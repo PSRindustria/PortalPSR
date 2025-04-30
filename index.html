@@ -10,56 +10,63 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* RESET */
+    /* ===== RESET ===== */
     *, *::before, *::after {
       margin: 0; padding: 0; box-sizing: border-box;
     }
     body {
-      background: #f4f4f4;
       font-family: 'Poppins', sans-serif;
+      background: #f4f4f4;
     }
 
-    /* CONTAINER PRINCIPAL */
+    /* ===== CONTAINER PRINCIPAL =====
+       largura máxima 442px no desktop,
+       sempre centralizado e 100% em mobile
+    */
     .container {
       width: 100%;
-      max-width: 442px;    /* no desktop não excede 442px */
+      max-width: 442px;
       margin: 0 auto;
       padding: 10px;
       display: grid;
       grid-template-rows:
-        auto  /* section1 */
-        auto  /* section2 */
-        auto  /* menu (grid) */
-        auto  /* section3 */
-        auto  /* section4 */
-        auto; /* section5 */
+        auto  /* seção 1: banner */
+        auto  /* seção 2: calendário */
+        auto  /* menu (grid de ícones) */
+        auto  /* seção 3: frase do dia */
+        auto  /* seção 4: dias sem acidentes */
+        auto; /* seção 5: redes sociais */
       row-gap: 12px;
     }
 
-    /* BLOCOS FULL-WIDTH */
+    /* ===== BLOCOS FULL-WIDTH ===== */
     .section-full {
       background: #fff;
       border-radius: 8px;
       overflow: hidden;
       position: relative;
-      min-height: 100px;  /* garante espaço antes de carregar */
+      min-height: 100px;
     }
 
-    /* BANNER (section1) */
+    /* ===== 1. BANNER (section1) ===== */
     #section1 img {
       display: block;
       width: 100%;
-      height: auto;       /* mantém proporção */
+      height: auto;
     }
 
-    /* GRID DE 8 ÍCONES: responsivo */
+    /* ===== 2. CALENDÁRIO (section2) ===== */
+    /* aplica dentro de blocks/section2.html */
+
+    /* ===== 3. MENU: GRID 4×2 ===== */
     .section-grid {
       display: grid;
       gap: 8px;
-      grid-template-columns: repeat(auto-fit, minmax(80px,1fr));
+      /* sempre 4 colunas, cada ícone cabe confortavelmente */
+      grid-template-columns: repeat(4, 1fr);
     }
 
-    /* PLACEHOLDER DE LOADING */
+    /* ===== PLACEHOLDER DE CARREGAMENTO ===== */
     .loading {
       min-height: 80px;
       display: flex;
@@ -84,7 +91,7 @@
       <div class="loading">Carregando calendário…</div>
     </div>
 
-    <!-- 3. MENU (8 ÍCONES) -->
+    <!-- 3. MENU (8 ÍCONES em 2 filas de 4) -->
     <div class="section-grid">
       <div data-block="grid1"><div class="loading">Jornal</div></div>
       <div data-block="grid2"><div class="loading">Cardápio</div></div>
@@ -114,6 +121,7 @@
   </div>
 
   <script>
+    // ao carregar a página, busca em blocks/*.html cada bloco
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[data-block]').forEach(el => {
         const name = el.getAttribute('data-block');
