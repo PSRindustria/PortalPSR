@@ -3,102 +3,191 @@
 <head>
   <meta charset="utf-8">
   <title>Portal PSR</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    body{background:#f4f4f4;font-family:'Poppins',sans-serif}
-    .container{
-      width:100%;max-width:442px;margin:0 auto;padding:10px;
-      display:grid;row-gap:12px;
+    /* ===== RESET ===== */
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
     }
-    .section-full{background:#fff;border-radius:8px;overflow:hidden}
-    .section-grid{
-      display:grid;gap:8px;
-      grid-template-columns:repeat(2,1fr);
+    body {
+      background: #f4f4f4;
+      font-family: 'Poppins', sans-serif;
     }
-    @media(min-width:600px){
-      .section-grid{grid-template-columns:repeat(4,1fr)}
+
+    /* ===== CONTAINER PRINCIPAL ===== */
+    .container {
+      width: 100%;
+      max-width: 442px;     /* nunca excede 442px em desktop */
+      margin: 0 auto;
+      padding: 10px;
+      display: grid;
+      grid-template-rows:
+        auto /* section1 */
+        /* ... outras seções ... */;
+      row-gap: 12px;
     }
-    .loading{
-      min-height:80px;
-      display:flex;align-items:center;justify-content:center;
-      color:#888;font-size:.9rem;
+
+    /* ===== SECTION 1 (BANNER) ===== */
+    #section1 {
+      position: relative;
+      width: 100%;
+      /* vou usar aspect-ratio para manter proporção 16:9 */
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #000; /* fallback */
+    }
+    #section1 img {
+      position: absolute;
+      inset: 0;          /* top:0; right:0; bottom:0; left:0 */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #section1 #comemoracao {
+      position: absolute;
+      top: 68%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      padding: 0 5vw;
+      color: #000;
+      font-size: 6vw; /* escala com a largura */
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255,255,255,0.7);
+    }
+    @media (min-width: 600px) {
+      #section1 #comemoracao {
+        font-size: 7vh; /* em telas maiores, usa viewport-height */
+      }
+    }
+
+    /* ===== ESTRELAS & FOGOS ===== */
+    .twinkle-lights {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .twinkle-lights span {
+      position: absolute;
+      width: 6px; height: 6px;
+      background: #fff;
+      clip-path: polygon(
+        50% 0%, 64% 30%, 98% 35%, 74% 58%, 79% 90%,
+        50% 75%, 21% 90%, 26% 58%, 2% 35%, 35% 30%
+      );
+      opacity: 0;
+      animation: blink 3s infinite ease-in-out;
+      animation-delay: var(--delay);
+    }
+    @keyframes blink {
+      0%   { opacity: 0.1; transform: scale(0.8); }
+      50%  { opacity: 1;   transform: scale(1.2); }
+      100% { opacity: 0.1; transform: scale(0.8); }
+    }
+    .firework {
+      position: absolute;
+      width: 0; height: 0;
+    }
+    .firework-particle {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      opacity: 1;
+      animation: explode 1s ease-out forwards;
+    }
+    @keyframes explode {
+      from { transform: translate(0, 0); opacity: 1; }
+      to   { transform: translate(var(--dx), var(--dy)); opacity: 0; }
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="container">
 
-    <!-- 1. BANNER -->
-    <div class="section-full" data-block="section1">
-      <div class="loading">Carregando banner…</div>
+    <!-- == SECTION 1: BANNER == -->
+    <div id="section1">
+      <img
+        id="banner-fixo"
+        src="https://lh3.googleusercontent.com/fife/.../w1920-h878"
+        alt="Banner PSR"
+      >
+      <p id="comemoracao">Carregando mensagem...</p>
+      <div class="twinkle-lights"></div>
     </div>
 
-    <!-- 2. CALENDÁRIO -->
-    <div class="section-full" data-block="section2">
-      <div class="loading">Carregando calendário…</div>
-    </div>
-
-    <!-- 3. MENU -->
-    <div class="section-grid">
-      <div data-block="grid1"><div class="loading">Jornal</div></div>
-      <div data-block="grid2"><div class="loading">Cardápio</div></div>
-      <div data-block="grid3"><div class="loading">Aniversário</div></div>
-      <div data-block="grid4"><div class="loading">Férias</div></div>
-      <div data-block="grid5"><div class="loading">CIPA</div></div>
-      <div data-block="grid6"><div class="loading">FlappyBob</div></div>
-      <div data-block="grid7"><div class="loading">VanRace</div></div>
-      <div data-block="grid8"><div class="loading">Ranking</div></div>
-    </div>
-
-    <!-- 4. FRASE DO DIA -->
-    <div class="section-full" data-block="section3">
-      <div class="loading">Carregando frase…</div>
-    </div>
-
-    <!-- 5. DIAS SEM ACIDENTES -->
-    <div class="section-full" data-block="section4">
-      <div class="loading">Carregando contador…</div>
-    </div>
-
-    <!-- 6. REDES SOCIAIS -->
-    <div class="section-full" data-block="section5">
-      <div class="loading">Carregando redes sociais…</div>
-    </div>
+    <!-- ... chame aqui fetch de section2, grid etc ... -->
 
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded',()=>{
-      document.querySelectorAll('[data-block]').forEach(el=>{
-        const name=el.dataset.block;
-        fetch(`blocks/${name}.html`)
-          .then(r=>{
-            if(!r.ok) throw new Error(`Falha ao carregar ${name}`);
-            return r.text();
-          })
-          .then(html=>{
-            el.innerHTML=html;
-            // executa scripts internos
-            el.querySelectorAll('script').forEach(old=>{
-              const s=document.createElement('script');
-              old.src? s.src=old.src: s.textContent=old.textContent;
-              document.body.appendChild(s);
-              document.body.removeChild(s);
-            });
-          })
-          .catch(err=>{
-            console.error(err);
-            el.innerHTML=`<p style="padding:20px;color:#c00">Erro ao carregar ${name}</p>`;
-          });
-      });
+    // Exemplo de dados embarcados em JSON (poderia vir de "blocks/section1.html")
+    const aniversariantes = [
+      { date:"2025-04-07", msg:"🥳 Feliz Aniversário, Rafaela Taborda! 🥳" },
+      { date:"2025-04-12", msg:"🥳 Feliz Aniversário, Rhafael Mendes! 🥳" },
+      { date:"2025-04-23", msg:"🥳 Feliz Aniversário, Selma Botelho! 🥳" },
+      { date:"2025-04-25", msg:"🥳 Feliz Aniversário, Gabriel Freire! 🥳" },
+      { date:"2025-04-26", msg:"🥳 Feliz Aniversário, Pedro Camargo! 🥳" },
+      { date:"2025-04-28", msg:"🥳 Feliz Aniversário, Iasmim Ferreira! 🥳" },
+      { date:"2025-04-30", msg:"🥳 Feliz Aniversário, Diogo e André! 🥳" }
+    ];
+    const defaultMsg = "#PSRindústria";
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const hoje = new Date().toISOString().slice(0,10);
+      let mensagem = defaultMsg;
+      let isBirthday = false;
+
+      for (const a of aniversariantes) {
+        if (a.date === hoje) {
+          mensagem = a.msg;
+          isBirthday = true;
+          break;
+        }
+      }
+
+      const elMsg = document.getElementById('comemoracao');
+      elMsg.textContent = mensagem;
+      if (isBirthday) elMsg.classList.add('birthday');
+
+      const container = document.querySelector('.twinkle-lights');
+
+      if (isBirthday) {
+        // fogos
+        setInterval(() => {
+          const fw = document.createElement('div');
+          fw.className = 'firework';
+          fw.style.top  = Math.random()*100+'%';
+          fw.style.left = Math.random()*100+'%';
+          container.appendChild(fw);
+          for (let i=0; i<12; i++) {
+            const p = document.createElement('div');
+            p.className = 'firework-particle';
+            const ang = Math.random()*2*Math.PI, dist = 50 + Math.random()*50;
+            p.style.setProperty('--dx', Math.cos(ang)*dist+'px');
+            p.style.setProperty('--dy', Math.sin(ang)*dist+'px');
+            const hue = Math.floor(Math.random()*360),
+                  col = `hsl(${hue},100%,50%)`;
+            p.style.background = col;
+            p.style.boxShadow  = `0 0 10px ${col},0 0 20px ${col}`;
+            fw.appendChild(p);
+          }
+          setTimeout(()=> fw.remove(), 1000);
+        }, 600);
+      } else {
+        // estrelinhas
+        for (let i=0; i<20; i++) {
+          const s = document.createElement('span');
+          s.style.setProperty('--delay', (Math.random()*3)+'s');
+          s.style.top     = Math.random()*100+'%';
+          s.style.left    = Math.random()*100+'%';
+          container.appendChild(s);
+        }
+      }
     });
   </script>
-
 </body>
 </html>
