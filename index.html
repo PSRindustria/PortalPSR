@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* RESET GERAL */
+    /* RESET GLOBAL */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -18,25 +18,26 @@
     }
     html, body {
       width: 100%;
-      overflow-x: hidden;
+      min-height: 100%;
       background: #f4f4f4;
       font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
     }
 
     /* CONTAINER PRINCIPAL */
     .container {
       width: 100%;
-      max-width: 442px;     /* No desktop, não excede 442px */
+      max-width: 442px;    /* não excede 442px em desktop */
       margin: 0 auto;
       padding: 10px;
       display: grid;
-      grid-template‐rows:
-        auto    /* seção 1: banner */
-        auto    /* seção 2: calendário */
-        auto    /* seção 3: menu (8 ícones) */
-        auto    /* seção 4: frase do dia */
-        auto    /* seção 5: dias sem acidentes */
-        auto;   /* seção 6: redes sociais */
+      grid-template-rows:
+        auto   /* section1: banner */
+        auto   /* section2: calendário */
+        auto   /* section3: menu (8 ícones) */
+        auto   /* section4: frase do dia */
+        auto   /* section5: dias sem acidentes */
+        auto;  /* section6: redes sociais */
       row-gap: 12px;
     }
 
@@ -51,16 +52,16 @@
     .section-grid {
       display: grid;
       gap: 8px;
-      grid-template-columns: repeat(4,1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
-    /* Em telas muito estreitas, cai para 2 colunas */
+    /* Se a tela ficar muito estreita, cai para 2 colunas */
     @media (max-width: 360px) {
       .section-grid {
-        grid-template-columns: repeat(2,1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    /* PLACEHOLDER DE LOADING */
+    /* PLACEHOLDER DE CARREGAMENTO */
     .loading {
       min-height: 80px;
       display: flex;
@@ -85,7 +86,7 @@
       <div class="loading">Carregando calendário…</div>
     </div>
 
-    <!-- 3. MENU (8 ÍCONES) -->
+    <!-- 3. MENU (8 ÍCONES) em 4 col × 2 lin -->
     <div class="section-grid">
       <div data-block="grid1"><div class="loading">Jornal</div></div>
       <div data-block="grid2"><div class="loading">Cardápio</div></div>
@@ -116,7 +117,7 @@
   </div>
 
   <script>
-    // Injeta cada bloco de blocks/{name}.html no placeholder correspondente
+    // Injeta cada bloco de blocks/{nome}.html no placeholder correspondente
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[data-block]').forEach(el => {
         const name = el.getAttribute('data-block');
