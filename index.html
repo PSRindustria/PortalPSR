@@ -1,58 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Portal PSR</title>
   <style>
-    *, *::before, *::after {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-    body {
-      font-family: sans-serif;
-      background: #fafafa;
-    }
+    /* RESET + BÁSICOS */
+    *, *::before, *::after { margin:0; padding:0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #fafafa; }
 
+    /* GRID PRINCIPAL (mobile-first) */
     .container {
       display: grid;
       grid-template-rows:
-        auto  /* banner */
-        auto  /* calendário */
-        auto  /* menu */
-        auto  /* quote */
-        auto  /* safety */
-        auto; /* seção5 */
+        auto   /* section1: banner */
+        auto   /* section2: calendário */
+        auto   /* menu */
+        auto   /* section3: quote */
+        auto   /* section4: contador */
+        auto;  /* section5: futuro */
       gap: 10px;
       width: 100%;
       margin: 0 auto;
       padding: 10px;
       background: #fff;
     }
-    @media (min-width: 1024px) {
-      .container {
-        max-width: 423px;
-      }
+    @media (min-width:1024px) {
+      /* SÓ em desktop limitamos largura */
+      .container { max-width: 423px; }
     }
 
-    .section-full { /* banner, calendário, quote, safety, seção5 */
+    /* SEÇÕES FULL-WIDTH */
+    .section-full {
       background: #f0f0f0;
-      padding: 20px;
+      padding: 0;          /* zerado — fragments já trazem seu próprio padding */
       border-radius: 4px;
     }
 
-    .section-grid { /* menu */
+    /* MENU 8-ITENS */
+    .section-grid {
       display: grid;
       grid-template-columns: repeat(2,1fr);
       gap: 10px;
     }
-    @media (min-width: 768px) {
+    @media (min-width:768px) {
       .section-grid {
         grid-template-columns: repeat(4,1fr);
       }
     }
     .cell {
       background: #ddd;
-      padding: 10px;
+      padding: 0;          /* fragmentos de link cuidam do padding interno */
       border-radius: 4px;
     }
     .cell a {
@@ -61,10 +59,10 @@
       justify-content: center;
       width: 100%; height: 100%;
       text-decoration: none;
-      color: #333;
+      color: #fff;
       font-size: 1.1rem;
       font-weight: 600;
-      background: #2a7ab8;  /* sua cor de botão */
+      background: #2a7ab8;
       border-radius: 4px;
       transition: background .2s;
     }
@@ -74,7 +72,6 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <!-- 1. Banner -->
     <div class="section-full" data-block="section1"></div>
@@ -82,19 +79,25 @@
     <!-- 2. Calendário -->
     <div class="section-full" data-block="section2"></div>
 
-    <!-- 3. Menu de 8 -->
+    <!-- 3. Menu de 8 botões -->
     <div class="section-grid">
       <div class="cell" data-block="grid1"></div>
-      <!-- ... grid2 até grid8 ... -->
+      <div class="cell" data-block="grid2"></div>
+      <div class="cell" data-block="grid3"></div>
+      <div class="cell" data-block="grid4"></div>
+      <div class="cell" data-block="grid5"></div>
+      <div class="cell" data-block="grid6"></div>
+      <div class="cell" data-block="grid7"></div>
+      <div class="cell" data-block="grid8"></div>
     </div>
 
     <!-- 4. Quote -->
     <div class="section-full" data-block="section3"></div>
 
-    <!-- 5. Safety counter -->
+    <!-- 5. Contador dias sem acidentes -->
     <div class="section-full" data-block="section4"></div>
 
-    <!-- 6. Seção5 vazia ou o que vier -->
+    <!-- 6. Seção futura -->
     <div class="section-full" data-block="section5"></div>
   </div>
 
@@ -108,6 +111,5 @@
       });
     });
   </script>
-
 </body>
 </html>
