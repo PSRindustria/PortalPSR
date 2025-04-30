@@ -12,7 +12,9 @@
   <style>
     /* RESET */
     *, *::before, *::after {
-      margin:0; padding:0; box-sizing:border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
     body {
       background: #f4f4f4;
@@ -22,44 +24,42 @@
     /* CONTAINER PRINCIPAL */
     .container {
       width: 100%;
-      max-width: 442px;    /* no desktop não excede 442px */
+      max-width: 442px;      /* não excede 442px no desktop */
       margin: 0 auto;
       padding: 10px;
       display: grid;
       grid-template-rows:
         auto  /* section1 */
         auto  /* section2 */
-        auto  /* grid menu */
+        auto  /* menu (grid) */
         auto  /* section3 */
         auto  /* section4 */
         auto; /* section5 */
       row-gap: 12px;
     }
 
-    /* ESTILOS COMUNS */
+    /* BLOCOS FULL-WIDTH */
     .section-full {
       background: #fff;
       border-radius: 8px;
       overflow: hidden;
     }
+
+    /* GRID DE 8 ÍCONES: SEMPRE 4 COLUNAS */
     .section-grid {
       display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      grid-template-columns: repeat(2,1fr);
     }
-    @media (min-width: 600px) {
-      .section-grid {
-        grid-template-columns: repeat(4,1fr);
-      }
-    }
-    /* placeholder de carregamento */
+
+    /* LOADING PLACEHOLDER */
     .loading {
       min-height: 80px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#888;
-      font-size:0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -112,7 +112,7 @@
         const name = el.getAttribute('data-block');
         fetch(`blocks/${name}.html`)
           .then(res => {
-            if (!res.ok) throw new Error(`Erro ao buscar blocks/${name}.html`);
+            if (!res.ok) throw new Error(`Falha ao carregar blocks/${name}.html`);
             return res.text();
           })
           .then(html => {
@@ -120,7 +120,7 @@
           })
           .catch(err => {
             console.error(err);
-            el.innerHTML = `<p style="padding:20px;color:#c00">Falha ao carregar ${name}</p>`;
+            el.innerHTML = `<p style="padding:20px;color:#c00">Erro ao carregar ${name}</p>`;
           });
       });
     });
