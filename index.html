@@ -1,244 +1,190 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal PSR</title>
-  <!-- Importa fonte Poppins do Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <style>
-    /* Reset e box-sizing */
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: #fff;
-      font-family: 'Poppins', sans-serif;
-      display: flex;
-      justify-content: center;
-    }
-    /* Container responsivo até 400px */
-    .container {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    /* Header fixo topo */
-    header {
-      position: sticky;
-      top: 0;
-      background: #fff;
-      z-index: 100;
-    }
-    /* Calendário */
-    .calendar-container {
-      display: flex;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
-    .day-box {
-      flex: 1;
-      height: 50px;
-      background-color: #cecece;
-      color: #777;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      font-size: clamp(0.75rem, 2vw, 1rem);
-    }
-    .day-box.highlight { background-color: #ffb600; color: #444; }
-    .day-box.holiday { background-color: #a3d5a2; color: #333; }
-    .day-box.holiday-today { background-color: #a3d5a2; color: #333; border: 2px solid #ffb600; }
-    .day-box.past    { background-color: #cecece; color: #777; }
-    .day-box.weekend { background-color: #cecece; color: #777; }
-    .month-year { text-align: center; font-size: clamp(0.75rem,2vw,1rem); }
-    /* Grid de ícones */
-    .icons-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.75rem;
-      margin: 1rem 0;
-    }
-    .icone-link {
-      text-decoration: none;
-      text-align: center;
-    }
-    .icone-box {
-      width: clamp(85px, 40vw, 120px);
-      height: clamp(85px, 40vw, 120px);
-      background-color: #bed3ee;
-      color: #003366;
-      border-radius: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s;
-    }
-    .icone-box:hover { transform: scale(1.05); }
-    .icon-label {
-      margin-top: 0.25rem;
-      font-size: clamp(0.75rem, 2vw, 1rem);
-      color: #003366;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
-    /* Reflexão do dia */
-    .reflection {
-      background-color: #bed3ee;
-      margin: 1rem 0;
-      padding: 0.75rem;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .reflection-title {
-      font-size: clamp(0.9rem,2vw,1.1rem);
-      color: #003366;
-      font-weight: 600;
-    }
-    /* Contador de dias sem acidentes */
-    .accidents {
-      position: sticky;
-      bottom: 0;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      background-color: #006400;
-      color: #fff;
-      text-align: center;
-      padding: 0.75rem 0;
-      font-size: clamp(0.9rem,2vw,1.2rem);
-      font-weight: 600;
-    }
-    .accidents span.highlight { color: #ffb600; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Projeto GitHub Pages</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .top-columns {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .column {
+            flex: 1;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            min-height: 200px;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .grid-item {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 150px;
+        }
+        
+        .section {
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+        
+        .loading {
+            font-style: italic;
+            color: #888;
+        }
+        
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <!-- Banner Portal PSR -->
-  <header class="container">
-    <div id="banner-container">
-      <img src="./PORTAL - v2.png" alt="Portal PSR" style="width:100%; display:block; border-radius:15px 15px 0 0;">
-      <p style="text-align:center; margin:0.5rem 0; font-size:clamp(0.9rem,2vw,1.2rem);">🥳 Feliz Aniversário, Diogo e André! 🥳</p>
-    </div>
-  </header>
-
-  <main class="container">
-    <!-- Calendário semanal -->
-    <div class="calendar-container">
-      <div class="day-box past"><div>Dom</div><div>27</div></div>
-      <div class="day-box past"><div>Seg</div><div>28</div></div>
-      <div class="day-box past"><div>Ter</div><div>29</div></div>
-      <div class="day-box highlight"><div>Qua</div><div>30</div></div>
-      <div class="day-box holiday"><div>Qui</div><div>1</div></div>
-      <div class="day-box"><div>Sex</div><div>2</div></div>
-      <div class="day-box weekend"><div>Sáb</div><div>3</div></div>
-    </div>
-    <div class="month-year">Abril de 2025</div>
-
-    <!-- Grid de ícones -->
-    <div class="icons-grid">
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG Jornal -->
+    <div class="container">
+        <!-- Top columns (section1 and section2) -->
+        <div class="top-columns">
+            <div id="section1" class="column">
+                <div class="loading">Carregando section1...</div>
+            </div>
+            <div id="section2" class="column">
+                <div class="loading">Carregando section2...</div>
+            </div>
         </div>
-        <div class="icon-label">jornal</div>
-      </a>
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG Cardápio -->
+        
+        <!-- Grid items (grid1 through grid8) -->
+        <div class="grid-container">
+            <div id="grid1" class="grid-item">
+                <div class="loading">Carregando grid1...</div>
+            </div>
+            <div id="grid2" class="grid-item">
+                <div class="loading">Carregando grid2...</div>
+            </div>
+            <div id="grid3" class="grid-item">
+                <div class="loading">Carregando grid3...</div>
+            </div>
+            <div id="grid4" class="grid-item">
+                <div class="loading">Carregando grid4...</div>
+            </div>
+            <div id="grid5" class="grid-item">
+                <div class="loading">Carregando grid5...</div>
+            </div>
+            <div id="grid6" class="grid-item">
+                <div class="loading">Carregando grid6...</div>
+            </div>
+            <div id="grid7" class="grid-item">
+                <div class="loading">Carregando grid7...</div>
+            </div>
+            <div id="grid8" class="grid-item">
+                <div class="loading">Carregando grid8...</div>
+            </div>
         </div>
-        <div class="icon-label">cardápio</div>
-      </a>
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG Aniversário -->
+        
+        <!-- Horizontal sections (section3, section4, and section5) -->
+        <div id="section3" class="section">
+            <div class="loading">Carregando section3...</div>
         </div>
-        <div class="icon-label">aniversário</div>
-      </a>
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG Férias -->
+        <div id="section4" class="section">
+            <div class="loading">Carregando section4...</div>
         </div>
-        <div class="icon-label">férias</div>
-      </a>
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG CIPA -->
+        <div id="section5" class="section">
+            <div class="loading">Carregando section5...</div>
         </div>
-        <div class="icon-label">cipa</div>
-      </a>
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG FlappyBob -->
-        </div>
-        <div class="icon-label">flappybob</div>
-      </a>
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG VanRace -->
-        </div>
-        <div class="icon-label">vanrace</div>
-      </a>
-      <a href="#" class="icone-link">
-        <div class="icone-box">
-          <!-- SVG Ranking -->
-        </div>
-        <div class="icon-label">ranking</div>
-      </a>
     </div>
 
-    <!-- Reflexão do dia -->
-    <div class="reflection">
-      <p class="reflection-title">Reflexão do dia:</p>
-      <p id="daily-quote"></p>
-    </div>
-  </main>
-
-  <!-- Contador de dias sem acidentes -->
-  <div class="accidents">
-    Estamos <span class="highlight" id="days">0</span> dias sem acidentes
-  </div>
-
-  <script>
-    // --- Calendário Dinâmico ---
-    (function() {
-      const hoje = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-      const diaSemana = hoje.getDay();
-      const diaMes = hoje.getDate();
-      const mes = hoje.getMonth();
-      const ano = hoje.getFullYear();
-      const nomesMes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-      const holidayMap = {/* ... feriados como no código anterior ... */};
-      document.querySelector('.month-year').textContent = `${nomesMes[mes]} de ${ano}`;
-      // Lógica de marcação dos .day-box omitida para brevidade
-    })();
-
-    // --- Frase do dia ---
-    (function() {
-      const frases = [
-        'Seja a mudança que você quer ver no mundo.',
-        'A persistência é o caminho do êxito.',
-        'Não espere por uma crise para descobrir o que é importante.',
-        // … outras frases …
-      ];
-      const idx = Math.floor(Math.random()*frases.length);
-      document.getElementById('daily-quote').textContent = frases[idx];
-    })();
-
-    // --- Contador de dias sem acidentes ---
-    (function() {
-      const inicio = new Date(2024, 3, 9); // 9 de abril de 2024
-      const hoje = new Date();
-      const diffMs = hoje - inicio;
-      const dias = Math.floor(diffMs / (1000*60*60*24));
-      document.getElementById('days').textContent = dias;
-    })();
-  </script>
+    <script>
+        // Lista de todos os elementos que precisam ser carregados
+        const elements = [
+            'section1', 'section2', 'section3', 'section4', 'section5',
+            'grid1', 'grid2', 'grid3', 'grid4', 'grid5', 'grid6', 'grid7', 'grid8'
+        ];
+        
+        // Função para carregar conteúdo de um arquivo
+        async function loadContent(elementId) {
+            try {
+                // Determinar em qual pasta procurar (section ou grid)
+                let folder = elementId.startsWith('section') ? 'sections' : 'grids';
+                
+                // Carregar o arquivo HTML da pasta correta
+                const response = await fetch(`./blocks/${folder}/${elementId}/index.html`);
+                
+                if (!response.ok) {
+                    throw new Error(`Erro ao carregar ${elementId}: ${response.status}`);
+                }
+                
+                const content = await response.text();
+                
+                // Inserir o conteúdo no elemento correspondente
+                document.getElementById(elementId).innerHTML = content;
+                
+                // Se houver um script, carregar e executar
+                await loadScript(elementId);
+                
+            } catch (error) {
+                console.error(`Erro ao carregar ${elementId}:`, error);
+                document.getElementById(elementId).innerHTML = 
+                    `<div class="error">Erro ao carregar ${elementId}</div>`;
+            }
+        }
+        
+        // Função para carregar e executar scripts
+        async function loadScript(elementId) {
+            try {
+                // Determinar em qual pasta procurar (section ou grid)
+                let folder = elementId.startsWith('section') ? 'sections' : 'grids';
+                
+                // Verificar se existe um arquivo script.js
+                const response = await fetch(`./blocks/${folder}/${elementId}/script.js`);
+                
+                if (response.ok) {
+                    const scriptContent = await response.text();
+                    
+                    // Criar e executar o script
+                    const script = document.createElement('script');
+                    script.id = `script-${elementId}`;
+                    script.textContent = scriptContent;
+                    document.body.appendChild(script);
+                }
+            } catch (error) {
+                console.error(`Erro ao carregar script para ${elementId}:`, error);
+            }
+        }
+        
+        // Carregar todos os elementos quando a página for carregada
+        document.addEventListener('DOMContentLoaded', () => {
+            elements.forEach(elementId => {
+                loadContent(elementId);
+            });
+        });
+    </script>
 </body>
 </html>
