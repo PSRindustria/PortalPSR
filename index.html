@@ -26,17 +26,17 @@
     /* CONTAINER PRINCIPAL */
     .container {
       width: 100%;
-      max-width: 442px;     /* não excede 442px no desktop */
+      max-width: 442px;     /* No desktop, não excede 442px */
       margin: 0 auto;
       padding: 10px;
       display: grid;
-      grid-template-rows:
-        auto    /* 1: banner */
-        auto    /* 2: calendário */
-        auto    /* 3: menu (8 ícones) */
-        auto    /* 4: frase do dia */
-        auto    /* 5: dias sem acidentes */
-        auto;   /* 6: redes sociais */
+      grid-template‐rows:
+        auto    /* seção 1: banner */
+        auto    /* seção 2: calendário */
+        auto    /* seção 3: menu (8 ícones) */
+        auto    /* seção 4: frase do dia */
+        auto    /* seção 5: dias sem acidentes */
+        auto;   /* seção 6: redes sociais */
       row-gap: 12px;
     }
 
@@ -47,12 +47,17 @@
       overflow: hidden;
     }
 
-    /* MENU FLUIDO (seção 3) */
+    /* MENU 8 ÍCONES EM 4×2 */
     .section-grid {
       display: grid;
       gap: 8px;
-      /* até 4 colunas, mas cada célula encolhe até 70px */
-      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      grid-template-columns: repeat(4,1fr);
+    }
+    /* Em telas muito estreitas, cai para 2 colunas */
+    @media (max-width: 360px) {
+      .section-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
     }
 
     /* PLACEHOLDER DE LOADING */
@@ -86,6 +91,7 @@
       <div data-block="grid2"><div class="loading">Cardápio</div></div>
       <div data-block="grid3"><div class="loading">Aniversário</div></div>
       <div data-block="grid4"><div class="loading">Férias</div></div>
+
       <div data-block="grid5"><div class="loading">CIPA</div></div>
       <div data-block="grid6"><div class="loading">FlappyBob</div></div>
       <div data-block="grid7"><div class="loading">VanRace</div></div>
@@ -110,7 +116,7 @@
   </div>
 
   <script>
-    // Ao carregar a página, injeta cada bloco HTML de blocks/{name}.html
+    // Injeta cada bloco de blocks/{name}.html no placeholder correspondente
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[data-block]').forEach(el => {
         const name = el.getAttribute('data-block');
