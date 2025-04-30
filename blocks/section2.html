@@ -1,89 +1,70 @@
-<!DOCTYPE html> 
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Calendário Centralizado</title>
-  <!-- Importa a fonte Poppins do Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-    .outer-wrapper {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background-color: #f9f9f9;
-      padding: 10px;
-    }
-    .calendar-container {
-      display: flex;
-      gap: 0.5rem;
-      width: 100%;
-      max-width: 600px;
-    }
-    .day-box {
-      flex: 1 1 0;
-      height: 75px;
-      background-color: #003366;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 15px;
-      font-weight: 600;
-      text-align: center;
-      font-size: clamp(1rem, 1.5vw, 1.5rem);
-      padding: 3px;
-      transition: border 0.2s;
-    }
-    /* Hoje em destaque laranja */
-    .day-box.highlight {
-      background-color: #ffb600;
-      color: #444;
-    }
-    /* Feriados (não hoje) em verde */
-    .day-box.holiday {
-      background-color: #a3d5a2 !important;
-      color: #333 !important;
-    }
-    /* Hoje feriado: verde + contorno laranja (#ffb600) */
-    .day-box.holiday-today {
-      background-color: #a3d5a2 !important;
-      color: #333 !important;
-      border: 3px solid #ffb600;
-    }
-    /* Dias passados em cinza */
-    .day-box.past {
-      background-color: #cecece !important;
-      color: #777 !important;
-    }
-    /* Finais de semana futuros em cinza */
-    .day-box.weekend {
-      background-color: #cecece !important;
-      color: #777 !important;
-    }
-    .day-name {
-      margin-bottom: 2px;
-    }
-    .month-year {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      font-weight: 400;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
+<!-- blocks/section2.html -->
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Reset e fonte apenas dentro do calendário */
+  #calendar-section,
+  #calendar-section * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  #calendar-section {
+    font-family: 'Poppins', sans-serif;
+  }
+  /* Wrapper e layout */
+  #calendar-section .outer-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    padding: 10px;
+  }
+  #calendar-section .calendar-container {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 600px;
+  }
+  /* Caixa de cada dia */
+  #calendar-section .day-box {
+    flex: 1 1 0;
+    height: 75px;
+    background-color: #003366;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    font-weight: 600;
+    text-align: center;
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    padding: 3px;
+    transition: border 0.2s;
+  }
+  /* Estados especiais */
+  #calendar-section .day-box.highlight { background-color: #ffb600; color: #444; }
+  #calendar-section .day-box.holiday  { background-color: #a3d5a2 !important; color: #333 !important; }
+  #calendar-section .day-box.holiday-today {
+    background-color: #a3d5a2 !important;
+    color: #333 !important;
+    border: 3px solid #ffb600;
+  }
+  #calendar-section .day-box.past    { background-color: #cecece !important; color: #777 !important; }
+  #calendar-section .day-box.weekend { background-color: #cecece !important; color: #777 !important; }
+  #calendar-section .day-name { margin-bottom: 2px; }
+  #calendar-section .month-year {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: center;
+  }
+</style>
+
+<div id="calendar-section">
   <div class="outer-wrapper">
     <div class="calendar-container">
       <div class="day-box" data-day="0"><div class="day-name">Dom</div><div class="day-number"></div></div>
@@ -96,87 +77,84 @@
     </div>
     <div class="month-year"></div>
   </div>
+</div>
 
-  <script>
-    // Data/horário em Brasília
-    const brasiliaTime = new Date(
-      new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" })
-    );
-    const dayOfWeek = brasiliaTime.getDay();
-    const dayOfMonth = brasiliaTime.getDate();
-    const month = brasiliaTime.getMonth();
-    const year = brasiliaTime.getFullYear();
-    const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-                   "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-    const dayBoxes = document.querySelectorAll('.day-box');
-    const monthYearEl = document.querySelector('.month-year');
-    monthYearEl.textContent = `${meses[month]} de ${year}`;
+<script>
+(function(){
+  const section       = document.getElementById('calendar-section');
+  const brasiliaTime  = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+  const dayOfWeek     = brasiliaTime.getDay();
+  const dayOfMonth    = brasiliaTime.getDate();
+  const month         = brasiliaTime.getMonth();
+  const year          = brasiliaTime.getFullYear();
+  const meses         = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+                         "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const dayBoxes      = section.querySelectorAll('.day-box');
+  const monthYearEl   = section.querySelector('.month-year');
 
-    // Feriados (mês-dia)
-    const holidays = {
-      "1-1": "Feliz Ano Novo!",
-      "3-15": "Feliz Dia do Consumidor!",
-      "4-18": "Feliz Sexta-feira Santa à todos!",
-      "4-20": "Feliz Páscoa à todos!",
-      "4-21": "Dia de Tiradentes",
-      "4-23": "Feliz dia de São Jorge",
-      "5-1": "Feliz dia do Trabalhador",
-      "5-11": "Feliz dia das Mães!",
-      "6-12": "Dia dos Namorados!",
-      "6-19": "Dia de Corpus Christi",
-      "8-10": "Feliz dia dos Pais!",
-      "9-7": "Dia da Independência do Brasil",
-      "9-15": "Feliz dia do Cliente!",
-      "10-12": "Feliz dia das Crianças!",
-      "11-2": "Dia de Finados",
-      "11-15": "Proclamação da República",
-      "11-20": "Dia de Zumbi e da Consciência Negra",
-      "12-25": "Feliz Natal à todos!",
-      "12-31": "Feliz Ano Novo!"
-    };
+  // Exibe mês e ano iniciais
+  monthYearEl.textContent = `${meses[month]} de ${year}`;
 
-    dayBoxes.forEach(box => {
-      const boxDay = parseInt(box.dataset.day, 10);
-      const offset = boxDay - dayOfWeek;
-      const dateBlock = new Date(year, month, dayOfMonth + offset);
-      const blockKey = `${dateBlock.getMonth()+1}-${dateBlock.getDate()}`;
+  // Mapa de feriados (mês-dia)
+  const holidays = {
+    "1-1":  "Feliz Ano Novo!",
+    "3-15": "Feliz Dia do Consumidor!",
+    "4-18": "Feliz Sexta-feira Santa à todos!",
+    "4-20": "Feliz Páscoa à todos!",
+    "4-21": "Dia de Tiradentes",
+    "4-23": "Feliz dia de São Jorge",
+    "5-1":  "Feliz dia do Trabalhador",
+    "5-11": "Feliz dia das Mães!",
+    "6-12": "Dia dos Namorados!",
+    "6-19": "Dia de Corpus Christi",
+    "8-10": "Feliz dia dos Pais!",
+    "9-7":  "Dia da Independência do Brasil",
+    "9-15": "Feliz dia do Cliente!",
+    "10-12":"Feliz dia das Crianças!",
+    "11-2": "Dia de Finados",
+    "11-15":"Proclamação da República",
+    "11-20":"Dia de Zumbi e da Consciência Negra",
+    "12-25":"Feliz Natal à todos!",
+    "12-31":"Feliz Ano Novo!"
+  };
 
-      // Número do dia
-      box.querySelector('.day-number').textContent = dateBlock.getDate();
+  dayBoxes.forEach(box => {
+    const boxDay    = parseInt(box.dataset.day, 10);
+    const offset    = boxDay - dayOfWeek;
+    const dateBlock = new Date(year, month, dayOfMonth + offset);
+    const key       = `${dateBlock.getMonth()+1}-${dateBlock.getDate()}`;
 
-      // 1) Feriados (exceto hoje) → verde
-      if (holidays[blockKey] && offset !== 0) {
-        box.classList.add('holiday');
-        return;
+    // Número do dia
+    box.querySelector('.day-number').textContent = dateBlock.getDate();
+
+    // 1) Feriados (não hoje)
+    if (holidays[key] && offset !== 0) {
+      box.classList.add('holiday');
+      return;
+    }
+    // 2) Hoje
+    if (offset === 0) {
+      if (holidays[key]) {
+        monthYearEl.textContent = holidays[key];
+        box.classList.add('holiday-today');
+      } else {
+        box.classList.add('highlight');
       }
+      return;
+    }
+    // 3) Dias passados
+    if (offset < 0) {
+      box.classList.add('past');
+      return;
+    }
+    // 4) Finais de semana futuros
+    if (boxDay === 0 || boxDay === 6) {
+      box.classList.add('weekend');
+    }
+  });
 
-      // 2) Hoje
-      if (offset === 0) {
-        if (holidays[blockKey]) {
-          monthYearEl.textContent = holidays[blockKey];
-          box.classList.add('holiday-today');
-        } else {
-          box.classList.add('highlight');
-        }
-        return;
-      }
-
-      // 3) Dias passados (offset < 0) → cinza
-      if (offset < 0) {
-        box.classList.add('past');
-        return;
-      }
-
-      // 4) Finais de semana futuros → cinza
-      if (boxDay === 0 || boxDay === 6) {
-        box.classList.add('weekend');
-      }
-    });
-
-    // Mensagens opcionais
-    if (dayOfWeek === 5) monthYearEl.textContent = "#Sextooooou 🥳";
-    if (dayOfWeek === 1) monthYearEl.textContent = "Uma ótima segunda à todos! 🙏";
-  </script>
-
-</body>
-</html>
+  // Mensagens extras
+  if (dayOfWeek === 5) monthYearEl.textContent = "#Sextooooou 🥳";
+  if (dayOfWeek === 1) monthYearEl.textContent = "Uma ótima segunda à todos! 🙏";
+})();
+</script>
