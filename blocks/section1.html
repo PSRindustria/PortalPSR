@@ -4,15 +4,60 @@
     id="banner-fixo"
     src="https://lh3.googleusercontent.com/fife/ALs6j_F9g5IZ3ZCcPi9aivJG1tp_iXEs1hU-urLPN9FbJTOHrjNlPDFNoiB-xe7F7iavkhRa3qpdkEqBijQpnFWmrQGrEE0MCfIGpw8zhKriIjEqGFfEOXh36reLA656wbTbPMj0OKLXTYYLmxm7MsKG_ES0YEnZ-T_LpcmRjYFv0krG4UbhTmVs0XwEQGe1eIcJ4wdsnmVi7cbr9WjqL2raMyb-wfy4U3sfYFCZTNefK4wL6IFQEQlKA_78A_sN3Lnr4YNiC6_59yYdzOyEuEZkGBSCFS8doL0QT2a2eSw1JKIMQzmdTbAM5qqSDWb84HrvPgcYVhXmt4ZHwwH33Dm4yz7qfgqclT6syf3VLgd8ELv9zU_HDfSs4v8iy6-kNe8U4DxkN3eQdZrgiy4KwR4AcVG_E1NmjR2zpBPaLq8iB29KmzZ1RXr-LJTMHUeSaJZwpV0BHCUcmnV_MjfLy4Q6M-lqBmO06eLZ5NlCGWDO_0oRYBjYoDbocQEXOhsJF3AfMMdn9hoMw4NE_A3YLlBi9zIkgpIW1LDfpkcd3fA06LgGQI1UxsYh8xzGYnZdeuvvUY7izjAQMJQ-jazZ65wtm4egGjvurL-AiblCtH9bVZGqP3xemeIrYxchWt4DQMdLv_61sQij2RRJaD5eDojq8Q6O8fbI01WtxLM-0AB4_WknAPs4X4SBNkFgCRhbLXwvM2phuudAvFZwAuWcrmeuCITecsM6jygiO4pJm_pMQ04wZ9j_V_4HH73qzAvGWAI-5gf62dSD3pTCvaUJWQwM-22blKVTt5wD6NutNnzPaQn9A-Fb-m4dxOu5vLxCvUCudZvCVjy7pNNoaz9oSw6SXLvTNnGYNXh3r4Oq58SREvNa7MPkHOpurM1CfD8vHxF86gh5bYz2e021g1XgMUvVQG-HZbMm_qossVBH8SslZDFlbUFnoSYbHftG7Yxr7K_EELBhf4Gk78zwatbLkcuX7dWhUmwO133-NjQWlPuPSWqIhtVNQrenXzkOgtfR-5XBKQmVW-c_n2ycPZBiCQ5tAFQOZBSmHWAXWJDUpG237DkKZxL85q_NUFpz7E8B-auE2-qp6iN4OaKzqSog7lwJNVYqJoqW87wlWEjAudMGrhF3H40RrzxTZwS1vefdWbZFryDNnSNlmCCWM86l0e9VQ89c4SQJHqXoNhkWitmOnFRqfKe0U2wIr4OWIMjdjGXj8ArlkV98zbqmz4Kkf73cJsNuHKAjTFEAX8UvGFCNex02u7Dc1XvHY840tTTuLV_vdZwMj7YfM0ZQZF09x25zKqFXC7X04yxH9ey-DfovzIYGPhTJfqIyi1OahQPP6R3rSgt78TPTHUDZUMmU5ACqtVrQ6nsdZSgvboUVW5XSRb5wZcp9mCT9jLLnuEW5keyrzvcTkMA9vt1LUN_zLXW7tLgyEiVqjjyTOzFpR5PZ3HolI_or_vtZnybZ3ZMeiltqvpquyjkJyGqxXKsvloWGx2gMzq4isYb_oAnvFbxQ_O7QjvYmNWGmv4Glv-TmcNj5Js43eqYMxK15iEwaOXwVhrdLDf2N7GOH1do71zC0x0uwxt34-dNQC3zgYqbnI0C4846sqlHTl75BKTeX-713ITJu4Hsy7y4eP2PzbQNB_stlZUoGdwDGl-8R=w1920-h878"
       alt="Banner Fixo"
-  >
-  <p id="comemoracao"></p>
-  <div class="twinkle-lights"></div>
+    >
+    <p id="comemoracao"></p>
+    <div class="twinkle-lights"></div>
 </div>
 
+<style>
+  /* só aqui dentro */
+  #banner-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  #banner-fixo {
+    position: absolute;
+    inset: 0;
+    width:100%; height:100%;
+    object-fit: cover;
+    z-index:1;
+  }
+  #comemoracao {
+    position: absolute;
+    z-index:2;
+    top:68%; left:50%;
+    transform: translate(-50%,-50%);
+    padding: 0 5vw;
+    color:#000;
+    font: bold 7vh "Helvetica Neue",Arial,sans-serif;
+    white-space: nowrap;
+    text-shadow:0 0 10px rgba(255,255,255,0.7);
+  }
+  .birthday { animation: flash 0.5s infinite; }
+  @keyframes flash {
+    0%{color:blue;}50%{color:black;}100%{color:blue;}
+  }
+  .twinkle-lights{ position:absolute;z-index:3;inset:0;pointer-events:none }
+  .twinkle-lights span{ /* estrelas */ width:8px;height:8px;
+    background:#fff;position:absolute;
+    clip-path:polygon(50% 0,65% 30,98% 35,74% 58,79% 90,
+                      50% 75,21% 90,26% 58,2% 35,35% 30);
+    opacity:0;animation:blink 3s infinite ease-in-out;
+    box-shadow:0 0 15px #fff,0 0 30px #fff,0 0 45px #fff,0 0 60px #fff;
+  }
+  @keyframes blink{0%{opacity:.1;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}100%{opacity:.1;transform:scale(.8)}}
+  .firework{position:absolute;width:0;height:0;pointer-events:none}
+  .firework-particle{position:absolute;width:6px;height:6px;border-radius:50%;opacity:1;animation:explode 1s ease-out forwards}
+  @keyframes explode{from{transform:translate(0,0);opacity:1}to{transform:translate(var(--dx),var(--dy));opacity:0}}
+</style>
+
 <script>
-  // Banco de dados de mensagens e datas
+  // exatamente o mesmo JS de fogos/estrelas de antes
   const bancoDeDados = [
-    { data: new Date(2026, 0, 1), mensagem: "Feliz Ano Novo!" },
+    { data:new Date(2026,0,1),    mensagem:"Feliz Ano Novo!" },
+    { data:new Date(2025,3,7),    mensagem:"🥳 Feliz Aniversário, Rafaela Taborda! 🥳" },
     { data: new Date(2025, 3, 7), mensagem: "🥳 Feliz Aniversário, Rafaela Taborda! 🥳" },
     { data: new Date(2025, 3, 12),mensagem: "🥳 Feliz Aniversário, Rhafael Mendes! 🥳" },
     { data: new Date(2025, 3, 23),mensagem: "🥳 Feliz Aniversário, Selma Botelho! 🥳" },
@@ -22,72 +67,58 @@
     { data: new Date(2025, 3, 30),mensagem: "🥳 Feliz Aniversário, Diogo e André! 🥳" },
     { data: new Date(2025, 3, 9), mensagem: "🎉🦺 1 Ano Sem Acidentes 🦺🎉" },
     { data: new Date(2025, 0, 1), mensagem: "🥳 Feliz Aniversário, Fillipe Soares! 🥳" },
-    { data: new Date(), mensagem: "#PSRindústria" }
+    { data:new Date(),            mensagem:"#PSRindústria" }
   ];
-
-  let isBirthday = false;
-  const hoje = new Date();
-  for (const item of bancoDeDados) {
-    if (
-      hoje.getDate()   === item.data.getDate() &&
-      hoje.getMonth()  === item.data.getMonth() &&
-      hoje.getFullYear()=== item.data.getFullYear()
-    ) {
-      const el = document.getElementById("comemoracao");
-      el.textContent = item.mensagem;
-      if (/Aniversário/.test(item.mensagem)) {
-        el.classList.add("birthday");
-        isBirthday = true;
-      }
+  let isBirthday=false;
+  const hoje=new Date();
+  for(const i of bancoDeDados){
+    if(hoje.getDate()===i.data.getDate()
+      &&hoje.getMonth()===i.data.getMonth()
+      &&hoje.getFullYear()===i.data.getFullYear()){
+      const el=document.getElementById("comemoracao");
+      el.textContent=i.mensagem;
+      if(/Aniversário/.test(i.mensagem)) el.classList.add("birthday"),isBirthday=true;
       break;
     }
   }
-
-  function createStars() {
-    const container = document.querySelector('.twinkle-lights');
-    for (let i = 0; i < 20; i++) {
-      const star = document.createElement("span");
-      star.style.top = Math.random() * 100 + "%";
-      star.style.left= Math.random() * 100 + "%";
-      star.style.animationDelay   = Math.random()*3 + "s";
-      star.style.animationDuration= (2+Math.random()*3)+"s";
-      star.addEventListener("animationiteration", ()=>{
-        star.style.top  = Math.random()*100 + "%";
-        star.style.left = Math.random()*100 + "%";
+  function createStars(){
+    const c=document.querySelector(".twinkle-lights");
+    for(let k=0;k<20;k++){
+      const s=document.createElement("span");
+      s.style.top=Math.random()*100+"%";
+      s.style.left=Math.random()*100+"%";
+      s.style.animationDelay=Math.random()*3+"s";
+      s.style.animationDuration=(2+Math.random()*3)+"s";
+      s.addEventListener("animationiteration",_=>{
+        s.style.top=Math.random()*100+"%";
+        s.style.left=Math.random()*100+"%";
       });
-      container.appendChild(star);
+      c.appendChild(s);
     }
   }
-
-  function spawnFirework() {
-    const container = document.querySelector('.twinkle-lights');
-    const fw = document.createElement("div");
+  function spawnFirework(){
+    const c=document.querySelector(".twinkle-lights");
+    const fw=document.createElement("div");
     fw.className="firework";
-    fw.style.top  = Math.random()*100 + "%";
-    fw.style.left = Math.random()*100 + "%";
-    container.appendChild(fw);
-    for (let i=0;i<12;i++){
-      const p = document.createElement("div");
+    fw.style.top=Math.random()*100+"%";
+    fw.style.left=Math.random()*100+"%";
+    c.appendChild(fw);
+    for(let i=0;i<12;i++){
+      const p=document.createElement("div");
       p.className="firework-particle";
-      const ang = Math.random()*2*Math.PI;
-      const dist=50+Math.random()*50;
+      const ang=Math.random()*2*Math.PI,dist=50+Math.random()*50;
       p.style.setProperty("--dx",Math.cos(ang)*dist+"px");
       p.style.setProperty("--dy",Math.sin(ang)*dist+"px");
-      const hue = Math.floor(Math.random()*360);
-      const color = `hsl(${hue},100%,50%)`;
-      p.style.background = color;
-      p.style.boxShadow  = `0 0 10px ${color},0 0 20px ${color}`;
+      const col=`hsl(${Math.floor(Math.random()*360)},100%,50%)`;
+      p.style.background=col;
+      p.style.boxShadow=`0 0 10px ${col},0 0 20px ${col}`;
       fw.appendChild(p);
     }
     setTimeout(()=>fw.remove(),1000);
   }
-
-  function createFireworks() {
+  function createFireworks(){
     document.querySelector(".twinkle-lights").innerHTML="";
     setInterval(spawnFirework,500);
   }
-
-  window.addEventListener("load", ()=>{
-    isBirthday ? createFireworks() : createStars();
-  });
+  window.addEventListener("load",_=>isBirthday?createFireworks():createStars());
 </script>
