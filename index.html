@@ -5,60 +5,28 @@
   <title>Portal PSR</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <!-- FONTES -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* RESET */
-    *, *::before, *::after {
-      margin:0; padding:0; box-sizing:border-box;
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{background:#f4f4f4;font-family:'Poppins',sans-serif}
+    .container{
+      width:100%;max-width:442px;margin:0 auto;padding:10px;
+      display:grid;row-gap:12px;
     }
-    body {
-      background: #f4f4f4;
-      font-family: 'Poppins', sans-serif;
+    .section-full{background:#fff;border-radius:8px;overflow:hidden}
+    .section-grid{
+      display:grid;gap:8px;
+      grid-template-columns:repeat(2,1fr);
     }
-    /* CONTAINER PRINCIPAL */
-    .container {
-      width: 100%;
-      max-width: 442px;    /* no desktop não excede 442px */
-      margin: 0 auto;
-      padding: 10px;
-      display: grid;
-      grid-template-rows:
-        auto  /* section1 */
-        auto  /* section2 */
-        auto  /* grid menu */
-        auto  /* section3 */
-        auto  /* section4 */
-        auto; /* section5 */
-      row-gap: 12px;
+    @media(min-width:600px){
+      .section-grid{grid-template-columns:repeat(4,1fr)}
     }
-    /* BLOCOS FULL-WIDTH */
-    .section-full {
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    /* GRID DE 8 ÍCONES: 4x2 */
-    .section-grid {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: repeat(2,1fr);
-    }
-    @media (min-width: 600px) {
-      .section-grid {
-        grid-template-columns: repeat(4,1fr);
-      }
-    }
-    /* placeholder */
-    .loading {
-      min-height: 80px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#888;
-      font-size:0.9rem;
+    .loading{
+      min-height:80px;
+      display:flex;align-items:center;justify-content:center;
+      color:#888;font-size:.9rem;
     }
   </style>
 </head>
@@ -76,7 +44,7 @@
       <div class="loading">Carregando calendário…</div>
     </div>
 
-    <!-- 3. MENU (8 ÍCONES) -->
+    <!-- 3. MENU -->
     <div class="section-grid">
       <div data-block="grid1"><div class="loading">Jornal</div></div>
       <div data-block="grid2"><div class="loading">Cardápio</div></div>
@@ -106,29 +74,27 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('[data-block]').forEach(el => {
-        const name = el.getAttribute('data-block');
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.querySelectorAll('[data-block]').forEach(el=>{
+        const name=el.dataset.block;
         fetch(`blocks/${name}.html`)
-          .then(res => {
-            if (!res.ok) throw new Error(`Falha ao carregar blocks/${name}.html`);
-            return res.text();
+          .then(r=>{
+            if(!r.ok) throw new Error(`Falha ao carregar ${name}`);
+            return r.text();
           })
-          .then(html => {
-            // injeta o HTML
-            el.innerHTML = html;
-            // executa todos os <script> dentro do bloco
-            el.querySelectorAll('script').forEach(old => {
-              const s = document.createElement('script');
-              if (old.src)      s.src = old.src;
-              else               s.textContent = old.textContent;
+          .then(html=>{
+            el.innerHTML=html;
+            // executa scripts internos
+            el.querySelectorAll('script').forEach(old=>{
+              const s=document.createElement('script');
+              old.src? s.src=old.src: s.textContent=old.textContent;
               document.body.appendChild(s);
               document.body.removeChild(s);
             });
           })
-          .catch(err => {
+          .catch(err=>{
             console.error(err);
-            el.innerHTML = `<p style="padding:20px;color:#c00">Erro ao carregar ${name}</p>`;
+            el.innerHTML=`<p style="padding:20px;color:#c00">Erro ao carregar ${name}</p>`;
           });
       });
     });
