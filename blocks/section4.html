@@ -1,387 +1,86 @@
 
-<!-- saved from url=(0014)about:internet -->
+<!-- saved from url=(0262)https://121788204-atari-embeds.googleusercontent.com/embeds/16cb204cf3a9d4d223a0a3fd8b0eec5d/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.pt_BR.ATNbtiFo1ho.O%2Fd%3D1%2Frs%3DAHpOoo_1YLh20Lb4BdBxVY5iwPfQkmf_Og%2Fm%3D__features__ -->
 <html lang="pt"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!--<base target="_blank">--><base href="." target="_blank">
 
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Display com Frase Diária</title>
-  <!-- Importa a fonte Poppins do Google Fonts -->
-  <link href="./css2(2)" rel="stylesheet">
-
+  <title>Dias Sem Acidentes</title>
+  <!-- Importação da fonte Roboto -->
+  <link href="./css2(3)" rel="stylesheet">
   <style>
-    body {
+    /* Reset básico e remoção da rolagem */
+    * {
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: #f4f4f4;
-    }
-    .display {
-      width: 100%;
-      max-width: 800px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       box-sizing: border-box;
-      overflow: hidden;
-      text-align: center;
-      padding: 0 15px;
-      border-radius: 10px;
     }
-    #daily-quote {
-      margin: 0;
-      white-space: normal;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      line-height: 1.2;
-      display: inline-block;
-      transition: opacity 1s ease-in-out;
-      opacity: 1;
-      font-size: 1.2rem;
+    html, body {
+      overflow: hidden; /* Remove a opção de barra de rolagem */
+      height: 100%;
     }
-    @keyframes flashAnimation {
-      0%   { filter: brightness(1) hue-rotate(0deg); }
-      50%  { filter: brightness(2) hue-rotate(45deg); }
-      100% { filter: brightness(1) hue-rotate(0deg); }
+    body {
+      background: #f5f5f5;
+      font-family: 'Roboto', sans-serif;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .flash {
-      animation: flashAnimation 1s ease-in-out 2;
+    /* Caixa fixa na parte inferior com altura de 50px, largura máxima de 400px e cantos arredondados */
+    .container {
+      background-color: #006400;
+      width: 100%;
+      max-width: 400px;
+      height: 50px;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 15px;
+    }
+    /* Estilo do texto que não será negrito */
+    .counter {
+      font-size: 18px;
+      font-weight: normal;
+      color: #fff;
+    }
+    /* Destaque para a parte numérica e para "dias" */
+    .highlight {
+      font-size: 22px;
+      color: #ffd700;
+      font-weight: 700;
+      margin: 0 2px;
     }
   </style>
 </head>
 <body>
-  <div class="display" style="background-color: rgb(171, 200, 231);">
-    <p id="daily-quote" style="color: rgb(32, 70, 111); opacity: 1; font-size: 20px;">Reflexão do dia:</p>
+  <div class="container">
+    <p class="counter">
+      👷 estamos <span id="days" class="highlight">386</span><span class="highlight">dias</span> sem acidentes
+    </p>
   </div>
-
+  
   <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // FLASH INICIAL
-    const displayContainer = document.querySelector(".display");
-    displayContainer.classList.add("flash");
-    setTimeout(() => displayContainer.classList.remove("flash"), 2000);
-
-    // CORES POR MÊS
-    const coresPorMes = {
-      0: { fundo: "#cfd0d5", texto: "#000000" },
-      1: { fundo: "#ff7709", texto: "#FFFFFF" },
-      2: { fundo: "#fec9d9", texto: "#b6063b" },
-      3: { fundo: "#abc8e7", texto: "#20466f" },
-      4: { fundo: "#ff7bac", texto: "#89103d" },
-      5: { fundo: "#588644", texto: "#154003" },
-      6: { fundo: "linear-gradient(to right, #01a75b, #fecd2a)", texto: "#574a20" },
-      7: { fundo: "#886aaa", texto: "#513176" },
-      8: { fundo: "#ffce59", texto: "#594d31" },
-      9: { fundo: "#f6c0d8", texto: "#9a335d" },
-      10:{ fundo: "#d4eff1", texto: "#034d72" },
-      11:{ fundo: "#b42619", texto: "#7b0d0d" }
-    };
-    const now = new Date(), month = now.getMonth();
-    const cfg = coresPorMes[month];
-    if (month === 6) {
-      displayContainer.style.background = cfg.fundo;
-    } else {
-      displayContainer.style.backgroundColor = cfg.fundo;
+    function updateCounter() {
+      // Data de início (ajuste conforme necessário)
+      const startDate = new Date("2024-04-09T00:00:00");
+      const currentDate = new Date();
+      
+      // Calcula a diferença em milissegundos e converte para dias
+      const diffTime = currentDate - startDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      // Atualiza apenas o número destacado
+      document.getElementById("days").innerText = diffDays;
     }
-    const displayElement = document.getElementById("daily-quote");
-    displayElement.style.color = cfg.texto;
-
-    // LISTA DE FRASES
-    const quotes = [
-"“Onde há poder, há resistência.” - Michel Foucault",
-"“Os sábios falam porque têm algo a dizer; os tolos falam porque têm que dizer algo.” - Platão",
-"“O homem é, por natureza, um animal político.” - Aristóteles",
-"“Não gaste sua indignação apenas em revolta; use-a para abastecer ações concretas.”",
-"“Egoísmo cria muros; empatia constrói pontes.”",
-"“Não me pergunte quem sou, nem me diga para permanecer o mesmo.” - Michel Foucault",
-"“O pensamento crítico cresce onde há liberdade de questionar e disposição de ouvir.”",
-"“Apressa-te a viver bem e pensa que cada dia é, por si só, uma vida.” - Sêneca",
-"“O perdão não apaga erros, mas impede que eles guiem nosso futuro.”",
-"“O ser humano carece mais de sentido do que de certezas.”",
-"“A vitalidade da esperança se nutre na convicção de que o bem pode prevalecer.”",
-"“Falar do que nos incomoda sem agir é como saber o problema sem buscar a solução.”",
-"“Não penses mal dos que procedem mal; pensa somente que estão equivocados.” - Sócrates",
-"“O impossível começa a ganhar forma quando se abre um espaço de dúvida sobre sua impossibilidade.”",
-"“A vontade de aprender é a faísca que ascende as grandes transformações pessoais.”",
-"“Ama e faz o que quiseres.” - Santo Agostinho",
-"“A escassez de atenção é a grande pobreza destes tempos acelerados.”",
-"“A raiva, quando bem conduzida, pode ser combustível para uma justa transformação.”",
-"“Não existe vida significativa sem paixão pelo que se faz.” - Clóvis de Barros Filho",
-"“Buscar a paz é cultivar a justiça; sem justiça, a paz não passa de ilusão.”",
-"“Enquanto não perdemos o medo de perder tudo, não começamos a viver.” - Luiz Felipe Pondé",
-"“A verdadeira grandeza está em aprender diariamente, jamais supondo que sabemos o suficiente.”",
-"“Seu tempo de vida é a sua maior riqueza; use-o para cultivar o que realmente importa.”",
-"“Ter fé na humanidade é apostar na capacidade de cada pessoa para o bem.”",
-"“Para encontrar a si mesmo, pense por si mesmo.” - Sócrates",
-"“A esperança é um princípio vital: enquanto há vida, há esperança.”",
-"“Sacrifício sem propósito é mero sofrimento; com propósito, é construção de algo maior.”",
-"“Para quem crê, nenhuma explicação é necessária; para quem não crê, nenhuma explicação é possível.” - Tomás de Aquino",
-"“A convivência floresce a humanidade; no isolamento, crescem as incompreensões.”",
-"“É parte da cura o desejo de ser curado.” - Sêneca",
-"“Emprego é fonte de renda; trabalho é fonte de vida.” - Mário Sérgio Cortella",
-"“Carregar mágoas é como manter pedras no bolso: só pesa em quem as leva.”",
-"“Devemos observar o passado sem nos aprisionar a ele; aprender e seguir adiante é ato de sabedoria.”",
-"“A música é para a alma o que a ginástica é para o corpo.” - Platão",
-"“Quem tem um porquê para viver pode suportar quase qualquer como.” - Friedrich Nietzsche",
-"“A força da vontade pode erguer pontes onde a razão viu apenas abismos.”",
-"“O amor genuíno não compete, soma forças e multiplica horizontes.”",
-"“A amizade é uma alma em dois corpos.” - Aristóteles",
-"“Cumpra deveres com a mesma intensidade com que se reivindica direitos; o senso de coletividade depende disso.”",
-"“A coragem aparece quando a importância de agir supera o medo de falhar.”",
-"“A adversidade molda a argila que somos, revelando nossa forma mais autêntica.”",
-"“É necessário cuidar da ética para não anestesiarmos a nossa consciência e começarmos a achar que tudo é normal.” - Mário Sérgio Cortella",
-"“Toda escolha revela quem somos; por isso, escolha com consciência e coragem.”",
-"“O eu não é dono de sua própria casa.” - Sigmund Freud",
-"“Transporte um punhado de terra todos os dias e construirás uma montanha.” - Confúcio",
-"“A lealdade é fruto da harmonia entre nossos valores e nossas ações.”",
-"“Exige muito de ti e espera pouco dos outros. Assim, evitarás muitos aborrecimentos.” - Confúcio",
-"“Fechar ciclos com gratidão abre espaço para novos começos cheios de esperança.”",
-"“Quando o conhecimento se alia à bondade, ambos encontram potência para transformar realidades.”",
-"“A paciência só é virtude quando se alia à ação no momento oportuno.”",
-"“A cada dia, escrevemos uma versão renovada de nós mesmos; não desperdice a oportunidade de evoluir.”",
-"“Desanimar é perder a alma do caminho; retomar o ânimo é reencontrar a força de seguir.”",
-"“A coragem não exige a ausência de medo, mas a força de seguir adiante apesar dele.”",
-"“Jamais se arrependa de ser gentil; nenhum ato de bondade é em vão.”",
-"“O sol nasce todo dia para quem decide enxergar a claridade.”",
-"“A presença de espírito se revela na calma diante do caos.”",
-"“Felicidade é conservar energia para coisas que valem a pena.” - Leandro Karnal",
-"“Sonhar não é fugir da realidade, mas recusar viver sem propósito.”",
-"“Não tema o erro: tema a recusa de aprender com ele.”",
-"“O dia amanhece para quem arrisca acordar a alma antes do sol.”",
-"“Eu escuto e esqueço. Eu vejo e lembro. Eu faço e compreendo.” - Confúcio",
-"“Ideias não envelhecem quando nascem da honestidade e do desejo de aprimorar o coletivo.”",
-"“A arte de recomeçar é irmã da resiliência.”",
-"“O destino embaralha as cartas, e nós jogamos.” - Arthur Schopenhauer",
-"“Todo dia é um recomeço para quem se permite reescrever a própria história.”",
-"“Feche a porta ao fatalismo e abra janelas para a renovação.”",
-"“Ver o que é certo e não fazê-lo é falta de coragem.” - Confúcio",
-"“Aquilo que não me mata, me torna mais forte.” - Friedrich Nietzsche",
-"“O que eu penso não muda nada além do meu pensamento; o que eu faço a partir disso muda tudo!” - Leandro Karnal",
-"“Seja coerente entre o que fala e o que faz; a integridade não se ensina, se demonstra.”",
-"“A modéstia verdadeira não oculta o valor próprio, apenas o exibe com discrição.”",
-"“Nós nunca somos tão desamparadamente infelizes como quando perdemos um amor.” - Sigmund Freud",
-"“Sábio não é quem tudo sabe, mas quem não se cansa de perguntar.”",
-"“Sofremos mais na imaginação do que na realidade.” - Sêneca",
-"“A compaixão é a ponte que liga o sofrimento do outro ao nosso desejo de ajudar.”",
-"“Quem reclama do mundo sem nele intervir perde a chance de construir a diferença que deseja.”",
-"“A liberdade se revela quando deixamos de nos escravizar pelos próprios medos.”",
-"“A felicidade é a pretensão ilusória de converter um instante de alegria em eternidade.” - Clóvis de Barros Filho",
-"“Tenha a coragem de aprender até o último dia; envelhece a mente que cessa de se abrir.”",
-"“A ética é o conjunto de princípios e valores que orienta nossa conduta na vida em comum.”",
-"“Gente não nasce pronta e vai se gastando; gente nasce não-pronta e vai se fazendo.” - Mário Sérgio Cortella",
-"“A nossa felicidade depende mais do que temos nas nossas cabeças do que do que temos nos nossos bolsos.” - Arthur Schopenhauer",
-"“A felicidade não é a recompensa da virtude, mas a própria virtude.” - Spinoza",
-"“A virtude está no meio termo.” - Aristóteles",
-"“O progresso coletivo começa quando entendemos que a sua conquista beneficia a todos, sem exceção.”",
-"“Uma vida com sentido é aquela em que propósito e ação caminham de mãos dadas.”",
-"“Ser fiel a si mesmo é honrar o que se sente e se pensa com sinceridade.”",
-"“A pobreza não vem da diminuição das riquezas, mas da multiplicação dos desejos.” - Platão",
-"“Espiritualidade não é fuga do real; é trazer um sentido mais profundo à vida concreta.”",
-"“Não rir, não lamentar, nem odiar, mas compreender.” - Spinoza",
-"“A vida é feita de escolhas, e até não escolher é uma escolha.” - Leandro Karnal",
-"“Faça o teu melhor, nas condições que você tem, enquanto não tem condições melhores para fazer melhor ainda.” - Mário Sérgio Cortella",
-"“Sem música, a vida seria um erro.” - Friedrich Nietzsche",
-"“Somos feitos de carne, mas temos de viver como se fôssemos de ferro.” - Sigmund Freud",
-"“Renovar-se exige abandonar fardos que só atrasam a caminhada.”",
-"“Ame sem medida, mas estabeleça limites para que o amor também respeite a si mesmo.”",
-"“Festeje as conquistas; nelas repousa a força para encarar as próximas batalhas.”",
-"“Temo o homem de um só livro.” - Tomás de Aquino",
-"“A leitura abre janelas na mente; a partilha do que lemos areja todo o ambiente social.”",
-"“É no silêncio que muitas respostas surgem; mas é na ação que essas respostas ganham forma.”",
-"“Esperar é ficar parado; esperançar é caminhar rumo à mudança necessária.”",
-"“A honestidade consigo mesmo é a bússola que evita atalhos desonestos.”",
-"“O valor do conhecimento não está no acúmulo, mas na capacidade de empregá-lo para o bem.”",
-"“A verdadeira riqueza está em partilhar o que se sabe e o que se sente.”",
-"“Cada decisão alimenta ou diminui a nossa humanidade: escolha com cuidado.”",
-"“Não basta querer mudar o mundo; é preciso mudar a nós mesmos dentro dele.”",
-"“Se você quer caminhar rápido, pode ir sozinho; mas, se quer ir longe, aprenda a caminhar junto.”",
-"“Um coração grato enxerga no erro o caminho para chegar ao acerto.”",
-"“Ser ético é recusar privilégios que machucam a dignidade alheia.”",
-"“Ter paciência é reconhecer o tempo certo; apressar-se é esquecer a sabedoria dos ciclos.”",
-"“A memória do ontem dá direção ao hoje e lança a semente do amanhã.”",
-"“Cooperar é reconhecer que ninguém floresce sozinho; precisamos semear em conjunto.”",
-"“Dê tempo à mente para pensar, e ao coração para sentir; a pressa consome percepções valiosas.”",
-"“Mesmo a mais escura noite pode abrigar uma fagulha de esperança.”",
-"“Facilidade é o nome que os vagabundos dão ao esforço alheio.” - Leandro Karnal",
-"“O ato de pensar exige pausa; faça silêncio interno para que novas ideias possam florescer.”",
-"“Errar não é o problema; não desejar corrigir o erro é o que paralisa nossa evolução.”",
-"“A rotina sem reflexão é como um rio que corre sem saber seu destino.”",
-"“Se queres ser amado, ama.” - Sêneca",
-"“A voz do intelecto é suave, mas não descansa até ser ouvida.” - Sigmund Freud",
-"“Quando a multidão exerce autoridade, ela é mais cruel do que os tiranos.” - Platão",
-"“O conhecimento amplia a alma, mas é a sabedoria que a conduz.” - Leandro Karnal",
-"“Quem conhece sua fragilidade aprende a acolher a fragilidade dos outros.”",
-"“A tarefa de viver é dura, mas fascinante.” - Clóvis de Barros Filho",
-"“Ser firme não significa ser duro; gentileza pode existir lado a lado com convicção.”",
-"“Os encontros que nos transformam são aqueles em que doamos parte de nós e acolhemos parte do outro.”",
-"“O sonho é a estrada real que conduz ao inconsciente.” - Sigmund Freud",
-"“A chave para um futuro sólido é forjar vínculos que suportem as incertezas.”",
-"“A conquista própria é a maior das vitórias.” - Platão",
-"“Liberdade é fazer o que não prejudica outra pessoa.”",
-"“Palavras que curam nascem de corações empáticos.”",
-"“Se queres conhecer a uma pessoa, não perguntes o que pensa, e sim o que ama.” - Santo Agostinho",
-"“A humildade não diminui o valor de quem a pratica; ao contrário, engrandece seu espírito.”",
-"“Quando paramos de perguntar o porquê das coisas, paramos de crescer.”",
-"“A busca da verdade exige desmontar crenças antigas e ter abertura ao novo.”",
-"“A mente só se ilumina quando confrontamos nossas crenças com a realidade.”",
-"“Os milagres não contrariam a natureza; apenas contrariam o que sabemos da natureza.” - Santo Agostinho",
-"“Amadurecer é um processo contínuo, não um estado final.”",
-"“Liderar é pôr-se a serviço; quando o poder se inverte e quer servir a si mesmo, deixa de ser legítimo.”",
-"“A misericórdia sem justiça é mãe da dissolução; a justiça sem misericórdia é crueldade.” - Tomás de Aquino",
-"“O todo é maior do que a soma de suas partes.” - Aristóteles",
-"“A coragem não mora em grandes gestos, mas na disposição de melhorar um pouco a cada dia.”",
-"“Seus sonhos merecem esforço, não apenas desejo.”",
-"“A esperança sofre sem perder a fé; o desespero renuncia antes de lutar.”",
-"“Calar pode ser sabedoria ou omissão; entender a diferença é o que distingue o prudente do conivente.”",
-"“Temos a arte para não morrer da verdade.” - Friedrich Nietzsche",
-"“Conflito é a divergência que pode construir entendimento; confronto é a tentativa de anular o outro.”",
-"“Uma vida não examinada não vale a pena ser vivida.” - Sócrates",
-"“Nunca estaremos totalmente prontos; a vida é, sobretudo, um esboço contínuo.”",
-"“A vida boa não é a vida perfeita, mas a que faz sentido apesar das imperfeições.”",
-"“Trabalhar em equipe é descobrir que somar visões gera um horizonte mais amplo.”",
-"“Minha posição não é que tudo seja ruim, mas que tudo é perigoso.” - Michel Foucault",
-"“A vida precisa valer agora.” - Clóvis de Barros Filho",
-"“A paz não é a ausência de guerra; é uma virtude, uma disposição benevolente, confiança e justiça.” - Spinoza",
-"“A solidão é a sorte de todos os espíritos excelentes.” - Arthur Schopenhauer",
-"“A certeza permite que façamos aquilo que já vínhamos fazendo. A dúvida nos permite avançar em territórios desconhecidos.” - Mário Sérgio Cortella",
-"“A pacificação verdadeira nasce na escuta; pouco adianta falar sem compreender.”",
-"“Se ninguém escuta, transforme sua voz em ação; atitudes repercutem mesmo no silêncio.”",
-"“Felicidade não é neblina passageira, mas a clareza de saber valorizar o agora.”",
-"“Muitos lamentam a falta de tempo; poucos notam quanto de vida se desperdiça sem reflexão.”",
-"“Não há vento favorável para quem não sabe aonde vai.” - Sêneca",
-"“Os dois inimigos da felicidade humana são a dor e o tédio.” - Arthur Schopenhauer",
-"“Gentileza é a força que desarma hostilidades e aproxima corações.”",
-"“A paciência é um exercício de fé na espera e na ação que virá.”",
-"“A fé é crer no que não vês; a recompensa dessa fé é ver aquilo em que crês.” - Santo Agostinho",
-"“Liberdade é poder ir e vir sem acorrentar o outro às nossas vontades.”",
-"“Cuidar dos outros não é paternalismo, mas manifestação de humanidade.”",
-"“Torna-te aquilo que és.” - Friedrich Nietzsche",
-"“Quem respeita o passado constrói o futuro com alicerces mais firmes.”",
-"“Educar é libertar, não adestrar.”",
-"“A raiva se dissolve no ato de compreender, ainda que não se concorde.”",
-"“Perdoar é libertar o outro e a si mesmo das correntes do ressentimento.”",
-"“Cada ser humano é um universo; não despreze a riqueza contida nas histórias do outro.”",
-"“Toda escolha revela quem somos; por isso, escolha com consciência e coragem.”",
-"“O estudo sério não nos afasta das pessoas; ao contrário, desperta em nós maior responsabilidade coletiva.”",
-"“A beleza do mundo aumenta quando respeitamos cada forma de vida.”",
-"“Nenhum aprendizado real se dá apenas no acerto; a correção do erro é o passo-chave da evolução.”",
-"“Resiliência é lembrar que a tempestade passa, mas o aprendizado fica.”",
-"“A presença atenta vale mais que qualquer presente luxuoso.”",
-"“A vida honrosa é o que fazemos dela; ainda que não realize todo o desejado, não deixe de ter honradas as escolhas quando estas podem ser feitas.” - Mário Sérgio Cortella",
-"“A educação tem raízes amargas, mas seus frutos são doces.” - Aristóteles",
-"“Não faças aos outros aquilo que não queres que te façam.” - Confúcio",
-"“A natureza não nos pertence; nós é que pertencemos a ela e precisamos cuidar do nosso lugar comum.”",
-"“Um líder inspira mais pelo caráter do que pelos discursos que profere.”",
-"“Não despreze seus talentos: eles podem ser a ponte para o sonho de muitos.”",
-"“A simplicidade não é menos; é saber valorizar o essencial.”",
-"“Aprender a aprender é talvez a maior lição da existência.”",
-"“O poder, longe de estorvar o saber, o produz.” - Michel Foucault",
-"“Prefiro o conhecimento à riqueza, pois o primeiro é perene, enquanto o segundo é caduco.” - Sócrates",
-"“O amor é uma alegria acompanhada pela ideia de uma causa exterior.” - Baruch Spinoza",
-"“O verdadeiro amor cresce com as dificuldades; o falso, se apaga.” - Tomás de Aquino",
-"“A motivação é uma porta que se abre por dentro.” - Mário Sérgio Cortella",
-"“Educar é ter esperança. Amar é ter esperança. Viver é esposar a esperança.” - Leandro Karnal",
-"“Todo chiste, no fundo, encobre uma verdade.” - Sigmund Freud",
-"“Quem me dá a liberdade me joga num vazio difícil de ser preenchido.” - Leandro Karnal",
-"“O saber é o único espaço de liberdade do ser.” - Michel Foucault",
-"“A felicidade é sinônimo de fertilidade. Fertilidade é impedir que a vida cesse na sua múltipla condição.” - Mário Cortella",
-"“Buscando o bem de nossos semelhantes, encontraremos o nosso.” - Platão",
-"“Tudo quanto acontece, acontece por necessidade.” - Baruch Spinoza",
-"“De tuas vulnerabilidades sairão tuas forças.” - Sigmund Freud",
-"“Quanto menos inteligente um homem é, menos misteriosa lhe parece a existência.” - Arthur Schopenhauer",
-"“A medida do amor é amar sem medida.” - Santo Agostinho",
-"“A juventude está feita para o aprendizado, não para o prazer.” - Aristóteles",
-"“Só há um bem: o conhecimento. Só há um mal: a ignorância.” - Sócrates",
-"“A vida vale a pena quando você torce para ela não acabar.” - Clóvis de Barros Filho",
-"“O dinheiro é uma felicidade humana abstrata; por isso, aquele que já não é capaz de apreciar a verdadeira felicidade humana, dedica-se completamente a ele.” - Arthur Schopenhauer",
-"“A função da arte na sociedade é edificar, reconstruir-nos quando estamos em perigo de desmoronar.” - Sigmund Freud",
-"“Democracia não é o paraíso, mas ela consegue garantir que a gente não chegue no inferno.” - Leandro Karnal",
-"“Uma vida sem exame não vale a pena ser vivida.” - Sócrates",
-"“A amizade é uma alma que habita em dois corpos; um coração que habita em duas almas.” - Aristóteles",
-"“O valor de um homem não se mede por aquilo que possui, mas pelo que é capaz de superar.” - Sêneca",
-"“A paixão é uma infecção passageira, curada automaticamente pelo tempo.” - Leandro Karnal",
-"“A verdadeira riqueza é estar satisfeito com pouco.” - Sêneca",
-"“O tempo cura o que a razão não pode.” - Sêneca",
-"“Para alguém que tem fé, não é necessária nenhuma explicação; para quem não tem, nenhuma explicação é possível.” - Tomás de Aquino",
-"“Para conhecermos os amigos é necessário passar pelo sucesso e pela desgraça. No sucesso, verificamos a quantidade e, na desgraça, a qualidade.” - Confúcio",
-"“Podemos facilmente perdoar uma criança que tem medo do escuro; a real tragédia da vida é quando os homens têm medo da luz.” - Platão",
-"“O mundo é um livro, e quem fica sentado em casa lê somente uma página.” - Santo Agostinho",
-"“Não me arrependo de nada. Aquele que se arrepende do que fez é duplamente miserável.” - Baruch Spinoza",
-"“Coloque a lealdade e a confiança acima de qualquer coisa; não te alies aos moralmente inferiores; não receies corrigir teus erros.” - Confúcio",
-"“O homem é livre quando pode escolher entre diversas possibilidades.” - Aristóteles",
-"“A ética é a inteligência compartilhada a serviço do aperfeiçoamento da convivência.” - Clóvis de Barros Filho",
-"“As emoções não expressadas nunca morrerão. Estão enterradas vivas e aparecerão mais tarde de maneiras mais desagradáveis.” - Sigmund Freud",
-"“Tente mover o mundo – o primeiro passo será mover a si mesmo.” - Platão",
-"“A esperança tem duas filhas lindas: a indignação e a coragem.” - Santo Agostinho",
-"“A rotina será prazerosa se eu enxergar o resultado dela como prazeroso.” - Mário Sérgio Cortella",
-"“O verdadeiro amor é o amor da diferença, o amor igual é um amor narcísico.” - Leandro Karnal",
-"“A esperança é o sonho do homem desperto.” - Aristóteles"
-
-    ];
-
-    // UTILITÁRIOS
-    function countWeekdays(start, end) {
-      let c = 0, d = new Date(start);
-      while (d <= end) {
-        const wd = d.getDay();
-        if (wd !== 0 && wd !== 6) c++;
-        d.setDate(d.getDate() + 1);
-      }
-      return c;
-    }
-    function resizeToFit(el, container) {
-      el.style.fontSize = "20px";
-      let sz = parseFloat(getComputedStyle(el).fontSize);
-      while (el.scrollHeight > container.clientHeight && sz > 8) {
-        sz -= 0.5;
-        el.style.fontSize = sz + "px";
-      }
-    }
-    function getDailyQuote() {
-      const today = new Date(), dow = today.getDay();
-      if (dow === 0 || dow === 6) return "";
-      const ref = new Date("2025-01-02T00:00:00");
-      const passed = countWeekdays(ref, today);
-      return quotes[(passed - 1) % quotes.length];
-    }
-
-    // CICLO DE EXIBIÇÃO
-    const quoteText = getDailyQuote();
-    const labelText = "Reflexão do dia:";
-    const durQuote = 12000, durLabel = 2000, durTrans = 1000;
-
-    function fadeOut(cb) {
-      displayElement.style.opacity = 0;
-      setTimeout(cb, durTrans);
-    }
-    function fadeIn(txt, cb) {
-      displayElement.textContent = txt;
-      displayElement.style.opacity = 0;
-      resizeToFit(displayElement, displayContainer);
-      setTimeout(() => displayElement.style.opacity = 1, 50);
-      if (cb) setTimeout(cb, durTrans);
-    }
-    function cycle() {
-      fadeIn(quoteText, () => {
-        setTimeout(() => fadeOut(() => {
-          fadeIn(labelText, () => {
-            setTimeout(() => fadeOut(cycle), durLabel);
-          });
-        }), durQuote);
-      });
-    }
-
-    if (quoteText) {
-      cycle();
-    } else {
-      displayElement.textContent = labelText;
-    }
-  });
+    
+    // Atualiza o contador imediatamente e a cada segundo
+    updateCounter();
+    setInterval(updateCounter, 1000);
   </script>
 
 
