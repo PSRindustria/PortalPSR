@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Layout Responsivo com Menu</title>
+  <title>Portal PSR</title>
   <style>
     /* RESET E BÁSICOS */
     *, *::before, *::after {
@@ -16,7 +16,7 @@
       background: #fafafa;
     }
 
-    /* CONTAINER PRINCIPAL */
+    /* CONTAINER PRINCIPAL (mobile-first: 100% largura) */
     .container {
       display: grid;
       grid-template-rows:
@@ -28,14 +28,12 @@
         auto;   /* seção 5 */
       gap: 10px;
       width: 100%;
-      max-width: 1920px;   /* largura padrão */
-      max-height: 1080px;
       margin: 0 auto;
       padding: 10px;
       background: #fff;
     }
 
-    /* EM DESKTOP, CONTENEDOR EM ATÉ 423px DE LARGURA */
+    /* só em desktop (>1024px): limita a 423px */
     @media (min-width: 1024px) {
       .container {
         max-width: 423px;
@@ -123,7 +121,7 @@
         fetch(`blocks/${name}.html`)
           .then(res => res.text())
           .then(html => el.innerHTML = html)
-          .catch(err => console.error('Erro ao carregar', name, err));
+          .catch(err => console.error('Erro ao carregar bloco', name, err));
       });
     });
   </script>
