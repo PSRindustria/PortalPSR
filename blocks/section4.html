@@ -7,27 +7,23 @@
   <!-- Importação da fonte Roboto -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset básico e remoção da rolagem */
+    /* Reset básico */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
     html, body {
-      overflow: hidden; /* Remove a opção de barra de rolagem */
       height: 100%;
     }
     body {
       background: #f5f5f5;
       font-family: 'Roboto', sans-serif;
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
-    /* Caixa fixa na parte inferior com altura de 50px, largura máxima de 400px e cantos arredondados */
+    /* Caixa fixa na parte inferior, sem estilo de quadro-negro */
     .container {
-      background-color: #006400;
+      background-color: #ffffff;
       width: 100%;
       max-width: 400px;
       height: 50px;
@@ -38,15 +34,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 15px;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
     }
-    /* Estilo do texto que não será negrito */
+    /* Texto normal */
     .counter {
       font-size: 18px;
       font-weight: normal;
-      color: #fff;
+      color: #333;
     }
-    /* Destaque para a parte numérica e para "dias" */
+    /* Destaque para número e palavra "dias" */
     .highlight {
       font-size: 22px;
       color: #ffd700;
@@ -63,22 +59,16 @@
   </div>
   
   <script>
-    function updateCounter() {
-      // Data de início (ajuste conforme necessário)
-      const startDate = new Date("2024-04-09T00:00:00");
-      const currentDate = new Date();
-      
-      // Calcula a diferença em milissegundos e converte para dias
-      const diffTime = currentDate - startDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
-      // Atualiza apenas o número destacado
+    (function updateCounter() {
+      // Data de início
+      const startDate   = new Date("2024-04-09T00:00:00");
+      const now         = new Date();
+      const diffTime    = now - startDate;
+      const diffDays    = Math.floor(diffTime / (1000 * 60 * 60 * 24));
       document.getElementById("days").innerText = diffDays;
-    }
-    
-    // Atualiza o contador imediatamente e a cada segundo
-    updateCounter();
-    setInterval(updateCounter, 1000);
+      // Atualiza a cada hora
+      setTimeout(updateCounter, 1000 * 60 * 60);
+    })();
   </script>
 </body>
 </html>
