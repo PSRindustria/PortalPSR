@@ -2,7 +2,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  /* Reset e fonte apenas dentro do quote */
+  /* reset e fonte apenas dentro do quote */
   #quote-section,
   #quote-section * {
     margin: 0;
@@ -10,33 +10,35 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
   }
-  /* Container principal */
+
+  /* container principal, sem 100vh */
   #quote-section .display {
     width: 100%;
     max-width: 800px;
-    height: 50px;
+    padding: 10px;
+    background: #f4f4f4;
+    border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     text-align: center;
-    padding: 0 15px;
-    border-radius: 10px;
-    background: #f4f4f4;
     margin: auto;
   }
-  /* Texto */
+
+  /* texto da frase */
   #quote-section #daily-quote {
-    display: inline-block;
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.2;
+    display: inline-block;
     font-size: 1.2rem;
     opacity: 1;
     transition: opacity 1s ease-in-out;
   }
-  /* Animação flash inicial */
+
+  /* animação flash inicial */
   @keyframes flashAnimation {
     0%   { filter: brightness(1) hue-rotate(0deg); }
     50%  { filter: brightness(2) hue-rotate(45deg); }
@@ -82,9 +84,13 @@
   else container.style.backgroundColor = cfg.bg;
   displayEl.style.color = cfg.text;
 
-  // frases
-  const quotes = [ /* ...coleção de frases... */ ];
+  // lista de frases (use o array completo que você já tem)
+  const quotes = [
+    "“Onde há poder, há resistência.” - Michel Foucault",
+    // ... resto das frases ...
+  ];
 
+  // utilitários
   function countWeekdays(start,end){
     let c=0, d=new Date(start);
     while(d<=end){
@@ -105,28 +111,29 @@
     if(dow===0||dow===6) return "";
     const ref=new Date("2025-01-02T00:00:00");
     const passed=countWeekdays(ref,today);
-    return quotes[(passed-1)%quotes.length];
+    return quotes[(passed-1)%quotes.length] || "";
   }
 
+  // ciclo de exibição
   const quoteText = getDailyQuote();
   const labelText = "Reflexão do dia:";
   const durQuote = 12000, durLabel = 2000, durTrans = 1000;
 
   function fadeOut(cb){
-    displayEl.style.opacity = 0;
-    setTimeout(cb, durTrans);
+    displayEl.style.opacity=0;
+    setTimeout(cb,durTrans);
   }
-  function fadeIn(txt, cb){
-    displayEl.textContent = txt;
-    displayEl.style.opacity = 0;
-    resizeToFit(displayEl, container);
-    setTimeout(()=> displayEl.style.opacity = 1, 50);
-    if(cb) setTimeout(cb, durTrans);
+  function fadeIn(txt,cb){
+    displayEl.textContent=txt;
+    displayEl.style.opacity=0;
+    resizeToFit(displayEl,container);
+    setTimeout(()=>displayEl.style.opacity=1,50);
+    if(cb) setTimeout(cb,durTrans);
   }
   function cycle(){
     fadeIn(quoteText, ()=>{
-      setTimeout(()=> fadeOut(()=>{
-        fadeIn(labelText, ()=> setTimeout(cycle, durLabel));
+      setTimeout(()=>fadeOut(()=>{
+        fadeIn(labelText, ()=>setTimeout(cycle,durLabel));
       }), durQuote);
     });
   }
