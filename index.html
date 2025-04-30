@@ -1,115 +1,208 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8">
   <title>Portal PSR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    /* RESET + BÁSICOS */
-    *, *::before, *::after { margin:0; padding:0; box-sizing: border-box; }
-    body { font-family: sans-serif; background: #fafafa; }
-
-    /* GRID PRINCIPAL (mobile-first) */
-    .container {
-      display: grid;
-      grid-template-rows:
-        auto   /* section1: banner */
-        auto   /* section2: calendário */
-        auto   /* menu */
-        auto   /* section3: quote */
-        auto   /* section4: contador */
-        auto;  /* section5: futuro */
-      gap: 10px;
+    /* === RESET & PAGE STRETCH === */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
       width: 100%;
-      margin: 0 auto;
-      padding: 10px;
-      background: #fff;
-    }
-    @media (min-width:1024px) {
-      /* SÓ em desktop limitamos largura */
-      .container { max-width: 423px; }
+      /* height: 100vh;  ← REMOVIDO */
     }
 
-    /* SEÇÕES FULL-WIDTH */
-    .section-full {
-      background: #f0f0f0;
-      padding: 0;          /* zerado — fragments já trazem seu próprio padding */
-      border-radius: 4px;
+    /* === BANNER (SEÇÃO 1) === */
+    #banner-container {
+      position: relative;
+      width: 100%;
+      max-height: 30vh;       /* Nunca passe de 30% da altura da tela */
+      height: auto;           /* Ajusta proporção */
+      overflow: hidden;
+    }
+    #banner-fixo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;      /* Preenche sem distorcer */
+      z-index: 1;
+    }
+    #comemoracao {
+      position: absolute;
+      z-index: 2;
+      top: 68%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      padding: 0 5vw;
+      color: #000;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 7vh;
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255,255,255,0.7);
+    }
+    .birthday {
+      animation: flash 0.5s infinite;
+    }
+    @keyframes flash {
+      0%   { color: blue; }
+      50%  { color: black; }
+      100% { color: blue; }
+    }
+    .twinkle-lights {
+      position: absolute;
+      z-index: 3;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
     }
 
-    /* MENU 8-ITENS */
-    .section-grid {
-      display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 10px;
-    }
-    @media (min-width:768px) {
-      .section-grid {
-        grid-template-columns: repeat(4,1fr);
+    /* === MOBILE TWEAKS === */
+    @media (max-width: 600px) {
+      #banner-container {
+        max-height: 25vh;     /* Ainda mais compacto em celulares */
+      }
+      #comemoracao {
+        font-size: 5vh;       /* Texto proporcional menor */
       }
     }
-    .cell {
-      background: #ddd;
-      padding: 0;          /* fragmentos de link cuidam do padding interno */
-      border-radius: 4px;
-    }
-    .cell a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%; height: 100%;
-      text-decoration: none;
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 600;
-      background: #2a7ab8;
-      border-radius: 4px;
-      transition: background .2s;
-    }
-    .cell a:hover {
-      background: #195884;
-    }
+
+    /* === DEMÁS SEÇÕES (estilos resumidos) === */
+    /* 
+    #section2 { ... }
+    .grid { ... }
+    #daily-quote { ... }
+    #section4 { ... }
+    etc.
+    */
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- 1. Banner -->
-    <div class="section-full" data-block="section1"></div>
 
-    <!-- 2. Calendário -->
-    <div class="section-full" data-block="section2"></div>
-
-    <!-- 3. Menu de 8 botões -->
-    <div class="section-grid">
-      <div class="cell" data-block="grid1"></div>
-      <div class="cell" data-block="grid2"></div>
-      <div class="cell" data-block="grid3"></div>
-      <div class="cell" data-block="grid4"></div>
-      <div class="cell" data-block="grid5"></div>
-      <div class="cell" data-block="grid6"></div>
-      <div class="cell" data-block="grid7"></div>
-      <div class="cell" data-block="grid8"></div>
-    </div>
-
-    <!-- 4. Quote -->
-    <div class="section-full" data-block="section3"></div>
-
-    <!-- 5. Contador dias sem acidentes -->
-    <div class="section-full" data-block="section4"></div>
-
-    <!-- 6. Seção futura -->
-    <div class="section-full" data-block="section5"></div>
+  <!-- === SEÇÃO 1: BANNER === -->
+  <div id="banner-container">
+    <img
+      id="banner-fixo"
+      src="https://lh3.googleusercontent.com/fife/ALs6j_…w1920-h878"
+      alt="Banner Fixo"
+    >
+    <p id="comemoracao"></p>
+    <div class="twinkle-lights"></div>
   </div>
 
+  <!-- === SEÇÃO 2: CALENDÁRIO === -->
+  <!-- (insira aqui o HTML e CSS da seção 2) -->
+
+  <!-- === MENU (8 ÍCONES) === -->
+  <!-- (insira aqui o grid dos botões Jornal, Cardápio etc.) -->
+
+  <!-- === SEÇÃO 3: FRASE DIÁRIA === -->
+  <!-- (insira aqui o display da frase do dia) -->
+
+  <!-- === SEÇÃO 4: DIAS SEM ACIDENTES === -->
+  <!-- (insira aqui o contador de dias) -->
+
+  <!-- === SEÇÃO 5: REDES SOCIAIS === -->
+  <!-- (insira aqui os ícones do Facebook, Instagram, LinkedIn) -->
+
+  <!-- Scripts de todas as seções -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('[data-block]').forEach(el => {
-        fetch(`blocks/${el.dataset.block}.html`)
-          .then(r => r.text())
-          .then(html => el.innerHTML = html)
-          .catch(err => console.error('Erro ao carregar', el.dataset.block, err));
-      });
-    });
+    // === BANNER: COMEMORAÇÕES & EFEITOS ===
+    (function(){
+      const bancoDeDados = [
+        { data: new Date(2026,0,1), mensagem: "Feliz Ano Novo!" },
+        { data: new Date(2025,3,7), mensagem: "🥳 Feliz Aniversário, Rafaela Taborda! 🥳" },
+        // … restante do seu banco de dados …
+        { data: new Date(), mensagem: "#PSRindústria" }
+      ];
+      const hoje = new Date();
+      let isBirthday = false;
+      for (const item of bancoDeDados) {
+        if (hoje.getDate()===item.data.getDate()
+          && hoje.getMonth()===item.data.getMonth()
+          && hoje.getFullYear()===item.data.getFullYear()) {
+          const el = document.getElementById("comemoracao");
+          el.textContent = item.mensagem;
+          if (item.mensagem.includes("Aniversário")) {
+            el.classList.add("birthday");
+            isBirthday = true;
+          }
+          break;
+        }
+      }
+      function createStars() {
+        const c = document.querySelector(".twinkle-lights");
+        for(let i=0;i<20;i++){
+          const s=document.createElement("span");
+          s.style.cssText=`
+            position:absolute;
+            top:${Math.random()*100}%;
+            left:${Math.random()*100}%;
+            width:8px;height:8px;
+            background:#fff;
+            clip-path:polygon(
+              50% 0,65% 30%,98% 35%,74% 58%,79% 90%,
+              50% 75%,21% 90%,26% 58%,2% 35%,35% 30%
+            );
+            opacity:0;
+            animation:blink ${3+Math.random()*3}s infinite;
+            animation-delay:${Math.random()*3}s;
+          `;
+          c.appendChild(s);
+        }
+      }
+      function createFireworks(){
+        const c = document.querySelector(".twinkle-lights");
+        setInterval(()=>{
+          const fw = document.createElement("div");
+          fw.className="firework";
+          fw.style.cssText=`
+            position:absolute;
+            top:${Math.random()*100}%;
+            left:${Math.random()*100}%;
+            width:0;height:0;
+          `;
+          c.appendChild(fw);
+          for(let i=0;i<12;i++){
+            const p=document.createElement("div");
+            const angle=Math.random()*2*Math.PI;
+            const dist=50+Math.random()*50;
+            const color=`hsl(${Math.random()*360},100%,50%)`;
+            p.className="firework-particle";
+            p.style.cssText=`
+              position:absolute;
+              width:6px;height:6px;
+              border-radius:50%;
+              background:${color};
+              box-shadow:0 0 10px ${color},0 0 20px ${color};
+              --dx:${Math.cos(angle)*dist}px;
+              --dy:${Math.sin(angle)*dist}px;
+              animation:explode 1s ease-out forwards;
+            `;
+            fw.appendChild(p);
+          }
+          setTimeout(()=>fw.remove(),1000);
+        },500);
+      }
+      if(isBirthday) createFireworks();
+      else createStars();
+    })();
+
+    /* 
+      Aqui seguiriam os scripts para:
+      - Seção 2 (calendário)
+      - Menu (links)
+      - Seção 3 (frase do dia)
+      - Seção 4 (contador de acidentes)
+      - Seção 5 (redes sociais)
+    */
   </script>
+
 </body>
 </html>
