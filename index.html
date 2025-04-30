@@ -3,26 +3,25 @@
 <head>
   <meta charset="utf-8">
   <title>Portal PSR</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- FONTES -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* RESET GLOBAL */
+    /* ====== RESET ====== */
     *, *::before, *::after {
-      margin: 0; padding: 0; box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    html, body {
-      width: 100%;
-      min-height: 100%;
+    body {
       background: #f4f4f4;
       font-family: 'Poppins', sans-serif;
-      overflow-x: hidden;
     }
 
-    /* CONTAINER PRINCIPAL */
+    /* ====== CONTAINER PRINCIPAL ====== */
     .container {
       width: 100%;
       max-width: 442px;    /* não excede 442px em desktop */
@@ -30,30 +29,35 @@
       padding: 10px;
       display: grid;
       grid-template-rows:
-        auto  /* seção 1: banner */
-        auto  /* seção 2: calendário */
-        auto  /* seção 3: menu (8 ícones) */
-        auto  /* seção 4: frase do dia */
-        auto  /* seção 5: dias sem acidentes */
-        auto; /* seção 6: redes sociais */
+        auto  /* section1 */
+        auto  /* section2 */
+        auto  /* grid menu */
+        auto  /* section3 */
+        auto  /* section4 */
+        auto; /* section5 */
       row-gap: 12px;
     }
 
-    /* BLOCOS FULL-WIDTH */
+    /* ====== BLOCOS FULL-WIDTH ====== */
     .section-full {
       background: #fff;
       border-radius: 8px;
       overflow: hidden;
     }
 
-    /* GRID 8 ÍCONES: SEMPRE 4 COLUNAS */
+    /* ====== GRID DE 8 ÍCONES ====== */
     .section-grid {
       display: grid;
       gap: 8px;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2,1fr);
+    }
+    @media (min-width: 600px) {
+      .section-grid {
+        grid-template-columns: repeat(4,1fr);
+      }
     }
 
-    /* PLACEHOLDER DE CARREGAMENTO */
+    /* ====== PLACEHOLDER ====== */
     .loading {
       min-height: 80px;
       display: flex;
@@ -61,6 +65,64 @@
       justify-content: center;
       color: #888;
       font-size: 0.9rem;
+    }
+
+    /* ====== SECTION1 – BANNER ====== */
+    #banner-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #000;
+    }
+    #banner-fixo { position: absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1 }
+    #comemoracao {
+      position: absolute; z-index:2;
+      top: 68%; left:50%;
+      transform:translate(-50%,-50%);
+      white-space:nowrap;
+      padding:0 5vw;
+      color:#000;
+      font-family:'Helvetica Neue',sans-serif;
+      font-size:7vh;
+      font-weight:bold;
+      text-align:center;
+      text-shadow:0 0 10px rgba(255,255,255,0.7);
+    }
+    @media(max-width:600px){
+      #comemoracao { font-size:5vh }
+    }
+    .twinkle-lights {
+      position:absolute; inset:0;
+      z-index:3; pointer-events:none;
+    }
+    .twinkle-lights span {
+      position:absolute;
+      width:8px; height:8px;
+      background:#fff;
+      clip-path:polygon(
+        50% 0%,64.7% 29.8%,97.6% 34.6%,73.8% 57.7%,
+        79.4% 90.45%,50% 75%,20.6% 90.45%,26.2% 57.7%,
+        2.45% 34.55%,35.3% 29.78%
+      );
+      opacity:0;
+      animation:blink 3s infinite ease-in-out;
+      box-shadow:0 0 15px #fff,0 0 30px #fff,0 0 45px #fff,0 0 60px #fff;
+    }
+    @keyframes blink {
+      0%{opacity:.1;transform:scale(.8)}
+      50%{opacity:1;transform:scale(1.2)}
+      100%{opacity:.1;transform:scale(.8)}
+    }
+    .firework { position:absolute;width:0;height:0;pointer-events:none }
+    .firework-particle {
+      position:absolute; width:6px; height:6px;
+      border-radius:50%; opacity:1;
+      animation:explode 1s ease-out forwards;
+    }
+    @keyframes explode {
+      from{transform:translate(0,0);opacity:1}
+      to{transform:translate(var(--dx),var(--dy));opacity:0}
     }
   </style>
 </head>
@@ -78,7 +140,7 @@
       <div class="loading">Carregando calendário…</div>
     </div>
 
-    <!-- 3. MENU (8 ÍCONES) em 4×2 -->
+    <!-- 3. MENU (8 ÍCONES) -->
     <div class="section-grid">
       <div data-block="grid1"><div class="loading">Jornal</div></div>
       <div data-block="grid2"><div class="loading">Cardápio</div></div>
@@ -108,22 +170,94 @@
   </div>
 
   <script>
-    // Injeta os blocos de blocks/{nome}.html
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[data-block]').forEach(el => {
-        const name = el.getAttribute('data-block');
+        const name = el.dataset.block;
         fetch(`blocks/${name}.html`)
           .then(res => {
-            if (!res.ok) throw new Error(`Erro ao buscar blocks/${name}.html`);
+            if (!res.ok) throw new Error(`Falha ao carregar blocks/${name}.html`);
             return res.text();
           })
-          .then(html => el.innerHTML = html)
+          .then(html => {
+            el.innerHTML = html;
+            if (name === 'section1') initBanner();
+          })
           .catch(err => {
             console.error(err);
             el.innerHTML = `<p style="padding:20px;color:#c00">Falha ao carregar ${name}</p>`;
           });
       });
     });
+
+    // === BANNER: COMEMORAÇÕES & EFEITOS ===
+    function initBanner() {
+      const banco = [
+        { data:new Date(2026,0,1), msg:"Feliz Ano Novo!" },
+        { data:new Date(2025,3,7), msg:"🥳 Feliz Aniversário, Rafaela! 🥳" },
+        /* ... resto ... */
+        { data:new Date(), msg:"#PSRindústria" }
+      ];
+      const hoje = new Date();
+      let isBday = false;
+      for (const item of banco) {
+        if (
+          hoje.getDate()===item.data.getDate() &&
+          hoje.getMonth()===item.data.getMonth() &&
+          hoje.getFullYear()===item.data.getFullYear()
+        ) {
+          const el = document.getElementById("comemoracao");
+          el.textContent = item.msg;
+          if (item.msg.includes("Aniversário")) {
+            el.classList.add("birthday");
+            isBday = true;
+          }
+          break;
+        }
+      }
+      isBday ? createFireworks() : createStars();
+    }
+
+    function createStars() {
+      const c = document.querySelector(".twinkle-lights");
+      for (let i=0; i<20; i++) {
+        const s = document.createElement("span");
+        s.style.top             = Math.random()*100 + "%";
+        s.style.left            = Math.random()*100 + "%";
+        s.style.animationDelay   = Math.random()*3 + "s";
+        s.style.animationDuration= (2+Math.random()*3) + "s";
+        s.addEventListener("animationiteration", ()=>{
+          s.style.top  = Math.random()*100 + "%";
+          s.style.left = Math.random()*100 + "%";
+        });
+        c.appendChild(s);
+      }
+    }
+    function spawnFirework() {
+      const c = document.querySelector(".twinkle-lights");
+      const fw = document.createElement("div");
+      fw.className="firework";
+      fw.style.top  = Math.random()*100 + "%";
+      fw.style.left = Math.random()*100 + "%";
+      c.appendChild(fw);
+      for (let i=0;i<12;i++){
+        const p = document.createElement("div");
+        p.className = "firework-particle";
+        const ang  = Math.random()*2*Math.PI;
+        const dist = 50 + Math.random()*50;
+        p.style.setProperty("--dx", Math.cos(ang)*dist + "px");
+        p.style.setProperty("--dy", Math.sin(ang)*dist + "px");
+        const hue = Math.floor(Math.random()*360);
+        const col = `hsl(${hue},100%,50%)`;
+        p.style.background = col;
+        p.style.boxShadow  = `0 0 10px ${col},0 0 20px ${col}`;
+        fw.appendChild(p);
+      }
+      setTimeout(()=>fw.remove(),1000);
+    }
+    function createFireworks() {
+      document.querySelector(".twinkle-lights").innerHTML = "";
+      setInterval(spawnFirework, 500);
+    }
   </script>
 
 </body>
