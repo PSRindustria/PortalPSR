@@ -1,61 +1,59 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Ícone Jornal Responsivo - Cores Dinâmicas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* Centraliza o conteúdo da página */
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: transparent;
-      overflow: hidden;  /* Evita barras de rolagem */
-    }
-    /* Link sem decoração */
-    a.icone-link {
-      text-decoration: none;
-      color: inherit;
-      display: inline-block;
-    }
-    /* Container do ícone com tamanho fluido */
-    .icone-jornal {
-      width: clamp(85px, 40vw, 120px);
-      height: clamp(85px, 40vw, 120px);
-      background-color: #2D81B2; /* Cor padrão - será substituída via script */
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    /* SVG ocupa 50% do container */
-    .icone-jornal svg {
-      width: 50%;
-      height: auto;
-    }
-    /* Estilo do texto do jornal */
-    .nome-jornal {
-      font-family: 'Poppins', sans-serif;
-      font-size: clamp(13px, 2vw, 13px);
-      font-weight: bold;
-      color: #FFFFFF; /* Cor padrão - será substituída via script */
-      margin-top: 6px;
-      margin-bottom: 3px;
-      text-transform: lowercase;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-  <!-- Link envolvendo o componente -->
-  <a class="icone-link" href="https://sites.google.com/view/portalpsr/in%C3%ADcio/jornal">
+<!-- blocks/grid1.html -->
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Escopo apenas dentro do grid1-section */
+  #grid1-section,
+  #grid1-section * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Link que envolve o ícone */
+  #grid1-section .icone-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Container do ícone com tamanho responsivo */
+  #grid1-section .icone-jornal {
+    width: clamp(85px, 40vw, 120px);
+    height: clamp(85px, 40vw, 120px);
+    background-color: #2D81B2; /* será substituído via script */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* SVG ocupa metade do container */
+  #grid1-section .icone-jornal svg {
+    width: 50%;
+    height: auto;
+  }
+
+  /* Texto abaixo do SVG */
+  #grid1-section .nome-jornal {
+    margin-top: 6px;
+    font-size: clamp(13px, 2vw, 13px);
+    font-weight: 700;
+    text-transform: lowercase;
+    text-align: center;
+    color: #FFFFFF; /* será substituído via script */
+  }
+</style>
+
+<div id="grid1-section">
+  <a class="icone-link" href="https://sites.google.com/view/portalpsr/in%C3%ADcio/jornal" target="_blank" aria-label="Jornal">
     <div class="icone-jornal">
-      <!-- Ícone SVG (a cor padrão também será alterada via script) -->
       <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF">
         <path d="M497,64.141c-130.548,0-216.272,36.223-241,48.174v0.291c-25.122-11.214-117.854-48.465-241-48.465
           c-8.284,0-15,6.716-15,15v358.482c0,8.284,6.716,15,15,15c134.198,0,232.915,47.742,234.348,48.444
@@ -71,113 +69,40 @@
           c-7.727-0.701-13.644-7.18-13.644-14.938V141.832z M209.817,409.79c-1.998,6.429-7.924,10.552-14.32,10.552
           c-1.475,0-2.974-0.219-4.456-0.68c-36.768-11.427-76.433-19.129-117.894-22.893c-8.25-0.749-14.332-8.044-13.583-16.294
           c0.749-8.251,8.05-14.335,16.294-13.583c43.558,3.954,85.307,12.069,124.085,24.121
-          C207.856,393.473,212.276,401.879,209.817,409.79z M209.817,349.79c-1.998,6.429-7.924,10.552-14.32,10.552
-          c-1.475,0-2.974-0.219-4.456-0.68c-36.768-11.427-76.433-19.129-117.894-22.893c-8.25-0.749-14.332-8.044-13.583-16.294
-          c0.749-8.251,8.05-14.333,16.294-13.583c43.558,3.954,85.307,12.069,124.085,24.121
-          C207.856,333.473,212.276,341.879,209.817,349.79z M209.817,289.79c-1.998,6.429-7.924,10.552-14.32,10.552
-          c-1.475,0-2.974-0.219-4.456-0.68c-36.768-11.427-76.433-19.129-117.894-22.893c-8.25-0.749-14.332-8.044-13.583-16.294
-          c0.749-8.251,8.05-14.339,16.294-13.583c43.558,3.954,85.307,12.069,124.085,24.121
-          C207.856,273.473,212.276,281.879,209.817,289.79z M438.353,396.771c-41.46,3.764-81.125,11.466-117.894,22.893
-          c-1.482,0.46-2.982,0.68-4.457,0.68c-6.396,0-12.321-4.123-14.319-10.552c-2.458-7.911,1.961-16.317,9.873-18.776
-          c38.78-12.052,80.528-20.167,124.085-24.121c8.244-0.749,15.546,5.332,16.294,13.583
-          C452.685,388.726,446.604,396.022,438.353,396.771z M438.353,336.771c-41.46,3.764-81.125,11.466-117.894,22.893
-          c-1.482,0.46-2.982,0.68-4.457,0.68c-6.396,0-12.321-4.123-14.319-10.552c-2.458-7.911,1.961-16.317,9.873-18.776
-          c38.78-12.052,80.528-20.167,124.085-24.121c8.244-0.753,15.546,5.332,16.294,13.583
-          C452.685,328.726,446.604,336.022,438.353,336.771z M438.353,276.771c-41.46,3.764-81.125,11.466-117.894,22.893
-          c-1.482,0.46-2.982,0.68-4.457,0.68c-6.396,0-12.321-4.123-14.319-10.552c-2.458-7.911,1.961-16.317,9.873-18.776
-          c38.78-12.052,80.528-20.167,124.085-24.121c8.244-0.749,15.546,5.332,16.294,13.583
-          C452.685,268.726,446.604,276.022,438.353,276.771z M438.353,216.77c-41.46,3.764-81.125,11.466-117.894,22.893
-          c-1.482,0.46-2.982,0.68-4.457,0.68c-6.396,0-12.321-4.123-14.319-10.552c-2.458-7.911,1.961-16.317,9.873-18.776
-          c38.78-12.052,80.528-20.167,124.085-24.121c8.244-0.754,15.546,5.331,16.294,13.583
-          C452.685,208.726,446.604,216.021,438.353,216.77z M438.353,156.77c-41.46,3.764-81.125,11.466-117.894,22.893
-          c-1.482,0.46-2.982,0.68-4.457,0.68c-6.396,0-12.321-4.123-14.319-10.552c-2.458-7.911,1.961-16.317,9.873-18.776
-          c38.78-12.052,80.528-20.167,124.085-24.121c8.244-0.75,15.546,5.332,16.294,13.583
-          C452.685,148.726,446.604,156.021,438.353,156.77z"/>
+          C207.856,393.473,212.276,401.879,209.817,409.79z"/>
       </svg>
-      <!-- Texto do jornal -->
       <div class="nome-jornal">Jornal</div>
     </div>
   </a>
+</div>
 
-  <script>
-    // Mapeamento de cores por mês (0 = Janeiro, 1 = Fevereiro, ..., 11 = Dezembro)
-    const coresPorMes = {
-      0: { // Janeiro
-        fundo: "#cfd0d5",
-        texto: "#000000"
-      },
-      1: { // Fevereiro
-        fundo: "#ff7709",
-        texto: "#FFFFFF"
-      },
-      2: { // Março
-        fundo: "#fec9d9",
-        texto: "#b6063b"
-      },
-      3: { // Abril
-        fundo: "#abc8e7",
-        texto: "#20466f"
-      },
-      4: { // Maio
-        fundo: "#ff7bac",
-        texto: "#89103d"
-      },
-      5: { // Junho
-        fundo: "#588644",
-        texto: "#154003"
-      },
-      6: { // Julho - degradê
-        fundo: "linear-gradient(to right, #01a75b, #fecd2a)",
-        texto: "#574a20"
-      },
-      7: { // Agosto
-        fundo: "#886aaa",
-        texto: "#513176"
-      },
-      8: { // Setembro
-        fundo: "#ffce59",
-        texto: "#594d31"
-      },
-      9: { // Outubro
-        fundo: "#f6c0d8",
-        texto: "#9a335d"
-      },
-      10: { // Novembro
-        fundo: "#d4eff1",
-        texto: "#034d72"
-      },
-      11: { // Dezembro
-        fundo: "#b42619",
-        texto: "#7b0d0d"
-      }
-    };
+<script>
+(function(){
+  const coresPorMes = {
+    0:{fundo:"#cfd0d5", texto:"#000"},
+    1:{fundo:"#ff7709", texto:"#fff"},
+    2:{fundo:"#fec9d9", texto:"#b6063b"},
+    3:{fundo:"#abc8e7", texto:"#20466f"},
+    4:{fundo:"#ff7bac", texto:"#89103d"},
+    5:{fundo:"#588644", texto:"#154003"},
+    6:{fundo:"linear-gradient(to right, #01a75b, #fecd2a)", texto:"#574a20"},
+    7:{fundo:"#886aaa", texto:"#513176"},
+    8:{fundo:"#ffce59", texto:"#594d31"},
+    9:{fundo:"#f6c0d8", texto:"#9a335d"},
+    10:{fundo:"#d4eff1", texto:"#034d72"},
+    11:{fundo:"#b42619", texto:"#7b0d0d"}
+  };
+  const m = new Date().getMonth();
+  const cfg = coresPorMes[m];
+  const box   = document.querySelector('#grid1-section .icone-jornal');
+  const text  = document.querySelector('#grid1-section .nome-jornal');
+  const svg   = document.querySelector('#grid1-section svg');
 
-    // Obtemos o mês atual (0-11)
-    const dataAtual = new Date();
-    const mesAtual = dataAtual.getMonth();
-    const configuracao = coresPorMes[mesAtual];
-
-    // Seleciona os elementos que serão alterados
-    const iconeJornal = document.querySelector('.icone-jornal');
-    const nomeJornal = document.querySelector('.nome-jornal');
-    const svgIcon = document.querySelector('.icone-jornal svg');
-
-    // Aplica a cor de fundo: se for julho, usamos background com degradê
-    if (iconeJornal) {
-      if (mesAtual === 6) {
-        iconeJornal.style.background = configuracao.fundo;
-      } else {
-        iconeJornal.style.backgroundColor = configuracao.fundo;
-      }
-    }
-    // Aplica a cor do texto
-    if (nomeJornal) {
-      nomeJornal.style.color = configuracao.texto;
-    }
-    // Aplica a cor (atributo fill) do SVG
-    if (svgIcon) {
-      svgIcon.setAttribute('fill', configuracao.texto);
-    }
-  </script>
-</body>
-</html>
+  if(box){
+    if(m===6) box.style.background = cfg.fundo;
+    else      box.style.backgroundColor = cfg.fundo;
+  }
+  if(text) text.style.color = cfg.texto;
+  if(svg)  svg.setAttribute('fill', cfg.texto);
+})();
+</script>
