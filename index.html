@@ -12,9 +12,7 @@
   <style>
     /* RESET GLOBAL */
     *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
     html, body {
       width: 100%;
@@ -32,12 +30,12 @@
       padding: 10px;
       display: grid;
       grid-template-rows:
-        auto   /* seção 1: banner */
-        auto   /* seção 2: calendário */
-        auto   /* seção 3: menu (8 ícones) */
-        auto   /* seção 4: frase do dia */
-        auto   /* seção 5: dias sem acidentes */
-        auto;  /* seção 6: redes sociais */
+        auto  /* seção 1: banner */
+        auto  /* seção 2: calendário */
+        auto  /* seção 3: menu (8 ícones) */
+        auto  /* seção 4: frase do dia */
+        auto  /* seção 5: dias sem acidentes */
+        auto; /* seção 6: redes sociais */
       row-gap: 12px;
     }
 
@@ -48,16 +46,11 @@
       overflow: hidden;
     }
 
-    /* MENU 8 ÍCONES: 2 colunas no mobile, 4 em telas ≥600px */
+    /* GRID 8 ÍCONES: SEMPRE 4 COLUNAS */
     .section-grid {
       display: grid;
       gap: 8px;
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @media (min-width: 600px) {
-      .section-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      grid-template-columns: repeat(4, 1fr);
     }
 
     /* PLACEHOLDER DE CARREGAMENTO */
