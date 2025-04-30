@@ -32,32 +32,31 @@
       padding: 10px;
       display: grid;
       grid-template-rows:
-        auto   /* section1: banner */
-        auto   /* section2: calendário */
-        auto   /* section3: menu (8 ícones) */
-        auto   /* section4: frase do dia */
-        auto   /* section5: dias sem acidentes */
-        auto;  /* section6: redes sociais */
+        auto   /* seção 1: banner */
+        auto   /* seção 2: calendário */
+        auto   /* seção 3: menu (8 ícones) */
+        auto   /* seção 4: frase do dia */
+        auto   /* seção 5: dias sem acidentes */
+        auto;  /* seção 6: redes sociais */
       row-gap: 12px;
     }
 
-    /* BLOCOS FULL-WIDTH (seções 1,2,4,5,6) */
+    /* BLOCOS FULL-WIDTH */
     .section-full {
       background: #fff;
       border-radius: 8px;
       overflow: hidden;
     }
 
-    /* MENU 8 ÍCONES EM 4×2 */
+    /* MENU 8 ÍCONES: 2 colunas no mobile, 4 em telas ≥600px */
     .section-grid {
       display: grid;
       gap: 8px;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
-    /* Se a tela ficar muito estreita, cai para 2 colunas */
-    @media (max-width: 360px) {
+    @media (min-width: 600px) {
       .section-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
     }
 
@@ -86,13 +85,12 @@
       <div class="loading">Carregando calendário…</div>
     </div>
 
-    <!-- 3. MENU (8 ÍCONES) em 4 col × 2 lin -->
+    <!-- 3. MENU (8 ÍCONES) em 4×2 -->
     <div class="section-grid">
       <div data-block="grid1"><div class="loading">Jornal</div></div>
       <div data-block="grid2"><div class="loading">Cardápio</div></div>
       <div data-block="grid3"><div class="loading">Aniversário</div></div>
       <div data-block="grid4"><div class="loading">Férias</div></div>
-
       <div data-block="grid5"><div class="loading">CIPA</div></div>
       <div data-block="grid6"><div class="loading">FlappyBob</div></div>
       <div data-block="grid7"><div class="loading">VanRace</div></div>
@@ -117,7 +115,7 @@
   </div>
 
   <script>
-    // Injeta cada bloco de blocks/{nome}.html no placeholder correspondente
+    // Injeta os blocos de blocks/{nome}.html
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[data-block]').forEach(el => {
         const name = el.getAttribute('data-block');
