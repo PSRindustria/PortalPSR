@@ -2,25 +2,21 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  /* Escopo somente dentro do safety-section */
-  #safety-section,
-  #safety-section * {
+  /* Escopo apenas dentro de section4 */
+  #section4,
+  #section4 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
   }
-
-  /* Wrapper que ocupa só o necessário */
-  #safety-section {
-    position: relative;
-    width: 100%;
-    padding: 10px 0;
+  html, body {
+    overflow: hidden;
+    height: 100%;
   }
-
-  /* Caixa fixa no rodapé, sem overflow:hidden no body */
-  #safety-section .container {
-    background-color: #ffffff;
+  /* Container fixo inferior */
+  #section4 .counter-container {
+    background-color: #006400;
     width: 100%;
     max-width: 400px;
     height: 50px;
@@ -31,18 +27,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    border-radius: 0; /* sem cantos arredondados */
-    z-index: 1000;
+    border-radius: 15px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
   }
-
-  /* Texto do contador */
-  #safety-section .counter {
+  #section4 .counter-text {
     font-size: 18px;
-    font-weight: normal;
-    color: #333;
+    font-weight: 400;
+    color: #fff;
+    display: flex;
+    align-items: baseline;
   }
-  #safety-section .highlight {
+  #section4 .counter-text .highlight {
     font-size: 22px;
     font-weight: 700;
     color: #ffd700;
@@ -50,26 +45,26 @@
   }
 </style>
 
-<div id="safety-section">
-  <div class="container">
-    <p class="counter">
-      👷 estamos 
+<div id="section4">
+  <div class="counter-container">
+    <p class="counter-text">
+      👷 estamos
       <span id="days" class="highlight">0</span>
-      <span class="highlight">dias</span> sem acidentes
+      dias sem acidentes
     </p>
   </div>
 </div>
 
 <script>
-(function() {
-  function updateCounter() {
-    const startDate = new Date("2024-04-09T00:00:00");
-    const now       = new Date();
-    const diffDays  = Math.floor((now - startDate)/(1000*60*60*24));
-    document.getElementById("days").innerText = diffDays;
-  }
-  // atualiza na carga e a cada hora
-  updateCounter();
-  setInterval(updateCounter, 1000*60*60);
-})();
+  (function(){
+    const start = new Date("2024-04-09T00:00:00");
+    const el = document.getElementById("days");
+    function update() {
+      const now = new Date();
+      const diff = Math.floor((now - start) / (1000*60*60*24));
+      el.textContent = diff;
+    }
+    update();
+    setInterval(update, 24*60*60*1000);
+  })();
 </script>
