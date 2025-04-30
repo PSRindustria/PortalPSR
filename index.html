@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout Responsivo com Menu</title>
+  <style>
+    /* RESET E BÁSICOS */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: sans-serif;
+      background: #fafafa;
+    }
+
+    /* CONTAINER PRINCIPAL */
+    .container {
+      display: grid;
+      grid-template-rows:
+        auto    /* seção 1 */
+        auto    /* seção 2 */
+        auto    /* grid de 8 (menu) */
+        auto    /* seção 3 */
+        auto    /* seção 4 */
+        auto;   /* seção 5 */
+      gap: 10px;
+      width: 100%;
+      max-width: 1920px;   /* largura padrão */
+      max-height: 1080px;
+      margin: 0 auto;
+      padding: 10px;
+      background: #fff;
+    }
+
+    /* EM DESKTOP, CONTENEDOR EM ATÉ 423px DE LARGURA */
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 423px;
+      }
+    }
+
+    /* SEÇÕES FULL-WIDTH */
+    .section-full {
+      background: #f0f0f0;
+      padding: 20px;
+      min-height: 100px;
+      border-radius: 4px;
+    }
+
+    /* GRID DO MENU (8 BOTÕES) */
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 10px;
+    }
+    @media (min-width: 768px) {
+      .section-grid {
+        grid-template-columns: repeat(4,1fr);
+      }
+    }
+
+    /* CÉLULAS (BOTÕES) */
+    .cell {
+      background: #ddd;
+      padding: 10px;
+      min-height: 100px;
+      border-radius: 4px;
+    }
+    .cell a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      color: #333;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: #e0e0e0;
+      border-radius: 4px;
+      transition: background .2s;
+    }
+    .cell a:hover {
+      background: #d0d0d0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- SEÇÃO 1 -->
+    <div class="section-full" data-block="section1"></div>
+
+    <!-- SEÇÃO 2 -->
+    <div class="section-full" data-block="section2"></div>
+
+    <!-- GRID DE 8 QUADRADOS (MENU) -->
+    <div class="section-grid">
+      <div class="cell" data-block="grid1"></div>
+      <div class="cell" data-block="grid2"></div>
+      <div class="cell" data-block="grid3"></div>
+      <div class="cell" data-block="grid4"></div>
+      <div class="cell" data-block="grid5"></div>
+      <div class="cell" data-block="grid6"></div>
+      <div class="cell" data-block="grid7"></div>
+      <div class="cell" data-block="grid8"></div>
+    </div>
+
+    <!-- SEÇÕES 3, 4 E 5 -->
+    <div class="section-full" data-block="section3"></div>
+    <div class="section-full" data-block="section4"></div>
+    <div class="section-full" data-block="section5"></div>
+  </div>
+
+  <script>
+    // Injeção dos blocos por arquivo separado em blocks/
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('[data-block]').forEach(el => {
+        const name = el.getAttribute('data-block');
+        fetch(`blocks/${name}.html`)
+          .then(res => res.text())
+          .then(html => el.innerHTML = html)
+          .catch(err => console.error('Erro ao carregar', name, err));
+      });
+    });
+  </script>
+
+</body>
+</html>

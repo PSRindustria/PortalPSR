@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dias Sem Acidentes</title>
+  <!-- Importação da fonte Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset básico e remoção da rolagem */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      overflow: hidden; /* Remove a opção de barra de rolagem */
+      height: 100%;
+    }
+    body {
+      background: #f5f5f5;
+      font-family: 'Roboto', sans-serif;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    /* Caixa fixa na parte inferior com altura de 50px, largura máxima de 400px e cantos arredondados */
+    .container {
+      background-color: #006400;
+      width: 100%;
+      max-width: 400px;
+      height: 50px;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 15px;
+    }
+    /* Estilo do texto que não será negrito */
+    .counter {
+      font-size: 18px;
+      font-weight: normal;
+      color: #fff;
+    }
+    /* Destaque para a parte numérica e para "dias" */
+    .highlight {
+      font-size: 22px;
+      color: #ffd700;
+      font-weight: 700;
+      margin: 0 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="counter">
+      👷 estamos <span id="days" class="highlight">0</span><span class="highlight">dias</span> sem acidentes
+    </p>
+  </div>
+  
+  <script>
+    function updateCounter() {
+      // Data de início (ajuste conforme necessário)
+      const startDate = new Date("2024-04-09T00:00:00");
+      const currentDate = new Date();
+      
+      // Calcula a diferença em milissegundos e converte para dias
+      const diffTime = currentDate - startDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      // Atualiza apenas o número destacado
+      document.getElementById("days").innerText = diffDays;
+    }
+    
+    // Atualiza o contador imediatamente e a cada segundo
+    updateCounter();
+    setInterval(updateCounter, 1000);
+  </script>
+</body>
+</html>

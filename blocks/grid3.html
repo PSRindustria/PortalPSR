@@ -1,0 +1,186 @@
+<!DOCTYPE html>  
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ícone Aniversário Responsivo - Cores Dinâmicas</title>
+  <!-- Importação da fonte "Poppins" -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Meta tag para garantirmos responsividade em todos os dispositivos -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Centraliza o conteúdo da página */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: -ms-flexbox;       /* Suporte para IE10/11 */
+      display: flex;
+      -ms-flex-align: center;
+      align-items: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      background-color: transparent;
+      overflow: hidden;  /* Evita barras de rolagem */
+    }
+
+    /* O link envolve todo o componente, removendo a decoração padrão */
+    a.icone-link {
+      text-decoration: none;
+      color: inherit;
+      display: inline-block;
+    }
+
+    /* Container do ícone com tamanho fluido usando clamp:
+       - O tamanho ficará entre 85px (mínimo) e 120px (máximo),
+       - Escalando com 40vw no meio.
+    */
+    .icone-jornal {
+      width: clamp(85px, 40vw, 120px);
+      height: clamp(85px, 40vw, 120px);
+      background-color: #2D81B2; /* Cor padrão que será substituída via script */
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* O SVG ocupa 50% do container para manter a proporção */
+    .icone-jornal svg {
+      width: 50%;
+      height: auto;
+    }
+
+    /* O texto escala de forma fluida também, entre 13px e 16px */
+    .nome-jornal {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(13px, 2vw, 13px);
+      font-weight: bold;
+      color: #FFFFFF; /* Cor padrão que será substituída via script */
+      margin-top: 6px;
+      margin-bottom: 3px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Link que envolve o componente e redireciona para a URL desejada -->
+  <a class="icone-link" href="https://sites.google.com/view/portalpsr/in%C3%ADcio/aniversariante">
+    <div class="icone-jornal">
+      <!-- Ícone em SVG com a arte em branco (a cor será modificada via script) -->
+      <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF">
+        <g>
+          <g>
+            <g>
+              <path d="M26.788,265.219l42.414,17.674c5.755,2.396,11.837,3.604,17.92,3.604c6.001,0,12.042-1.188,17.756-3.543l29-11.94
+                c6.492-2.662,13.64-2.642,20.111,0.082l27.648,11.633c11.633,4.915,24.433,4.936,36.065,0.082l28.242-11.756
+                c6.472-2.703,13.64-2.703,20.111,0l28.242,11.756c11.612,4.854,24.412,4.833,36.065-0.082l27.628-11.633
+                c6.492-2.744,13.64-2.744,20.132-0.082l29,11.94c11.51,4.751,24.187,4.731,35.697-0.082l42.394-17.654
+                c3.83-1.597,6.308-5.325,6.308-9.441v-61.44c0-16.957-13.783-30.72-30.72-30.72h-92.16v-22.385
+                c11.899-4.239,20.48-15.503,20.48-28.815c0-24.044-21.074-45.814-23.491-48.21c-3.994-3.994-10.465-3.994-14.479,0
+                c-2.396,2.396-23.47,24.166-23.47,48.21c0,13.312,8.581,24.576,20.48,28.815v22.385h-81.92v-42.865
+                c11.899-4.239,20.48-15.503,20.48-28.815c0-22.262-19.354-61.624-21.565-66.027c-3.482-6.943-14.828-6.943-18.309,0
+                c-2.212,4.403-21.565,43.766-21.565,66.027c0,13.312,8.581,24.576,20.48,28.815v42.865h-81.92v-22.385
+                c11.899-4.239,20.48-15.503,20.48-28.815c0-24.044-21.074-45.814-23.491-48.21c-3.994-3.994-10.465-3.994-14.479,0
+                c-2.396,2.396-23.47,24.166-23.47,48.21c0,13.312,8.581,24.576,20.48,28.815v22.385H51.2c-16.937,0-30.72,13.763-30.72,30.72
+                v61.44C20.48,259.894,22.958,263.621,26.788,265.219z"/>
+              <path d="M481.28,409.377H30.72C13.783,409.377,0,423.14,0,440.097c0,28.221,22.958,51.2,51.2,51.2h409.6
+                c28.242,0,51.2-22.979,51.2-51.2C512,423.14,498.217,409.377,481.28,409.377z"/>
+              <path d="M399.319,301.878l-29-11.94c-0.696-0.287-1.434-0.43-2.15-0.43c-0.778,0-1.495,0.143-2.232,0.451l-27.628,11.653
+                c-8.356,3.523-17.101,5.304-26.071,5.304c-8.888,0-17.551-1.761-25.846-5.202l-28.201-11.756
+                c-0.717-0.307-1.475-0.451-2.191-0.451c-0.717,0-1.475,0.143-2.171,0.43l-28.262,11.776c-8.253,3.441-16.937,5.202-25.805,5.202
+                c-8.97,0-17.715-1.782-26.091-5.304l-27.607-11.653c-0.696-0.287-1.475-0.451-2.232-0.451c-0.737,0-1.475,0.164-2.191,0.451
+                l-28.959,11.919c-8.192,3.379-16.794,5.099-25.559,5.099c-8.868,0-17.531-1.741-25.784-5.181l-20.378-8.479v95.58h430.08v-95.58
+                l-20.357,8.479c-8.253,3.441-16.916,5.181-25.805,5.181C416.113,306.977,407.491,305.257,399.319,301.878z"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+      <!-- Texto "Aniversário" centralizado -->
+      <div class="nome-jornal">Aniversário</div>
+    </div>
+  </a>
+
+  <script>
+    // Mapeamento de cores por mês (0 = Janeiro, 1 = Fevereiro, ..., 11 = Dezembro)
+    const coresPorMes = {
+      0: { // Janeiro
+        fundo: "#cfd0d5",
+        texto: "#000000"
+      },
+      1: { // Fevereiro
+        fundo: "#ff7709",
+        texto: "#FFFFFF"
+      },
+      2: { // Março
+        fundo: "#fec9d9",
+        texto: "#b6063b"
+      },
+      3: { // Abril
+        fundo: "#abc8e7",
+        texto: "#20466f"
+      },
+      4: { // Maio
+        fundo: "#ff7bac",
+        texto: "#89103d"
+      },
+      5: { // Junho
+        fundo: "#588644",
+        texto: "#154003"
+      },
+      6: { // Julho - degradê
+        fundo: "linear-gradient(to right, #01a75b, #fecd2a)",
+        texto: "#574a20"
+      },
+      7: { // Agosto
+        fundo: "#886aaa",
+        texto: "#513176"
+      },
+      8: { // Setembro
+        fundo: "#ffce59",
+        texto: "#594d31"
+      },
+      9: { // Outubro
+        fundo: "#f6c0d8",
+        texto: "#9a335d"
+      },
+      10: { // Novembro
+        fundo: "#d4eff1",
+        texto: "#034d72"
+      },
+      11: { // Dezembro
+        fundo: "#b42619",
+        texto: "#7b0d0d"
+      }
+    };
+
+    // Obtemos o mês atual (0 a 11)
+    const dataAtual = new Date();
+    const mesAtual = dataAtual.getMonth();
+    const configuracao = coresPorMes[mesAtual];
+
+    // Seleciona os elementos que serão alterados
+    const iconeJornal = document.querySelector('.icone-jornal');
+    const nomeJornal = document.querySelector('.nome-jornal');
+    const svgIcon = document.querySelector('.icone-jornal svg');
+
+    // Aplica a cor de fundo: se for julho, utiliza o degradê; para os demais, utiliza a cor simples
+    if (iconeJornal) {
+      if (mesAtual === 6) {
+        iconeJornal.style.background = configuracao.fundo;
+      } else {
+        iconeJornal.style.backgroundColor = configuracao.fundo;
+      }
+    }
+
+    // Aplica a cor do texto
+    if (nomeJornal) {
+      nomeJornal.style.color = configuracao.texto;
+    }
+
+    // Aplica a cor do ícone (atributo fill do SVG)
+    if (svgIcon) {
+      svgIcon.setAttribute('fill', configuracao.texto);
+    }
+  </script>
+</body>
+</html>

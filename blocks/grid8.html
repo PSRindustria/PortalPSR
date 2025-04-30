@@ -1,0 +1,185 @@
+<!DOCTYPE html> 
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ícone Ranking Responsivo - Cores Dinâmicas</title>
+  <!-- Importação da fonte "Poppins" -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Meta tag para garantirmos responsividade em todos os dispositivos -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Centraliza o conteúdo da página */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: -ms-flexbox;       /* Suporte para IE10/11 */
+      display: flex;
+      -ms-flex-align: center;
+      align-items: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      background-color: transparent;
+      overflow: hidden;  /* Evita barras de rolagem */
+    }
+    
+    /* O link envolve todo o componente, removendo a decoração padrão */
+    a.icone-link {
+      text-decoration: none;
+      color: inherit;
+      display: inline-block;
+    }
+    
+    /* Container do ícone com tamanho fluido usando clamp:
+       - O tamanho ficará entre 85px (mínimo) e 120px (máximo),
+       - Escalando com 40vw no meio.
+    */
+    .icone-jornal {
+      width: clamp(85px, 40vw, 120px);
+      height: clamp(85px, 40vw, 120px);
+      background-color: #2D81B2; /* Cor padrão que será substituída via script */
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* O SVG ocupa 50% do container para manter a proporção */
+    .icone-jornal svg {
+      width: 50%;
+      height: auto;
+    }
+    
+    /* O texto escala de forma fluida também, entre 15px e 16px,
+       utiliza a fonte "Poppins" e exibe a inicial de cada palavra em maiúscula.
+    */
+    .nome-jornal {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(13px, 2vw, 13px);
+      font-weight: bold;
+      text-transform: capitalize;
+      color: #FFFFFF; /* Cor padrão que será substituída via script */
+      margin-top: 6px;
+      margin-bottom: 3px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Link que envolve o componente e redireciona para a URL desejada -->
+  <a class="icone-link" href="https://sites.google.com/view/portalpsr/in%C3%ADcio/ranking">
+    <div class="icone-jornal">
+      <!-- Novo ícone em SVG com a arte em branco (o fill será alterado via script) -->
+      <svg id="Layer_1" enable-background="new 0 0 34 34" height="512" viewBox="0 0 34 34" width="512" xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF">
+        <g>
+          <g>
+            <g>
+              <path d="m9.2 33h-7.2c-.5 0-1-.5-1-1v-7.3c0-.6.5-1 1-1h7v8.3c0 .3.1.7.2 1z"/>
+            </g>
+          </g>
+          <g>
+            <g>
+              <path d="m23 20v12c0 .5-.5 1-1 1h-10c-.5 0-1-.5-1-1v-12c0-.6.5-1 1-1h10c.5 0 1 .4 1 1z"/>
+            </g>
+          </g>
+          <g>
+            <g>
+              <path d="m33 26v6c0 .5-.5 1-1 1h-7.2c.1-.3.2-.7.2-1v-7h7c.5 0 1 .4 1 1z"/>
+            </g>
+          </g>
+          <g>
+            <g>
+              <path d="m25.1 8-3.3 3.2.8 4.6c.1.4-.1.8-.4 1s-.8.2-1.1.1l-4.1-2.2-4.1 2.1c-.3.2-.7.2-1-.1-.3-.2-.5-.6-.4-1l.8-4.6-3.4-3.1c-.2-.2-.3-.6-.2-1s.4-.6.8-.7l4.6-.7 2-4.1c.3-.7 1.5-.7 1.8 0l2 4.1 4.6.7c.4.1.7.3.8.7s0 .8-.2 1z"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+      <!-- Texto "Ranking" centralizado dentro do ícone -->
+      <div class="nome-jornal">Ranking</div>
+    </div>
+  </a>
+  
+  <script>
+    // Mapeamento de cores por mês (0 = Janeiro, 1 = Fevereiro, ..., 11 = Dezembro)
+    const coresPorMes = {
+      0: { // Janeiro
+        fundo: "#cfd0d5",
+        texto: "#000000"
+      },
+      1: { // Fevereiro
+        fundo: "#ff7709",
+        texto: "#FFFFFF"
+      },
+      2: { // Março
+        fundo: "#fec9d9",
+        texto: "#b6063b"
+      },
+      3: { // Abril
+        fundo: "#abc8e7",
+        texto: "#20466f"
+      },
+      4: { // Maio
+        fundo: "#ff7bac",
+        texto: "#89103d"
+      },
+      5: { // Junho
+        fundo: "#588644",
+        texto: "#154003"
+      },
+      6: { // Julho - degradê
+        fundo: "linear-gradient(to right, #01a75b, #fecd2a)",
+        texto: "#574a20"
+      },
+      7: { // Agosto
+        fundo: "#886aaa",
+        texto: "#513176"
+      },
+      8: { // Setembro
+        fundo: "#ffce59",
+        texto: "#594d31"
+      },
+      9: { // Outubro
+        fundo: "#f6c0d8",
+        texto: "#9a335d"
+      },
+      10: { // Novembro
+        fundo: "#d4eff1",
+        texto: "#034d72"
+      },
+      11: { // Dezembro
+        fundo: "#b42619",
+        texto: "#7b0d0d"
+      }
+    };
+
+    // Obtemos o mês atual (0 a 11)
+    const dataAtual = new Date();
+    const mesAtual = dataAtual.getMonth();
+    const configuracao = coresPorMes[mesAtual];
+
+    // Seleciona os elementos que serão alterados
+    const iconeJornal = document.querySelector('.icone-jornal');
+    const nomeJornal = document.querySelector('.nome-jornal');
+    const svgIcon = document.querySelector('.icone-jornal svg');
+
+    // Aplica a cor de fundo: se for julho (índice 6), utiliza o degradê; para os demais, aplica a cor sólida
+    if (iconeJornal) {
+      if (mesAtual === 6) {
+        iconeJornal.style.background = configuracao.fundo;
+      } else {
+        iconeJornal.style.backgroundColor = configuracao.fundo;
+      }
+    }
+    
+    // Aplica a cor do texto
+    if (nomeJornal) {
+      nomeJornal.style.color = configuracao.texto;
+    }
+    
+    // Aplica a cor do ícone (atributo fill do SVG)
+    if (svgIcon) {
+      svgIcon.setAttribute('fill', configuracao.texto);
+    }
+  </script>
+</body>
+</html>
