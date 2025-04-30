@@ -5,27 +5,76 @@
   <title>Portal PSR</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    /* === RESET & PAGE STRETCH === */
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
+    /* === RESET BÁSICO === */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:Poppins, sans-serif;
+      background:#f4f4f4;
     }
 
-    /* === BANNER (SEÇÃO 1) === */
-    #banner-container {
-      position: relative;
-      width: 100%;
-      height: 30vh;        /* fixa 30% da altura da viewport */
-      max-height: 30vh;
+    /* === GRID PRINCIPAL === */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      grid-auto-rows: auto;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    /* full-width sections */
+    #section1,
+    #section2,
+    #section3,
+    #section4,
+    #section5 {
+      grid-column: 1 / -1;
+      background: #fff;
+      border-radius: 8px;
       overflow: hidden;
     }
-    #banner-fixo {
+
+    /* ÍCONES: 4 colunas */
+    .icon-grid {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(4,1fr);
+      gap: 10px;
+    }
+    .icon-grid a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #5b9bd5;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 20px;
+      font-weight: 700;
+      aspect-ratio: 1;
+      text-transform: capitalize;
+    }
+    .icon-grid a svg {
+      width: 40%;
+      height: auto;
+      margin-bottom: 8px;
+      fill: currentColor;
+    }
+
+    /* === SECTION 1: BANNER === */
+    #banner-container {
+      position: relative;
+      height: 30vh;      /* 30% da viewport */
+      max-height: 30vh;
+    }
+    #banner-container img {
       position: absolute;
-      inset: 0;            /* top:0; right:0; bottom:0; left:0; */
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -37,115 +86,230 @@
       top: 68%;
       left: 50%;
       transform: translate(-50%, -50%);
-      white-space: nowrap;
-      padding: 0 5vw;
       color: #000;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 7vh;
       font-weight: bold;
-      text-align: center;
       text-shadow: 0 0 10px rgba(255,255,255,0.7);
-    }
-    .birthday {
-      animation: flash 0.5s infinite;
+      white-space: nowrap;
+      padding: 0 5vw;
     }
     @keyframes flash {
       0%   { color: blue; }
       50%  { color: black; }
       100% { color: blue; }
     }
+    .birthday { animation: flash 0.5s infinite; }
     .twinkle-lights {
       position: absolute;
-      z-index: 3;
       inset: 0;
       pointer-events: none;
+      z-index: 3;
     }
 
-    /* === Ajustes Mobile === */
-    @media (max-width: 600px) {
-      #banner-container { height: 25vh; max-height: 25vh; }
-      #comemoracao  { font-size: 5vh; }
+    /* === SECTION 2: CALENDÁRIO (exemplo) === */
+    #section2 {
+      padding: 20px;
     }
 
-    /* (resto das seções aqui…) */
+    /* === SECTION 3: FRASE DIÁRIA === */
+    #section3 {
+      padding: 20px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+    }
+    #daily-quote {
+      font-size: 1.2rem;
+      transition: opacity 1s ease-in-out;
+      opacity: 1;
+    }
+
+    /* === SECTION 4: DIAS SEM ACIDENTES === */
+    #section4 {
+      padding: 20px;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+    .counter {
+      background:#006400;
+      color:#fff;
+      padding:10px 20px;
+      border-radius:25px;
+      font-size:18px;
+      display:flex;
+      align-items:center;
+    }
+    .counter .highlight {
+      color:#ffd700;
+      font-size:22px;
+      margin:0 5px;
+      font-weight:700;
+    }
+
+    /* === SECTION 5: REDES SOCIAIS === */
+    #section5 {
+      padding: 20px;
+      text-align: center;
+    }
+    #section5 a {
+      margin: 0 10px;
+      display: inline-block;
+    }
+    #section5 img {
+      width:32px;
+      height:auto;
+    }
+
+    /* === MOBILE TWEAKS === */
+    @media (max-width:600px) {
+      #banner-container { height:25vh; max-height:25vh; }
+      #comemoracao { font-size:5vh; }
+      .icon-grid { grid-template-columns: repeat(2,1fr); }
+    }
   </style>
 </head>
+
 <body>
 
-  <!-- === SEÇÃO 1: BANNER === -->
-  <div id="banner-container">
-    <img
-      id="banner-fixo"
-      src="https://lh3.googleusercontent.com/fife/ALs6j_F9g5IZ3ZCcPi9aivJG1tp_iXEs1hU-urLPN9FbJTOHrjNlPDFNoiB-xe7F7iavkhRa3qpdkEqBijQpnFWmrQGrEE0MCfIGpw8zhKriIjEqGFfEOXh36reLA656wbTbPMj0OKLXTYYLmxm7MsKG_ES0YEnZ-T_LpcmRjYFv0krG4UbhTmVs0XwEQGe1eIcJ4wdsnmVi7cbr9WjqL2raMyb-wfy4U3sfYFCZTNefK4wL6IFQEQlKA_78A_sN3Lnr4YNiC6_59yYdzOyEuEZkGBSCFS8doL0QT2a2eSw1JKIMQzmdTbAM5qqSDWb84HrvPgcYVhXmt4ZHwwH33Dm4yz7qfgqclT6syf3VLgd8ELv9zU_HDfSs4v8iy6-kNe8U4DxkN3eQdZrgiy4KwR4AcVG_E1NmjR2zpBPaLq8iB29KmzZ1RXr-LJTMHUeSaJZwpV0BHCUcmnV_MjfLy4Q6M-lqBmO06eLZ5NlCGWDO_0oRYBjYoDbocQEXOhsJF3AfMMdn9hoMw4NE_A3YLlBi9zIkgpIW1LDfpkcd3fA06LgGQI1UxsYh8xzGYnZdeuvvUY7izjAQMJQ-jazZ65wtm4egGjvurL-AiblCtH9bVZGqP3xemeIrYxchWt4DQMdLv_61sQij2RRJaD5eDojq8Q6O8fbI01WtxLM-0AB4_WknAPs4X4SBNkFgCRhbLXwvM2phuudAvFZwAuWcrmeuCITecsM6jygiO4pJm_pMQ04wZ9j_V_4HH73qzAvGWAI-5gf62dSD3pTCvaUJWQwM-22blKVTt5wD6NutNnzPaQn9A-Fb-m4dxOu5vLxCvUCudZvCVjy7pNNoaz9oSw6SXLvTNnGYNXh3r4Oq58SREvNa7MPkHOpurM1CfD8vHxF86gh5bYz2e021g1XgMUvVQG-HZbMm_qossVBH8SslZDFlbUFnoSYbHftG7Yxr7K_EELBhf4Gk78zwatbLkcuX7dWhUmwO133-NjQWlPuPSWqIhtVNQrenXzkOgtfR-5XBKQmVW-c_n2ycPZBiCQ5tAFQOZBSmHWAXWJDUpG237DkKZxL85q_NUFpz7E8B-auE2-qp6iN4OaKzqSog7lwJNVYqJoqW87wlWEjAudMGrhF3H40RrzxTZwS1vefdWbZFryDNnSNlmCCWM86l0e9VQ89c4SQJHqXoNhkWitmOnFRqfKe0U2wIr4OWIMjdjGXj8ArlkV98zbqmz4Kkf73cJsNuHKAjTFEAX8UvGFCNex02u7Dc1XvHY840tTTuLV_vdZwMj7YfM0ZQZF09x25zKqFXC7X04yxH9ey-DfovzIYGPhTJfqIyi1OahQPP6R3rSgt78TPTHUDZUMmU5ACqtVrQ6nsdZSgvboUVW5XSRb5wZcp9mCT9jLLnuEW5keyrzvcTkMA9vt1LUN_zLXW7tLgyEiVqjjyTOzFpR5PZ3HolI_or_vtZnybZ3ZMeiltqvpquyjkJyGqxXKsvloWGx2gMzq4isYb_oAnvFbxQ_O7QjvYmNWGmv4Glv-TmcNj5Js43eqYMxK15iEwaOXwVhrdLDf2N7GOH1do71zC0x0uwxt34-dNQC3zgYqbnI0C4846sqlHTl75BKTeX-713ITJu4Hsy7y4eP2PzbQNB_stlZUoGdwDGl-8R=w1920-h878"
-      alt="Banner Fixo">
-    <p id="comemoracao"></p>
-    <div class="twinkle-lights"></div>
-  </div>
+  <div class="grid-container">
 
-  <!-- SEÇÃO 2, 3, 4, 5… AQUI -->
+    <!-- SEÇÃO 1: BANNER -->
+    <section id="section1">
+      <div id="banner-container">
+        <img id="banner-fixo"
+          src="https://lh3.googleusercontent.com/fife/ALs6j_F9g5IZ3ZCcPi9aivJG1tp_iXEs1hU-urLPN9FbJTOHrjNlPDFNoiB-xe7F7iavkhRa3qpdkEqBijQpnFWmrQGrEE0MCfIGpw8zhKriIjEqGFfEOXh36reLA656wbTbPMj0OKLXTYYLmxm7MsKG_ES0YEnZ-T_LpcmRjYFv0krG4UbhTmVs0XwEQGe1eIcJ4wdsnmVi7cbr9WjqL2raMyb-wfy4U3sfYFCZTNefK4wL6IFQEQlKA_78A_sN3Lnr4YNiC6_59yYdzOyEuEZkGBSCFS8doL0QT2a2eSw1JKIMQzmdTbAM5qqSDWb84HrvPgcYVhXmt4ZHwwH33Dm4yz7qfgqclT6syf3VLgd8ELv9zU_HDfSs4v8iy6-kNe8U4DxkN3eQdZrgiy4KwR4AcVG_E1NmjR2zpBPaLq8iB29KmzZ1RXr-LJTMHUeSaJZwpV0BHCUcmnV_MjfLy4Q6M-lqBmO06eLZ5NlCGWDO_0oRYBjYoDbocQEXOhsJF3AfMMdn9hoMw4NE_A3YLlBi9zIkgpIW1LDfpkcd3fA06LgGQI1UxsYh8xzGYnZdeuvvUY7izjAQMJQ-jazZ65wtm4egGjvurL-AiblCtH9bVZGqP3xemeIrYxchWt4DQMdLv_61sQij2RRJaD5eDojq8Q6O8fbI01WtxLM-0AB4_WknAPs4X4SBNkFgCRhbLXwvM2phuudAvFZwAuWcrmeuCITecsM6jygiO4pJm_pMQ04wZ9j_V_4HH73qzAvGWAI-5gf62dSD3pTCvaUJWQwM-22blKVTt5wD6NutNnzPaQn9A-Fb-m4dxOu5vLxCvUCudZvCVjy7pNNoaz9oSw6SXLvTNnGYNXh3r4Oq58SREvNa7MPkHOpurM1CfD8vHxF86gh5bYz2e021g1XgMUvVQG-HZbMm_qossVBH8SslZDFlbUFnoSYbHftG7Yxr7K_EELBhf4Gk78zwatbLkcuX7dWhUmwO133-NjQWlPuPSWqIhtVNQrenXzkOgtfR-5XBKQmVW-c_n2ycPZBiCQ5tAFQOZBSmHWAXWJDUpG237DkKZxL85q_NUFpz7E8B-auE2-qp6iN4OaKzqSog7lwJNVYqJoqW87wlWEjAudMGrhF3H40RrzxTZwS1vefdWbZFryDNnSNlmCCWM86l0e9VQ89c4SQJHqXoNhkWitmOnFRqfKe0U2wIr4OWIMjdjGXj8ArlkV98zbqmz4Kkf73cJsNuHKAjTFEAX8UvGFCNex02u7Dc1XvHY840tTTuLV_vdZwMj7YfM0ZQZF09x25zKqFXC7X04yxH9ey-DfovzIYGPhTJfqIyi1OahQPP6R3rSgt78TPTHUDZUMmU5ACqtVrQ6nsdZSgvboUVW5XSRb5wZcp9mCT9jLLnuEW5keyrzvcTkMA9vt1LUN_zLXW7tLgyEiVqjjyTOzFpR5PZ3HolI_or_vtZnybZ3ZMeiltqvpquyjkJyGqxXKsvloWGx2gMzq4isYb_oAnvFbxQ_O7QjvYmNWGmv4Glv-TmcNj5Js43eqYMxK15iEwaOXwVhrdLDf2N7GOH1do71zC0x0uwxt34-dNQC3zgYqbnI0C4846sqlHTl75BKTeX-713ITJu4Hsy7y4eP2PzbQNB_stlZUoGdwDGl-8R=w1920-h878"
+          alt="Banner Fixo">
+        <p id="comemoracao"></p>
+        <div class="twinkle-lights"></div>
+      </div>
+    </section>
 
+    <!-- SEÇÃO 2: CALENDÁRIO -->
+    <section id="section2">
+      <!-- Insira aqui seu calendário (HTML/CSS/JS) -->
+      <h2>Calendário</h2>
+      <!-- ... -->
+    </section>
+
+    <!-- MENU DE 8 ÍCONES -->
+    <div class="icon-grid">
+      <a href="#"><svg><!-- ícone Jornal --></svg>Jornal</a>
+      <a href="#"><svg><!-- ícone Cardápio --></svg>Cardápio</a>
+      <a href="#"><svg><!-- ícone Aniversário --></svg>Aniversário</a>
+      <a href="#"><svg><!-- ícone Férias --></svg>Férias</a>
+      <a href="#"><svg><!-- ícone CIPA --></svg>Cipa</a>
+      <a href="#"><svg><!-- ícone FlappyBob --></svg>FlappyBob</a>
+      <a href="#"><svg><!-- ícone VanRace --></svg>VanRace</a>
+      <a href="#"><svg><!-- ícone Ranking --></svg>Ranking</a>
+    </div>
+
+    <!-- SEÇÃO 3: FRASE DIÁRIA -->
+    <section id="section3">
+      <div class="display">
+        <p id="daily-quote">Frase do dia...</p>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 4: DIAS SEM ACIDENTES -->
+    <section id="section4">
+      <div class="counter">
+        👷 estamos <span id="days" class="highlight">0</span> dias sem acidentes
+      </div>
+    </section>
+
+    <!-- SEÇÃO 5: REDES SOCIAIS -->
+    <section id="section5">
+      <a href="#"><img src="facebook.png" alt="Facebook"></a>
+      <a href="#"><img src="instagram.png" alt="Instagram"></a>
+      <a href="#"><img src="linkedin.png" alt="LinkedIn"></a>
+    </section>
+
+  </div><!-- /.grid-container -->
+
+  <!-- SCRIPTS DAS 5 SEÇÕES -->
   <script>
+    // === BANNER: estrelas ou fogos ===
     (function(){
-      const bancoDeDados = [
-        { data: new Date(2026,0,1), mensagem: "Feliz Ano Novo!" },
-        { data: new Date(2025,3,7), mensagem: "🥳 Feliz Aniversário, Rafaela Taborda! 🥳" },
-        /* … restante … */
-        { data: new Date(), mensagem: "#PSRindústria" }
+      const data = new Date();
+      const bd = [
+        { d:new Date(2025,3,7), m:"🥳 Aniversário Rafaela! 🥳" },
+        { d:new Date(), m:"#PSRindústria" }
       ];
-      const hoje = new Date();
-      let isBirthday = false;
-      for (const item of bancoDeDados) {
-        if (hoje.getDate()===item.data.getDate() &&
-            hoje.getMonth()===item.data.getMonth() &&
-            hoje.getFullYear()===item.data.getFullYear()) {
-          const el = document.getElementById("comemoracao");
-          el.textContent = item.mensagem;
-          if (item.mensagem.includes("Aniversário")) {
-            el.classList.add("birthday");
-            isBirthday = true;
-          }
+      let isB=false;
+      for(const i of bd){
+        if(data.getDate()===i.d.getDate() &&
+           data.getMonth()===i.d.getMonth() &&
+           data.getFullYear()===i.d.getFullYear()){
+          const el=document.getElementById("comemoracao");
+          el.textContent=i.m;
+          if(i.m.includes("Aniversário")){ el.classList.add("birthday"); isB=true; }
           break;
         }
       }
-
-      function createStars() {
-        const c = document.querySelector(".twinkle-lights");
-        for (let i=0; i<20; i++){
-          const s = document.createElement("span");
-          s.style.top           = Math.random()*100 + "%";
-          s.style.left          = Math.random()*100 + "%";
-          s.style.animation     = `blink ${3+Math.random()*3}s infinite`;
-          s.style.animationDelay= `${Math.random()*3}s`;
-          c.appendChild(s);
-        }
+      const container=document.querySelector(".twinkle-lights");
+      function star(){
+        const s=document.createElement("span");
+        s.style.cssText=`
+          position:absolute;
+          width:8px;height:8px;
+          top:${Math.random()*100}% ;
+          left:${Math.random()*100}% ;
+          background:#fff;
+          clip-path:polygon(50% 0,65% 30,98% 35,74% 58,79% 90,50% 75,21% 90,26% 58,2% 35,35% 30);
+          opacity:0;
+          animation:blink ${3+Math.random()*3}s infinite;
+          animation-delay:${Math.random()*3}s;
+        `;
+        container.appendChild(s);
       }
-      function spawnFirework(){
-        const c = document.querySelector(".twinkle-lights");
-        const fw = document.createElement("div");
+      function fire(){
+        const fw=document.createElement("div");
         fw.className="firework";
-        fw.style.top  = Math.random()*100+"%";
-        fw.style.left = Math.random()*100+"%";
-        c.appendChild(fw);
+        fw.style.cssText=`position:absolute;top:${Math.random()*100}% ;left:${Math.random()*100}% ;width:0;height:0;`;
+        container.appendChild(fw);
         for(let i=0;i<12;i++){
-          const p = document.createElement("div");
+          const p=document.createElement("div");
+          const a=Math.random()*2*Math.PI, d=50+Math.random()*50;
+          const h=Math.random()*360;
           p.className="firework-particle";
-          const ang = Math.random()*2*Math.PI;
-          const dist=50+Math.random()*50;
-          const hue = Math.floor(Math.random()*360);
-          p.style.setProperty("--dx",Math.cos(ang)*dist+"px");
-          p.style.setProperty("--dy",Math.sin(ang)*dist+"px");
-          p.style.background = `hsl(${hue},100%,50%)`;
-          p.style.boxShadow  = `0 0 10px hsl(${hue},100%,50%),0 0 20px hsl(${hue},100%,50%)`;
+          p.style.cssText=`
+            position:absolute;
+            width:6px;height:6px;border-radius:50%;
+            background:hsl(${h},100%,50%);box-shadow:0 0 10px hsl(${h},100%,50%),0 0 20px hsl(${h},100%,50%);
+            --dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d}px;
+            animation:explode 1s ease-out forwards;
+          `;
           fw.appendChild(p);
         }
         setTimeout(()=>fw.remove(),1000);
       }
-      function createFireworks(){
-        setInterval(spawnFirework,500);
+      if(isB){
+        setInterval(fire,500);
+      } else {
+        for(let i=0;i<20;i++) star();
       }
-
-      isBirthday ? createFireworks() : createStars();
     })();
+
+    // === SEÇÃO 3: FRASE DIÁRIA ===
+    document.addEventListener("DOMContentLoaded", ()=> {
+      const quotes=[ /* ... */ ];
+      const display=document.getElementById("daily-quote");
+      function show(){ display.textContent=quotes[Math.floor(Math.random()*quotes.length)]; }
+      show();
+    });
+
+    // === SEÇÃO 4: CONTADOR ===
+    (function(){
+      const start=new Date("2024-04-09");
+      const el=document.getElementById("days");
+      function upd(){
+        const diff=Math.floor((new Date()-start)/(1000*60*60*24));
+        el.textContent=diff;
+      }
+      upd(); setInterval(upd,1000);
+    })();
+
+    // === SEÇÃO 5: nenhuma lógica extra ===
   </script>
 
 </body>
