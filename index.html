@@ -1,193 +1,195 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <title>Portal PSR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seu Projeto</title>
+  <!-- Importa fonte Poppins do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    /* ===== RESET ===== */
+    /* Reset e box-sizing */
     *, *::before, *::after {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-    body {
-      background: #f4f4f4;
-      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* ===== CONTAINER PRINCIPAL ===== */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Container com largura full até 400px e centralizado */
     .container {
       width: 100%;
-      max-width: 442px;     /* nunca excede 442px em desktop */
+      max-width: 400px;
       margin: 0 auto;
+    }
+
+    /* Header fixo no topo */
+    header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+
+    header, main {
+      padding: 0;
+    }
+
+    /* Estilos do calendário */
+    .outer-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f9f9f9;
       padding: 10px;
-      display: grid;
-      grid-template-rows:
-        auto /* section1 */
-        /* ... outras seções ... */;
-      row-gap: 12px;
     }
-
-    /* ===== SECTION 1 (BANNER) ===== */
-    #section1 {
-      position: relative;
+    .calendar-container {
+      display: flex;
+      gap: 0.5rem;
       width: 100%;
-      /* vou usar aspect-ratio para manter proporção 16:9 */
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      border-radius: 8px;
-      background: #000; /* fallback */
+      max-width: 600px;
     }
-    #section1 img {
-      position: absolute;
-      inset: 0;          /* top:0; right:0; bottom:0; left:0 */
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    #section1 #comemoracao {
-      position: absolute;
-      top: 68%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
-      padding: 0 5vw;
-      color: #000;
-      font-size: 6vw; /* escala com a largura */
-      font-weight: bold;
+    .day-box {
+      flex: 1 1 0;
+      height: 75px;
+      background-color: #003366;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      font-weight: 600;
       text-align: center;
-      text-shadow: 0 0 10px rgba(255,255,255,0.7);
+      font-size: clamp(1rem, 1.5vw, 1.5rem);
+      padding: 3px;
+      transition: border 0.2s;
     }
-    @media (min-width: 600px) {
-      #section1 #comemoracao {
-        font-size: 7vh; /* em telas maiores, usa viewport-height */
-      }
-    }
+    .day-box.highlight { background-color: #ffb600; color: #444; }
+    .day-box.holiday { background-color: #a3d5a2 !important; color: #333 !important; }
+    .day-box.holiday-today { background-color: #a3d5a2 !important; color: #333 !important; border: 3px solid #ffb600; }
+    .day-box.past    { background-color: #cecece !important; color: #777 !important; }
+    .day-box.weekend { background-color: #cecece !important; color: #777 !important; }
 
-    /* ===== ESTRELAS & FOGOS ===== */
-    .twinkle-lights {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-    .twinkle-lights span {
-      position: absolute;
-      width: 6px; height: 6px;
-      background: #fff;
-      clip-path: polygon(
-        50% 0%, 64% 30%, 98% 35%, 74% 58%, 79% 90%,
-        50% 75%, 21% 90%, 26% 58%, 2% 35%, 35% 30%
-      );
-      opacity: 0;
-      animation: blink 3s infinite ease-in-out;
-      animation-delay: var(--delay);
-    }
-    @keyframes blink {
-      0%   { opacity: 0.1; transform: scale(0.8); }
-      50%  { opacity: 1;   transform: scale(1.2); }
-      100% { opacity: 0.1; transform: scale(0.8); }
-    }
-    .firework {
-      position: absolute;
-      width: 0; height: 0;
-    }
-    .firework-particle {
-      position: absolute;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      opacity: 1;
-      animation: explode 1s ease-out forwards;
-    }
-    @keyframes explode {
-      from { transform: translate(0, 0); opacity: 1; }
-      to   { transform: translate(var(--dx), var(--dy)); opacity: 0; }
-    }
+    .day-name { margin-bottom: 2px; }
+    .month-year { margin-top: 1rem; font-size: 0.9rem; font-weight: 400; text-align: center; }
   </style>
 </head>
-
 <body>
-  <div class="container">
 
-    <!-- == SECTION 1: BANNER == -->
-    <div id="section1">
-      <img
-        id="banner-fixo"
-        src="https://lh3.googleusercontent.com/fife/.../w1920-h878"
-        alt="Banner PSR"
-      >
-      <p id="comemoracao">Carregando mensagem...</p>
-      <div class="twinkle-lights"></div>
+  <!-- BANNER NO TOPO (sticky) -->
+  <header class="container">
+    <div id="banner-container">
+      <img id="banner-fixo" src="./PORTAL - v2.png" alt="Banner Fixo" style="width:100%; display:block;">
+      <p id="comemoracao">🥳 Feliz Aniversário! 🥳</p>
+      <!-- … código de fogos ou estrelinhas … -->
     </div>
+  </header>
 
-    <!-- ... chame aqui fetch de section2, grid etc ... -->
+  <!-- CONTEÚDO DO CALENDÁRIO -->
+  <main class="container">
+    <div class="outer-wrapper">
+      <div class="calendar-container">
+        <div class="day-box past" data-day="0"><div class="day-name">Dom</div><div class="day-number">27</div></div>
+        <div class="day-box past" data-day="1"><div class="day-name">Seg</div><div class="day-number">28</div></div>
+        <div class="day-box past" data-day="2"><div class="day-name">Ter</div><div class="day-number">29</div></div>
+        <div class="day-box highlight" data-day="3"><div class="day-name">Qua</div><div class="day-number">30</div></div>
+        <div class="day-box holiday" data-day="4"><div class="day-name">Qui</div><div class="day-number">1</div></div>
+        <div class="day-box" data-day="5"><div class="day-name">Sex</div><div class="day-number">2</div></div>
+        <div class="day-box weekend" data-day="6"><div class="day-name">Sáb</div><div class="day-number">3</div></div>
+      </div>
+      <div class="month-year">Abril de 2025</div>
+    </div>
+    <script>
+      // Data/horário em Brasília
+      const brasiliaTime = new Date(
+        new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" })
+      );
+      const dayOfWeek = brasiliaTime.getDay();
+      const dayOfMonth = brasiliaTime.getDate();
+      const month = brasiliaTime.getMonth();
+      const year = brasiliaTime.getFullYear();
+      const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+                     "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+      const dayBoxes = document.querySelectorAll('.day-box');
+      const monthYearEl = document.querySelector('.month-year');
+      monthYearEl.textContent = `${meses[month]} de ${year}`;
 
-  </div>
+      // Feriados (mês-dia)
+      const holidays = {
+        "1-1": "Feliz Ano Novo!",
+        "3-15": "Feliz Dia do Consumidor!",
+        "4-18": "Feliz Sexta-feira Santa à todos!",
+        "4-20": "Feliz Páscoa à todos!",
+        "4-21": "Dia de Tiradentes",
+        "4-23": "Feliz dia de São Jorge",
+        "5-1": "Feliz dia do Trabalhador",
+        "5-11": "Feliz dia das Mães!",
+        "6-12": "Dia dos Namorados!",
+        "6-19": "Dia de Corpus Christi",
+        "8-10": "Feliz dia dos Pais!",
+        "9-7": "Dia da Independência do Brasil",
+        "9-15": "Feliz dia do Cliente!",
+        "10-12": "Feliz dia das Crianças!",
+        "11-2": "Dia de Finados",
+        "11-15": "Proclamação da República",
+        "11-20": "Dia de Zumbi e da Consciência Negra",
+        "12-25": "Feliz Natal à todos!",
+        "12-31": "Feliz Ano Novo!"
+      };
 
-  <script>
-    // Exemplo de dados embarcados em JSON (poderia vir de "blocks/section1.html")
-    const aniversariantes = [
-      { date:"2025-04-07", msg:"🥳 Feliz Aniversário, Rafaela Taborda! 🥳" },
-      { date:"2025-04-12", msg:"🥳 Feliz Aniversário, Rhafael Mendes! 🥳" },
-      { date:"2025-04-23", msg:"🥳 Feliz Aniversário, Selma Botelho! 🥳" },
-      { date:"2025-04-25", msg:"🥳 Feliz Aniversário, Gabriel Freire! 🥳" },
-      { date:"2025-04-26", msg:"🥳 Feliz Aniversário, Pedro Camargo! 🥳" },
-      { date:"2025-04-28", msg:"🥳 Feliz Aniversário, Iasmim Ferreira! 🥳" },
-      { date:"2025-04-30", msg:"🥳 Feliz Aniversário, Diogo e André! 🥳" }
-    ];
-    const defaultMsg = "#PSRindústria";
+      dayBoxes.forEach(box => {
+        const boxDay = parseInt(box.dataset.day, 10);
+        const offset = boxDay - dayOfWeek;
+        const dateBlock = new Date(year, month, dayOfMonth + offset);
+        const blockKey = `${dateBlock.getMonth()+1}-${dateBlock.getDate()}`;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const hoje = new Date().toISOString().slice(0,10);
-      let mensagem = defaultMsg;
-      let isBirthday = false;
+        // Número do dia
+        box.querySelector('.day-number').textContent = dateBlock.getDate();
 
-      for (const a of aniversariantes) {
-        if (a.date === hoje) {
-          mensagem = a.msg;
-          isBirthday = true;
-          break;
+        // 1) Feriados (exceto hoje) → verde
+        if (holidays[blockKey] && offset !== 0) {
+          box.classList.add('holiday');
+          return;
         }
-      }
 
-      const elMsg = document.getElementById('comemoracao');
-      elMsg.textContent = mensagem;
-      if (isBirthday) elMsg.classList.add('birthday');
-
-      const container = document.querySelector('.twinkle-lights');
-
-      if (isBirthday) {
-        // fogos
-        setInterval(() => {
-          const fw = document.createElement('div');
-          fw.className = 'firework';
-          fw.style.top  = Math.random()*100+'%';
-          fw.style.left = Math.random()*100+'%';
-          container.appendChild(fw);
-          for (let i=0; i<12; i++) {
-            const p = document.createElement('div');
-            p.className = 'firework-particle';
-            const ang = Math.random()*2*Math.PI, dist = 50 + Math.random()*50;
-            p.style.setProperty('--dx', Math.cos(ang)*dist+'px');
-            p.style.setProperty('--dy', Math.sin(ang)*dist+'px');
-            const hue = Math.floor(Math.random()*360),
-                  col = `hsl(${hue},100%,50%)`;
-            p.style.background = col;
-            p.style.boxShadow  = `0 0 10px ${col},0 0 20px ${col}`;
-            fw.appendChild(p);
+        // 2) Hoje
+        if (offset === 0) {
+          if (holidays[blockKey]) {
+            monthYearEl.textContent = holidays[blockKey];
+            box.classList.add('holiday-today');
+          } else {
+            box.classList.add('highlight');
           }
-          setTimeout(()=> fw.remove(), 1000);
-        }, 600);
-      } else {
-        // estrelinhas
-        for (let i=0; i<20; i++) {
-          const s = document.createElement('span');
-          s.style.setProperty('--delay', (Math.random()*3)+'s');
-          s.style.top     = Math.random()*100+'%';
-          s.style.left    = Math.random()*100+'%';
-          container.appendChild(s);
+          return;
         }
-      }
-    });
-  </script>
+
+        // 3) Dias passados (offset < 0) → cinza
+        if (offset < 0) {
+          box.classList.add('past');
+          return;
+        }
+
+        // 4) Finais de semana futuros → cinza
+        if (boxDay === 0 || boxDay === 6) {
+          box.classList.add('weekend');
+        }
+      });
+
+      // Mensagens opcionais
+      if (dayOfWeek === 5) monthYearEl.textContent = "#Sextooooou 🥳";
+      if (dayOfWeek === 1) monthYearEl.textContent = "Uma ótima segunda à todos! 🙏";
+    </script>
+  </main>
+
 </body>
 </html>
