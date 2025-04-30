@@ -3,70 +3,59 @@
 <head>
   <meta charset="utf-8">
   <title>Portal PSR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
   <!-- FONTES -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== RESET ===== */
+    /* RESET GERAL */
     *, *::before, *::after {
-      margin: 0; padding: 0; box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    body {
-      font-family: 'Poppins', sans-serif;
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
       background: #f4f4f4;
+      font-family: 'Poppins', sans-serif;
     }
 
-    /* ===== CONTAINER PRINCIPAL =====
-       largura máxima 442px no desktop,
-       sempre centralizado e 100% em mobile
-    */
+    /* CONTAINER PRINCIPAL */
     .container {
       width: 100%;
-      max-width: 442px;
+      max-width: 442px;     /* não excede 442px no desktop */
       margin: 0 auto;
       padding: 10px;
       display: grid;
       grid-template-rows:
-        auto  /* seção 1: banner */
-        auto  /* seção 2: calendário */
-        auto  /* menu (grid de ícones) */
-        auto  /* seção 3: frase do dia */
-        auto  /* seção 4: dias sem acidentes */
-        auto; /* seção 5: redes sociais */
+        auto    /* 1: banner */
+        auto    /* 2: calendário */
+        auto    /* 3: menu (8 ícones) */
+        auto    /* 4: frase do dia */
+        auto    /* 5: dias sem acidentes */
+        auto;   /* 6: redes sociais */
       row-gap: 12px;
     }
 
-    /* ===== BLOCOS FULL-WIDTH ===== */
+    /* BLOCOS FULL-WIDTH (seções 1,2,4,5,6) */
     .section-full {
       background: #fff;
       border-radius: 8px;
       overflow: hidden;
-      position: relative;
-      min-height: 100px;
     }
 
-    /* ===== 1. BANNER (section1) ===== */
-    #section1 img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    /* ===== 2. CALENDÁRIO (section2) ===== */
-    /* aplica dentro de blocks/section2.html */
-
-    /* ===== 3. MENU: GRID 4×2 ===== */
+    /* MENU FLUIDO (seção 3) */
     .section-grid {
       display: grid;
       gap: 8px;
-      /* sempre 4 colunas, cada ícone cabe confortavelmente */
-      grid-template-columns: repeat(4, 1fr);
+      /* até 4 colunas, mas cada célula encolhe até 70px */
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     }
 
-    /* ===== PLACEHOLDER DE CARREGAMENTO ===== */
+    /* PLACEHOLDER DE LOADING */
     .loading {
       min-height: 80px;
       display: flex;
@@ -82,16 +71,16 @@
   <div class="container">
 
     <!-- 1. BANNER -->
-    <div class="section-full" id="section1" data-block="section1">
+    <div class="section-full" data-block="section1">
       <div class="loading">Carregando banner…</div>
     </div>
 
     <!-- 2. CALENDÁRIO -->
-    <div class="section-full" id="section2" data-block="section2">
+    <div class="section-full" data-block="section2">
       <div class="loading">Carregando calendário…</div>
     </div>
 
-    <!-- 3. MENU (8 ÍCONES em 2 filas de 4) -->
+    <!-- 3. MENU (8 ÍCONES) -->
     <div class="section-grid">
       <div data-block="grid1"><div class="loading">Jornal</div></div>
       <div data-block="grid2"><div class="loading">Cardápio</div></div>
@@ -104,36 +93,36 @@
     </div>
 
     <!-- 4. FRASE DO DIA -->
-    <div class="section-full" id="section3" data-block="section3">
+    <div class="section-full" data-block="section3">
       <div class="loading">Carregando frase…</div>
     </div>
 
     <!-- 5. DIAS SEM ACIDENTES -->
-    <div class="section-full" id="section4" data-block="section4">
+    <div class="section-full" data-block="section4">
       <div class="loading">Carregando contador…</div>
     </div>
 
     <!-- 6. REDES SOCIAIS -->
-    <div class="section-full" id="section5" data-block="section5">
+    <div class="section-full" data-block="section5">
       <div class="loading">Carregando redes sociais…</div>
     </div>
 
   </div>
 
   <script>
-    // ao carregar a página, busca em blocks/*.html cada bloco
+    // Ao carregar a página, injeta cada bloco HTML de blocks/{name}.html
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[data-block]').forEach(el => {
         const name = el.getAttribute('data-block');
         fetch(`blocks/${name}.html`)
           .then(res => {
-            if (!res.ok) throw new Error(`Falha ao carregar blocks/${name}.html`);
+            if (!res.ok) throw new Error(`Erro ao buscar blocks/${name}.html`);
             return res.text();
           })
           .then(html => el.innerHTML = html)
           .catch(err => {
             console.error(err);
-            el.innerHTML = `<p style="padding:20px;color:#c00">Erro ao carregar ${name}</p>`;
+            el.innerHTML = `<p style="padding:20px;color:#c00">Falha ao carregar ${name}</p>`;
           });
       });
     });
