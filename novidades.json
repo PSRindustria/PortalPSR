@@ -1,0 +1,23 @@
+[
+  {
+    "titulo": "Nova Linha de Produção",
+    "data": "01/05/2025",
+    "conteudo": "Temos o prazer de anunciar a inauguração da nossa nova linha de produção automatizada, que aumentará nossa capacidade em 40% e criará 25 novos postos de trabalho. Essa expansão faz parte do nosso plano estratégico de crescimento e reafirma nosso compromisso com a inovação e a excelência.",
+    "link": "#",
+    "icone": "fas fa-newspaper"
+  },
+  {
+    "titulo": "Treinamento em Segurança",
+    "data": "28/04/2025",
+    "conteudo": "Nos dias 10 e 11 de maio, realizaremos um treinamento especial em segurança do trabalho para todos os funcionários. O evento contará com especialistas do setor e abordará novas práticas e protocolos de segurança essenciais para nossa operação.",
+    "link": "#",
+    "icone": "fas fa-shield-alt"
+  },
+  {
+    "titulo": "Resultados do Primeiro Trimestre",
+    "data": "15/04/2025",
+    "conteudo": "É com grande satisfação que anunciamos os resultados excepcionais do primeiro trimestre de 2025. Graças ao esforço e dedicação de toda a equipe, superamos nossas metas em 15% e estamos bem posicionados para um ano de crescimento sustentável.",
+    "link": "#",
+    "icone": "fas fa-chart-line"
+  }
+]
