@@ -1,0 +1,26 @@
+[
+  {
+    "colaborador": "Marcelo Santos",
+    "departamento": "Produção",
+    "inicio": "05/05/2025",
+    "retorno": "04/06/2025"
+  },
+  {
+    "colaborador": "Juliana Ferreira",
+    "departamento": "Financeiro",
+    "inicio": "10/05/2025",
+    "retorno": "09/06/2025"
+  },
+  {
+    "colaborador": "Roberto Almeida",
+    "departamento": "Manutenção",
+    "inicio": "15/05/2025",
+    "retorno": "14/06/2025"
+  },
+  {
+    "colaborador": "Patricia Oliveira",
+    "departamento": "Administrativo",
+    "inicio": "20/05/2025",
+    "retorno": "19/06/2025"
+  }
+]
