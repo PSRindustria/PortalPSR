@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio Semanal - PSR Indústria</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --azul-marinho: #003366;
+            --azul-aco: #4682B4;
+            --cinza-escuro: #4B4B4B;
+            --branco: #FFFFFF;
+            --dourado: #DAA520;
+            --verde: #006400;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--branco);
+            color: var(--cinza-escuro);
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--azul-marinho);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        
+        .logo {
+            color: var(--branco);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo span {
+            color: var(--dourado);
+            margin-left: 5px;
+        }
+        
+        /* Menu para desktop */
+        .menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .menu li {
+            margin-left: 15px;
+        }
+        
+        .menu a {
+            color: var(--branco);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--dourado);
+        }
+        
+        .menu-toggle {
+            display: none;
+            color: var(--branco);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .whatsapp-contact {
+            color: var(--branco);
+            background-color: var(--verde);
+            padding: 8px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-contact i {
+            margin-right: 8px;
+        }
+        
+        .whatsapp-contact:hover {
+            background-color: #008000;
+            transform: translateY(-2px);
+        }
+        
+        /* Título da página */
+        .page-title {
+            margin-top: 120px;
+            text-align: center;
+            padding: 20px;
+            color: var(--azul-marinho);
+        }
+        
+        .page-title h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            color: var(--cinza-escuro);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Estilos do Cardápio */
+        .cardapio-container {
+            max-width: 100%;
+            padding: 20px;
+            margin: 0 auto;
+        }
+        
+        .coluna {
+            max-width: 100vw;
+            height: 44vw;
+            background-color: #00c2ff;
+            margin-bottom: 5%; /* Espaçamento entre colunas */
+            display: flex;
+            align-items: center; /* Centraliza o texto verticalmente */
+            justify-content: center; /* Centraliza o texto horizontalmente */
+            border-radius: 7vw;
+            position: relative;
+            box-sizing: border-box; /* Inclui padding e border no cálculo das dimensões */
+        }
+
+        /* Classe para a coluna do dia atual */
+        .orange {
+            background-color: #ffd324 !important;
+        }
+
+        /* Classe para as colunas de dias que já passaram ou para feriados */
+        .inativa {
+            background-color: #ccc !important;
+            opacity: 0.6;
+        }
+
+        .coluna::after, .coluna::before {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 80vw;
+            border-radius: 3vw;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .coluna::after {
+            bottom: 65%;
+            height: 14%;
+            background-color: #003068;
+        }
+
+        .coluna::before {
+            bottom: 35%;
+            height: 45%;
+            background-color: rgba(8, 50, 96, 0.075);
+        }
+
+        .proteinas, .opcional, .opcional2, .diaSemana {
+            font-weight: bold;
+            color: #083260;
+            letter-spacing: 0.3px;
+            font-size: 3.1vw; /* Fonte responsiva */
+        }
+
+        .proteinas {
+            color: #f1e32e;
+        }
+
+        .texto {
+            color: #083260;
+            font-size: 3.1vw;
+            letter-spacing: 0.5px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            text-align: left;
+            padding: 10vw; /* Espaço interno em todas as direções */
+            line-height: 6.35vw;
+            margin-left: 0;
+            position: relative;
+            z-index: 1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            width: 100%;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--azul-marinho);
+            color: var(--branco);
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .footer-content h3::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--dourado);
+            margin: 10px auto;
+        }
+        
+        .footer-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .destaque {
+            font-size: 1.2rem;
+            color: var(--dourado);
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            color: var(--branco);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--dourado);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+        
+        /* Responsivo */
+        @media screen and (max-width: 768px) {
+            .menu {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--azul-marinho);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+            
+            .menu.active {
+                display: flex;
+            }
+            
+            .menu li {
+                margin: 10px 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .header-container {
+                padding: 10px 20px;
+            }
+            
+            .page-title {
+                margin-top: 100px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="/api/placeholder/40/40" alt="PSR Logo">
+                PSR <span>Indústria</span>
+            </a>
+            <nav>
+                <ul class="menu" id="menu">
+                    <li><a href="index.html#inicio">Início</a></li>
+                    <li><a href="cardapio.html">Cardápio</a></li>
+                    <li><a href="index.html#novidades">Novidades</a></li>
+                    <li><a href="index.html#aniversariantes">Aniversariantes</a></li>
+                    <li><a href="index.html#ferias">Férias</a></li>
+                    <li><a href="jornal.html">Jornal</a></li>
+                    <li><a href="index.html#cipa">CIPA</a></li>
+                </ul>
+                <div class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+            <a href="https://wa.me/5500000000000" class="whatsapp-contact">
+                <i class="fab fa-whatsapp"></i> Contato
+            </a>
+        </div>
+    </header>
+
+    <div class="page-title">
+        <h1>Cardápio Semanal do Refeitório</h1>
+        <p>Confira o menu da semana. O cardápio do dia atual está destacado em amarelo.</p>
+    </div>
+
+    <div class="cardapio-container">
+        <div class="coluna">
+            <p class="texto"></p>
+        </div>
+        <div class="coluna">
+            <p class="texto"></p>
+        </div>
+        <div class="coluna">
+            <p class="texto"></p>
+        </div>
+        <div class="coluna">
+            <p class="texto"></p>
+        </div>
+        <div class="coluna">
+            <p class="texto"></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <h3>PSR Indústria</h3>
+            <p>Trabalhando juntos por um futuro melhor e mais seguro.</p>
+            <p class="destaque">Segurança em primeiro lugar, qualidade sempre!</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 PSR Indústria. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menu toggle para dispositivos móveis
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('menu').classList.toggle('active');
+        });
+
+        // Função para detectar se o dispositivo é iOS
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        // Função para centralizar o elemento usando offsetTop para iOS Safari
+        function scrollToCenter(element) {
+            // Calcula a posição vertical do elemento
+            var top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
+            // Ajusta o scroll para a posição calculada
+            window.scrollTo({ top: top, behavior: 'auto' });
+            // Garante o ajuste para alguns casos
+            document.documentElement.scrollTop = top;
+            document.body.scrollTop = top;
+        }
+
+        // Função para inativar as colunas anteriores ao dia atual
+        function inativarColunasAntes(indexColunaDiaAtual, colunas) {
+            for (var i = 0; i < indexColunaDiaAtual; i++) {
+                colunas[i].classList.add('inativa');
+            }
+        }
+
+        // Aguarda o carregamento completo da página
+        window.addEventListener('load', function() {
+            // Dados da data atual
+            var dataAtual = new Date();
+            var dia = dataAtual.getDate();
+            var mes = dataAtual.getMonth();
+            var hoje = dataAtual.getDay(); // 0=domingo, 1=segunda, etc.
+            var colunas = document.querySelectorAll('.coluna');
+
+            // Lógica para definir qual API usar de acordo com o dia do mês
+            var ultimoDiaDoMes = new Date(dataAtual.getFullYear(), mes + 1, 0).getDate();
+            var linkApi;
+            if (dia <= (ultimoDiaDoMes * 1/4)) {
+                linkApi = 'https://sheetdb.io/api/v1/7hr24kjg5t0j9';
+            } else if (dia <= (ultimoDiaDoMes * 2/4)) {
+                linkApi = 'https://sheetdb.io/api/v1/5cmwxard26ezh';
+            } else if (dia <= (ultimoDiaDoMes * 3/4)) {
+                linkApi = 'https://sheetdb.io/api/v1/4kp0h4xybetac';
+            } else {
+                linkApi = 'https://sheetdb.io/api/v1/j20hi5jsk2b1e';
+            }
+
+            // Se for dia de semana (segunda a sexta)
+            if (hoje >= 1 && hoje <= 5) {
+                // Adiciona a classe para destacar o dia atual
+                colunas[hoje - 1].classList.add('orange');
+                // Inativa as colunas anteriores
+                inativarColunasAntes(hoje - 1, colunas);
+
+                // Usa um atraso para garantir que o layout esteja pronto
+                setTimeout(function() {
+                    if (isIOS()) {
+                        scrollToCenter(colunas[hoje - 1]);
+                    } else {
+                        colunas[hoje - 1].scrollIntoView({ behavior: 'auto', block: 'center' });
+                    }
+                }, 500);  // Ajuste o tempo se necessário (p.ex., 500ms ou mais)
+            }
+
+            // Busca os dados da API e popula as colunas
+            fetch(linkApi)
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        if (colunas[i]) {
+                            // Verifica se o campo PROTEINAS contém a palavra "Feriado" (ignora maiúsculas/minúsculas)
+                            if (data[i].PROTEINAS.toLowerCase().includes("feriado")) {
+                                colunas[i].classList.add('inativa');
+                            }
+                            
+                            let linha = `
+                                <span class="diaSemana">${data[i].DIAS}</span> <br>
+                                🔶 <span class="proteinas">${data[i].PROTEINAS}</span> <br>
+                                💠 EXTRA1: <span class="opcional">${data[i].OPCIONAL}</span> <br>
+                                💠 EXTRA2: <span class="opcional2">${data[i].OPCIONAL2}</span> <br>
+                                🔹 ${data[i].GUARNIÇÃO} <br>
+                                🔹 <span class="SALADAS">${data[i].SALADAS}</span>
+                            `;
+                            colunas[i].querySelector('.texto').innerHTML = linha;
+                        }
+                    }
+                })
+                .catch(err => console.error('Erro ao buscar os dados da API:', err));
+        });
+    </script>
+</body>
+</html>
