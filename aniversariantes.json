@@ -1,0 +1,26 @@
+[
+  {
+    "nome": "Carlos Silva",
+    "cargo": "Produção",
+    "data": "05/05",
+    "imagem": "/img/colaboradores/carlos-silva.jpg"
+  },
+  {
+    "nome": "Ana Paula",
+    "cargo": "Administrativo",
+    "data": "12/05",
+    "imagem": "/img/colaboradores/ana-paula.jpg"
+  },
+  {
+    "nome": "Rodrigo Mendes",
+    "cargo": "Logística",
+    "data": "18/05",
+    "imagem": "/img/colaboradores/rodrigo-mendes.jpg"
+  },
+  {
+    "nome": "Fernanda Costa",
+    "cargo": "RH",
+    "data": "24/05",
+    "imagem": "/img/colaboradores/fernanda-costa.jpg"
+  }
+]
