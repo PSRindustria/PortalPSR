@@ -268,26 +268,39 @@ main { padding-bottom: 40px; }
 /* ==================================================
    FÉRIAS
    ================================================== */
-.ferias-container { width:100%; }
+.ferias-container {
+  width: 100%;
+}
 .ferias-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
-  justify-items: center; /* centraliza cada card */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  justify-items: center; /* centraliza cada card dentro da grid */
 }
+/* só no mobile, você pode manter se quiser ajustar margens, mas não é obrigatório */
 @media (max-width: 768px) {
-  .ferias-grid { justify-content: center; }
+  .ferias-grid {
+    /* mantém as colunas responsivas, mas centraliza a grid inteira se precisar */
+    justify-content: center;
+  }
 }
+
 .ferias-card {
   background: var(--cinza-claro-ferias-bg);
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transition: transform 0.3s;
+  text-align: center;  /* centraliza todos os textos dentro do card */
 }
-.ferias-card:hover { transform: translateY(-5px); }
+.ferias-card:hover {
+  transform: translateY(-5px);
+}
+
 .ferias-card-header {
-  display: flex; align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centraliza o ícone e o nome */
   margin-bottom: 15px;
 }
 .ferias-card-icon {
@@ -295,10 +308,11 @@ main { padding-bottom: 40px; }
   color: var(--azul-marinho);
   margin-right: 10px;
 }
+
 .ferias-dates {
   display: flex;
   gap: 10px;
-  justify-content: center;
+  justify-content: center; /* centraliza as “pills” de data */
   margin: 12px 0;
 }
 .ferias-card-inicio,
@@ -313,25 +327,32 @@ main { padding-bottom: 40px; }
   border: 1px solid var(--azul-aco);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
+
 .ferias-table {
-  width:100%; border-collapse: collapse;
-  margin-top:20px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
-.ferias-table th, .ferias-table td {
-  padding:12px; text-align:left;
+.ferias-table th,
+.ferias-table td {
+  padding: 12px;
+  text-align: left;
 }
 .ferias-table thead {
   background: var(--azul-marinho);
   color: #fff;
 }
-@media (min-width:769px) {
-  .ferias-grid { display:none; }
+@media (min-width: 769px) {
+  .ferias-grid {
+    display: none; /* esconde cards no desktop, mostra tabela */
+  }
 }
-@media (max-width:768px) {
-  .ferias-table { display:none; }
+@media (max-width: 768px) {
+  .ferias-table {
+    display: none; /* esconde tabela no mobile, mostra cards */
+  }
 }
-
 /* ==================================================
    CIPA
    ================================================== */
