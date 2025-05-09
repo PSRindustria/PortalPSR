@@ -319,11 +319,16 @@ main {
   transform: translateY(-5px);
 }
 .aniversariante-img {
-  width: 100px;
-  height: 100px;
+  width: 150px;           /* ou o tamanho que você preferir */
+  height: 150px;
   border-radius: 50%;
-  margin: 0 auto 10px;
   overflow: hidden;
+  margin: 0 auto 10px;
+}
+.aniversariante-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .aniversariante-data {
   background: var(--rosa-claro-aniversario);
@@ -468,4 +473,31 @@ footer {
 footer .footer-content {
   max-width: 800px;
   margin: 0 auto;
+}
+/* efeito “fogos” coloridos simplificado */
+/* ================================
+   Destaque do aniversariante de hoje
+   ================================ */
+.destaque-hoje {
+  animation: blink 1s step-end infinite;
+  position: relative;
+  overflow: visible;
+}
+@keyframes blink {
+  50% { opacity: 0.5; }
+}
+/* efeito “fogos” coloridos simplificado */
+.destaque-hoje::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 6px; height: 6px;
+  background: red;
+  box-shadow:
+    10px 10px yellow,
+    -10px 10px blue,
+    10px -10px green,
+    -10px -10px orange;
+  border-radius: 50%;
 }
