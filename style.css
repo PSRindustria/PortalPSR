@@ -508,3 +508,23 @@ footer .footer-content {
 .cipa-card {
   border-radius: 15px;
 }
+/* ======== DATAS EM PILLS NO CARD DE FÉRIAS ======== */
+.ferias-dates {
+  display: flex;
+  gap: 10px;               /* espaço entre as caixinhas */
+  justify-content: center; /* centra horizontalmente */
+  margin: 12px 0;          /* espaçamento acima e abaixo */
+}
+
+.ferias-card-inicio,
+.ferias-card-retorno {
+  display: inline-block;
+  border-radius: 20px;           /* bordas arredondadas */
+  padding: 6px 14px;             /* espaçamento interno */
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--azul-marinho);    /* texto azul-marinho */
+  background-color: #fff;        /* fundo branco */
+  border: 1px solid var(--azul-aco); /* borda azul-aco */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
