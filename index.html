@@ -141,27 +141,6 @@
             cursor: pointer;
         }
         
-        .whatsapp-contact {
-            color: var(--branco);
-            background-color: var(--verde);
-            padding: 8px 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-        
-        .whatsapp-contact i {
-            margin-right: 8px;
-        }
-        
-        .whatsapp-contact:hover {
-            background-color: #008000;
-            transform: translateY(-2px);
-        }
-        
         .banner {
             height: 400px;
             background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.9)), url('/api/placeholder/1200/400') center/cover no-repeat;
@@ -361,10 +340,6 @@
             height: 100%;
             object-fit: cover;
         }
-        .aniversariante-img i {
-            font-size: 80px;
-            color: var(--branco);
-        }
         .aniversariante-info {
             padding: 20px;
             text-align: center;
@@ -527,12 +502,6 @@
             .menu-toggle {
                 display: block;
             }
-            .header-container {
-                padding: 10px 20px; 
-            }
-            .whatsapp-contact {
-                display: none; 
-            }
             .banner {
                 height: 300px;
                 margin-top: 60px; 
@@ -565,9 +534,6 @@
             .aniversariante-img {
                 display: none; 
             }
-            .aniversariante-info {
-                padding: 0; 
-            }
             .aniversariante-info h3 {
                 font-size: 1.2rem; 
                 color: var(--azul-marinho);
@@ -576,79 +542,64 @@
                 align-items: center;
                 justify-content: center;
             }
-            .aniversariante-info h3 .aniversario-icone {
-                margin-right: 8px; 
-                color: var(--dourado); 
-                font-size: 1.1rem;
+            .aniversariante-info p {
+                font-size: 0.9rem;
+                color: var(--cinza-escuro);
+                margin-bottom: 5px;
             }
             .aniversariante-data {
                 font-size: 1rem; 
                 color: var(--cinza-escuro);
-                background-color: var(--rosa-claro-aniversario); 
+                background-color: var(--rosa-claro-aniversario);
                 padding: 5px 10px;
-                border-radius: 15px; 
-                border: 1px solid var(--borda-aniversario); 
-                display: inline-block; 
-                margin-top: 5px;
-                font-weight: 500;
-            }
-            .aniversariante-card.expanded,
-            .aniversariante-card::after {
-                display: none; 
-            }
-             .aniversariante-info p:not(.aniversariante-data) { 
-                display: block;
-                font-size: 0.9rem;
-                color: var(--cinza-escuro);
+                border-radius: 15px;
+                border: 1px solid var(--borda-aniversario);
+                display: inline-block;
                 margin-top: 5px;
             }
 
-            /* Férias Mobile - Ajuste para mostrar datas no lugar do cargo */
             .ferias-table thead {
                 display: none;
             }
             .ferias-table tbody tr {
-                display: flex; /* Alterado para flex para melhor controle */
-                flex-direction: column; /* Empilhar itens verticalmente */
+                display: block;
                 margin-bottom: 15px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                border-radius: 8px; /* Bordas mais suaves */
+                border-radius: 8px;
                 overflow: hidden;
-                background-color: var(--branco);
-                padding: 15px;
             }
             .ferias-table tbody td {
                 display: block;
-                text-align: left; /* Alinhar texto à esquerda para melhor leitura */
-                padding: 8px 0; /* Ajuste no padding */
-                border-bottom: 1px solid #eee; /* Linha separadora sutil */
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
             }
-            .ferias-table tbody tr td:last-child {
-                border-bottom: none; /* Remove a última borda */
-            }
-
-            .ferias-table tbody td.ferias-colaborador {
+            .ferias-table tbody td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
                 font-weight: bold;
                 color: var(--azul-marinho);
-                font-size: 1.1rem;
             }
-            .ferias-table tbody td.ferias-periodo {
-                font-size: 0.95rem;
-                color: var(--cinza-escuro);
+            .ferias-table tbody td:first-child {
+                background-color: var(--azul-marinho);
+                color: white;
+                font-weight: bold;
+                padding: 12px 10px;
+                text-align: center;
             }
-            .ferias-table tbody td.ferias-periodo .label {
-                font-weight: 600;
-                color: var(--azul-aco);
+            .ferias-table tbody td:nth-child(2) {
+                background-color: #f0f3f8;
             }
-            /* Oculta as colunas de departamento, início e retorno originais no mobile */
-            .ferias-table tbody td:nth-child(2),
-            .ferias-table tbody td:nth-child(3),
+            .ferias-table tbody td:nth-child(3) {
+                background-color: #f0f3f8;
+            }
             .ferias-table tbody td:nth-child(4) {
-                display: none; 
+                background-color: #f0f3f8;
             }
-            /* Adiciona a nova célula para o período de férias */
-            .ferias-table tbody tr td.ferias-periodo-mobile {
-                display: block !important; /* Garante que seja exibido */
+
+            .cipa-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -684,7 +635,7 @@
     <section class="banner" id="inicio">
         <h1>Bem-vindo à Intranet da PSR Indústria</h1>
         <p>Seu portal para informações internas, notícias e recursos para colaboradores</p>
-        <a href="#novidades" class="banner-btn">Novidades</a>
+        <a href="#novidades" class="banner-btn">Ver Novidades</a>
     </section>
 
     <section id="novidades" class="section">
@@ -757,19 +708,15 @@
 
         async function carregarDados(arquivo) {
             try {
-                // Garante que o caminho para os arquivos JSON seja relativo à raiz do site.
-                // Se o index.html e os JSONs estão no mesmo nível, 'arquivo' (ex: 'novidades.json') já é o caminho correto.
-                // Se estiverem em subpastas, o caminho precisaria ser ajustado aqui ou na chamada da função.
-                // Para este projeto, assumindo que estão na raiz, o nome do arquivo é suficiente.
-                const resposta = await fetch(arquivo); 
+                const resposta = await fetch(arquivo);
                 if (!resposta.ok) {
                     console.error(`Erro ao carregar ${arquivo}: ${resposta.status} ${resposta.statusText}`);
-                    const containerId = arquivo.split('.')[0] + '-container'; 
+                    const containerId = arquivo.split('.')[0] + '-container';
                     const container = document.getElementById(containerId);
                     if (container) {
-                        container.innerHTML = `<p>Erro ao carregar dados de ${arquivo}. Verifique o console para mais detalhes.</p>`;
+                        container.innerHTML = `<p>Erro ao carregar dados de ${arquivo}. Tente novamente mais tarde.</p>`;
                     }
-                    return null; 
+                    return null;
                 }
                 return await resposta.json();
             } catch (erro) {
@@ -802,14 +749,13 @@
                     `;
                     container.innerHTML += novidadeHTML;
                 });
-            } else if (novidades) { 
+            } else if (novidades) {
                  container.innerHTML = '<p>Nenhuma novidade encontrada no momento.</p>';
-            } 
+            }
         }
 
         async function carregarReflexaoDoDia() {
             const container = document.getElementById('reflexao-container');
-            // Corrigido para buscar 'reflexaododia.json' diretamente, assumindo que está na raiz.
             const reflexoes = await carregarDados('reflexaododia.json'); 
             
             if (reflexoes && reflexoes.length > 0) {
@@ -847,7 +793,7 @@
                         <div class="aniversariante-card">
                             <div class="aniversariante-img">${imagemHTML}</div>
                             <div class="aniversariante-info">
-                                <h3><i class="fas fa-birthday-cake aniversario-icone"></i>${aniversariante.nome}</h3>
+                                <h3>${aniversariante.nome}</h3>
                                 ${aniversariante.cargo ? `<p>${aniversariante.cargo}</p>` : ''}
                                 <p class="aniversariante-data">${aniversariante.data}</p>
                             </div>
@@ -867,29 +813,14 @@
                 tbody.innerHTML = '';
                 ferias.forEach(f => {
                     const tr = document.createElement('tr');
-                    // Para desktop, mantém a estrutura original da tabela
-                    let htmlInterno = `
-                        <td class="ferias-colaborador">${f.colaborador}</td>
+                    tr.innerHTML = `
+                        <td>${f.colaborador}</td>
                         <td>${f.departamento}</td>
                         <td>${f.inicio}</td>
                         <td>${f.retorno}</td>
                     `;
-
-                    // Para mobile, ajusta para mostrar nome e período de férias
-                    // A classe .ferias-periodo-mobile será usada pelo CSS para formatar especificamente no mobile
-                    if (window.innerWidth <= 768) {
-                         htmlInterno = `
-                            <td class="ferias-colaborador">${f.colaborador}</td>
-                            <td class="ferias-periodo-mobile ferias-periodo">
-                                <span class="label">Período:</span> ${f.inicio} - ${f.retorno}
-                            </td>
-                        `;
-                    }
-                    tr.innerHTML = htmlInterno;
                     tbody.appendChild(tr);
                 });
-                // A lógica de expandir/colapsar original para mobile foi removida/simplificada
-                // Se precisar de interatividade, ela precisaria ser refeita para o novo layout flex
             } else if (ferias) {
                 tbody.innerHTML = '<tr><td colspan="4"><p>Nenhuma programação de férias encontrada.</p></td></tr>';
             }
@@ -927,4 +858,3 @@
     </script>
 </body>
 </html>
-
