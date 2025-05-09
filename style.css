@@ -110,7 +110,7 @@ main { padding-bottom: 40px; }
 }
 .section-title {
   text-align: center; font-size: 2rem;
-  margin-bottom: 30px; position: relative; margin-top: 20px;
+  margin-bottom: 30px; position: relative; margin-top: 15px;
 }
 .section-title::after {
   content: '';
