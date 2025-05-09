@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" /> 
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma"        content="no-cache" />
-  <meta http-equiv="Expires"       content="0" />  
+  <meta http-equiv="Expires"       content="0" />
   <title>PSR Indústria</title>
   <!-- CSS principal -->
   <link rel="stylesheet" href="style.css" />
@@ -97,7 +97,19 @@
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html`)
         .then(r => r.text())
-        .then(html => document.getElementById(`${file}-placeholder`).innerHTML = html);
+        .then(html => {
+          document.getElementById(`${file}-placeholder`).innerHTML = html;
+          // ativa toggle apenas para o menu
+          if (file === 'menu') {
+            const toggle = document.getElementById('menu-toggle');
+            const menuEl = document.getElementById('menu');
+            if (toggle && menuEl) {
+              toggle.addEventListener('click', () => {
+                menuEl.classList.toggle('active');
+              });
+            }
+          }
+        });
     });
 
     // 2) Configura data de hoje
