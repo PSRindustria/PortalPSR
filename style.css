@@ -280,17 +280,18 @@ main { padding-bottom: 40px; }
 .ferias-container {
   width: 100%;
 }
+
+/* Use flexbox e remova toda regra de grid-template-columns e justify-items */
 .ferias-grid {
   display: flex;
+  flex-wrap: wrap;          /* permite quebra de linha quando não couber */
   gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  justify-items: center; /* centraliza cada card dentro da grid */
+  justify-content: center;  /* centraliza todos os cards */
 }
-/* só no mobile, você pode manter se quiser ajustar margens, mas não é obrigatório */
+
 @media (max-width: 768px) {
   .ferias-grid {
-    /* mantém as colunas responsivas, mas centraliza a grid inteira se precisar */
-    justify-content: center;
+    justify-content: center;  /* mantém centralizado no mobile */
   }
 }
 
@@ -301,7 +302,12 @@ main { padding-bottom: 40px; }
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transition: transform 0.3s;
   text-align: center;
+
+  /* tamanho igual aos demais cards (fixo de base) */
+  flex: 1 1 260px;    /* base 260px, mas encolhe e cresce se necessário */
+  max-width: 260px;   /* nunca fica maior que 260px */
 }
+
 .ferias-card:hover {
   transform: translateY(-5px);
 }
@@ -309,7 +315,7 @@ main { padding-bottom: 40px; }
 .ferias-card-header {
   display: flex;
   align-items: center;
-  justify-content: center; /* centraliza o ícone e o nome */
+  justify-content: center; /* centraliza ícone e nome */
   margin-bottom: 15px;
 }
 .ferias-card-icon {
@@ -352,15 +358,15 @@ main { padding-bottom: 40px; }
   background: var(--azul-marinho);
   color: #fff;
 }
+
+/* desktop: esconde cards e mostra tabela */
 @media (min-width: 769px) {
-  .ferias-grid {
-    display: none; /* esconde cards no desktop, mostra tabela */
-  }
+  .ferias-grid { display: none; }
 }
+
+/* mobile: esconde tabela e mostra cards */
 @media (max-width: 768px) {
-  .ferias-table {
-    display: none; /* esconde tabela no mobile, mostra cards */
-  }
+  .ferias-table { display: none; }
 }
 /* ==================================================
    CIPA
