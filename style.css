@@ -227,9 +227,14 @@ main { padding-bottom: 40px; }
   border-radius: 50%; overflow: hidden;
   margin: 0 auto 10px;
 }
+/* img do aniversariante cobre todo o container */
 .aniversariante-img img {
-  width: 100%; height: 100%; object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+/* estilo da data no card */
 .aniversariante-data {
   background: var(--rosa-claro-aniversario);
   color: var(--dourado);
@@ -239,30 +244,34 @@ main { padding-bottom: 40px; }
   display: inline-block;
   margin-top: 6px;
 }
-/* destaque do aniversariante do dia */
+
+/* destaque animado do aniversariante do dia */
 .destaque-hoje {
-  animation: blink 1s step-end infinite;
-  overflow: visible;
+  position: relative;            /* base para partículas absolutamente posicionadas */
+  animation: blue-pulse 1.5s infinite alternate ease-in-out;
 }
-@keyframes blink { 50% { opacity: 0.5; } }
-.destaque-hoje::after {
-  content: '';
+
+@keyframes blue-pulse {
+  from { box-shadow: 0 0 8px rgba(0,123,255,0.5); }
+  to   { box-shadow: 0 0 16px rgba(0,123,255,1); }
+}
+
+/* cada faísca dentro do card */
+.destaque-hoje .spark {
   position: absolute;
-  top: -8px; left: 50%;
-  width: 6px; height: 6px;
-  background: red;
+  width: 4px;
+  height: 4px;
+  background: rgba(0,123,255,0.8);
   border-radius: 50%;
-  box-shadow:
-    -10px -10px yellow,
-     10px -10px cyan,
-    -10px  10px magenta,
-     10px   10px orange;
-  animation: fireworks 1s infinite;
+  pointer-events: none;
+  animation: spark-fly 0.8s infinite ease-in-out;
 }
-@keyframes fireworks {
-  0% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
- 50% { opacity: 0; transform: translate(-50%,-50%) scale(1.5); }
- 100% { opacity: 0; }
+
+/* movimento da faísca */
+@keyframes spark-fly {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  50%  { opacity: 1; transform: translateY(-8px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-16px) scale(0.8); }
 }
 
 /* ==================================================
