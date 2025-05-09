@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Evita cache para dados atualizados -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma"        content="no-cache" />
-  <meta http-equiv="Expires"       content="0" />
-  <title>Cardápio PSR</title>
+  <title>Cardápio Semanal</title>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
       --color-primary: #00c2ff;
@@ -18,32 +18,24 @@
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Roboto', sans-serif;
       background: var(--bg-light);
       color: var(--color-text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       padding: 1rem;
+      display: flex;
+      justify-content: center;
     }
 
-    .container { width: 100%; max-width: 600px; }
-
-    h1.title {
-      font-size: 2rem;
-      margin: 1rem 0 0.5rem;
-      text-align: center;
-      color: var(--color-primary);
-    }
-
-    p.subtitle {
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      color: var(--color-text);
+    .container {
+      width: 100%;
+      max-width: 600px;
     }
 
     .coluna {
@@ -61,6 +53,7 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
+    /* Barra superior colorida (mais grossa) */
     .coluna::before {
       content: '';
       position: absolute;
@@ -71,19 +64,69 @@
       background: var(--color-primary);
     }
 
-    .orange::before { background: var(--color-highlight); }
-    .inativa { opacity: 0.6; filter: grayscale(50%); }
+    /* Destaque para dia atual */
+    .orange::before {
+      background: var(--color-highlight);
+    }
 
-    .texto { padding: 1.5rem; line-height: 1.5; }
-    .diaSemana { font-size: 1.25rem; text-transform: uppercase; }
-    .proteinas { font-size: 1.75rem; font-weight: bold; background-color: rgba(0,0,0,0.05); border-left: 4px solid var(--color-highlight); padding: 0.5rem; border-radius: 4px; }
-    .opcional, .opcional2 { background-color: rgba(0,0,0,0.05); border-radius: 6px; padding: 0.2rem 0.5rem; font-size: 1rem; }
-    .guarnicao, .saladas { font-size: 1rem; }
+    /* Colunas inativas (dias já passados ou feriados) */
+    .inativa {
+      opacity: 0.6;
+      filter: grayscale(50%);
+    }
 
+    .texto {
+      padding: 1.5rem;
+      line-height: 1.5;
+    }
+
+    p {
+      margin-bottom: 0.75rem;
+    }
+
+    .diaSemana {
+      font-size: 1.25rem;
+      text-transform: uppercase;
+    }
+
+    /* Destaque principal para o prato principal */
+    .proteinas {
+      font-size: 1.75rem;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-left: 4px solid var(--color-highlight);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* Destaque sutil (marca-texto) com cinza claro */
+    .opcional,
+    .opcional2 {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-size: 1rem;
+    }
+
+    .guarnicao,
+    .saladas {
+      font-size: 1rem;
+    }
+
+    /* Responsividade para mobile */
     @media (max-width: 600px) {
-      .texto { padding: 1rem; font-size: 4vw; }
-      .diaSemana { font-size: 3.5vw; }
-      .proteinas { font-size: 5vw; }
+      .texto {
+        padding: 1rem;
+        font-size: 4vw;
+      }
+
+      .diaSemana {
+        font-size: 3.5vw;
+      }
+
+      .proteinas {
+        font-size: 5vw;
+      }
     }
   </style>
 </head>
@@ -91,11 +134,6 @@
   <!-- MENU FUNCIONAL -->
   <div id="menu-placeholder"></div>
 
-  <!-- TÍTULO E SUBTÍTULO -->
-  <h1 class="title">Cardápio PSR</h1>
-  <p class="subtitle">Para a opção extra, basta avisar no refeitório pela manhã.</p>
-
-  <!-- CONTEÚDO DO CARDÁPIO -->
   <div class="container">
     <div class="coluna"><div class="texto"></div></div>
     <div class="coluna"><div class="texto"></div></div>
@@ -107,77 +145,85 @@
   <!-- RODAPÉ -->
   <div id="footer-placeholder"></div>
 
-  <!-- SCRIPTS -->
   <script>
-  // Injeta menu e rodapé e ativa toggle
-  document.addEventListener('DOMContentLoaded', () => {
-    ['menu','footer'].forEach(file => {
-      fetch(`${file}.html`)
-        .then(r => r.text())
-        .then(html => {
-          document.getElementById(`${file}-placeholder`).innerHTML = html;
-          if (file === 'menu') {
-            const toggle = document.getElementById('menu-toggle');
-            const menuEl = document.getElementById('menu');
-            if (toggle && menuEl) {
-              toggle.addEventListener('click', () => {
-                menuEl.classList.toggle('active');
-              });
-              menuEl.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                  menuEl.classList.remove('active');
+    // Injeta menu e rodapé e ativa toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      ['menu','footer'].forEach(file => {
+        fetch(`${file}.html`)
+          .then(r => r.text())
+          .then(html => {
+            document.getElementById(`${file}-placeholder`).innerHTML = html;
+            if (file === 'menu') {
+              const toggle = document.getElementById('menu-toggle');
+              const menuEl = document.getElementById('menu');
+              if (toggle && menuEl) {
+                toggle.addEventListener('click', () => {
+                  menuEl.classList.toggle('active');
                 });
-              });
+                menuEl.querySelectorAll('a').forEach(link => {
+                  link.addEventListener('click', () => {
+                    menuEl.classList.remove('active');
+                  });
+                });
+              }
             }
-          }
-        });
+          });
+      });
     });
-  });
 
-  // Lógica de destaque e fetch do cardápio
-  window.addEventListener('load', () => {
     function isIOS() {
       return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     }
-    function scrollToCenter(el) {
-      const top = el.offsetTop - (window.innerHeight/2) + (el.offsetHeight/2);
+
+    function scrollToCenter(element) {
+      const top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
       window.scrollTo({ top, behavior: 'auto' });
       document.documentElement.scrollTop = top;
       document.body.scrollTop = top;
     }
-    function inativarColunasAntes(idx, col) { for (let i = 0; i < idx; i++) col[i].classList.add('inativa'); }
 
-    const hojeNum = new Date().getDay();
-    const colunas = document.querySelectorAll('.coluna');
-    if (hojeNum >= 1 && hojeNum <= 5) {
-      colunas[hojeNum-1].classList.add('orange');
-      inativarColunasAntes(hojeNum-1, colunas);
-      setTimeout(() => {
-        if (isIOS()) scrollToCenter(colunas[hojeNum-1]);
-        else colunas[hojeNum-1].scrollIntoView({ behavior: 'auto', block: 'center' });
-      }, 500);
+    function inativarColunasAntes(index, colunas) {
+      for (let i = 0; i < index; i++) {
+        colunas[i].classList.add('inativa');
+      }
     }
 
-    fetch('https://agenda-portal-2d149-default-rtdb.firebaseio.com/cardapio.json')
-      .then(res => res.json())
-      .then(data => {
-        const dias = ['segunda','terca','quarta','quinta','sexta'];
-        dias.forEach((dia,i) => {
-          const item = data[dia];
-          if (item && colunas[i]) {
-            if ((item.proteinas||'').toLowerCase().includes('feriado')) colunas[i].classList.add('inativa');
-            colunas[i].querySelector('.texto').innerHTML = `
-              <p class="diaSemana">${dia.toUpperCase()}-FEIRA</p>
-              <p class="proteinas">🔶 ${item.proteinas}</p>
-              <p class="opcional">💠 EXTRA1: ${item.opcional1}</p>
-              <p class="opcional2">💠 EXTRA2: ${item.opcional2}</p>
-              <p class="guarnicao">🔹 ${item.guarnicao}</p>
-              <p class="saladas">🔹 ${item.saladas}</p>`;
-          }
-        });
-      })
-      .catch(err => console.error('Erro ao buscar dados do Firebase:', err));
-  });
+    window.addEventListener('load', () => {
+      const hojeNum = new Date().getDay();
+      const colunas = document.querySelectorAll('.coluna');
+
+      if (hojeNum >= 1 && hojeNum <= 5) {
+        colunas[hojeNum - 1].classList.add('orange');
+        inativarColunasAntes(hojeNum - 1, colunas);
+        setTimeout(() => {
+          if (isIOS()) scrollToCenter(colunas[hojeNum - 1]);
+          else colunas[hojeNum - 1].scrollIntoView({ behavior: 'auto', block: 'center' });
+        }, 500);
+      }
+
+      fetch('https://agenda-portal-2d149-default-rtdb.firebaseio.com/cardapio.json')
+        .then(res => res.json())
+        .then(data => {
+          const dias = ['segunda','terca','quarta','quinta','sexta'];
+          dias.forEach((dia, i) => {
+            const item = data[dia];
+            if (item && colunas[i]) {
+              if ((item.proteinas||'').toLowerCase().includes('feriado')) {
+                colunas[i].classList.add('inativa');
+              }
+              colunas[i].querySelector('.texto').innerHTML = `
+                <p class="diaSemana">${dia.toUpperCase()}-FEIRA</p>
+                <p class="proteinas">🔶 ${item.proteinas}</p>
+                <p class="opcional">💠 EXTRA1: ${item.opcional1}</p>
+                <p class="opcional2">💠 EXTRA2: ${item.opcional2}</p>
+                <p class="guarnicao">🔹 ${item.guarnicao}</p>
+                <p class="saladas">🔹 ${item.saladas}</p>
+              `;
+            }
+          });
+        })
+        .catch(err => console.error('Erro ao buscar dados do Firebase:', err));
+    });
   </script>
 </body>
 </html>
