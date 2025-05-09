@@ -245,12 +245,11 @@ main { padding-bottom: 40px; }
   margin-top: 6px;
 }
 
-/* destaque animado do aniversariante do dia */
+/* destaque animado do aniversariante do dia (pulse azul) */
 .destaque-hoje {
-  position: relative;            /* base para partículas absolutamente posicionadas */
+  position: relative;
   animation: blue-pulse 1.5s infinite alternate ease-in-out;
 }
-
 @keyframes blue-pulse {
   from { box-shadow: 0 0 8px rgba(0,123,255,0.5); }
   to   { box-shadow: 0 0 16px rgba(0,123,255,1); }
@@ -266,12 +265,46 @@ main { padding-bottom: 40px; }
   pointer-events: none;
   animation: spark-fly 0.8s infinite ease-in-out;
 }
-
-/* movimento da faísca */
 @keyframes spark-fly {
   0%   { opacity: 0; transform: translateY(0) scale(0.5); }
   50%  { opacity: 1; transform: translateY(-8px) scale(1.2); }
   100% { opacity: 0; transform: translateY(-16px) scale(0.8); }
+}
+
+/* ==================================================
+   FOGO DE ARTIFÍCIO NO CARD DE ANIVERSARIANTE
+   ================================================== */
+/* container para os fogos dentro do card */
+.destaque-hoje .twinkle-lights {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+/* cada explosão */
+.destaque-hoje .firework {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
+}
+/* partícula individual */
+.destaque-hoje .firework-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: red;
+  border-radius: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: firework-explode 1s ease-out forwards;
+}
+@keyframes firework-explode {
+  to {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0);
+  }
 }
 
 /* ==================================================
@@ -280,21 +313,17 @@ main { padding-bottom: 40px; }
 .ferias-container {
   width: 100%;
 }
-
-/* Use flexbox e remova toda regra de grid-template-columns e justify-items */
 .ferias-grid {
   display: flex;
-  flex-wrap: wrap;          /* permite quebra de linha quando não couber */
+  flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;  /* centraliza todos os cards */
+  justify-content: center;
 }
-
 @media (max-width: 768px) {
   .ferias-grid {
-    justify-content: center;  /* mantém centralizado no mobile */
+    justify-content: center;
   }
 }
-
 .ferias-card {
   background: var(--cinza-claro-ferias-bg);
   padding: 20px;
@@ -302,112 +331,77 @@ main { padding-bottom: 40px; }
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transition: transform 0.3s;
   text-align: center;
-
-  /* tamanho igual aos demais cards (fixo de base) */
-  flex: 1 1 260px;    /* base 260px, mas encolhe e cresce se necessário */
-  max-width: 260px;   /* nunca fica maior que 260px */
+  flex: 1 1 260px;
+  max-width: 260px;
 }
-
-.ferias-card:hover {
-  transform: translateY(-5px);
-}
-
+.ferias-card:hover { transform: translateY(-5px); }
 .ferias-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: center; /* centraliza ícone e nome */
+  display: flex; align-items: center; justify-content: center;
   margin-bottom: 15px;
 }
 .ferias-card-icon {
-  font-size: 1.8rem;
-  color: var(--azul-marinho);
+  font-size: 1.8rem; color: var(--azul-marinho);
   margin-right: 10px;
 }
-
 .ferias-dates {
-  display: flex;
-  gap: 10px;
-  justify-content: center; /* centraliza as “pills” de data */
-  margin: 12px 0;
+  display: flex; gap: 10px;
+  justify-content: center; margin: 12px 0;
 }
 .ferias-card-inicio,
 .ferias-card-retorno {
-  display: inline-block;
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--azul-marinho);
-  background-color: #fff;
+  display: inline-block; border-radius: 20px;
+  padding: 6px 14px; font-size: 0.9rem; font-weight: 500;
+  color: var(--azul-marinho); background-color: #fff;
   border: 1px solid var(--azul-aco);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-
 .ferias-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  width: 100%; border-collapse: collapse;
+  margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
-.ferias-table th,
-.ferias-table td {
-  padding: 12px;
-  text-align: left;
+.ferias-table th, .ferias-table td {
+  padding: 12px; text-align: left;
 }
 .ferias-table thead {
-  background: var(--azul-marinho);
-  color: #fff;
+  background: var(--azul-marinho); color: #fff;
 }
-
-/* desktop: esconde cards e mostra tabela */
 @media (min-width: 769px) {
   .ferias-grid { display: none; }
 }
-
-/* mobile: esconde tabela e mostra cards */
 @media (max-width: 768px) {
   .ferias-table { display: none; }
 }
+
 /* ==================================================
    CIPA
    ================================================== */
 .cipa-container {
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-  justify-content:center;
+  display: flex; flex-wrap: wrap;
+  gap: 20px; justify-content: center;
 }
 .cipa-card {
-  background: var(--branco);
-  padding:20px;
-  border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-  flex:1 1 260px;
-  text-align:center;
-  transition:transform .3s;
+  background: var(--branco); padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  flex: 1 1 260px; text-align: center;
+  transition: transform .3s;
 }
 .cipa-card:hover { transform: translateY(-5px); }
 .cipa-icon {
-  width:50px; height:50px;
-  background:var(--azul-marinho);
-  color:#fff;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 10px;
+  width: 50px; height: 50px;
+  background: var(--azul-marinho); color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 10px;
 }
 
 /* ==================================================
    RODAPÉ
    ================================================== */
 footer {
-  background: var(--azul-marinho);
-  color: #fff;
-  padding: 30px 20px;
-  text-align: center;
+  background: var(--azul-marinho); color: #fff;
+  padding: 30px 20px; text-align: center;
 }
 footer .footer-content {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 800px; margin: 0 auto;
 }
