@@ -23,7 +23,7 @@
   <section class="banner" id="inicio">
     <h1>Bem-vindo à Intranet PSR Indústria</h1>
     <p>Sua fonte central de informações, notícias e recursos.</p>
-    <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
+    <a href="#novidades" class="banner-btn">Ver Novidades</a>
   </section>
 
   <main>
@@ -104,17 +104,18 @@
             const toggle = document.getElementById('menu-toggle');
             const menuEl = document.getElementById('menu');
             if (toggle && menuEl) {
-              toggle.addEventListener('click', () => {
-                menuEl.classList.toggle('active');
-              });
-              // fecha o menu ao clicar em qualquer link
-              menuEl.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                  menuEl.classList.remove('active');
-                });
-              });
-            }
-          }
+            // abre/fecha ao clicar no hambúrguer
+            toggle.addEventListener('click', () => {
+            menuEl.classList.toggle('active');
+            });
+            // fecha o menu ao clicar em qualquer link
+            menuEl.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+            menuEl.classList.remove('active');
+            });
+          });
+        }
+      }
         });
     });
 
@@ -287,16 +288,14 @@
               <span class="ferias-card-inicio">${f.inicio}</span>
               <span class="ferias-card-retorno">${f.retorno}</span>
             </div>
-          <p class="ferias-card-departamento">${f.departamento}</p>
-        </div>\`;  // Fecha o template da div ferias-card
-
-        // Monta também a linha da tabela
+            <p class="ferias-card-departamento">${f.departamento}</p>
+          </div>`;
         const tr = document.createElement('tr');
-        tr.innerHTML = \`
-          <td>\${f.colaborador}</td>
-          <td>\${f.departamento}</td>
-          <td>\${f.inicio}</td>
-          <td>\${f.retorno}</td>\`;
+        tr.innerHTML = `
+          <td>${f.colaborador}</td>
+          <td>${f.departamento}</td>
+          <td>${f.inicio}</td>
+          <td>${f.retorno}</td>`;
         tb.appendChild(tr);
       });
     }
@@ -312,12 +311,12 @@
       c.innerHTML = '';
       const list = Array.isArray(raw) ? raw : Object.values(raw);
       list.forEach(i => {
-        c.innerHTML += \`
+        c.innerHTML += `
           <div class="cipa-card">
-            <div class="cipa-icon"><i class="\${i.icone}"></i></div>
-            <h3>\${i.titulo||i.nome}</h3>
-            <p>\${i.conteudo||i.cargo_cipa||''}</p>
-          </div>\`;
+            <div class="cipa-icon"><i class="${i.icone}"></i></div>
+            <h3>${i.titulo||i.nome}</h3>
+            <p>${i.conteudo||i.cargo_cipa||''}</p>
+          </div>`;
       });
     }
 
