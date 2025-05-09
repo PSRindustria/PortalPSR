@@ -81,7 +81,7 @@ nav ul li a:hover {
   margin-top: 35px; height: 400px;
   background:
     linear-gradient(rgba(0,51,102,0.7),rgba(0,51,102,0.9)),
-    url('https://via.placeholder.com/1200x400') center/cover no-repeat;
+    url('https://github.com/PSRindustria/PortalPSR/blob/main/imagens/banner-v2.jpg?raw=true') center/cover no-repeat;
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   text-align: center; color: var(--branco);
