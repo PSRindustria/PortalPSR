@@ -730,89 +730,199 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navUl = document.querySelector('nav ul');
-
-            if (menuToggle && navUl) {
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menu-toggle');
+            const menu = document.getElementById('menu');
+            if (menuToggle && menu) {
                 menuToggle.addEventListener('click', () => {
-                    navUl.classList.toggle('active');
+                    menu.classList.toggle('active');
                 });
             }
 
-            // Função para carregar dados de JSON e renderizar
-            async function loadJsonData(url, containerSelector, renderFunction) {
-                const container = document.querySelector(containerSelector);
-                if (!container) {
-                    console.error(`Container ${containerSelector} not found.`);
-                    return;
-                }
-                const loadingElement = container.querySelector('.loading');
-
+            async function carregarDados(arquivo) {
                 try {
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    const data = await response.json();
-                    if (loadingElement) loadingElement.remove();
-                    renderFunction(data, container);
-                } catch (error) {
-                    console.error(`Error loading data from ${url}:`, error);
-                    if (loadingElement) loadingElement.remove();
-                    container.innerHTML = `<p>Erro ao carregar dados. Tente novamente mais tarde.</p>`;
+                    const resposta = await fetch(arquivo);
+                    if (!resposta.ok) {
+                        console.error(`Erro ao carregar ${arquivo}: ${resposta.status} ${resposta.statusText}`);
+                        const containerIdBase = arquivo.split('.')[0];
+                        
+                        // Tenta atualizar containers específicos se existirem
+                        const gridContainer = document.getElementById(containerIdBase + '-grid-container');
+                        const tableBody = document.getElementById(containerIdBase + '-tbody');
+                        const genericContainer = document.getElementById(containerIdBase + '-container');
+
+                        const erroMsg = `<p>Erro ao carregar dados de ${arquivo}. Tente novamente mais tarde.</p>`;
+
+                        if (gridContainer) gridContainer.innerHTML = erroMsg;
+                        if (tableBody) tableBody.innerHTML = `<tr><td colspan="4">${erroMsg}</td></tr>`;
+                        if (genericContainer && !gridContainer && !tableBody) genericContainer.innerHTML = erroMsg;
+                        
+                        return null;
+                    }
+                    return await resposta.json();
+                } catch (erro) {
+                    console.error(`Falha ao carregar ${arquivo}:`, erro);
+                    const containerIdBase = arquivo.split('.')[0];
+                    const gridContainer = document.getElementById(containerIdBase + '-grid-container');
+                    const tableBody = document.getElementById(containerIdBase + '-tbody');
+                    const genericContainer = document.getElementById(containerIdBase + '-container');
+
+                    const falhaMsg = `<p>Falha ao carregar dados de ${arquivo}. Verifique sua conexão ou contate o suporte.</p>`;
+
+                    if (gridContainer) gridContainer.innerHTML = falhaMsg;
+                    if (tableBody) tableBody.innerHTML = `<tr><td colspan="4">${falhaMsg}</td></tr>`;
+                    if (genericContainer && !gridContainer && !tableBody) genericContainer.innerHTML = falhaMsg;
+
+                    return null;
                 }
             }
 
-            // Renderizar Novidades
-            function renderNovidades(data, container) {
-                data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'novidade-card';
-                    card.innerHTML = `
-                        <div class="novidade-img"><i class="${item.icone}"></i></div>
-                        <div class="novidade-content">
-                            <h3>${item.titulo}</h3>
-                            <p class="novidade-date"><i class="fas fa-calendar-alt"></i> ${item.data}</p>
-                            <p>${item.resumo}</p>
-                            ${item.link ? `<a href="${item.link}" class="novidade-link" target="_blank">Saiba Mais <i class="fas fa-arrow-right"></i></a>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
+            async function carregarNovidades() {
+                const container = document.getElementById('novidades-container');
+                const novidades = await carregarDados('novidades.json');
+                if (novidades && novidades.length > 0) {
+                    container.innerHTML = '';
+                    novidades.forEach(novidade => {
+                        const novidadeHTML = `
+                            <div class="novidade-card">
+                                <div class="novidade-img"><i class="${novidade.icone}"></i></div>
+                                <div class="novidade-content">
+                                    <h3>${novidade.titulo}</h3>
+                                    <div class="novidade-date"><i class="far fa-calendar-alt"></i> ${novidade.data}</div>
+                                    <p>${novidade.conteudo}</p>
+                                    <a href="${novidade.link}" class="novidade-link">Saiba mais <i class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += novidadeHTML;
+                    });
+                } else if (novidades) {
+                     container.innerHTML = '<p>Nenhuma novidade encontrada no momento.</p>';
+                }
             }
 
-            // Renderizar Reflexão do Dia
-            function renderReflexao(data, container) {
-                container.innerHTML = '';
+            async function carregarReflexaoDoDia() {
+                const container = document.getElementById('reflexao-container');
+                const reflexoes = await carregarDados('reflexaododia.json'); 
+                
+                if (reflexoes && reflexoes.length > 0) {
+                    const hoje = new Date();
+                    const dia = String(hoje.getDate()).padStart(2, '0');
+                    const mes = String(hoje.getMonth() + 1).padStart(2, '0'); 
+                    const ano = hoje.getFullYear();
+                    const dataAtualFormatada = `${dia}/${mes}/${ano}`;
 
-                const card = document.createElement('div');
-                card.className = 'reflexao-card';
+                    const reflexaoDeHoje = reflexoes.find(r => r.data === dataAtualFormatada);
 
-                card.innerHTML = `
-                    <p class="reflexao-frase">"${data.frase}"</p>
-                    <p class="reflexao-autor">- ${data.autor}</p>
-                    <p class="reflexao-instrucao" style="font-size: 0.95rem; color: #888;">Clique aqui para refletir</p>
-                    <div class="reflexao-extra" style="display: none;">
-                        <p class="reflexao-texto">${data.texto}</p>
-                        <p class="reflexao-data">${data.data}</p>
-                    </div>
-                `;
-
-                card.style.cursor = 'pointer';
-                card.addEventListener('click', () => {
-                    const extra = card.querySelector('.reflexao-extra');
-                    extra.style.display = extra.style.display === 'none' ? 'block' : 'none';
-                });
-
-                container.appendChild(card);
+                    if (reflexaoDeHoje) {
+                        container.innerHTML = `
+                            <p class="reflexao-frase">“${reflexaoDeHoje.frase}”</p>
+                            <p class="reflexao-autor">- ${reflexaoDeHoje.autor}</p>
+                            <p class="reflexao-texto">${reflexaoDeHoje.reflexao}</p>
+                            <p class="reflexao-data">Reflexão para o dia: ${reflexaoDeHoje.data}</p>
+                        `;
+                    } else {
+                        container.innerHTML = '<p>Nenhuma reflexão encontrada para hoje. Volte amanhã!</p>';
+                    }
+                } else if (reflexoes) {
+                    container.innerHTML = '<p>Nenhuma reflexão programada no momento.</p>';
+                }
             }
+
+            async function carregarAniversariantes() {
+                const container = document.getElementById('aniversariantes-container');
+                const aniversariantes = await carregarDados('aniversariantes.json');
+                if (aniversariantes && aniversariantes.length > 0) {
+                    container.innerHTML = '';
+                    aniversariantes.forEach(aniversariante => {
+                        const imagemHTML = aniversariante.imagem ? `<img src="${aniversariante.imagem}" alt="${aniversariante.nome}">` : '<i class="fas fa-birthday-cake"></i>';
+                        const aniversarianteHTML = `
+                            <div class="aniversariante-card">
+                                <div class="aniversariante-img">${imagemHTML}</div>
+                                <div class="aniversariante-info">
+                                    <h3><i class="fas fa-birthday-cake"></i>${aniversariante.nome}</h3>
+                                    ${aniversariante.cargo ? `<p>${aniversariante.cargo}</p>` : ''}
+                                    <p class="aniversariante-data">${aniversariante.data}</p>
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += aniversarianteHTML;
+                    });
+                } else if (aniversariantes) {
+                    container.innerHTML = '<p>Nenhum aniversariante encontrado para este mês.</p>';
+                }
             }
 
-            // Carregar todos os dados
-            loadJsonData('novidades.json', '#novidades .novidades-container', renderNovidades);
-            loadJsonData('reflexaododia.json', '#reflexao-do-dia .reflexao-container', renderReflexao); // Assumindo que o JSON de reflexão é reflexaododia.json
-            loadJsonData('aniversariantes.json', '#aniversariantes .aniversariantes-container', renderAniversariantes);
-            loadJsonData('ferias.json', '#ferias .ferias-container', renderFerias);
-            loadJsonData('cipa.json', '#cipa .cipa-container', renderCipa);
+            async function carregarFerias() {
+                const feriasData = await carregarDados('ferias.json');
+                const tbody = document.getElementById('ferias-tbody');
+                const gridContainer = document.getElementById('ferias-grid-container');
+
+                if (feriasData && feriasData.length > 0) {
+                    if (tbody) tbody.innerHTML = '';
+                    if (gridContainer) gridContainer.innerHTML = '';
+
+                    feriasData.forEach(f => {
+                        // Para a tabela (desktop)
+                        if (tbody) {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${f.colaborador}</td>
+                                <td>${f.departamento}</td>
+                                <td>${f.inicio}</td>
+                                <td>${f.retorno}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        }
+
+                        // Para os cards (mobile)
+                        if (gridContainer) {
+                            const cardHTML = `
+                                <div class="ferias-card">
+                                    <div class="ferias-card-header">
+                                        <i class="fas fa-suitcase-rolling ferias-card-icon"></i>
+                                        <h4 class="ferias-card-colaborador">${f.colaborador}</h4>
+                                    </div>
+                                    <p class="ferias-card-periodo"><strong>Período:</strong> ${f.inicio} - ${f.retorno}</p>
+                                    <p class="ferias-card-departamento">Departamento: ${f.departamento}</p>
+                                </div>
+                            `;
+                            gridContainer.innerHTML += cardHTML;
+                        }
+                    });
+                } else if (feriasData) {
+                    if (tbody) tbody.innerHTML = '<tr><td colspan="4"><p>Nenhuma programação de férias encontrada.</p></td></tr>';
+                    if (gridContainer) gridContainer.innerHTML = '<p>Nenhuma programação de férias encontrada.</p>';
+                }
+            }
+
+            async function carregarCIPA() {
+                const container = document.getElementById('cipa-container');
+                const cipaMembros = await carregarDados('cipa.json');
+                if (cipaMembros && cipaMembros.length > 0) {
+                    container.innerHTML = '';
+                    cipaMembros.forEach(membro => {
+                        const cipaHTML = `
+                            <div class="cipa-card">
+                                <div class="cipa-icon"><i class="${membro.icone || 'fas fa-hard-hat'}"></i></div>
+                                <h3>${membro.nome}</h3>
+                                <p>${membro.cargo_cipa}</p>
+                                <p>Departamento: ${membro.departamento}</p>
+                                ${membro.contato ? `<p>Contato: ${membro.contato}</p>` : ''}
+                            </div>
+                        `;
+                        container.innerHTML += cipaHTML;
+                    });
+                } else if (cipaMembros) {
+                    container.innerHTML = '<p>Nenhum membro da CIPA encontrado.</p>';
+                }
+            }
+
+            carregarNovidades();
+            carregarReflexaoDoDia();
+            carregarAniversariantes();
+            carregarFerias();
+            carregarCIPA();
         });
     </script>
 </body>
