@@ -1,0 +1,34 @@
+<!-- menu.html -->
+<header>
+  <div class="header-container">
+    <a href="index.html" class="logo">
+      <img src="psr_logo.png" alt="PSR Logo">
+      <span>Indústria</span>
+    </a>
+    <nav>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Abrir/Fechar menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul id="menu">
+        <li><a href="index.html#inicio">Início</a></li>
+        <li><a href="cardapio.html">Cardápio</a></li>
+        <li><a href="index.html#novidades">Novidades</a></li>
+        <li><a href="index.html#reflexao-do-dia">Reflexão do Dia</a></li>
+        <li><a href="index.html#aniversariantes">Aniversariantes</a></li>
+        <li><a href="index.html#ferias">Férias</a></li>
+        <li><a href="index.html#cipa">CIPA</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+// menu.html – menu toggle script
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('menu-toggle');
+  const menu   = document.getElementById('menu');
+  toggle?.addEventListener('click', () => {
+    menu.classList.toggle('active');
+  });
+});
+</script>
