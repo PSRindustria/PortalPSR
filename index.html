@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" /> 
+  <meta http-equiv="Pragma"        content="no-cache" />
+  <meta http-equiv="Expires"       content="0" />  
   <title>PSR Indústria</title>
   <!-- CSS principal -->
   <link rel="stylesheet" href="style.css" />
@@ -107,20 +110,17 @@
     document.getElementById('data-hoje-novidades').textContent = hojePt;
 
     // 3) Função genérica fetch + JSON com cache-buster
-async function fetchData(path) {
--   // const cacheBuster = Date.now();
-  try {
--     const res = await fetch(`${path}?t=${cacheBuster}`);
-+     const res = await fetch(path, {
-+       cache: 'no-store',       // desativa cache do navegador
-+       credentials: 'omit'      // não envia/armazenar cookies
-+     });
-    if (!res.ok) throw new Error(res.status);
-    return await res.json();
-  } catch {
-    return null;
-  }
-}    
+    async function fetchData(path) {
+      const cacheBuster = Date.now();
+      try {
+        const res = await fetch(`${path}?t=${cacheBuster}`);
+        if (!res.ok) throw new Error(res.status);
+        return await res.json();
+      } catch {
+        return null;
+      }
+    }
+
     // 4) Renderiza Novidades
     async function renderNovidades() {
       const data = await fetchData('novidades.json'),
