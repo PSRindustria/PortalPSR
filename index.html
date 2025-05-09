@@ -174,7 +174,7 @@
       c.appendChild(card);
     }
 
-    // 6) Renderiza Aniversariantes
+    // 6) Renderiza Aniversariantes + partículas
     async function renderAniversariantes() {
       const data = await fetchData('aniversariantes.json'),
             container = document.getElementById('aniversariantes-container');
@@ -187,6 +187,7 @@
             diaHoje = String(hoje.getDate()).padStart(2,'0'),
             mesHoje = String(hoje.getMonth()+1).padStart(2,'0'),
             nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
       data.forEach(a => {
         const [dStr,mStr] = a.data.split('/');
         const card = document.createElement('div');
@@ -207,6 +208,19 @@
             <p class="aniversariante-data">${dataFmt}</p>
           </div>`;
         container.appendChild(card);
+
+        // se for hoje, cria partículas "spark"
+        if (card.classList.contains('destaque-hoje')) {
+          for (let i = 0; i < 25; i++) {
+            const spark = document.createElement('span');
+            spark.className = 'spark';
+            spark.style.top  = Math.random() * 100 + '%';
+            spark.style.left = Math.random() * 100 + '%';
+            spark.style.animationDelay    = (Math.random() * 0.8) + 's';
+            spark.style.animationDuration = (0.6 + Math.random() * 0.6) + 's';
+            card.appendChild(spark);
+          }
+        }
       });
     }
 
