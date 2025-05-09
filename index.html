@@ -656,7 +656,7 @@
                     <li><a href="#reflexao-do-dia">Reflexão do Dia</a></li>
                     <li><a href="#aniversariantes">Aniversariantes</a></li>
                     <li><a href="#ferias">Férias</a></li>
-                    <li><a href="#jornal">Jornal</a></li>
+                    
                     <li><a href="#cipa">CIPA</a></li>
                 </ul>
             </nav>
@@ -699,14 +699,6 @@
             <div class="ferias-container">
                 <!-- Conteúdo será carregado por JavaScript -->
                 <div class="loading"><div class="loading-spinner"></div></div>
-            </div>
-        </section>
-
-        <section id="jornal" class="section">
-            <h2 class="section-title">Jornal Interno</h2>
-            <div class="container">
-                <p>Em breve, novidades do nosso jornal interno aqui!</p>
-                <!-- Pode ser um link para um PDF ou uma seção de artigos -->
             </div>
         </section>
 
@@ -790,101 +782,29 @@
 
             // Renderizar Reflexão do Dia
             function renderReflexao(data, container) {
-                container.innerHTML = `
+                container.innerHTML = '';
+
+                const card = document.createElement('div');
+                card.className = 'reflexao-card';
+
+                card.innerHTML = `
                     <p class="reflexao-frase">"${data.frase}"</p>
                     <p class="reflexao-autor">- ${data.autor}</p>
-                    <p class="reflexao-texto">${data.texto}</p>
-                    <p class="reflexao-data">${data.data}</p>
+                    <p class="reflexao-instrucao" style="font-size: 0.95rem; color: #888;">Clique aqui para refletir</p>
+                    <div class="reflexao-extra" style="display: none;">
+                        <p class="reflexao-texto">${data.texto}</p>
+                        <p class="reflexao-data">${data.data}</p>
+                    </div>
                 `;
-            }
 
-            // Renderizar Aniversariantes
-            function renderAniversariantes(data, container) {
-                data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'aniversariante-card';
-                    card.innerHTML = `
-                        <div class="aniversariante-img">
-                            ${item.foto ? `<img src="${item.foto}" alt="${item.nome}">` : '<i class="fas fa-birthday-cake"></i>'}
-                        </div>
-                        <div class="aniversariante-info">
-                            <h3><i class="fas fa-birthday-cake"></i> ${item.nome}</h3>
-                            <p>${item.setor}</p>
-                            <p class="aniversariante-data">${item.data_aniversario}</p>
-                        </div>
-                    `;
-                    container.appendChild(card);
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    const extra = card.querySelector('.reflexao-extra');
+                    extra.style.display = extra.style.display === 'none' ? 'block' : 'none';
                 });
+
+                container.appendChild(card);
             }
-
-            // Renderizar Férias
-            function renderFerias(data, container) {
-                if (data.length === 0) {
-                    container.innerHTML = '<p>Nenhum colaborador em férias no momento.</p>';
-                    return;
-                }
-                // Opção 1: Cards (como no mobile)
-                const gridContainer = document.createElement('div');
-                gridContainer.className = 'ferias-grid';
-                data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'ferias-card';
-                    card.innerHTML = `
-                        <div class="ferias-card-header">
-                            <i class="fas fa-plane-departure ferias-card-icon"></i>
-                            <span class="ferias-card-colaborador">${item.nome}</span>
-                        </div>
-                        <p class="ferias-card-periodo">Período: ${item.periodo_inicio} a ${item.periodo_fim}</p>
-                        <p class="ferias-card-departamento">Setor: ${item.setor}</p>
-                    `;
-                    gridContainer.appendChild(card);
-                });
-                container.appendChild(gridContainer);
-
-                // Opção 2: Tabela (para desktop, pode ser adicionada condicionalmente ou via CSS display)
-                // Se quiser a tabela também, descomente e ajuste:
-                /*
-                const table = document.createElement('table');
-                table.className = 'ferias-table';
-                table.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Setor</th>
-                            <th>Início</th>
-                            <th>Fim</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.map(item => `
-                            <tr>
-                                <td>${item.nome}</td>
-                                <td>${item.setor}</td>
-                                <td>${item.periodo_inicio}</td>
-                                <td>${item.periodo_fim}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                `;
-                container.appendChild(table);
-                */
-            }
-
-            // Renderizar CIPA
-            function renderCipa(data, container) {
-                for (const key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        const item = data[key];
-                        const card = document.createElement('div');
-                        card.className = 'cipa-card';
-                        card.innerHTML = `
-                            <div class="cipa-icon"><i class="${item.icone}"></i></div>
-                            <h3>${item.titulo}</h3>
-                            <p>${item.conteudo}</p>
-                        `;
-                        container.appendChild(card);
-                    }
-                }
             }
 
             // Carregar todos os dados
