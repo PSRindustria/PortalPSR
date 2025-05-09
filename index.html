@@ -13,8 +13,8 @@
             --branco: #FFFFFF;
             --dourado: #DAA520;
             --verde: #006400;
-            --rosa-claro-aniversario: #fde3e9; /* Cor de fundo sutil para data */
-            --borda-aniversario: #f08080; /* Cor da borda elegante para data */
+            --rosa-claro-aniversario: #fde3e9; 
+            --borda-aniversario: #f08080; 
         }
         
         footer {
@@ -550,27 +550,26 @@
                 font-size: 1.5rem;
             }
 
-            /* Aniversariantes Mobile - Opção 1: Card Vertical Detalhado */
             .aniversariantes-container {
-                grid-template-columns: 1fr; /* Uma coluna para mobile */
-                gap: 15px; /* Espaçamento menor entre cards */
+                grid-template-columns: 1fr; 
+                gap: 15px; 
             }
             .aniversariante-card {
-                display: flex; /* Para alinhar ícone e texto */
-                flex-direction: column; /* Conteúdo empilhado verticalmente */
-                align-items: center; /* Centraliza o conteúdo do card */
-                padding: 20px; /* Mais espaçamento interno */
-                text-align: center; /* Centraliza texto */
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                padding: 20px; 
+                text-align: center; 
                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
             .aniversariante-img {
-                display: none; /* Remove a imagem grande no mobile, conforme solicitado indiretamente pela imagem de referência */
+                display: none; 
             }
             .aniversariante-info {
-                padding: 0; /* Remove padding extra pois o card já tem */
+                padding: 0; 
             }
             .aniversariante-info h3 {
-                font-size: 1.2rem; /* Nome um pouco maior */
+                font-size: 1.2rem; 
                 color: var(--azul-marinho);
                 margin-bottom: 8px;
                 display: flex;
@@ -578,95 +577,78 @@
                 justify-content: center;
             }
             .aniversariante-info h3 .aniversario-icone {
-                margin-right: 8px; /* Espaço entre ícone e nome */
-                color: var(--dourado); /* Ícone festivo dourado */
+                margin-right: 8px; 
+                color: var(--dourado); 
                 font-size: 1.1rem;
             }
             .aniversariante-data {
-                font-size: 1rem; /* Data com bom tamanho */
+                font-size: 1rem; 
                 color: var(--cinza-escuro);
-                background-color: var(--rosa-claro-aniversario); /* Fundo sutil */
+                background-color: var(--rosa-claro-aniversario); 
                 padding: 5px 10px;
-                border-radius: 15px; /* Bordas arredondadas para a data */
-                border: 1px solid var(--borda-aniversario); /* Borda elegante */
-                display: inline-block; /* Para o padding e background funcionarem bem */
+                border-radius: 15px; 
+                border: 1px solid var(--borda-aniversario); 
+                display: inline-block; 
                 margin-top: 5px;
                 font-weight: 500;
             }
-            /* Remove a funcionalidade de expandir/colapsar que existia antes, pois o novo design já mostra tudo */
             .aniversariante-card.expanded,
             .aniversariante-card::after {
                 display: none; 
             }
-             .aniversariante-info p:not(.aniversariante-data) { /* Mostra o cargo se houver */
+             .aniversariante-info p:not(.aniversariante-data) { 
                 display: block;
                 font-size: 0.9rem;
                 color: var(--cinza-escuro);
                 margin-top: 5px;
             }
 
+            /* Férias Mobile - Ajuste para mostrar datas no lugar do cargo */
             .ferias-table thead {
                 display: none;
             }
             .ferias-table tbody tr {
-                display: block;
+                display: flex; /* Alterado para flex para melhor controle */
+                flex-direction: column; /* Empilhar itens verticalmente */
                 margin-bottom: 15px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                border-radius: 6px;
+                border-radius: 8px; /* Bordas mais suaves */
                 overflow: hidden;
-                cursor: pointer;
-            }
-            .ferias-table tbody tr td:nth-child(3),
-            .ferias-table tbody tr td:nth-child(4) {
-                display: none;
-            }
-            .ferias-table tbody tr.expanded td:nth-child(3),
-            .ferias-table tbody tr.expanded td:nth-child(4) {
-                display: block;
-                text-align: center;
-                padding: 10px;
+                background-color: var(--branco);
+                padding: 15px;
             }
             .ferias-table tbody td {
                 display: block;
-                text-align: center;
-                padding: 10px;
+                text-align: left; /* Alinhar texto à esquerda para melhor leitura */
+                padding: 8px 0; /* Ajuste no padding */
+                border-bottom: 1px solid #eee; /* Linha separadora sutil */
             }
-            .ferias-table tbody td:first-child {
-                background-color: var(--azul-marinho);
-                color: white;
+            .ferias-table tbody tr td:last-child {
+                border-bottom: none; /* Remove a última borda */
+            }
+
+            .ferias-table tbody td.ferias-colaborador {
                 font-weight: bold;
-                padding: 12px 10px;
-                position: relative;
+                color: var(--azul-marinho);
+                font-size: 1.1rem;
             }
-            .ferias-table tbody td:first-child::after {
-                content: '\f107';
-                font-family: 'Font Awesome 5 Free';
-                font-weight: 900;
-                position: absolute;
-                right: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: var(--branco);
-                transition: transform 0.3s ease;
-            }
-            .ferias-table tbody tr.expanded td:first-child::after {
-                transform: translateY(-50%) rotate(180deg);
-            }
-            .ferias-table tbody td:nth-child(2) {
+            .ferias-table tbody td.ferias-periodo {
+                font-size: 0.95rem;
                 color: var(--cinza-escuro);
-                font-style: italic;
-                padding: 8px 10px;
-                background-color: #f0f3f8;
             }
-            .ferias-table tbody td:nth-child(3)::before {
-                content: 'Início: ';
+            .ferias-table tbody td.ferias-periodo .label {
                 font-weight: 600;
-                color: var(--azul-marinho);
+                color: var(--azul-aco);
             }
-            .ferias-table tbody td:nth-child(4)::before {
-                content: 'Retorno: ';
-                font-weight: 600;
-                color: var(--azul-marinho);
+            /* Oculta as colunas de departamento, início e retorno originais no mobile */
+            .ferias-table tbody td:nth-child(2),
+            .ferias-table tbody td:nth-child(3),
+            .ferias-table tbody td:nth-child(4) {
+                display: none; 
+            }
+            /* Adiciona a nova célula para o período de férias */
+            .ferias-table tbody tr td.ferias-periodo-mobile {
+                display: block !important; /* Garante que seja exibido */
             }
         }
     </style>
@@ -775,13 +757,17 @@
 
         async function carregarDados(arquivo) {
             try {
-                const resposta = await fetch(arquivo);
+                // Garante que o caminho para os arquivos JSON seja relativo à raiz do site.
+                // Se o index.html e os JSONs estão no mesmo nível, 'arquivo' (ex: 'novidades.json') já é o caminho correto.
+                // Se estiverem em subpastas, o caminho precisaria ser ajustado aqui ou na chamada da função.
+                // Para este projeto, assumindo que estão na raiz, o nome do arquivo é suficiente.
+                const resposta = await fetch(arquivo); 
                 if (!resposta.ok) {
                     console.error(`Erro ao carregar ${arquivo}: ${resposta.status} ${resposta.statusText}`);
-                    const containerId = arquivo.split('.')[0] + '-container'; // ex: novidades.json -> novidades-container
+                    const containerId = arquivo.split('.')[0] + '-container'; 
                     const container = document.getElementById(containerId);
                     if (container) {
-                        container.innerHTML = `<p>Erro ao carregar dados de ${arquivo}. Tente novamente mais tarde.</p>`;
+                        container.innerHTML = `<p>Erro ao carregar dados de ${arquivo}. Verifique o console para mais detalhes.</p>`;
                     }
                     return null; 
                 }
@@ -795,14 +781,6 @@
                 }
                 return null;
             }
-        }
-
-        function formatarDataParaComparacao(dataString) { 
-            const partes = dataString.split('/');
-            if (partes.length === 3) {
-                return `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
-            }
-            return dataString; 
         }
 
         async function carregarNovidades() {
@@ -824,14 +802,15 @@
                     `;
                     container.innerHTML += novidadeHTML;
                 });
-            } else if (novidades) { // Se a resposta for um array vazio
+            } else if (novidades) { 
                  container.innerHTML = '<p>Nenhuma novidade encontrada no momento.</p>';
-            } // Se novidades for null, a mensagem de erro já foi tratada em carregarDados
+            } 
         }
 
         async function carregarReflexaoDoDia() {
             const container = document.getElementById('reflexao-container');
-            const reflexoes = await carregarDados('reflexaododia.json');
+            // Corrigido para buscar 'reflexaododia.json' diretamente, assumindo que está na raiz.
+            const reflexoes = await carregarDados('reflexaododia.json'); 
             
             if (reflexoes && reflexoes.length > 0) {
                 const hoje = new Date();
@@ -864,7 +843,6 @@
                 container.innerHTML = '';
                 aniversariantes.forEach(aniversariante => {
                     const imagemHTML = aniversariante.imagem ? `<img src="${aniversariante.imagem}" alt="${aniversariante.nome}">` : '<i class="fas fa-user"></i>';
-                    // Adaptação para o novo card mobile (Opção 1)
                     const aniversarianteHTML = `
                         <div class="aniversariante-card">
                             <div class="aniversariante-img">${imagemHTML}</div>
@@ -877,7 +855,6 @@
                     `;
                     container.innerHTML += aniversarianteHTML;
                 });
-                // Removida a lógica de expandir/colapsar, pois o novo design mobile já mostra tudo.
             } else if (aniversariantes) {
                 container.innerHTML = '<p>Nenhum aniversariante encontrado para este mês.</p>';
             }
@@ -890,22 +867,29 @@
                 tbody.innerHTML = '';
                 ferias.forEach(f => {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${f.colaborador}</td>
+                    // Para desktop, mantém a estrutura original da tabela
+                    let htmlInterno = `
+                        <td class="ferias-colaborador">${f.colaborador}</td>
                         <td>${f.departamento}</td>
                         <td>${f.inicio}</td>
                         <td>${f.retorno}</td>
                     `;
+
+                    // Para mobile, ajusta para mostrar nome e período de férias
+                    // A classe .ferias-periodo-mobile será usada pelo CSS para formatar especificamente no mobile
+                    if (window.innerWidth <= 768) {
+                         htmlInterno = `
+                            <td class="ferias-colaborador">${f.colaborador}</td>
+                            <td class="ferias-periodo-mobile ferias-periodo">
+                                <span class="label">Período:</span> ${f.inicio} - ${f.retorno}
+                            </td>
+                        `;
+                    }
+                    tr.innerHTML = htmlInterno;
                     tbody.appendChild(tr);
                 });
-                if (window.innerWidth <= 768) {
-                    const rows = document.querySelectorAll('#ferias-tbody tr');
-                    rows.forEach(row => {
-                        row.addEventListener('click', () => {
-                            row.classList.toggle('expanded');
-                        });
-                    });
-                }
+                // A lógica de expandir/colapsar original para mobile foi removida/simplificada
+                // Se precisar de interatividade, ela precisaria ser refeita para o novo layout flex
             } else if (ferias) {
                 tbody.innerHTML = '<tr><td colspan="4"><p>Nenhuma programação de férias encontrada.</p></td></tr>';
             }
