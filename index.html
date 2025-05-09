@@ -15,7 +15,6 @@
             --verde: #006400;
         }
         
-        /* Novo estilo do footer */
         footer {
             background-color: var(--azul-marinho);
             color: var(--branco);
@@ -75,7 +74,6 @@
             overflow-x: hidden;
         }
         
-        /* Header */
         header {
             background-color: var(--azul-marinho);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -111,7 +109,6 @@
             margin-left: 5px;
         }
         
-        /* Menu para desktop */
         .menu {
             display: flex;
             list-style: none;
@@ -163,11 +160,10 @@
             transform: translateY(-2px);
         }
         
-        /* Banner */
         .banner {
             height: 400px;
             background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.9)), url('/api/placeholder/1200/400') center/cover no-repeat;
-            margin-top: 70px;
+            margin-top: 70px; /* Ajustado para altura do header */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -205,7 +201,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
-        /* Seções */
         .section {
             padding: 60px 20px;
         }
@@ -226,12 +221,11 @@
             background: var(--dourado);
             margin: 15px auto 0;
         }
-        
-        /* Novidades */
+
+        /* Estilos para Novidades */
         #novidades {
             background-color: var(--branco);
         }
-        
         .novidades-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -239,41 +233,35 @@
             flex-direction: column;
             gap: 25px;
         }
-        
-.novidade-card {
-    background-color: #f7f9fc;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease;
-}
-
-.novidade-img {
-    background-color: var(--azul-marinho);
-    color: var(--branco);
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.novidade-img i {
-    font-size: 40px;
-}
-        
+        .novidade-card {
+            background-color: #f7f9fc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        .novidade-img {
+            background-color: var(--azul-marinho);
+            color: var(--branco);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .novidade-img i {
+            font-size: 40px;
+        }
         .novidade-content {
             padding: 25px;
             text-align: center;
         }
-        
         .novidade-content h3 {
             color: var(--azul-marinho);
             margin-bottom: 10px;
             font-size: 1.3rem;
         }
-        
         .novidade-date {
             color: var(--cinza-escuro);
             font-size: 0.9rem;
@@ -282,12 +270,10 @@
             align-items: center;
             justify-content: center;
         }
-        
         .novidade-content p {
             margin-bottom: 15px;
             line-height: 1.6;
         }
-        
         .novidade-link {
             color: var(--azul-aco);
             text-decoration: none;
@@ -296,20 +282,56 @@
             align-items: center;
             transition: color 0.3s ease;
         }
-        
         .novidade-link i {
             margin-left: 8px;
             transition: transform 0.3s ease;
         }
-        
         .novidade-link:hover {
             color: var(--azul-marinho);
         }
-        
         .novidade-link:hover i {
             transform: translateX(5px);
         }
-        
+
+        /* Estilos para Reflexão do Dia */
+        #reflexao-do-dia {
+            background-color: #e9ecef; /* Um fundo suave para diferenciar */
+        }
+        .reflexao-container {
+            max-width: 800px; /* Mais centralizado */
+            margin: 0 auto;
+            background-color: var(--branco);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        .reflexao-frase {
+            font-size: 1.5rem; /* Frase em destaque */
+            font-style: italic;
+            color: var(--azul-marinho);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .reflexao-autor {
+            font-size: 1rem;
+            color: var(--dourado); /* Autor em dourado */
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .reflexao-texto {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--cinza-escuro);
+            text-align: justify;
+        }
+        .reflexao-data {
+            font-size: 0.9rem;
+            color: var(--cinza-escuro);
+            margin-top: 20px;
+        }
+
+        /* Aniversariantes */
         .aniversariantes-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -317,19 +339,16 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
         .aniversariante-card {
             background-color: var(--branco);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
         }
-        
         .aniversariante-card:hover {
             transform: translateY(-5px);
         }
-        
         .aniversariante-img {
             height: 200px;
             background-color: var(--azul-aco);
@@ -338,80 +357,67 @@
             align-items: center;
             overflow: hidden;
         }
-        
         .aniversariante-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
         .aniversariante-img i {
             font-size: 80px;
             color: var(--branco);
         }
-        
         .aniversariante-info {
             padding: 20px;
             text-align: center;
         }
-        
         .aniversariante-info h3 {
             margin-bottom: 8px;
             color: var(--azul-marinho);
         }
-        
         .aniversariante-info p {
             color: var(--cinza-escuro);
             margin-bottom: 5px;
         }
-        
         .aniversariante-data {
             font-weight: bold;
             color: var(--dourado);
         }
-        
+
         /* Férias */
         #ferias {
             background-color: var(--branco);
         }
-        
         .ferias-container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
         .ferias-table {
             width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             border-radius: 10px;
             overflow: hidden;
         }
-        
         .ferias-table th,
         .ferias-table td {
             padding: 15px;
             text-align: left;
         }
-        
         .ferias-table thead {
             background-color: var(--azul-marinho);
             color: var(--branco);
         }
-        
         .ferias-table tbody tr:nth-child(even) {
             background-color: #f7f9fc;
         }
-        
         .ferias-table tbody tr:hover {
-            background-color: rgba(70, 130, 180, 0.1);
+            background-color: rgba(70,130,180,0.1);
         }
-        
+
         /* CIPA */
         #cipa {
             background-color: #f7f9fc;
         }
-        
         .cipa-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -419,20 +425,17 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
-        
         .cipa-card {
             background-color: var(--branco);
             border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             text-align: center;
             transition: transform 0.3s ease;
         }
-        
         .cipa-card:hover {
             transform: translateY(-5px);
         }
-        
         .cipa-icon {
             width: 80px;
             height: 80px;
@@ -445,136 +448,112 @@
             margin: 0 auto 20px;
             font-size: 32px;
         }
-        
         .cipa-card h3 {
             color: var(--azul-marinho);
             margin-bottom: 15px;
         }
-        
         .cipa-card p {
             color: var(--cinza-escuro);
             line-height: 1.6;
         }
-        
-        /* Footer */
-        footer {
-            background-color: var(--azul-marinho);
-            color: var(--branco);
-            padding: 40px 20px;
-        }
-        
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-        }
-        
-        .footer-column h3 {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .footer-column h3::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 3px;
-            background: var(--dourado);
-            margin-top: 10px;
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-links a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-        
-        .footer-links a i {
-            margin-right: 10px;
-            color: var(--dourado);
-        }
-        
-        .footer-links a:hover {
-            color: var(--dourado);
-        }
-        
+
+        /* Ícones de Redes Sociais Melhorados */
         .social-links {
             display: flex;
+            justify-content: center; /* Centraliza os ícones */
             margin-top: 20px;
         }
-        
         .social-links a {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
+            width: 48px; /* Tamanho aumentado */
+            height: 48px; /* Tamanho aumentado */
+            background-color: rgba(255, 255, 255, 0.15); /* Fundo um pouco mais visível */
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 10px;
+            margin: 0 10px; /* Espaçamento ajustado */
             color: var(--branco);
-            transition: all 0.3s ease;
+            font-size: 1.5rem; /* Tamanho do ícone aumentado */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Transição mais elaborada */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra sutil */
         }
-        
         .social-links a:hover {
             background-color: var(--dourado);
-            transform: translateY(-3px);
+            color: var(--azul-marinho); /* Cor do ícone no hover */
+            transform: translateY(-5px) scale(1.1); /* Efeito de elevação e aumento */
+            box-shadow: 0 8px 15px rgba(218, 165, 32, 0.4); /* Sombra dourada no hover */
         }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ccc;
-        }
-        
-        /* Loading spinner */
+
         .loading {
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 30px;
         }
-        
         .loading-spinner {
-            border: 5px solid rgba(0, 51, 102, 0.1);
+            border: 5px solid rgba(0,51,102,0.1);
             border-top: 5px solid var(--dourado);
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        /* Aniversariantes responsivo - Melhorado */
+
+        /* Responsividade */
         @media screen and (max-width: 768px) {
-            /* Logo responsivo */
             .logo img {
                 height: 30px;
             }
-            
             .logo {
                 font-size: 1.3rem;
             }
-            
+            .menu {
+                display: none;
+                position: absolute;
+                top: 60px; /* Ajustado para altura do header */
+                left: 0;
+                width: 100%;
+                background-color: var(--azul-marinho);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            }
+            .menu.active {
+                display: flex;
+            }
+            .menu li {
+                margin: 10px 0;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .header-container {
+                padding: 10px 20px; /* Reduzido para mobile */
+            }
+            .whatsapp-contact {
+                display: none; /* Remove o contato do WhatsApp no mobile */
+            }
+            .banner {
+                height: 300px;
+                margin-top: 60px; /* Ajustado para altura do header */
+            }
+            .banner h1 {
+                font-size: 1.8rem;
+            }
+            .banner p {
+                font-size: 1rem;
+            }
+            .section {
+                padding: 40px 20px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
             .aniversariante-card {
                 cursor: pointer;
                 transition: all 0.3s ease;
@@ -583,52 +562,43 @@
                 display: flex;
                 align-items: center;
             }
-            
             .aniversariante-img {
                 display: none;
             }
-            
             .aniversariante-info {
                 padding: 0;
                 text-align: left;
                 width: 100%;
                 position: relative;
             }
-            
             .aniversariante-info p:not(.aniversariante-data) {
                 display: none;
                 margin-top: 10px;
                 transition: all 0.3s ease;
             }
-            
             .aniversariante-card.expanded {
                 flex-direction: column;
                 align-items: stretch;
                 padding: 0;
             }
-            
             .aniversariante-card.expanded .aniversariante-img {
                 display: flex;
                 height: 120px;
                 margin-bottom: 10px;
             }
-            
             .aniversariante-card.expanded .aniversariante-info {
                 padding: 15px;
                 text-align: center;
             }
-            
             .aniversariante-card.expanded .aniversariante-info p {
                 display: block;
             }
-            
             .aniversariante-info h3 {
                 display: inline-block;
                 margin-right: 15px;
                 margin-bottom: 0;
                 font-size: 1.1rem;
             }
-            
             .aniversariante-data {
                 position: absolute;
                 right: 0;
@@ -641,7 +611,6 @@
                 font-size: 0.9rem;
                 display: inline-block;
             }
-            
             .aniversariante-card.expanded .aniversariante-data {
                 position: static;
                 transform: none;
@@ -650,8 +619,6 @@
                 font-size: 1.1rem;
                 padding: 8px 15px;
             }
-            
-            /* Ícone de expansão */
             .aniversariante-card::after {
                 content: '\f107';
                 font-family: 'Font Awesome 5 Free';
@@ -664,50 +631,37 @@
                 transition: transform 0.3s ease;
                 font-size: 1.2rem;
             }
-            
             .aniversariante-card.expanded::after {
                 transform: translateY(-50%) rotate(180deg);
                 top: 15px;
                 right: 15px;
             }
-            
-            /* Férias responsivo - Encolher e expandir */
-            .ferias-table {
-                border-collapse: separate;
-                border-spacing: 0;
-            }
-            
             .ferias-table thead {
                 display: none;
             }
-            
             .ferias-table tbody tr {
                 display: block;
                 margin-bottom: 15px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 border-radius: 6px;
                 overflow: hidden;
                 cursor: pointer;
             }
-            
             .ferias-table tbody tr td:nth-child(3),
             .ferias-table tbody tr td:nth-child(4) {
                 display: none;
             }
-            
             .ferias-table tbody tr.expanded td:nth-child(3),
             .ferias-table tbody tr.expanded td:nth-child(4) {
                 display: block;
                 text-align: center;
                 padding: 10px;
             }
-            
             .ferias-table tbody td {
                 display: block;
                 text-align: center;
                 padding: 10px;
             }
-            
             .ferias-table tbody td:first-child {
                 background-color: var(--azul-marinho);
                 color: white;
@@ -715,7 +669,6 @@
                 padding: 12px 10px;
                 position: relative;
             }
-            
             .ferias-table tbody td:first-child::after {
                 content: '\f107';
                 font-family: 'Font Awesome 5 Free';
@@ -727,84 +680,27 @@
                 color: var(--branco);
                 transition: transform 0.3s ease;
             }
-            
             .ferias-table tbody tr.expanded td:first-child::after {
                 transform: translateY(-50%) rotate(180deg);
             }
-            
             .ferias-table tbody td:nth-child(2) {
                 color: var(--cinza-escuro);
                 font-style: italic;
                 padding: 8px 10px;
                 background-color: #f0f3f8;
             }
-            
             .ferias-table tbody td:nth-child(3)::before {
                 content: 'Início: ';
                 font-weight: 600;
                 color: var(--azul-marinho);
             }
-            
             .ferias-table tbody td:nth-child(4)::before {
                 content: 'Retorno: ';
                 font-weight: 600;
                 color: var(--azul-marinho);
             }
         }
-        
-        /* Responsivo - Base */
-        @media screen and (max-width: 768px) {
-            .menu {
-                display: none;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background-color: var(--azul-marinho);
-                flex-direction: column;
-                align-items: center;
-                padding: 20px 0;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            }
-            
-            .menu.active {
-                display: flex;
-            }
-            
-            .menu li {
-                margin: 10px 0;
-            }
-            
-            .menu-toggle {
-                display: block;
-            }
-            
-            .header-container {
-                padding: 10px 20px;
-            }
-            
-            .banner {
-                height: 300px;
-                margin-top: 60px;
-            }
-            
-            .banner h1 {
-                font-size: 1.8rem;
-            }
-            
-            .banner p {
-                font-size: 1rem;
-            }
-            
-            .section {
-                padding: 40px 20px;
-            }
-            
-            .section-title {
-                font-size: 1.5rem;
-            }
-        }
-</style>
+    </style>
 </head>
 <body>
     <header>
@@ -818,6 +714,7 @@
                     <li><a href="#inicio">Início</a></li>
                     <li><a href="cardapio.html">Cardápio</a></li>
                     <li><a href="#novidades">Novidades</a></li>
+                    <li><a href="#reflexao-do-dia">Reflexão do Dia</a></li>
                     <li><a href="#aniversariantes">Aniversariantes</a></li>
                     <li><a href="#ferias">Férias</a></li>
                     <li><a href="jornal.html">Jornal</a></li>
@@ -833,7 +730,7 @@
         </div>
     </header>
 
-    <section class="banner">
+    <section class="banner" id="inicio">
         <h1>Bem-vindo à Intranet da PSR Indústria</h1>
         <p>Seu portal para informações internas, notícias e recursos para colaboradores</p>
         <a href="#novidades" class="banner-btn">Novidades</a>
@@ -842,18 +739,21 @@
     <section id="novidades" class="section">
         <h2 class="section-title">Últimas Novidades</h2>
         <div class="novidades-container" id="novidades-container">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-            </div>
+            <div class="loading"><div class="loading-spinner"></div></div>
+        </div>
+    </section>
+
+    <section id="reflexao-do-dia" class="section">
+        <h2 class="section-title">Reflexão do Dia</h2>
+        <div class="reflexao-container" id="reflexao-container">
+            <div class="loading"><div class="loading-spinner"></div></div>
         </div>
     </section>
 
     <section id="aniversariantes" class="section">
         <h2 class="section-title">Aniversariantes do Mês</h2>
         <div class="aniversariantes-container" id="aniversariantes-container">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-            </div>
+            <div class="loading"><div class="loading-spinner"></div></div>
         </div>
     </section>
 
@@ -870,13 +770,7 @@
                     </tr>
                 </thead>
                 <tbody id="ferias-tbody">
-                    <tr>
-                        <td colspan="4">
-                            <div class="loading">
-                                <div class="loading-spinner"></div>
-                            </div>
-                        </td>
-                    </tr>
+                    <tr><td colspan="4"><div class="loading"><div class="loading-spinner"></div></div></td></tr>
                 </tbody>
             </table>
         </div>
@@ -885,9 +779,7 @@
     <section id="cipa" class="section">
         <h2 class="section-title">CIPA</h2>
         <div class="cipa-container" id="cipa-container">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-            </div>
+            <div class="loading"><div class="loading-spinner"></div></div>
         </div>
     </section>
 
@@ -908,12 +800,10 @@
     </footer>
 
     <script>
-        // Menu toggle para dispositivos móveis
         document.getElementById('menu-toggle').addEventListener('click', function() {
             document.getElementById('menu').classList.toggle('active');
         });
 
-        // Função para carregar dados JSON de um arquivo
         async function carregarDados(arquivo) {
             try {
                 const resposta = await fetch(arquivo);
@@ -927,34 +817,28 @@
             }
         }
 
-        // Função para formatar data (DD/MM/AAAA)
-        function formatarData(dataString) {
-            return dataString;
+        function formatarDataParaComparacao(dataString) { 
+            const partes = dataString.split('/');
+            if (partes.length === 3) {
+                return `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+            }
+            return dataString; 
         }
 
-        // Carregar e exibir novidades
         async function carregarNovidades() {
             const container = document.getElementById('novidades-container');
             const novidades = await carregarDados('novidades.json');
-            
             if (novidades && novidades.length > 0) {
                 container.innerHTML = '';
-                
                 novidades.forEach(novidade => {
                     const novidadeHTML = `
                         <div class="novidade-card">
-                            <div class="novidade-img">
-                                <i class="${novidade.icone}"></i>
-                            </div>
+                            <div class="novidade-img"><i class="${novidade.icone}"></i></div>
                             <div class="novidade-content">
                                 <h3>${novidade.titulo}</h3>
-                                <div class="novidade-date">
-                                    <i class="far fa-calendar-alt"></i> ${novidade.data}
-                                </div>
+                                <div class="novidade-date"><i class="far fa-calendar-alt"></i> ${novidade.data}</div>
                                 <p>${novidade.conteudo}</p>
-                                <a href="${novidade.link}" class="novidade-link">
-                                    Saiba mais <i class="fas fa-arrow-right"></i>
-                                </a>
+                                <a href="${novidade.link}" class="novidade-link">Saiba mais <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </div>
                     `;
@@ -965,25 +849,44 @@
             }
         }
 
-        // Carregar e exibir aniversariantes
+        async function carregarReflexaoDoDia() {
+            const container = document.getElementById('reflexao-container');
+            const reflexoes = await carregarDados('reflexaododia.json');
+            
+            if (reflexoes && reflexoes.length > 0) {
+                const hoje = new Date();
+                const dia = String(hoje.getDate()).padStart(2, '0');
+                const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+                const ano = hoje.getFullYear();
+                const dataAtualFormatada = `${dia}/${mes}/${ano}`;
+
+                const reflexaoDeHoje = reflexoes.find(r => r.data === dataAtualFormatada);
+
+                if (reflexaoDeHoje) {
+                    container.innerHTML = `
+                        <p class="reflexao-frase">“${reflexaoDeHoje.frase}”</p>
+                        <p class="reflexao-autor">- ${reflexaoDeHoje.autor}</p>
+                        <p class="reflexao-texto">${reflexaoDeHoje.reflexao}</p>
+                        <p class="reflexao-data">Reflexão para o dia: ${reflexaoDeHoje.data}</p>
+                    `;
+                } else {
+                    container.innerHTML = '<p>Nenhuma reflexão encontrada para hoje. Volte amanhã!</p>';
+                }
+            } else {
+                container.innerHTML = '<p>Nenhuma reflexão encontrada.</p>';
+            }
+        }
+
         async function carregarAniversariantes() {
             const container = document.getElementById('aniversariantes-container');
             const aniversariantes = await carregarDados('aniversariantes.json');
-            
             if (aniversariantes && aniversariantes.length > 0) {
                 container.innerHTML = '';
-                
                 aniversariantes.forEach(aniversariante => {
-                    // Usar imagem do aniversariante se disponível, caso contrário usar ícone padrão
-                    const imagemHTML = aniversariante.imagem 
-                        ? `<img src="${aniversariante.imagem}" alt="${aniversariante.nome}">`
-                        : `<i class="fas fa-user"></i>`;
-                    
+                    const imagemHTML = aniversariante.imagem ? `<img src="${aniversariante.imagem}" alt="${aniversariante.nome}">` : '<i class="fas fa-user"></i>';
                     const aniversarianteHTML = `
                         <div class="aniversariante-card">
-                            <div class="aniversariante-img">
-                                ${imagemHTML}
-                            </div>
+                            <div class="aniversariante-img">${imagemHTML}</div>
                             <div class="aniversariante-info">
                                 <h3>${aniversariante.nome}</h3>
                                 <p>${aniversariante.cargo}</p>
@@ -993,139 +896,75 @@
                     `;
                     container.innerHTML += aniversarianteHTML;
                 });
-                
-                // Adicionar evento para cards em dispositivos móveis
                 if (window.innerWidth <= 768) {
                     const cards = document.querySelectorAll('.aniversariante-card');
                     cards.forEach(card => {
-                        card.addEventListener('click', function() {
-                            this.classList.toggle('expanded');
+                        card.addEventListener('click', () => {
+                            card.classList.toggle('expanded');
                         });
                     });
                 }
             } else {
-                container.innerHTML = '<p>Nenhum aniversariante encontrado neste mês.</p>';
+                container.innerHTML = '<p>Nenhum aniversariante encontrado para este mês.</p>';
             }
         }
 
-        // Carregar e exibir programação de férias
         async function carregarFerias() {
             const tbody = document.getElementById('ferias-tbody');
             const ferias = await carregarDados('ferias.json');
-            
             if (ferias && ferias.length > 0) {
                 tbody.innerHTML = '';
-                
-                ferias.forEach(periodo => {
+                ferias.forEach(f => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${periodo.colaborador}</td>
-                        <td>${periodo.departamento}</td>
-                        <td>${periodo.inicio}</td>
-                        <td>${periodo.retorno}</td>
+                        <td>${f.colaborador}</td>
+                        <td>${f.departamento}</td>
+                        <td>${f.inicio}</td>
+                        <td>${f.retorno}</td>
                     `;
                     tbody.appendChild(tr);
                 });
-                
-                // Adicionar evento para linhas em dispositivos móveis
                 if (window.innerWidth <= 768) {
-                    const rows = tbody.querySelectorAll('tr');
+                    const rows = document.querySelectorAll('#ferias-tbody tr');
                     rows.forEach(row => {
-                        row.addEventListener('click', function() {
-                            this.classList.toggle('expanded');
+                        row.addEventListener('click', () => {
+                            row.classList.toggle('expanded');
                         });
                     });
                 }
             } else {
-                tbody.innerHTML = '<tr><td colspan="4">Nenhum período de férias programado.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4"><p>Nenhuma programação de férias encontrada.</p></td></tr>';
             }
         }
 
-        // Carregar e exibir informações da CIPA
         async function carregarCIPA() {
             const container = document.getElementById('cipa-container');
-            const cipa = await carregarDados('cipa.json');
-            
-            if (cipa && Object.keys(cipa).length > 0) {
+            const cipaMembros = await carregarDados('cipa.json');
+            if (cipaMembros && cipaMembros.length > 0) {
                 container.innerHTML = '';
-                
-                for (const key in cipa) {
-                    if (cipa.hasOwnProperty(key)) {
-                        const secao = cipa[key];
-                        const cipaHTML = `
-                            <div class="cipa-card">
-                                <div class="cipa-icon">
-                                    <i class="${secao.icone}"></i>
-                                </div>
-                                <h3>${secao.titulo}</h3>
-                                <p>${secao.conteudo}</p>
-                            </div>
-                        `;
-                        container.innerHTML += cipaHTML;
-                    }
-                }
+                cipaMembros.forEach(membro => {
+                    const cipaHTML = `
+                        <div class="cipa-card">
+                            <div class="cipa-icon"><i class="${membro.icone || 'fas fa-hard-hat'}"></i></div>
+                            <h3>${membro.nome}</h3>
+                            <p>${membro.cargo_cipa}</p>
+                            <p>Departamento: ${membro.departamento}</p>
+                            ${membro.contato ? `<p>Contato: ${membro.contato}</p>` : ''}
+                        </div>
+                    `;
+                    container.innerHTML += cipaHTML;
+                });
             } else {
-                container.innerHTML = '<p>Nenhuma informação da CIPA encontrada.</p>';
+                container.innerHTML = '<p>Nenhum membro da CIPA encontrado.</p>';
             }
         }
 
-        // Carregar todos os dados quando a página for carregada
-        window.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             carregarNovidades();
+            carregarReflexaoDoDia();
             carregarAniversariantes();
             carregarFerias();
             carregarCIPA();
-            
-            // Suavizar scrolling para links internos
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Fechar menu mobile se estiver aberto
-                    document.getElementById('menu').classList.remove('active');
-                    
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 70,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });
-
-        // Atualizar comportamento responsivo ao redimensionar a janela
-        window.addEventListener('resize', function() {
-            const isMobile = window.innerWidth <= 768;
-            
-            // Aniversariantes
-            const aniversarianteCards = document.querySelectorAll('.aniversariante-card');
-            aniversarianteCards.forEach(card => {
-                if (isMobile) {
-                    card.addEventListener('click', function() {
-                        this.classList.toggle('expanded');
-                    });
-                } else {
-                    card.removeEventListener('click', function() {});
-                    card.classList.remove('expanded');
-                }
-            });
-            
-            // Férias
-            const feriaRows = document.querySelectorAll('#ferias-tbody tr');
-            feriaRows.forEach(row => {
-                if (isMobile) {
-                    row.addEventListener('click', function() {
-                        this.classList.toggle('expanded');
-                    });
-                } else {
-                    row.removeEventListener('click', function() {});
-                    row.classList.remove('expanded');
-                }
-            });
         });
     </script>
 </body>
