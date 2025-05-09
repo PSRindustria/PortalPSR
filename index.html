@@ -13,6 +13,8 @@
             --branco: #FFFFFF;
             --dourado: #DAA520;
             --verde: #006400;
+            --rosa-claro-aniversario: #fde3e9; /* Cor de fundo sutil para data */
+            --borda-aniversario: #f08080; /* Cor da borda elegante para data */
         }
         
         footer {
@@ -163,7 +165,7 @@
         .banner {
             height: 400px;
             background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.9)), url('/api/placeholder/1200/400') center/cover no-repeat;
-            margin-top: 70px; /* Ajustado para altura do header */
+            margin-top: 70px; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -222,7 +224,6 @@
             margin: 15px auto 0;
         }
 
-        /* Estilos para Novidades */
         #novidades {
             background-color: var(--branco);
         }
@@ -293,12 +294,11 @@
             transform: translateX(5px);
         }
 
-        /* Estilos para Reflexão do Dia */
         #reflexao-do-dia {
-            background-color: #e9ecef; /* Um fundo suave para diferenciar */
+            background-color: #e9ecef; 
         }
         .reflexao-container {
-            max-width: 800px; /* Mais centralizado */
+            max-width: 800px; 
             margin: 0 auto;
             background-color: var(--branco);
             padding: 30px;
@@ -307,7 +307,7 @@
             text-align: center;
         }
         .reflexao-frase {
-            font-size: 1.5rem; /* Frase em destaque */
+            font-size: 1.5rem; 
             font-style: italic;
             color: var(--azul-marinho);
             margin-bottom: 10px;
@@ -315,7 +315,7 @@
         }
         .reflexao-autor {
             font-size: 1rem;
-            color: var(--dourado); /* Autor em dourado */
+            color: var(--dourado); 
             margin-bottom: 20px;
             font-weight: bold;
         }
@@ -331,7 +331,6 @@
             margin-top: 20px;
         }
 
-        /* Aniversariantes */
         .aniversariantes-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -383,7 +382,6 @@
             color: var(--dourado);
         }
 
-        /* Férias */
         #ferias {
             background-color: var(--branco);
         }
@@ -414,7 +412,6 @@
             background-color: rgba(70,130,180,0.1);
         }
 
-        /* CIPA */
         #cipa {
             background-color: #f7f9fc;
         }
@@ -457,31 +454,30 @@
             line-height: 1.6;
         }
 
-        /* Ícones de Redes Sociais Melhorados */
         .social-links {
             display: flex;
-            justify-content: center; /* Centraliza os ícones */
+            justify-content: center; 
             margin-top: 20px;
         }
         .social-links a {
-            width: 48px; /* Tamanho aumentado */
-            height: 48px; /* Tamanho aumentado */
-            background-color: rgba(255, 255, 255, 0.15); /* Fundo um pouco mais visível */
+            width: 48px; 
+            height: 48px; 
+            background-color: rgba(255, 255, 255, 0.15); 
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 10px; /* Espaçamento ajustado */
+            margin: 0 10px; 
             color: var(--branco);
-            font-size: 1.5rem; /* Tamanho do ícone aumentado */
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Transição mais elaborada */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra sutil */
+            font-size: 1.5rem; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
         }
         .social-links a:hover {
             background-color: var(--dourado);
-            color: var(--azul-marinho); /* Cor do ícone no hover */
-            transform: translateY(-5px) scale(1.1); /* Efeito de elevação e aumento */
-            box-shadow: 0 8px 15px rgba(218, 165, 32, 0.4); /* Sombra dourada no hover */
+            color: var(--azul-marinho); 
+            transform: translateY(-5px) scale(1.1); 
+            box-shadow: 0 8px 15px rgba(218, 165, 32, 0.4); 
         }
 
         .loading {
@@ -503,7 +499,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsividade */
         @media screen and (max-width: 768px) {
             .logo img {
                 height: 30px;
@@ -514,7 +509,7 @@
             .menu {
                 display: none;
                 position: absolute;
-                top: 60px; /* Ajustado para altura do header */
+                top: 60px; 
                 left: 0;
                 width: 100%;
                 background-color: var(--azul-marinho);
@@ -533,14 +528,14 @@
                 display: block;
             }
             .header-container {
-                padding: 10px 20px; /* Reduzido para mobile */
+                padding: 10px 20px; 
             }
             .whatsapp-contact {
-                display: none; /* Remove o contato do WhatsApp no mobile */
+                display: none; 
             }
             .banner {
                 height: 300px;
-                margin-top: 60px; /* Ajustado para altura do header */
+                margin-top: 60px; 
             }
             .banner h1 {
                 font-size: 1.8rem;
@@ -554,88 +549,62 @@
             .section-title {
                 font-size: 1.5rem;
             }
+
+            /* Aniversariantes Mobile - Opção 1: Card Vertical Detalhado */
+            .aniversariantes-container {
+                grid-template-columns: 1fr; /* Uma coluna para mobile */
+                gap: 15px; /* Espaçamento menor entre cards */
+            }
             .aniversariante-card {
-                cursor: pointer;
-                transition: all 0.3s ease;
-                position: relative;
-                padding: 12px;
-                display: flex;
-                align-items: center;
+                display: flex; /* Para alinhar ícone e texto */
+                flex-direction: column; /* Conteúdo empilhado verticalmente */
+                align-items: center; /* Centraliza o conteúdo do card */
+                padding: 20px; /* Mais espaçamento interno */
+                text-align: center; /* Centraliza texto */
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
             .aniversariante-img {
-                display: none;
+                display: none; /* Remove a imagem grande no mobile, conforme solicitado indiretamente pela imagem de referência */
             }
             .aniversariante-info {
-                padding: 0;
-                text-align: left;
-                width: 100%;
-                position: relative;
-            }
-            .aniversariante-info p:not(.aniversariante-data) {
-                display: none;
-                margin-top: 10px;
-                transition: all 0.3s ease;
-            }
-            .aniversariante-card.expanded {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 0;
-            }
-            .aniversariante-card.expanded .aniversariante-img {
-                display: flex;
-                height: 120px;
-                margin-bottom: 10px;
-            }
-            .aniversariante-card.expanded .aniversariante-info {
-                padding: 15px;
-                text-align: center;
-            }
-            .aniversariante-card.expanded .aniversariante-info p {
-                display: block;
+                padding: 0; /* Remove padding extra pois o card já tem */
             }
             .aniversariante-info h3 {
-                display: inline-block;
-                margin-right: 15px;
-                margin-bottom: 0;
+                font-size: 1.2rem; /* Nome um pouco maior */
+                color: var(--azul-marinho);
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .aniversariante-info h3 .aniversario-icone {
+                margin-right: 8px; /* Espaço entre ícone e nome */
+                color: var(--dourado); /* Ícone festivo dourado */
                 font-size: 1.1rem;
             }
             .aniversariante-data {
-                position: absolute;
-                right: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                background-color: var(--dourado);
-                color: var(--branco);
+                font-size: 1rem; /* Data com bom tamanho */
+                color: var(--cinza-escuro);
+                background-color: var(--rosa-claro-aniversario); /* Fundo sutil */
                 padding: 5px 10px;
-                border-radius: 20px;
-                font-size: 0.9rem;
-                display: inline-block;
+                border-radius: 15px; /* Bordas arredondadas para a data */
+                border: 1px solid var(--borda-aniversario); /* Borda elegante */
+                display: inline-block; /* Para o padding e background funcionarem bem */
+                margin-top: 5px;
+                font-weight: 500;
             }
-            .aniversariante-card.expanded .aniversariante-data {
-                position: static;
-                transform: none;
-                margin: 10px auto;
-                display: inline-block;
-                font-size: 1.1rem;
-                padding: 8px 15px;
-            }
+            /* Remove a funcionalidade de expandir/colapsar que existia antes, pois o novo design já mostra tudo */
+            .aniversariante-card.expanded,
             .aniversariante-card::after {
-                content: '\f107';
-                font-family: 'Font Awesome 5 Free';
-                font-weight: 900;
-                position: absolute;
-                right: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: var(--azul-marinho);
-                transition: transform 0.3s ease;
-                font-size: 1.2rem;
+                display: none; 
             }
-            .aniversariante-card.expanded::after {
-                transform: translateY(-50%) rotate(180deg);
-                top: 15px;
-                right: 15px;
+             .aniversariante-info p:not(.aniversariante-data) { /* Mostra o cargo se houver */
+                display: block;
+                font-size: 0.9rem;
+                color: var(--cinza-escuro);
+                margin-top: 5px;
             }
+
             .ferias-table thead {
                 display: none;
             }
@@ -808,11 +777,22 @@
             try {
                 const resposta = await fetch(arquivo);
                 if (!resposta.ok) {
-                    throw new Error(`Erro ao carregar ${arquivo}: ${resposta.status}`);
+                    console.error(`Erro ao carregar ${arquivo}: ${resposta.status} ${resposta.statusText}`);
+                    const containerId = arquivo.split('.')[0] + '-container'; // ex: novidades.json -> novidades-container
+                    const container = document.getElementById(containerId);
+                    if (container) {
+                        container.innerHTML = `<p>Erro ao carregar dados de ${arquivo}. Tente novamente mais tarde.</p>`;
+                    }
+                    return null; 
                 }
                 return await resposta.json();
             } catch (erro) {
                 console.error(`Falha ao carregar ${arquivo}:`, erro);
+                const containerId = arquivo.split('.')[0] + '-container';
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.innerHTML = `<p>Falha ao carregar dados de ${arquivo}. Verifique sua conexão ou contate o suporte.</p>`;
+                }
                 return null;
             }
         }
@@ -844,9 +824,9 @@
                     `;
                     container.innerHTML += novidadeHTML;
                 });
-            } else {
-                container.innerHTML = '<p>Nenhuma novidade encontrada.</p>';
-            }
+            } else if (novidades) { // Se a resposta for um array vazio
+                 container.innerHTML = '<p>Nenhuma novidade encontrada no momento.</p>';
+            } // Se novidades for null, a mensagem de erro já foi tratada em carregarDados
         }
 
         async function carregarReflexaoDoDia() {
@@ -856,7 +836,7 @@
             if (reflexoes && reflexoes.length > 0) {
                 const hoje = new Date();
                 const dia = String(hoje.getDate()).padStart(2, '0');
-                const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+                const mes = String(hoje.getMonth() + 1).padStart(2, '0'); 
                 const ano = hoje.getFullYear();
                 const dataAtualFormatada = `${dia}/${mes}/${ano}`;
 
@@ -872,8 +852,8 @@
                 } else {
                     container.innerHTML = '<p>Nenhuma reflexão encontrada para hoje. Volte amanhã!</p>';
                 }
-            } else {
-                container.innerHTML = '<p>Nenhuma reflexão encontrada.</p>';
+            } else if (reflexoes) {
+                container.innerHTML = '<p>Nenhuma reflexão programada no momento.</p>';
             }
         }
 
@@ -884,27 +864,21 @@
                 container.innerHTML = '';
                 aniversariantes.forEach(aniversariante => {
                     const imagemHTML = aniversariante.imagem ? `<img src="${aniversariante.imagem}" alt="${aniversariante.nome}">` : '<i class="fas fa-user"></i>';
+                    // Adaptação para o novo card mobile (Opção 1)
                     const aniversarianteHTML = `
                         <div class="aniversariante-card">
                             <div class="aniversariante-img">${imagemHTML}</div>
                             <div class="aniversariante-info">
-                                <h3>${aniversariante.nome}</h3>
-                                <p>${aniversariante.cargo}</p>
+                                <h3><i class="fas fa-birthday-cake aniversario-icone"></i>${aniversariante.nome}</h3>
+                                ${aniversariante.cargo ? `<p>${aniversariante.cargo}</p>` : ''}
                                 <p class="aniversariante-data">${aniversariante.data}</p>
                             </div>
                         </div>
                     `;
                     container.innerHTML += aniversarianteHTML;
                 });
-                if (window.innerWidth <= 768) {
-                    const cards = document.querySelectorAll('.aniversariante-card');
-                    cards.forEach(card => {
-                        card.addEventListener('click', () => {
-                            card.classList.toggle('expanded');
-                        });
-                    });
-                }
-            } else {
+                // Removida a lógica de expandir/colapsar, pois o novo design mobile já mostra tudo.
+            } else if (aniversariantes) {
                 container.innerHTML = '<p>Nenhum aniversariante encontrado para este mês.</p>';
             }
         }
@@ -932,7 +906,7 @@
                         });
                     });
                 }
-            } else {
+            } else if (ferias) {
                 tbody.innerHTML = '<tr><td colspan="4"><p>Nenhuma programação de férias encontrada.</p></td></tr>';
             }
         }
@@ -954,7 +928,7 @@
                     `;
                     container.innerHTML += cipaHTML;
                 });
-            } else {
+            } else if (cipaMembros) {
                 container.innerHTML = '<p>Nenhum membro da CIPA encontrado.</p>';
             }
         }
@@ -969,3 +943,4 @@
     </script>
 </body>
 </html>
+
