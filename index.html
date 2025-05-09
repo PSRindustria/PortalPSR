@@ -259,6 +259,12 @@
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
             text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .reflexao-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
         .reflexao-frase {
             font-size: 1.5rem; 
@@ -273,11 +279,32 @@
             margin-bottom: 20px;
             font-weight: bold;
         }
+        .reflexao-expandir {
+            color: var(--azul-aco);
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .reflexao-expandir i {
+            transition: transform 0.3s ease;
+        }
         .reflexao-texto {
             font-size: 1.1rem;
             line-height: 1.7;
             color: var(--cinza-escuro);
             text-align: justify;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            margin-top: 0;
+        }
+        .reflexao-texto.expanded {
+            max-height: 500px;
+            margin-top: 20px;
         }
         .reflexao-data {
             font-size: 0.9rem;
@@ -656,7 +683,6 @@
                     <li><a href="#reflexao-do-dia">Reflexão do Dia</a></li>
                     <li><a href="#aniversariantes">Aniversariantes</a></li>
                     <li><a href="#ferias">Férias</a></li>
-                    
                     <li><a href="#cipa">CIPA</a></li>
                 </ul>
             </nav>
@@ -740,6 +766,15 @@
                 });
             }
 
+            // URLs dos arquivos JSON no GitHub
+            const urls = {
+                novidades: 'https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/novidades.json',
+                reflexoes: 'https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/reflexaododia.json',
+                aniversariantes: 'https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/aniversariantes.json',
+                ferias: 'https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/ferias.json',
+                cipa: 'https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/cipa.json'
+            };
+
             // Função para carregar dados de JSON e renderizar
             async function loadJsonData(url, containerSelector, renderFunction) {
                 const container = document.querySelector(containerSelector);
@@ -764,6 +799,7 @@
 
             // Renderizar Novidades
             function renderNovidades(data, container) {
+                container.innerHTML = ''; // Limpa o container
                 data.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'novidade-card';
@@ -772,7 +808,7 @@
                         <div class="novidade-content">
                             <h3>${item.titulo}</h3>
                             <p class="novidade-date"><i class="fas fa-calendar-alt"></i> ${item.data}</p>
-                            <p>${item.resumo}</p>
+                            <p>${item.conteudo}</p>
                             ${item.link ? `<a href="${item.link}" class="novidade-link" target="_blank">Saiba Mais <i class="fas fa-arrow-right"></i></a>` : ''}
                         </div>
                     `;
@@ -782,39 +818,160 @@
 
             // Renderizar Reflexão do Dia
             function renderReflexao(data, container) {
-                container.innerHTML = '';
-
-                const card = document.createElement('div');
-                card.className = 'reflexao-card';
-
-                card.innerHTML = `
-                    <p class="reflexao-frase">"${data.frase}"</p>
-                    <p class="reflexao-autor">- ${data.autor}</p>
-                    <p class="reflexao-instrucao" style="font-size: 0.95rem; color: #888;">Clique aqui para refletir</p>
-                    <div class="reflexao-extra" style="display: none;">
-                        <p class="reflexao-texto">${data.texto}</p>
-                        <p class="reflexao-data">${data.data}</p>
-                    </div>
+                // Pegar a reflexão atual (primeiro item do array)
+                const reflexaoAtual = data[0]; // Assumindo que o primeiro item é a reflexão do dia atual
+                
+                container.innerHTML = `
+                    <div class="reflexao-frase">"${reflexaoAtual.frase}"</div>
+                    <div class="reflexao-autor">- ${reflexaoAtual.autor}</div>
+                    <div class="reflexao-expandir">Clique aqui para refletir <i class="fas fa-chevron-down"></i></div>
+                    <div class="reflexao-texto">${reflexaoAtual.reflexao}</div>
+                    <div class="reflexao-data">${reflexaoAtual.data}</div>
                 `;
-
-                card.style.cursor = 'pointer';
-                card.addEventListener('click', () => {
-                    const extra = card.querySelector('.reflexao-extra');
-                    extra.style.display = extra.style.display === 'none' ? 'block' : 'none';
+                
+                // Adicionar evento de clique para expandir/recolher
+                const expandirBtn = container.querySelector('.reflexao-expandir');
+                const textoReflexao = container.querySelector('.reflexao-texto');
+                
+                expandirBtn.addEventListener('click', () => {
+                    textoReflexao.classList.toggle('expanded');
+                    const icone = expandirBtn.querySelector('i');
+                    if (textoReflexao.classList.contains('expanded')) {
+                        icone.classList.remove('fa-chevron-down');
+                        icone.classList.add('fa-chevron-up');
+                    } else {
+                        icone.classList.remove('fa-chevron-up');
+                        icone.classList.add('fa-chevron-down');
+                    }
                 });
-
-                container.appendChild(card);
             }
+
+            // Renderizar Aniversariantes
+            function renderAniversariantes(data, container) {
+                container.innerHTML = ''; // Limpa o container
+                
+                data.forEach(pessoa => {
+                    const card = document.createElement('div');
+                    card.className = 'aniversariante-card';
+                    
+                    // Verificar se tem uma imagem válida ou usar ícone padrão
+                    const imagemHTML = pessoa.imagem && pessoa.imagem.startsWith('http') 
+                        ? `<img src="${pessoa.imagem}" alt="${pessoa.nome}">`
+                        : `<i class="fas fa-birthday-cake"></i>`;
+                    
+                    card.innerHTML = `
+                        <div class="aniversariante-img">
+                            ${imagemHTML}
+                        </div>
+                        <div class="aniversariante-info">
+                            <h3><i class="fas fa-birthday-cake"></i> ${pessoa.nome}</h3>
+                            <p>${pessoa.cargo}</p>
+                            <div class="aniversariante-data">${pessoa.data}</div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            }
+
+            // Renderizar Férias
+            function renderFerias(data, container) {
+                container.innerHTML = ''; // Limpa o container
+                
+                // Criar grid para os cards
+                const feriasList = document.createElement('div');
+                feriasList.className = 'ferias-grid';
+                
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'ferias-card';
+                    card.innerHTML = `
+                        <div class="ferias-card-header">
+                            <div class="ferias-card-icon">
+                                <i class="fas fa-umbrella-beach"></i>
+                            </div>
+                            <div class="ferias-card-colaborador">${item.colaborador}</div>
+                        </div>
+                        <div class="ferias-card-periodo">
+                            <i class="fas fa-calendar-alt"></i> ${item.inicio} até ${item.retorno}
+                        </div>
+                        <div class="ferias-card-departamento">
+                            <i class="fas fa-building"></i> ${item.departamento}
+                        </div>
+                    `;
+                    
+                    feriasList.appendChild(card);
+                });
+                
+                container.appendChild(feriasList);
+                
+                // Criar tabela para desktop (opcional)
+                const table = document.createElement('table');
+                table.className = 'ferias-table';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Colaborador</th>
+                            <th>Departamento</th>
+                            <th>Início</th>
+                            <th>Retorno</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(item => `
+                            <tr>
+                                <td>${item.colaborador}</td>
+                                <td>${item.departamento}</td>
+                                <td>${item.inicio}</td>
+                                <td>${item.retorno}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                
+                container.appendChild(table);
+                
+                // Adicionar media query para mostrar/esconder tabela em CSS inline
+                const style = document.createElement('style');
+                style.textContent = `
+                    @media screen and (max-width: 768px) {
+                        .ferias-table {
+                            display: none;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Renderizar CIPA
+            function renderCIPA(data, container) {
+                container.innerHTML = ''; // Limpa o container
+                
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        const item = data[key];
+                        const card = document.createElement('div');
+                        card.className = 'cipa-card';
+                        card.innerHTML = `
+                            <div class="cipa-icon">
+                                <i class="${item.icone}"></i>
+                            </div>
+                            <h3>${item.titulo}</h3>
+                            <p>${item.conteudo}</p>
+                        `;
+                        
+                        container.appendChild(card);
+                    }
+                }
             }
 
             // Carregar todos os dados
-            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/novidades.json', '#novidades .novidades-container', renderNovidades);
-            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/reflexaododia.json', '#reflexao-do-dia .reflexao-container', renderReflexao); // Assumindo que o JSON de reflexão é https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/reflexaododia.json
-            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/aniversariantes.json', '#aniversariantes .aniversariantes-container', renderAniversariantes);
-            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/ferias.json', '#ferias .ferias-container', renderFerias);
-            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/cipa.json', '#cipa .cipa-container', renderCipa);
+            loadJsonData(urls.novidades, '.novidades-container', renderNovidades);
+            loadJsonData(urls.reflexoes, '.reflexao-container', renderReflexao);
+            loadJsonData(urls.aniversariantes, '.aniversariantes-container', renderAniversariantes);
+            loadJsonData(urls.ferias, '.ferias-container', renderFerias);
+            loadJsonData(urls.cipa, '.cipa-container', renderCIPA);
         });
     </script>
 </body>
 </html>
-
