@@ -196,7 +196,7 @@ main {
   }
   .aniversariantes-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
 }
@@ -228,10 +228,12 @@ main {
 .novidades-header {
   display: flex;
   align-items: center;
+  justify-content: center;     /* <— centraliza o relógio */
   font-size: .9rem;
   color: var(--cinza-escuro);
   margin-bottom: 10px;
 }
+
 .novidades-header i {
   margin-right: 6px;
   color: var(--azul-aco);
