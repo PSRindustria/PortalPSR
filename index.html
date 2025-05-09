@@ -93,6 +93,7 @@
 
   <!-- SCRIPTS -->
   <script>
+  document.addEventListener('DOMContentLoaded', () => {
     // 1) injeta menu e rodapé
     ['menu','footer'].forEach(file => {
       fetch(file + '.html')
@@ -100,14 +101,13 @@
         .then(html => document.getElementById(file + '-placeholder').innerHTML = html);
     });
 
-    // 2) configura data atual
+    // 2) configura data de hoje
     const hoje = new Date(),
           dia = hoje.getDate(),
           mes = hoje.getMonth(),
           ano = hoje.getFullYear(),
           meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
           hojePt = `${dia} de ${meses[mes]} de ${ano}`;
-
     document.getElementById('data-hoje-novidades').textContent = hojePt;
 
     // 3) função genérica fetch + JSON
@@ -123,7 +123,7 @@
     }
 
     // 4) renderiza Novidades
-    (async () => {
+    async function renderNovidades() {
       const data = await fetchData('novidades.json'),
             c = document.getElementById('novidades-container');
       if (!data) {
@@ -142,10 +142,10 @@
             </div>
           </div>`;
       });
-    })();
+    }
 
-    // 5) renderiza Reflexão com expand/collapse
-    (async () => {
+    // 5) renderiza Reflexão do Dia
+    async function renderReflexao() {
       const data = await fetchData('reflexaododia.json'),
             c = document.getElementById('reflexao-container');
       if (!data) {
@@ -160,6 +160,7 @@
         return;
       }
       const card = document.createElement('div');
+      card.className = 'reflexao-card';
       card.innerHTML = `
         <p class="reflexao-frase">“${r.frase}”</p>
         <p class="reflexao-autor">- ${r.autor}</p>
@@ -175,92 +176,56 @@
         extra.style.display = extra.style.display === 'none' ? 'block' : 'none';
       });
       c.appendChild(card);
-    })();
-
-    // 6) renderiza Aniversariantes
-function formatarDataBr(dataBr) {
-  const [dia, mes] = dataBr.split('/');
-  const meses = [
-    'janeiro','fevereiro','março','abril','maio','junho',
-    'julho','agosto','setembro','outubro','novembro','dezembro'
-  ];
-  return `${dia} de ${meses[Number(mes) - 1]}`;
-}
-async function renderAniversariantes() {
-  const data = await fetchData('aniversariantes.json');
-  const container = document.getElementById('aniversariantes-container');
-
-  // se algo deu errado, interrompe e mostra mensagem
-  if (!data) {
-    container.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
-    return;
-  }
-
-  container.innerHTML = '';  // remove spinner
-
-  // resto do seu loop...
-}
-
-renderAniversariantes();
-  // se chegou aqui, veio o array, então podemos limpar o loader:
-  container.innerHTML = '';
-  // ... resto do código que cria os cards ...
-}
-  container.innerHTML = '';
-
-  // pega dia e mês de hoje em dois dígitos
-  const hoje = new Date();
-  const diaHoje = String(hoje.getDate()).padStart(2, '0');
-  const mesHoje = String(hoje.getMonth() + 1).padStart(2, '0');
-
-  // nomes dos meses para exibir "05 de maio"
-  const nomesMes = [
-    'janeiro','fevereiro','março','abril','maio','junho',
-    'julho','agosto','setembro','outubro','novembro','dezembro'
-  ];
-
-  data.forEach(a => {
-    // separa "DD/MM"
-    const [dia, mes] = a.data.split('/');
-
-    // monta o elemento card
-    const card = document.createElement('div');
-    card.className = 'aniversariante-card';
-
-    // se for aniversário hoje, adiciona destaque
-    if (dia === diaHoje && mes === mesHoje) {
-      card.classList.add('destaque-hoje');
     }
 
-    // converte para "DD de mês"
-    const dataFormatada = `${dia} de ${nomesMes[Number(mes)-1]}`;
-
-    card.innerHTML = `
-      <div class="aniversariante-img">
-        ${a.imagem
-          ? `<img src="${a.imagem}" alt="${a.nome}">`
-          : '<i class="fas fa-birthday-cake"></i>'}
-      </div>
-      <div class="aniversariante-info">
-        <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
-        ${a.cargo ? `<p>${a.cargo}</p>` : ''}
-        <p class="aniversariante-data">${dataFormatada}</p>
-      </div>`;
-    container.appendChild(card);
-  });
-}
-
+    // 6) renderiza Aniversariantes
+    async function renderAniversariantes() {
+      const data = await fetchData('aniversariantes.json'),
+            container = document.getElementById('aniversariantes-container');
+      if (!data) {
+        container.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
+        return;
+      }
+      container.innerHTML = '';
+      const hoje = new Date(),
+            diaHoje = String(hoje.getDate()).padStart(2,'0'),
+            mesHoje = String(hoje.getMonth()+1).padStart(2,'0'),
+            nomesMes = ['janeiro','fevereiro','março','abril','maio','junho',
+                        'julho','agosto','setembro','outubro','novembro','dezembro'];
+      data.forEach(a => {
+        const [dStr,mStr] = a.data.split('/');
+        const card = document.createElement('div');
+        card.className = 'aniversariante-card';
+        if (dStr === diaHoje && mStr === mesHoje) {
+          card.classList.add('destaque-hoje');
+        }
+        const dataFmt = `${dStr} de ${nomesMes[Number(mStr)-1]}`;
+        card.innerHTML = `
+          <div class="aniversariante-img">
+            ${a.imagem
+              ? `<img src="${a.imagem}" alt="${a.nome}">`
+              : '<i class="fas fa-birthday-cake"></i>'}
+          </div>
+          <div class="aniversariante-info">
+            <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
+            ${a.cargo ? `<p>${a.cargo}</p>` : ''}
+            <p class="aniversariante-data">${dataFmt}</p>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
 
     // 7) renderiza Férias
-    (async () => {
+    async function renderFerias() {
       const data = await fetchData('ferias.json'),
             grid = document.getElementById('ferias-grid-container'),
-            tb   = document.getElementById('ferias-tbody');
+            tb = document.getElementById('ferias-tbody');
       if (!data) {
         grid.innerHTML = tb.innerHTML = '<p>Erro ao carregar férias.</p>';
         return;
       }
-      grid.innerHTML = ''; tb.innerHTML = '';
+      grid.innerHTML = '';
+      tb.innerHTML = '';
       data.forEach(f => {
         grid.innerHTML += `
           <div class="ferias-card">
@@ -272,24 +237,25 @@ renderAniversariantes();
             <p>${f.departamento}</p>
           </div>`;
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${f.colaborador}</td>
-                        <td>${f.departamento}</td>
-                        <td>${f.inicio}</td>
-                        <td>${f.retorno}</td>`;
+        tr.innerHTML = `
+          <td>${f.colaborador}</td>
+          <td>${f.departamento}</td>
+          <td>${f.inicio}</td>
+          <td>${f.retorno}</td>`;
         tb.appendChild(tr);
       });
-    })();
+    }
 
     // 8) renderiza CIPA
-    (async () => {
+    async function renderCIPA() {
       const raw = await fetchData('cipa.json'),
             c = document.getElementById('cipa-container');
       if (!raw) {
         c.innerHTML = '<p>Erro ao carregar CIPA.</p>';
         return;
       }
-      const list = Array.isArray(raw) ? raw : Object.values(raw);
       c.innerHTML = '';
+      const list = Array.isArray(raw) ? raw : Object.values(raw);
       list.forEach(i => {
         c.innerHTML += `
           <div class="cipa-card">
@@ -298,7 +264,15 @@ renderAniversariantes();
             <p>${i.conteudo||i.cargo_cipa||''}</p>
           </div>`;
       });
-    })();
+    }
+
+    // 9) dispara todas as renderizações
+    renderNovidades();
+    renderReflexao();
+    renderAniversariantes();
+    renderFerias();
+    renderCIPA();
+  });
   </script>
 </body>
 </html>
