@@ -28,9 +28,7 @@
         /* ==================================================
            RESET E ESTILIZAÇÕES GERAIS
            ================================================== */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -38,14 +36,8 @@
             color: var(--cinza-escuro);
             line-height: 1.6;
         }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        img {
-            max-width: 100%;
-            display: block;
-        }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
 
         /* ==================================================
            HEADER E NAVEGAÇÃO
@@ -74,22 +66,15 @@
             display: flex;
             align-items: center;
         }
-        .logo img {
-            height: 40px;
-            margin-right: 10px;
-        }
-        .logo span {
-            color: var(--dourado);
-        }
+        .logo img { height: 40px; margin-right: 10px; }
+        .logo span { color: var(--dourado); }
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
             padding: 0;
         }
-        nav ul li {
-            margin-left: 20px;
-        }
+        nav ul li { margin-left: 20px; }
         nav ul li a {
             padding: 8px 12px;
             border-radius: 4px;
@@ -109,9 +94,7 @@
             cursor: pointer;
         }
         @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
+            .menu-toggle { display: block; }
             nav ul {
                 display: none;
                 flex-direction: column;
@@ -121,13 +104,8 @@
                 width: 100%;
                 background-color: var(--azul-marinho);
             }
-            nav ul.active {
-                display: flex;
-            }
-            nav ul li {
-                margin: 10px 0;
-                text-align: center;
-            }
+            nav ul.active { display: flex; }
+            nav ul li { margin: 10px 0; text-align: center; }
         }
 
         /* ==================================================
@@ -136,7 +114,8 @@
         .banner {
             margin-top: 70px;
             height: 400px;
-            background: linear-gradient(rgba(0,51,102,0.7),rgba(0,51,102,0.9)), url('https://via.placeholder.com/1200x400') center/cover no-repeat;
+            background: linear-gradient(rgba(0,51,102,0.7),rgba(0,51,102,0.9)),
+                        url('https://via.placeholder.com/1200x400') center/cover no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -145,16 +124,8 @@
             color: var(--branco);
             padding: 0 20px;
         }
-        .banner h1 {
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        .banner p {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin-bottom: 30px;
-        }
+        .banner h1 { font-size: 2.8rem; margin-bottom: 20px; font-weight: 700; }
+        .banner p { font-size: 1.3rem; max-width: 700px; margin-bottom: 30px; }
         .banner-btn {
             background-color: var(--dourado);
             color: var(--azul-marinho);
@@ -206,8 +177,21 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ==================================================
+           CONSTRAINTE DE LARGURA (DESKTOP)
+           ================================================== */
+        @media (min-width: 769px) {
+            main {
+                max-width: 1080px;
+                margin: 0 auto;
+            }
+            .aniversariantes-container {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 20px;
+            }
         }
 
         /* ==================================================
@@ -227,9 +211,7 @@
             overflow: hidden;
             transition: transform 0.3s;
         }
-        .novidade-card:hover {
-            transform: translateY(-5px);
-        }
+        .novidade-card:hover { transform: translateY(-5px); }
         .novidade-img {
             background-color: var(--azul-marinho);
             color: var(--branco);
@@ -283,13 +265,22 @@
         .reflexao-autor {
             font-weight: bold;
             color: var(--dourado);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+        .reflexao-instrucao {
+            cursor: pointer;
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .reflexao-extra {
+            display: none;
+            text-align: justify;
         }
         .reflexao-texto {
             font-size: 1.1rem;
             line-height: 1.7;
             color: var(--cinza-escuro);
-            text-align: justify;
         }
         .reflexao-data {
             margin-top: 20px;
@@ -300,7 +291,7 @@
            ANIVERSARIANTES
            ================================================== */
         .aniversariantes-container {
-            display: flex;
+            display: flex;  /* default mobile */
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
@@ -314,9 +305,7 @@
             text-align: center;
             transition: transform 0.3s;
         }
-        .aniversariante-card:hover {
-            transform: translateY(-5px);
-        }
+        .aniversariante-card:hover { transform: translateY(-5px); }
         .aniversariante-img {
             height: 150px;
             width: 150px;
@@ -347,9 +336,7 @@
         /* ==================================================
            FÉRIAS
            ================================================== */
-        .ferias-container {
-            width: 100%;
-        }
+        .ferias-container { width: 100%; }
         .ferias-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -362,9 +349,7 @@
             padding: 20px;
             transition: transform 0.3s;
         }
-        .ferias-card:hover {
-            transform: translateY(-5px);
-        }
+        .ferias-card:hover { transform: translateY(-5px); }
         .ferias-card-header {
             display: flex;
             align-items: center;
@@ -396,7 +381,6 @@
             background-color: var(--azul-marinho);
             color: var(--branco);
         }
-        /* Mobile vs Desktop */
         @media (min-width: 769px) {
             .ferias-grid { display: none; }
             .ferias-table { display: table; }
@@ -424,9 +408,7 @@
             text-align: center;
             transition: transform 0.3s;
         }
-        .cipa-card:hover {
-            transform: translateY(-5px);
-        }
+        .cipa-card:hover { transform: translateY(-5px); }
         .cipa-icon {
             width: 60px;
             height: 60px;
@@ -453,10 +435,6 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        .footer-content h3 {
-            margin-bottom: 15px;
-            position: relative;
-        }
         .footer-content h3::after {
             content: '';
             display: block;
@@ -465,30 +443,22 @@
             background: var(--dourado);
             margin: 10px auto 0;
         }
-        .social-links a {
-            margin: 0 10px;
-            font-size: 1.8rem;
-            transition: transform 0.3s; 
-        }
-        .social-links a:hover {
-            transform: scale(1.2);
-        }
+        .social-links a { margin: 0 10px; font-size: 1.8rem; transition: transform 0.3s; }
+        .social-links a:hover { transform: scale(1.2); }
         .contato-rodape {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
+            margin-top: 20px; padding: 10px 20px;
             background-color: var(--dourado);
             color: var(--azul-marinho);
             border-radius: 50px;
             font-weight: 600;
             transition: background-color 0.3s;
         }
-        .contato-rodape:hover {
-            background-color: #c69500;
-        }
+        .contato-rodape:hover { background-color: #c69500; }
     </style>
 </head>
 <body>
+
     <!-- HEADER -->
     <header>
         <div class="header-container">
@@ -591,9 +561,10 @@
         </div>
     </footer>
 
-    <!-- SCRIPT DE CARREGAMENTO -->
+    <!-- SCRIPT DE CARREGAMENTO E EXPANSÃO DE REFLEXÃO -->
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Menu responsivo
         const menuToggle = document.getElementById('menu-toggle');
         const menu       = document.getElementById('menu');
         if (menuToggle) {
@@ -602,10 +573,10 @@
             });
         }
 
-        // Base CDN jsDelivr apontando para a branch main
+        // Base CDN jsDelivr
         const BASE = 'https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR@main';
 
-        // Função genérica de fetch com tratamento
+        // Fetch genérico
         async function fetchData(path) {
             try {
                 const res = await fetch(`${BASE}/${path}`);
@@ -617,7 +588,7 @@
             }
         }
 
-        // Render Novidades
+        // Novidades
         async function renderNovidades() {
             const data = await fetchData('novidades.json');
             const c    = document.getElementById('novidades-container');
@@ -640,7 +611,7 @@
             });
         }
 
-        // Render Reflexão do Dia
+        // Reflexão com expand/collapse
         async function renderReflexao() {
             const data = await fetchData('reflexaododia.json');
             const c    = document.getElementById('reflexao-container');
@@ -648,25 +619,40 @@
                 c.innerHTML = '<p>Erro ao carregar reflexão.</p>';
                 return;
             }
-            // Formata data de hoje
+            // data de hoje
             const hoje = new Date();
             const d    = String(hoje.getDate()).padStart(2,'0');
             const m    = String(hoje.getMonth()+1).padStart(2,'0');
             const y    = hoje.getFullYear();
             const dt   = `${d}/${m}/${y}`;
             const r    = data.find(x => x.data === dt);
+            c.innerHTML = '';
             if (!r) {
                 c.innerHTML = '<p>Sem reflexão para hoje.</p>';
-            } else {
-                c.innerHTML = `
+                return;
+            }
+            // monta card interativo
+            const card = document.createElement('div');
+            card.className = 'reflexao-card';
+            card.innerHTML = `
                 <p class="reflexao-frase">“${r.frase}”</p>
                 <p class="reflexao-autor">- ${r.autor}</p>
-                <p class="reflexao-texto">${r.reflexao}</p>
-                <p class="reflexao-data">Reflexão do dia: ${r.data}</p>`;
-            }
+                <p class="reflexao-instrucao">Clique aqui para refletir</p>
+                <div class="reflexao-extra">
+                    <p class="reflexao-texto">${r.reflexao}</p>
+                    <p class="reflexao-data">Reflexão do dia: ${r.data}</p>
+                </div>`;
+            // toggle
+            card.addEventListener('click', () => {
+                const extra = card.querySelector('.reflexao-extra');
+                extra.style.display = extra.style.display === 'none' ? 'block' : 'none';
+            });
+            // inicialmente escondido
+            card.querySelector('.reflexao-extra').style.display = 'none';
+            c.appendChild(card);
         }
 
-        // Render Aniversariantes
+        // Aniversariantes
         async function renderAniversariantes() {
             const data = await fetchData('aniversariantes.json');
             const c    = document.getElementById('aniversariantes-container');
@@ -690,7 +676,7 @@
             });
         }
 
-        // Render Férias
+        // Férias
         async function renderFerias() {
             const data = await fetchData('ferias.json');
             const grid = document.getElementById('ferias-grid-container');
@@ -702,7 +688,7 @@
             grid.innerHTML = '';
             tb.innerHTML   = '';
             data.forEach(f => {
-                // Card mobile
+                // card mobile
                 grid.innerHTML += `
                 <div class="ferias-card">
                     <div class="ferias-card-header">
@@ -712,7 +698,7 @@
                     <p class="ferias-card-periodo"><strong>Período:</strong> ${f.inicio} - ${f.retorno}</p>
                     <p class="ferias-card-departamento">${f.departamento}</p>
                 </div>`;
-                // Tabela desktop
+                // tabela desktop
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${f.colaborador}</td>
@@ -723,7 +709,7 @@
             });
         }
 
-        // Render CIPA
+        // CIPA
         async function renderCIPA() {
             const raw = await fetchData('cipa.json');
             const c   = document.getElementById('cipa-container');
@@ -731,7 +717,6 @@
                 c.innerHTML = '<p>Erro ao carregar CIPA.</p>';
                 return;
             }
-            // Transforma objeto em array se necessário
             const list = Array.isArray(raw) ? raw : Object.values(raw);
             c.innerHTML = '';
             list.forEach(i => {
@@ -744,7 +729,7 @@
             });
         }
 
-        // Chamada inicial
+        // chamadas iniciais
         renderNovidades();
         renderReflexao();
         renderAniversariantes();
