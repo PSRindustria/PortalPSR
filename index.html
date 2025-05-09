@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSR Indústria</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+    <!-- CSS externo -->
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ==================================================
+           VARIÁVEIS DE COR
+           ================================================== */
         :root {
             --azul-marinho: #003366;
             --azul-aco: #4682B4;
@@ -23,7 +25,12 @@
             --azul-claro-ferias-texto: #6c757d;
         }
 
-        /* Estilos Gerais */
+        /* ==================================================
+           RESET E ESTILIZAÇÕES GERAIS
+           ================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -31,20 +38,18 @@
             color: var(--cinza-escuro);
             line-height: 1.6;
         }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        img {
+            max-width: 100%;
+            display: block;
         }
 
-        h1, h2, h3 {
-            color: var(--azul-marinho);
-            margin-bottom: 20px;
-        }
-
-        /* Cabeçalho */
+        /* ==================================================
+           HEADER E NAVEGAÇÃO
+           ================================================== */
         header {
             background-color: var(--azul-marinho);
             color: var(--branco);
@@ -53,67 +58,85 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-
         .header-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
-
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            text-decoration: none;
-            color: var(--branco);
             display: flex;
             align-items: center;
         }
-
         .logo img {
             height: 40px;
             margin-right: 10px;
         }
-
         .logo span {
             color: var(--dourado);
-            margin-left: 5px;
         }
-
         nav ul {
             list-style: none;
             display: flex;
             margin: 0;
             padding: 0;
         }
-
         nav ul li {
             margin-left: 20px;
         }
-
         nav ul li a {
-            color: var(--branco);
-            text-decoration: none;
-            font-weight: 500;
             padding: 8px 12px;
             border-radius: 4px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 500;
+            transition: background-color 0.3s;
         }
-
         nav ul li a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255,255,255,0.1);
             color: var(--dourado);
         }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--branco);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: var(--azul-marinho);
+            }
+            nav ul.active {
+                display: flex;
+            }
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+        }
 
-        /* Banner */
+        /* ==================================================
+           BANNER PRINCIPAL
+           ================================================== */
         .banner {
+            margin-top: 70px;
             height: 400px;
-            background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.9)), url('https://via.placeholder.com/1200x400') center/cover no-repeat;
-            margin-top: 70px; /* Ajuste para não sobrepor o header fixo */
+            background: linear-gradient(rgba(0,51,102,0.7),rgba(0,51,102,0.9)), url('https://via.placeholder.com/1200x400') center/cover no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -122,48 +145,41 @@
             color: var(--branco);
             padding: 0 20px;
         }
-
         .banner h1 {
             font-size: 2.8rem;
             margin-bottom: 20px;
             font-weight: 700;
         }
-
         .banner p {
             font-size: 1.3rem;
             max-width: 700px;
             margin-bottom: 30px;
         }
-
         .banner-btn {
             background-color: var(--dourado);
             color: var(--azul-marinho);
             padding: 12px 24px;
             border-radius: 50px;
-            text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-
         .banner-btn:hover {
-            background-color: #c69500;
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* Seções */
+        /* ==================================================
+           SEÇÕES E TÍTULOS
+           ================================================== */
         .section {
             padding: 60px 20px;
         }
-
         .section-title {
             text-align: center;
             font-size: 2.2rem;
-            margin-bottom: 40px;
-            color: var(--azul-marinho);
             position: relative;
+            margin-bottom: 40px;
         }
-
         .section-title::after {
             content: '';
             display: block;
@@ -173,25 +189,43 @@
             margin: 15px auto 0;
         }
 
-        /* Cards de Novidades */
-        #novidades {
-            background-color: var(--branco);
-        }
-        .novidades-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* ==================================================
+           ESTILOS DE LOADERS
+           ================================================== */
+        .loading {
             display: flex;
-            flex-direction: column;
-            gap: 25px;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        .loading-spinner {
+            border: 5px solid rgba(0,51,102,0.1);
+            border-top: 5px solid var(--dourado);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==================================================
+           NOVIDADES
+           ================================================== */
+        .novidades-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
         .novidade-card {
-            background-color: #f7f9fc;
+            background: #f7f9fc;
             border-radius: 10px;
-            overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease;
+            flex: 1 1 300px;
+            overflow: hidden;
+            transition: transform 0.3s;
         }
         .novidade-card:hover {
             transform: translateY(-5px);
@@ -200,12 +234,7 @@
             background-color: var(--azul-marinho);
             color: var(--branco);
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .novidade-img i {
-            font-size: 40px;
+            text-align: center;
         }
         .novidade-content {
             padding: 25px;
@@ -214,45 +243,29 @@
         .novidade-content h3 {
             color: var(--azul-marinho);
             margin-bottom: 10px;
-            font-size: 1.3rem;
         }
         .novidade-date {
-            color: var(--cinza-escuro);
             font-size: 0.9rem;
+            color: var(--cinza-escuro);
             margin-bottom: 15px;
             display: flex;
-            align-items: center;
             justify-content: center;
-        }
-        .novidade-content p {
-            margin-bottom: 15px;
-            line-height: 1.6;
+            align-items: center;
         }
         .novidade-link {
             color: var(--azul-aco);
-            text-decoration: none;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            transition: color 0.3s ease;
-        }
-        .novidade-link i {
-            margin-left: 8px;
-            transition: transform 0.3s ease;
-        }
-        .novidade-link:hover {
-            color: var(--azul-marinho);
-        }
-        .novidade-link:hover i {
-            transform: translateX(5px);
+            gap: 5px;
+            margin-top: 10px;
         }
 
-        /* Seção Reflexão do Dia */
-        #reflexao-do-dia {
-            background-color: #e9ecef; 
-        }
+        /* ==================================================
+           REFLEXÃO DO DIA
+           ================================================== */
         .reflexao-container {
-            max-width: 800px; 
+            max-width: 800px;
             margin: 0 auto;
             background-color: var(--branco);
             padding: 30px;
@@ -261,17 +274,16 @@
             text-align: center;
         }
         .reflexao-frase {
-            font-size: 1.5rem; 
+            font-size: 1.5rem;
             font-style: italic;
             color: var(--azul-marinho);
             margin-bottom: 10px;
             line-height: 1.4;
         }
         .reflexao-autor {
-            font-size: 1rem;
-            color: var(--dourado); 
-            margin-bottom: 20px;
             font-weight: bold;
+            color: var(--dourado);
+            margin-bottom: 20px;
         }
         .reflexao-texto {
             font-size: 1.1rem;
@@ -280,109 +292,78 @@
             text-align: justify;
         }
         .reflexao-data {
-            font-size: 0.9rem;
-            color: var(--cinza-escuro);
             margin-top: 20px;
+            font-size: 0.9rem;
         }
 
-        /* Cards de Aniversariantes */
+        /* ==================================================
+           ANIVERSARIANTES
+           ================================================== */
         .aniversariantes-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
         .aniversariante-card {
-            background-color: var(--branco);
+            background: var(--branco);
             border-radius: 10px;
-            overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            display: flex; /* Adicionado para alinhar itens verticalmente */
-            flex-direction: column; /* Adicionado para alinhar itens verticalmente */
-            align-items: center; /* Centraliza horizontalmente */
+            flex: 1 1 200px;
             padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
         }
         .aniversariante-card:hover {
             transform: translateY(-5px);
         }
         .aniversariante-img {
-            height: 150px; /* Ajustado para mobile */
-            width: 150px; /* Ajustado para mobile */
-            background-color: var(--azul-aco);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 150px;
+            width: 150px;
+            border-radius: 50%;
             overflow: hidden;
-            border-radius: 50%; /* Imagem redonda */
-            margin-bottom: 15px;
+            margin: 0 auto 15px;
         }
         .aniversariante-img img {
+            object-fit: cover;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-        }
-        .aniversariante-img i.fa-birthday-cake {
-            font-size: 2rem; /* Tamanho do ícone de bolo */
-            color: var(--branco);
-        }
-        .aniversariante-info {
-            text-align: center;
         }
         .aniversariante-info h3 {
-            margin-bottom: 5px;
-            color: var(--azul-marinho);
             font-size: 1.2rem;
-            display: flex; /* Para alinhar ícone e nome */
-            align-items: center; /* Para alinhar ícone e nome */
-            justify-content: center; /* Para alinhar ícone e nome */
-        }
-        .aniversariante-info h3 i.fa-birthday-cake {
-            margin-right: 8px; /* Espaçamento entre ícone e nome */
-            color: var(--dourado); /* Cor do ícone */
-            font-size: 1.1rem;
-        }
-        .aniversariante-info p {
-            color: var(--cinza-escuro);
-            margin-bottom: 3px;
-            font-size: 0.9rem;
+            color: var(--azul-marinho);
+            margin-bottom: 5px;
         }
         .aniversariante-data {
             font-weight: bold;
             color: var(--dourado);
-            font-size: 1rem;
             background-color: var(--rosa-claro-aniversario);
             padding: 5px 10px;
             border-radius: 15px;
-            border: 1px solid var(--borda-aniversario);
             display: inline-block;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
-        /* Cards de Férias (Mobile e Desktop) */
-        #ferias {
-            background-color: var(--branco);
-        }
+        /* ==================================================
+           FÉRIAS
+           ================================================== */
         .ferias-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
         }
         .ferias-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            gap: 20px;
         }
         .ferias-card {
-            background-color: var(--cinza-claro-ferias-bg);
+            background: var(--cinza-claro-ferias-bg);
             border-radius: 10px;
-            padding: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 20px;
+            transition: transform 0.3s;
         }
         .ferias-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
         .ferias-card-header {
             display: flex;
@@ -392,93 +373,76 @@
         .ferias-card-icon {
             font-size: 1.8rem;
             color: var(--azul-marinho);
-            margin-right: 15px;
+            margin-right: 10px;
         }
         .ferias-card-colaborador {
-            font-size: 1.2rem;
             font-weight: 600;
             color: var(--azul-marinho);
         }
-        .ferias-card-periodo {
-            font-size: 0.95rem;
-            color: var(--azul-claro-ferias-texto);
+        .ferias-card-periodo, .ferias-card-departamento {
             margin-bottom: 8px;
         }
-        .ferias-card-departamento {
-            font-size: 0.9rem;
-            color: var(--cinza-escuro);
-            font-style: italic;
-        }
-
-        /* Tabela de Férias (Desktop - será escondida em mobile) */
         .ferias-table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 20px; /* Espaçamento se ambos forem visíveis */
         }
-        .ferias-table th,
-        .ferias-table td {
-            padding: 15px;
+        .ferias-table th, .ferias-table td {
+            padding: 12px;
             text-align: left;
         }
         .ferias-table thead {
             background-color: var(--azul-marinho);
             color: var(--branco);
         }
-        .ferias-table tbody tr:nth-child(even) {
-            background-color: #f7f9fc;
+        /* Mobile vs Desktop */
+        @media (min-width: 769px) {
+            .ferias-grid { display: none; }
+            .ferias-table { display: table; }
         }
-        .ferias-table tbody tr:hover {
-            background-color: rgba(70,130,180,0.1);
+        @media (max-width: 768px) {
+            .ferias-table { display: none; }
+            .ferias-grid { display: grid; }
         }
 
-        /* Cards da CIPA */
-        #cipa {
-            background-color: #f7f9fc;
-        }
+        /* ==================================================
+           CIPA
+           ================================================== */
         .cipa-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
         .cipa-card {
-            background-color: var(--branco);
+            background: var(--branco);
             border-radius: 10px;
-            padding: 30px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            flex: 1 1 300px;
+            padding: 20px;
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
         .cipa-card:hover {
             transform: translateY(-5px);
         }
         .cipa-icon {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             background-color: var(--azul-marinho);
             color: var(--branco);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             border-radius: 50%;
-            margin: 0 auto 20px;
-            font-size: 32px;
-        }
-        .cipa-card h3 {
-            color: var(--azul-marinho);
-            margin-bottom: 15px;
-        }
-        .cipa-card p {
-            color: var(--cinza-escuro);
-            line-height: 1.6;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
         }
 
-        /* Rodapé */
+        /* ==================================================
+           RODAPÉ
+           ================================================== */
         footer {
             background-color: var(--azul-marinho);
             color: var(--branco);
@@ -490,7 +454,6 @@
             margin: 0 auto;
         }
         .footer-content h3 {
-            font-size: 1.5rem;
             margin-bottom: 15px;
             position: relative;
         }
@@ -500,320 +463,294 @@
             width: 60px;
             height: 3px;
             background: var(--dourado);
-            margin: 10px auto;
-        }
-        .footer-content p {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        .destaque {
-            font-size: 1.2rem;
-            color: var(--dourado);
-            margin: 25px 0;
-            font-weight: 500;
-        }
-        .social-links {
-            margin-bottom: 20px;
+            margin: 10px auto 0;
         }
         .social-links a {
-            color: var(--branco);
-            margin: 0 12px;
+            margin: 0 10px;
             font-size: 1.8rem;
-            transition: color 0.3s ease, transform 0.3s ease;
-            display: inline-block; /* Para aplicar transform */
+            transition: transform 0.3s; 
         }
         .social-links a:hover {
-            color: var(--dourado);
             transform: scale(1.2);
         }
         .contato-rodape {
+            display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
             background-color: var(--dourado);
             color: var(--azul-marinho);
             border-radius: 50px;
-            text-decoration: none;
             font-weight: 600;
-            display: inline-block;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s;
         }
         .contato-rodape:hover {
             background-color: #c69500;
-            color: var(--branco);
-        }
-        .copyright {
-            padding-top: 20px;
-            margin-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ccc;
-        }
-
-        /* Animações e Responsividade */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-        }
-        .loading-spinner {
-            border: 5px solid rgba(0, 51, 102, 0.1);
-            border-top: 5px solid var(--dourado);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsividade para o menu */
-        .menu-toggle {
-            display: none;
-            color: var(--branco);
-            font-size: 24px;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
-        @media screen and (max-width: 768px) {
-            .header-container {
-                padding: 10px 15px;
-            }
-            .logo img {
-                height: 35px;
-            }
-            .logo {
-                font-size: 1.5rem;
-            }
-            nav ul {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px; /* Ajustar conforme a altura do header */
-                left: 0;
-                width: 100%;
-                background-color: var(--azul-marinho);
-                padding: 10px 0;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            }
-            nav ul.active {
-                display: flex;
-            }
-            nav ul li {
-                margin: 10px 0;
-                text-align: center;
-            }
-            nav ul li a {
-                padding: 10px 15px;
-            }
-            .menu-toggle {
-                display: block;
-            }
-            .banner {
-                margin-top: 60px; /* Ajustar conforme a altura do header */
-                height: 300px;
-            }
-            .banner h1 {
-                font-size: 2rem;
-            }
-            .banner p {
-                font-size: 1rem;
-            }
-            .section-title {
-                font-size: 1.8rem;
-            }
-            .aniversariante-img {
-                height: 120px;
-                width: 120px;
-            }
-            .ferias-grid {
-                grid-template-columns: 1fr;
-            }
-            .cipa-container {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
+    <!-- HEADER -->
     <header>
         <div class="header-container">
-            <a href="#inicio" class="logo">
+            <a href="#" class="logo">
                 <img src="psr_logo.png" alt="PSR Logo">
                 <span>Indústria</span>
             </a>
             <nav>
-                <button class="menu-toggle" aria-label="Abrir menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <ul>
+                <button id="menu-toggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
+                <ul id="menu">
                     <li><a href="#inicio">Início</a></li>
-                    <li><a href="cardapio.html" target="_blank">Cardápio</a></li>
+                    <li><a href="cardapio.html">Cardápio</a></li>
                     <li><a href="#novidades">Novidades</a></li>
                     <li><a href="#reflexao-do-dia">Reflexão do Dia</a></li>
                     <li><a href="#aniversariantes">Aniversariantes</a></li>
                     <li><a href="#ferias">Férias</a></li>
-                    
                     <li><a href="#cipa">CIPA</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main>
-        <section class="banner">
-            <h1>Bem-vindo à Intranet PSR Indústria</h1>
-            <p>Sua fonte central de informações, notícias e recursos.</p>
-            <a href="#novidades" class="banner-btn">Ver Novidades</a>
-        </section>
+    <!-- BANNER -->
+    <section class="banner" id="inicio">
+        <h1>Bem-vindo à Intranet PSR Indústria</h1>
+        <p>Sua fonte central de informações, notícias e recursos.</p>
+        <a href="#novidades" class="banner-btn">Ver Novidades</a>
+    </section>
 
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main>
+        <!-- Novidades -->
         <section id="novidades" class="section">
             <h2 class="section-title">Novidades</h2>
-            <div class="novidades-container">
-                <!-- Conteúdo será carregado por JavaScript -->
+            <div id="novidades-container" class="novidades-container">
                 <div class="loading"><div class="loading-spinner"></div></div>
             </div>
         </section>
 
+        <!-- Reflexão do Dia -->
         <section id="reflexao-do-dia" class="section">
             <h2 class="section-title">Reflexão do Dia</h2>
-            <div class="reflexao-container">
-                <!-- Conteúdo será carregado por JavaScript -->
+            <div id="reflexao-container" class="reflexao-container">
                 <div class="loading"><div class="loading-spinner"></div></div>
             </div>
         </section>
 
+        <!-- Aniversariantes -->
         <section id="aniversariantes" class="section">
             <h2 class="section-title">Aniversariantes do Mês</h2>
-            <div class="aniversariantes-container">
-                <!-- Conteúdo será carregado por JavaScript -->
+            <div id="aniversariantes-container" class="aniversariantes-container">
                 <div class="loading"><div class="loading-spinner"></div></div>
             </div>
         </section>
 
+        <!-- Férias -->
         <section id="ferias" class="section">
             <h2 class="section-title">Colaboradores em Férias</h2>
             <div class="ferias-container">
-                <!-- Conteúdo será carregado por JavaScript -->
-                <div class="loading"><div class="loading-spinner"></div></div>
+                <div id="ferias-grid-container" class="ferias-grid">
+                    <div class="loading"><div class="loading-spinner"></div></div>
+                </div>
+                <table class="ferias-table">
+                    <thead>
+                        <tr>
+                            <th>Colaborador</th>
+                            <th>Departamento</th>
+                            <th>Início</th>
+                            <th>Retorno</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ferias-tbody">
+                        <tr><td colspan="4"><div class="loading"><div class="loading-spinner"></div></div></td></tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
+        <!-- CIPA -->
         <section id="cipa" class="section">
             <h2 class="section-title">CIPA</h2>
-            <div class="cipa-container">
-                <!-- Conteúdo será carregado por JavaScript -->
+            <div id="cipa-container" class="cipa-container">
                 <div class="loading"><div class="loading-spinner"></div></div>
             </div>
         </section>
     </main>
 
+    <!-- FOOTER -->
     <footer>
         <div class="footer-content">
             <h3>PSR Indústria</h3>
-            <p>Liderando o caminho em soluções industriais inovadoras e sustentáveis.</p>
             <p class="destaque">Conecte-se conosco para transformar sua visão em realidade.</p>
             <div class="social-links">
-                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
             </div>
             <a href="#contato" class="contato-rodape">Entre em Contato</a>
-        </div>
-        <div class="copyright">
-            <p>&copy; 2024 PSR Indústria. Todos os direitos reservados.</p>
+            <div>&copy; 2025 PSR Indústria. Todos os direitos reservados.</div>
         </div>
     </footer>
 
+    <!-- SCRIPT DE CARREGAMENTO -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navUl = document.querySelector('nav ul');
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.getElementById('menu-toggle');
+        const menu       = document.getElementById('menu');
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                menu.classList.toggle('active');
+            });
+        }
 
-            if (menuToggle && navUl) {
-                menuToggle.addEventListener('click', () => {
-                    navUl.classList.toggle('active');
-                });
+        // Base CDN jsDelivr apontando para a branch main
+        const BASE = 'https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR@main';
+
+        // Função genérica de fetch com tratamento
+        async function fetchData(path) {
+            try {
+                const res = await fetch(`${BASE}/${path}`);
+                if (!res.ok) throw new Error(`Status ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                console.error('Erro ao carregar', path, err);
+                return null;
             }
+        }
 
-            // Função para carregar dados de JSON e renderizar
-            async function loadJsonData(url, containerSelector, renderFunction) {
-                const container = document.querySelector(containerSelector);
-                if (!container) {
-                    console.error(`Container ${containerSelector} not found.`);
-                    return;
-                }
-                const loadingElement = container.querySelector('.loading');
-
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    const data = await response.json();
-                    if (loadingElement) loadingElement.remove();
-                    renderFunction(data, container);
-                } catch (error) {
-                    console.error(`Error loading data from ${url}:`, error);
-                    if (loadingElement) loadingElement.remove();
-                    container.innerHTML = `<p>Erro ao carregar dados. Tente novamente mais tarde.</p>`;
-                }
+        // Render Novidades
+        async function renderNovidades() {
+            const data = await fetchData('novidades.json');
+            const c    = document.getElementById('novidades-container');
+            if (!data) {
+                c.innerHTML = '<p>Erro ao carregar novidades.</p>';
+                return;
             }
-
-            // Renderizar Novidades
-            function renderNovidades(data, container) {
-                data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'novidade-card';
-                    card.innerHTML = `
-                        <div class="novidade-img"><i class="${item.icone}"></i></div>
-                        <div class="novidade-content">
-                            <h3>${item.titulo}</h3>
-                            <p class="novidade-date"><i class="fas fa-calendar-alt"></i> ${item.data}</p>
-                            <p>${item.resumo}</p>
-                            ${item.link ? `<a href="${item.link}" class="novidade-link" target="_blank">Saiba Mais <i class="fas fa-arrow-right"></i></a>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            }
-
-            // Renderizar Reflexão do Dia
-            function renderReflexao(data, container) {
-                container.innerHTML = '';
-
-                const card = document.createElement('div');
-                card.className = 'reflexao-card';
-
-                card.innerHTML = `
-                    <p class="reflexao-frase">"${data.frase}"</p>
-                    <p class="reflexao-autor">- ${data.autor}</p>
-                    <p class="reflexao-instrucao" style="font-size: 0.95rem; color: #888;">Clique aqui para refletir</p>
-                    <div class="reflexao-extra" style="display: none;">
-                        <p class="reflexao-texto">${data.texto}</p>
-                        <p class="reflexao-data">${data.data}</p>
+            c.innerHTML = '';
+            data.forEach(n => {
+                c.innerHTML += `
+                <div class="novidade-card">
+                    <div class="novidade-img"><i class="${n.icone}"></i></div>
+                    <div class="novidade-content">
+                        <h3>${n.titulo}</h3>
+                        <div class="novidade-date"><i class="far fa-calendar-alt"></i> ${n.data}</div>
+                        <p>${n.conteudo || n.resumo}</p>
+                        <a href="${n.link}" class="novidade-link">Saiba mais <i class="fas fa-arrow-right"></i></a>
                     </div>
-                `;
+                </div>`;
+            });
+        }
 
-                card.style.cursor = 'pointer';
-                card.addEventListener('click', () => {
-                    const extra = card.querySelector('.reflexao-extra');
-                    extra.style.display = extra.style.display === 'none' ? 'block' : 'none';
-                });
-
-                container.appendChild(card);
+        // Render Reflexão do Dia
+        async function renderReflexao() {
+            const data = await fetchData('reflexaododia.json');
+            const c    = document.getElementById('reflexao-container');
+            if (!data) {
+                c.innerHTML = '<p>Erro ao carregar reflexão.</p>';
+                return;
             }
+            // Formata data de hoje
+            const hoje = new Date();
+            const d    = String(hoje.getDate()).padStart(2,'0');
+            const m    = String(hoje.getMonth()+1).padStart(2,'0');
+            const y    = hoje.getFullYear();
+            const dt   = `${d}/${m}/${y}`;
+            const r    = data.find(x => x.data === dt);
+            if (!r) {
+                c.innerHTML = '<p>Sem reflexão para hoje.</p>';
+            } else {
+                c.innerHTML = `
+                <p class="reflexao-frase">“${r.frase}”</p>
+                <p class="reflexao-autor">- ${r.autor}</p>
+                <p class="reflexao-texto">${r.reflexao}</p>
+                <p class="reflexao-data">Reflexão do dia: ${r.data}</p>`;
             }
+        }
 
-            // Carregar todos os dados
-            loadJsonData('https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR/novidades.json', '#novidades .novidades-container', renderNovidades);
-            loadJsonData('https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR/reflexaododia.json', '#reflexao-do-dia .reflexao-container', renderReflexao); // Assumindo que o JSON de reflexão é https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR/reflexaododia.json
-            loadJsonData('https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR/aniversariantes.json', '#aniversariantes .aniversariantes-container', renderAniversariantes);
-            loadJsonData('https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR/ferias.json', '#ferias .ferias-container', renderFerias);
-            loadJsonData('https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR/cipa.json', '#cipa .cipa-container', renderCipa);
-        });
+        // Render Aniversariantes
+        async function renderAniversariantes() {
+            const data = await fetchData('aniversariantes.json');
+            const c    = document.getElementById('aniversariantes-container');
+            if (!data) {
+                c.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
+                return;
+            }
+            c.innerHTML = '';
+            data.forEach(a => {
+                c.innerHTML += `
+                <div class="aniversariante-card">
+                    <div class="aniversariante-img">
+                        ${a.imagem ? `<img src="${a.imagem}" alt="${a.nome}">` : '<i class="fas fa-birthday-cake"></i>'}
+                    </div>
+                    <div class="aniversariante-info">
+                        <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
+                        ${a.cargo ? `<p>${a.cargo}</p>` : ''}
+                        <p class="aniversariante-data">${a.data}</p>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // Render Férias
+        async function renderFerias() {
+            const data = await fetchData('ferias.json');
+            const grid = document.getElementById('ferias-grid-container');
+            const tb   = document.getElementById('ferias-tbody');
+            if (!data) {
+                grid.innerHTML = tb.innerHTML = '<p>Erro ao carregar férias.</p>';
+                return;
+            }
+            grid.innerHTML = '';
+            tb.innerHTML   = '';
+            data.forEach(f => {
+                // Card mobile
+                grid.innerHTML += `
+                <div class="ferias-card">
+                    <div class="ferias-card-header">
+                        <i class="fas fa-plane-departure ferias-card-icon"></i>
+                        <span class="ferias-card-colaborador">${f.colaborador}</span>
+                    </div>
+                    <p class="ferias-card-periodo"><strong>Período:</strong> ${f.inicio} - ${f.retorno}</p>
+                    <p class="ferias-card-departamento">${f.departamento}</p>
+                </div>`;
+                // Tabela desktop
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${f.colaborador}</td>
+                    <td>${f.departamento}</td>
+                    <td>${f.inicio}</td>
+                    <td>${f.retorno}</td>`;
+                tb.appendChild(tr);
+            });
+        }
+
+        // Render CIPA
+        async function renderCIPA() {
+            const raw = await fetchData('cipa.json');
+            const c   = document.getElementById('cipa-container');
+            if (!raw) {
+                c.innerHTML = '<p>Erro ao carregar CIPA.</p>';
+                return;
+            }
+            // Transforma objeto em array se necessário
+            const list = Array.isArray(raw) ? raw : Object.values(raw);
+            c.innerHTML = '';
+            list.forEach(i => {
+                c.innerHTML += `
+                <div class="cipa-card">
+                    <div class="cipa-icon"><i class="${i.icone}"></i></div>
+                    <h3>${i.titulo || i.nome}</h3>
+                    <p>${i.conteudo || i.cargo_cipa}</p>
+                </div>`;
+            });
+        }
+
+        // Chamada inicial
+        renderNovidades();
+        renderReflexao();
+        renderAniversariantes();
+        renderFerias();
+        renderCIPA();
+    });
     </script>
 </body>
 </html>
