@@ -90,7 +90,7 @@ nav ul li a:hover {
 .banner h1 { font-size: 2.0rem; margin-bottom: 10px; font-weight: 700; }
 .banner p { font-size: 1.3rem; max-width: 700px; margin-bottom: 20px; margin-top: 0px; }
 .banner-btn {
-  background-color: var(--dourado);
+  background-color: #ffb600;
   color: var(--azul-marinho);
   padding: 12px 24px; border-radius: 50px;
   font-weight: 600;
