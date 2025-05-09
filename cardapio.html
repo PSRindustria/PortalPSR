@@ -29,14 +29,23 @@
       font-family: 'Roboto', sans-serif;
       background: var(--bg-light);
       color: var(--color-text);
-      padding: 90px 1rem 1rem; /* CORRIGIDO: compensação para o menu fixo */
-      display: flex;
-      justify-content: center;
+      padding-top: 80px; /* Espaço para o menu fixo */
+    }
+
+    /* Estilos apenas para o menu-placeholder */
+    #menu-placeholder {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
     }
 
     .container {
       width: 100%;
       max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1rem;
     }
 
     .coluna {
@@ -109,18 +118,23 @@
       font-size: 1rem;
     }
 
+    /* Estilos para o footer placeholder */
+    #footer-placeholder {
+      margin-top: 2rem;
+    }
+
     @media (max-width: 600px) {
       .texto {
         padding: 1rem;
-        font-size: 4vw;
+        font-size: 0.95rem;
       }
 
       .diaSemana {
-        font-size: 3.5vw;
+        font-size: 1.1rem;
       }
 
       .proteinas {
-        font-size: 5vw;
+        font-size: 1.5rem;
       }
     }
   </style>
