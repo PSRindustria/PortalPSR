@@ -78,17 +78,17 @@ nav ul li a:hover {
    BANNER PRINCIPAL
    ================================================== */
 .banner {
-  margin-top: 70px; height: 400px;
+  margin-top: 35px; height: 400px;
   background:
     linear-gradient(rgba(0,51,102,0.7),rgba(0,51,102,0.9)),
     url('https://via.placeholder.com/1200x400') center/cover no-repeat;
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   text-align: center; color: var(--branco);
-  padding: 0 20px;
+  padding: 0 30px;
 }
-.banner h1 { font-size: 2.8rem; margin-bottom: 20px; font-weight: 700; }
-.banner p { font-size: 1.3rem; max-width: 700px; margin-bottom: 30px; }
+.banner h1 { font-size: 2.0rem; margin-bottom: 10px; font-weight: 700; }
+.banner p { font-size: 1.3rem; max-width: 700px; margin-bottom: 20px; margin-top: 0px; }
 .banner-btn {
   background-color: var(--dourado);
   color: var(--azul-marinho);
@@ -106,18 +106,18 @@ nav ul li a:hover {
    ================================================== */
 main { padding-bottom: 40px; }
 .section {
-  padding: 40px 20px;
+  padding: 30px 20px;
 }
 .section-title {
   text-align: center; font-size: 2rem;
-  margin-bottom: 20px; position: relative;
+  margin-bottom: 30px; position: relative;
 }
 .section-title::after {
   content: '';
   display: block;
-  width: 80px; height: 3px;
+  width: 120px; height: 3px;
   background: var(--dourado);
-  margin: 10px auto 0;
+  margin: 7px auto 0;
 }
 
 /* ==================================================
@@ -172,15 +172,16 @@ main { padding-bottom: 40px; }
 .novidade-img {
   background: var(--azul-marinho);
   color: #fff; padding: 20px; text-align: center;
+  border-radius: 15px 15px 0px 0px;
 }
-.novidade-content { padding: 20px; text-align: center; }
+.novidade-content { padding: 10px 30px 10px 30px; text-align: center; }
 
 /* ==================================================
    REFLEXÃO DO DIA
    ================================================== */
 .reflexao-container {
   background: var(--branco);
-  padding: 20px;
+  padding: 5px 20px 20px 20px;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);
   text-align: center;
@@ -189,6 +190,7 @@ main { padding-bottom: 40px; }
 .reflexao-frase {
   font-style: italic; color: var(--azul-marinho);
   font-size: 1.4rem;
+  padding: 0px 10px 0px 10px;
 }
 .reflexao-autor {
   font-weight: bold; color: var(--dourado);
@@ -196,7 +198,6 @@ main { padding-bottom: 40px; }
 }
 .reflexao-instrucao {
   color: var(--azul-aco);
-  text-decoration: underline;
   cursor: pointer;
   font-weight: 600;
   margin-bottom: 8px;
@@ -214,9 +215,9 @@ main { padding-bottom: 40px; }
 }
 .aniversariante-card {
   background: var(--branco);
-  padding: 15px;
+  padding: 35px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
   text-align: center;
   transition: transform .3s;
   position: relative;
@@ -236,13 +237,13 @@ main { padding-bottom: 40px; }
 
 /* estilo da data no card */
 .aniversariante-data {
-  background: var(--rosa-claro-aniversario);
-  color: var(--dourado);
-  padding: 4px 8px;
+  background: rgb(194 233 249);
+  color: #4b4b4b;
+  padding: 4px 18px;
   border-radius: 12px;
-  font-size: .9rem;
+  font-size: 1.2rem;
   display: inline-block;
-  margin-top: 6px;
+  margin-top: 0px;
 }
 
 /* destaque animado do aniversariante do dia (pulse azul) */
@@ -326,13 +327,13 @@ main { padding-bottom: 40px; }
 }
 .ferias-card {
   background: var(--cinza-claro-ferias-bg);
-  padding: 20px;
+  padding: 23px 0px 5px 0px;
   border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.20);
   transition: transform 0.3s;
   text-align: center;
-  flex: 1 1 260px;
-  max-width: 260px;
+  flex: 1 1 100%;
+  max-width: 100%;
 }
 .ferias-card:hover { transform: translateY(-5px); }
 .ferias-card-header {
