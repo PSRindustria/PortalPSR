@@ -808,12 +808,13 @@
             }
 
             // Carregar todos os dados
-            loadJsonData('novidades.json', '#novidades .novidades-container', renderNovidades);
-            loadJsonData('reflexoes.json', '#reflexao-do-dia .reflexao-container', renderReflexao); // Assumindo que o JSON de reflexão é reflexoes.json
-            loadJsonData('aniversariantes.json', '#aniversariantes .aniversariantes-container', renderAniversariantes);
-            loadJsonData('ferias.json', '#ferias .ferias-container', renderFerias);
-            loadJsonData('cipa.json', '#cipa .cipa-container', renderCipa);
+            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/bancos/novidades.json', '#novidades .novidades-container', renderNovidades);
+            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/bancos/reflexaododia.json', '#reflexao-do-dia .reflexao-container', renderReflexao); // Assumindo que o JSON de reflexão é https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/bancos/reflexaododia.json
+            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/bancos/aniversariantes.json', '#aniversariantes .aniversariantes-container', renderAniversariantes);
+            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/bancos/ferias.json', '#ferias .ferias-container', renderFerias);
+            loadJsonData('https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/bancos/cipa.json', '#cipa .cipa-container', renderCipa);
         });
     </script>
 </body>
 </html>
+
