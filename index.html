@@ -94,14 +94,16 @@
   <!-- SCRIPTS -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // 1) injeta menu e rodapé
+    // 1) Injeta menu e rodapé
     ['menu','footer'].forEach(file => {
-      fetch(file + '.html')
+      fetch(`${file}.html`)
         .then(r => r.text())
-        .then(html => document.getElementById(file + '-placeholder').innerHTML = html);
+        .then(html => {
+          document.getElementById(`${file}-placeholder`).innerHTML = html;
+        });
     });
 
-    // 2) configura data de hoje
+    // 2) Configura data de hoje
     const hoje = new Date(),
           dia = hoje.getDate(),
           mes = hoje.getMonth(),
@@ -110,7 +112,7 @@
           hojePt = `${dia} de ${meses[mes]} de ${ano}`;
     document.getElementById('data-hoje-novidades').textContent = hojePt;
 
-    // 3) função genérica fetch + JSON
+    // 3) Função genérica fetch + JSON
     const BASE = 'https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR@main';
     async function fetchData(path) {
       try {
@@ -122,7 +124,7 @@
       }
     }
 
-    // 4) renderiza Novidades
+    // 4) Renderiza Novidades
     async function renderNovidades() {
       const data = await fetchData('novidades.json'),
             c = document.getElementById('novidades-container');
@@ -144,7 +146,7 @@
       });
     }
 
-    // 5) renderiza Reflexão do Dia
+    // 5) Renderiza Reflexão do Dia
     async function renderReflexao() {
       const data = await fetchData('reflexaododia.json'),
             c = document.getElementById('reflexao-container');
@@ -178,7 +180,7 @@
       c.appendChild(card);
     }
 
-    // 6) renderiza Aniversariantes
+    // 6) Renderiza Aniversariantes
     async function renderAniversariantes() {
       const data = await fetchData('aniversariantes.json'),
             container = document.getElementById('aniversariantes-container');
@@ -190,8 +192,7 @@
       const hoje = new Date(),
             diaHoje = String(hoje.getDate()).padStart(2,'0'),
             mesHoje = String(hoje.getMonth()+1).padStart(2,'0'),
-            nomesMes = ['janeiro','fevereiro','março','abril','maio','junho',
-                        'julho','agosto','setembro','outubro','novembro','dezembro'];
+            nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
       data.forEach(a => {
         const [dStr,mStr] = a.data.split('/');
         const card = document.createElement('div');
@@ -215,30 +216,30 @@
       });
     }
 
-    // 7) renderiza Férias
+    // 7) Renderiza Férias
     async function renderFerias() {
       const data = await fetchData('ferias.json'),
             grid = document.getElementById('ferias-grid-container'),
-            tb = document.getElementById('ferias-tbody');
+            tb   = document.getElementById('ferias-tbody');
       if (!data) {
         grid.innerHTML = tb.innerHTML = '<p>Erro ao carregar férias.</p>';
         return;
       }
       grid.innerHTML = '';
-      tb.innerHTML = '';
+      tb.innerHTML   = '';
       data.forEach(f => {
-grid.innerHTML += `
-  <div class="ferias-card">
-    <div class="ferias-card-header">
-      <i class="fas fa-plane-departure ferias-card-icon"></i>
-      <span>${f.colaborador}</span>
-    </div>
-    <div class="ferias-dates">
-      <span class="ferias-card-inicio">Início: ${f.inicio}</span>
-      <span class="ferias-card-retorno">Retorno: ${f.retorno}</span>
-    </div>
-    <p class="ferias-card-departamento">${f.departamento}</p>
-  </div>`;
+        grid.innerHTML += `
+          <div class="ferias-card">
+            <div class="ferias-card-header">
+              <i class="fas fa-plane-departure ferias-card-icon"></i>
+              <span class="ferias-card-colaborador">${f.colaborador}</span>
+            </div>
+            <div class="ferias-dates">
+              <span class="ferias-card-inicio">${f.inicio}</span>
+              <span class="ferias-card-retorno">${f.retorno}</span>
+            </div>
+            <p class="ferias-card-departamento">${f.departamento}</p>
+          </div>`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${f.colaborador}</td>
@@ -249,7 +250,7 @@ grid.innerHTML += `
       });
     }
 
-    // 8) renderiza CIPA
+    // 8) Renderiza CIPA
     async function renderCIPA() {
       const raw = await fetchData('cipa.json'),
             c = document.getElementById('cipa-container');
@@ -269,7 +270,7 @@ grid.innerHTML += `
       });
     }
 
-    // 9) dispara todas as renderizações
+    // 9) Dispara todas as renderizações
     renderNovidades();
     renderReflexao();
     renderAniversariantes();
