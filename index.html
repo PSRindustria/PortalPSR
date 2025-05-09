@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSR Indústria</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -552,7 +556,7 @@
             padding: 30px;
         }
         .loading-spinner {
-            border: 5px solid rgba(0,51,102,0.1);
+            border: 5px solid rgba(0, 51, 102, 0.1);
             border-top: 5px solid var(--dourado);
             border-radius: 50%;
             width: 40px;
@@ -564,64 +568,72 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Media Queries para Responsividade */
-        @media (max-width: 768px) {
+        /* Responsividade para o menu */
+        .menu-toggle {
+            display: none;
+            color: var(--branco);
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        @media screen and (max-width: 768px) {
             .header-container {
-                flex-direction: column;
-                align-items: flex-start;
+                padding: 10px 15px;
             }
-            .menu {
+            .logo img {
+                height: 35px;
+            }
+            .logo {
+                font-size: 1.5rem;
+            }
+            nav ul {
+                display: none;
                 flex-direction: column;
+                position: absolute;
+                top: 60px; /* Ajustar conforme a altura do header */
+                left: 0;
                 width: 100%;
-                display: none; /* Escondido por padrão em telas pequenas */
+                background-color: var(--azul-marinho);
+                padding: 10px 0;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             }
-            .menu.active {
-                display: flex; /* Mostra quando o menu toggle está ativo */
+            nav ul.active {
+                display: flex;
             }
-            .menu li {
+            nav ul li {
                 margin: 10px 0;
                 text-align: center;
             }
+            nav ul li a {
+                padding: 10px 15px;
+            }
             .menu-toggle {
-                display: block; /* Mostra o botão de menu hamburguer */
-                background: none;
-                border: none;
-                color: var(--branco);
-                font-size: 1.5rem;
-                cursor: pointer;
-                position: absolute;
-                top: 20px;
-                right: 20px;
+                display: block;
+            }
+            .banner {
+                margin-top: 60px; /* Ajustar conforme a altura do header */
+                height: 300px;
             }
             .banner h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             .banner p {
                 font-size: 1rem;
             }
             .section-title {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
-            .aniversariantes-container {
-                grid-template-columns: 1fr; /* Uma coluna para telas menores */
+            .aniversariante-img {
+                height: 120px;
+                width: 120px;
             }
-            .ferias-table { /* Esconde a tabela em mobile */
-                display: none;
-            }
-            .ferias-grid { /* Garante que os cards sejam exibidos em mobile */
-                display: grid;
+            .ferias-grid {
+                grid-template-columns: 1fr;
             }
             .cipa-container {
-                grid-template-columns: 1fr; /* Uma coluna para telas menores */
-            }
-        }
-
-        @media (min-width: 769px) { /* Esconde os cards de férias em desktop */
-            .ferias-grid {
-                display: none;
-            }
-            .ferias-table {
-                display: table; /* Garante que a tabela seja exibida em desktop */
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -629,304 +641,258 @@
 <body>
     <header>
         <div class="header-container">
-            <a href="#" class="logo">
-                <img src="logo.png" alt="PSR Logo">
-                PSR <span>Indústria</span>
+            <a href="#inicio" class="logo">
+                <img src="psr_logo.png" alt="PSR Logo">
+                <span>Indústria</span>
             </a>
             <nav>
-                <ul class="menu" id="menu">
+                <button class="menu-toggle" aria-label="Abrir menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul>
                     <li><a href="#inicio">Início</a></li>
-                    <li><a href="cardapio.html">Cardápio</a></li>
+                    <li><a href="cardapio.html" target="_blank">Cardápio</a></li>
                     <li><a href="#novidades">Novidades</a></li>
                     <li><a href="#reflexao-do-dia">Reflexão do Dia</a></li>
                     <li><a href="#aniversariantes">Aniversariantes</a></li>
                     <li><a href="#ferias">Férias</a></li>
-                    <li><a href="jornal.html">Jornal</a></li>
+                    <li><a href="#jornal">Jornal</a></li>
                     <li><a href="#cipa">CIPA</a></li>
                 </ul>
-                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
-                    <i class="fas fa-bars"></i>
-                </button>
             </nav>
         </div>
     </header>
 
-    <section class="banner" id="inicio">
-        <h1>Bem-vindo à Intranet da PSR Indústria</h1>
-        <p>Seu portal para informações internas, notícias e recursos para colaboradores</p>
-        <a href="#novidades" class="banner-btn">Ver Novidades</a>
-    </section>
+    <main>
+        <section class="banner">
+            <h1>Bem-vindo à Intranet PSR Indústria</h1>
+            <p>Sua fonte central de informações, notícias e recursos.</p>
+            <a href="#novidades" class="banner-btn">Ver Novidades</a>
+        </section>
 
-    <section id="novidades" class="section">
-        <h2 class="section-title">Últimas Novidades</h2>
-        <div class="novidades-container" id="novidades-container">
-            <!-- Conteúdo das novidades será carregado aqui -->
-            <div class="loading"><div class="loading-spinner"></div></div>
-        </div>
-    </section>
-
-    <section id="reflexao-do-dia" class="section">
-        <h2 class="section-title">Reflexão do Dia</h2>
-        <div class="reflexao-container" id="reflexao-container">
-            <!-- Conteúdo da reflexão do dia será carregado aqui -->
-            <div class="loading"><div class="loading-spinner"></div></div>
-        </div>
-    </section>
-
-    <section id="aniversariantes" class="section">
-        <h2 class="section-title">Aniversariantes do Mês</h2>
-        <div class="aniversariantes-container" id="aniversariantes-container">
-            <!-- Conteúdo dos aniversariantes será carregado aqui -->
-            <div class="loading"><div class="loading-spinner"></div></div>
-        </div>
-    </section>
-
-    <section id="ferias" class="section">
-        <h2 class="section-title">Programação de Férias</h2>
-        <div class="ferias-container">
-            <!-- Cards de Férias para Mobile -->
-            <div class="ferias-grid" id="ferias-grid-container">
-                <!-- Conteúdo dos cards de férias será carregado aqui -->
+        <section id="novidades" class="section">
+            <h2 class="section-title">Novidades</h2>
+            <div class="novidades-container">
+                <!-- Conteúdo será carregado por JavaScript -->
                 <div class="loading"><div class="loading-spinner"></div></div>
             </div>
-            <!-- Tabela de Férias para Desktop -->
-            <table class="ferias-table" id="ferias-table">
-                <thead>
-                    <tr>
-                        <th>Colaborador</th>
-                        <th>Departamento</th>
-                        <th>Início</th>
-                        <th>Retorno</th>
-                    </tr>
-                </thead>
-                <tbody id="ferias-tbody">
-                    <!-- Conteúdo da tabela de férias será carregado aqui -->
-                    <tr><td colspan="4"><div class="loading"><div class="loading-spinner"></div></div></td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+        </section>
 
-    <section id="cipa" class="section">
-        <h2 class="section-title">CIPA</h2>
-        <div class="cipa-container" id="cipa-container">
-            <!-- Conteúdo da CIPA será carregado aqui -->
-            <div class="loading"><div class="loading-spinner"></div></div>
-        </div>
-    </section>
+        <section id="reflexao-do-dia" class="section">
+            <h2 class="section-title">Reflexão do Dia</h2>
+            <div class="reflexao-container">
+                <!-- Conteúdo será carregado por JavaScript -->
+                <div class="loading"><div class="loading-spinner"></div></div>
+            </div>
+        </section>
+
+        <section id="aniversariantes" class="section">
+            <h2 class="section-title">Aniversariantes do Mês</h2>
+            <div class="aniversariantes-container">
+                <!-- Conteúdo será carregado por JavaScript -->
+                <div class="loading"><div class="loading-spinner"></div></div>
+            </div>
+        </section>
+
+        <section id="ferias" class="section">
+            <h2 class="section-title">Colaboradores em Férias</h2>
+            <div class="ferias-container">
+                <!-- Conteúdo será carregado por JavaScript -->
+                <div class="loading"><div class="loading-spinner"></div></div>
+            </div>
+        </section>
+
+        <section id="jornal" class="section">
+            <h2 class="section-title">Jornal Interno</h2>
+            <div class="container">
+                <p>Em breve, novidades do nosso jornal interno aqui!</p>
+                <!-- Pode ser um link para um PDF ou uma seção de artigos -->
+            </div>
+        </section>
+
+        <section id="cipa" class="section">
+            <h2 class="section-title">CIPA</h2>
+            <div class="cipa-container">
+                <!-- Conteúdo será carregado por JavaScript -->
+                <div class="loading"><div class="loading-spinner"></div></div>
+            </div>
+        </section>
+    </main>
 
     <footer>
         <div class="footer-content">
             <h3>PSR Indústria</h3>
-            <p class="destaque">Mais do que uma equipe, somos uma empresa feita de valores, pessoas e propósito.</p>
+            <p>Liderando o caminho em soluções industriais inovadoras e sustentáveis.</p>
+            <p class="destaque">Conecte-se conosco para transformar sua visão em realidade.</p>
             <div class="social-links">
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                 <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             </div>
-            <a href="https://wa.me/SEUNUMERODOWHATSAPP" class="contato-rodape" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-whatsapp"></i> Contato
-            </a>
-            <div class="copyright">
-                &copy; 2025 PSR Indústria. Todos os direitos reservados.
-            </div>
+            <a href="#contato" class="contato-rodape">Entre em Contato</a>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 PSR Indústria. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuToggle = document.getElementById('menu-toggle');
-            const menu = document.getElementById('menu');
-            if (menuToggle && menu) {
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navUl = document.querySelector('nav ul');
+
+            if (menuToggle && navUl) {
                 menuToggle.addEventListener('click', () => {
-                    menu.classList.toggle('active');
+                    navUl.classList.toggle('active');
                 });
             }
 
-            async function carregarDados(arquivo) {
+            // Função para carregar dados de JSON e renderizar
+            async function loadJsonData(url, containerSelector, renderFunction) {
+                const container = document.querySelector(containerSelector);
+                if (!container) {
+                    console.error(`Container ${containerSelector} not found.`);
+                    return;
+                }
+                const loadingElement = container.querySelector('.loading');
+
                 try {
-                    const resposta = await fetch(arquivo);
-                    if (!resposta.ok) {
-                        console.error(`Erro ao carregar ${arquivo}: ${resposta.status} ${resposta.statusText}`);
-                        const containerIdBase = arquivo.split('.')[0];
-                        
-                        // Tenta atualizar containers específicos se existirem
-                        const gridContainer = document.getElementById(containerIdBase + '-grid-container');
-                        const tableBody = document.getElementById(containerIdBase + '-tbody');
-                        const genericContainer = document.getElementById(containerIdBase + '-container');
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    if (loadingElement) loadingElement.remove();
+                    renderFunction(data, container);
+                } catch (error) {
+                    console.error(`Error loading data from ${url}:`, error);
+                    if (loadingElement) loadingElement.remove();
+                    container.innerHTML = `<p>Erro ao carregar dados. Tente novamente mais tarde.</p>`;
+                }
+            }
 
-                        const erroMsg = `<p>Erro ao carregar dados de ${arquivo}. Tente novamente mais tarde.</p>`;
+            // Renderizar Novidades
+            function renderNovidades(data, container) {
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'novidade-card';
+                    card.innerHTML = `
+                        <div class="novidade-img"><i class="${item.icone}"></i></div>
+                        <div class="novidade-content">
+                            <h3>${item.titulo}</h3>
+                            <p class="novidade-date"><i class="fas fa-calendar-alt"></i> ${item.data}</p>
+                            <p>${item.resumo}</p>
+                            ${item.link ? `<a href="${item.link}" class="novidade-link" target="_blank">Saiba Mais <i class="fas fa-arrow-right"></i></a>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
 
-                        if (gridContainer) gridContainer.innerHTML = erroMsg;
-                        if (tableBody) tableBody.innerHTML = `<tr><td colspan="4">${erroMsg}</td></tr>`;
-                        if (genericContainer && !gridContainer && !tableBody) genericContainer.innerHTML = erroMsg;
-                        
-                        return null;
+            // Renderizar Reflexão do Dia
+            function renderReflexao(data, container) {
+                container.innerHTML = `
+                    <p class="reflexao-frase">"${data.frase}"</p>
+                    <p class="reflexao-autor">- ${data.autor}</p>
+                    <p class="reflexao-texto">${data.texto}</p>
+                    <p class="reflexao-data">${data.data}</p>
+                `;
+            }
+
+            // Renderizar Aniversariantes
+            function renderAniversariantes(data, container) {
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'aniversariante-card';
+                    card.innerHTML = `
+                        <div class="aniversariante-img">
+                            ${item.foto ? `<img src="${item.foto}" alt="${item.nome}">` : '<i class="fas fa-birthday-cake"></i>'}
+                        </div>
+                        <div class="aniversariante-info">
+                            <h3><i class="fas fa-birthday-cake"></i> ${item.nome}</h3>
+                            <p>${item.setor}</p>
+                            <p class="aniversariante-data">${item.data_aniversario}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            // Renderizar Férias
+            function renderFerias(data, container) {
+                if (data.length === 0) {
+                    container.innerHTML = '<p>Nenhum colaborador em férias no momento.</p>';
+                    return;
+                }
+                // Opção 1: Cards (como no mobile)
+                const gridContainer = document.createElement('div');
+                gridContainer.className = 'ferias-grid';
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'ferias-card';
+                    card.innerHTML = `
+                        <div class="ferias-card-header">
+                            <i class="fas fa-plane-departure ferias-card-icon"></i>
+                            <span class="ferias-card-colaborador">${item.nome}</span>
+                        </div>
+                        <p class="ferias-card-periodo">Período: ${item.periodo_inicio} a ${item.periodo_fim}</p>
+                        <p class="ferias-card-departamento">Setor: ${item.setor}</p>
+                    `;
+                    gridContainer.appendChild(card);
+                });
+                container.appendChild(gridContainer);
+
+                // Opção 2: Tabela (para desktop, pode ser adicionada condicionalmente ou via CSS display)
+                // Se quiser a tabela também, descomente e ajuste:
+                /*
+                const table = document.createElement('table');
+                table.className = 'ferias-table';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Setor</th>
+                            <th>Início</th>
+                            <th>Fim</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(item => `
+                            <tr>
+                                <td>${item.nome}</td>
+                                <td>${item.setor}</td>
+                                <td>${item.periodo_inicio}</td>
+                                <td>${item.periodo_fim}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                container.appendChild(table);
+                */
+            }
+
+            // Renderizar CIPA
+            function renderCipa(data, container) {
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        const item = data[key];
+                        const card = document.createElement('div');
+                        card.className = 'cipa-card';
+                        card.innerHTML = `
+                            <div class="cipa-icon"><i class="${item.icone}"></i></div>
+                            <h3>${item.titulo}</h3>
+                            <p>${item.conteudo}</p>
+                        `;
+                        container.appendChild(card);
                     }
-                    return await resposta.json();
-                } catch (erro) {
-                    console.error(`Falha ao carregar ${arquivo}:`, erro);
-                    const containerIdBase = arquivo.split('.')[0];
-                    const gridContainer = document.getElementById(containerIdBase + '-grid-container');
-                    const tableBody = document.getElementById(containerIdBase + '-tbody');
-                    const genericContainer = document.getElementById(containerIdBase + '-container');
-
-                    const falhaMsg = `<p>Falha ao carregar dados de ${arquivo}. Verifique sua conexão ou contate o suporte.</p>`;
-
-                    if (gridContainer) gridContainer.innerHTML = falhaMsg;
-                    if (tableBody) tableBody.innerHTML = `<tr><td colspan="4">${falhaMsg}</td></tr>`;
-                    if (genericContainer && !gridContainer && !tableBody) genericContainer.innerHTML = falhaMsg;
-
-                    return null;
                 }
             }
 
-            async function carregarNovidades() {
-                const container = document.getElementById('novidades-container');
-                const novidades = await carregarDados('novidades.json');
-                if (novidades && novidades.length > 0) {
-                    container.innerHTML = '';
-                    novidades.forEach(novidade => {
-                        const novidadeHTML = `
-                            <div class="novidade-card">
-                                <div class="novidade-img"><i class="${novidade.icone}"></i></div>
-                                <div class="novidade-content">
-                                    <h3>${novidade.titulo}</h3>
-                                    <div class="novidade-date"><i class="far fa-calendar-alt"></i> ${novidade.data}</div>
-                                    <p>${novidade.conteudo}</p>
-                                    <a href="${novidade.link}" class="novidade-link">Saiba mais <i class="fas fa-arrow-right"></i></a>
-                                </div>
-                            </div>
-                        `;
-                        container.innerHTML += novidadeHTML;
-                    });
-                } else if (novidades) {
-                     container.innerHTML = '<p>Nenhuma novidade encontrada no momento.</p>';
-                }
-            }
-
-            async function carregarReflexaoDoDia() {
-                const container = document.getElementById('reflexao-container');
-                const reflexoes = await carregarDados('reflexaododia.json'); 
-                
-                if (reflexoes && reflexoes.length > 0) {
-                    const hoje = new Date();
-                    const dia = String(hoje.getDate()).padStart(2, '0');
-                    const mes = String(hoje.getMonth() + 1).padStart(2, '0'); 
-                    const ano = hoje.getFullYear();
-                    const dataAtualFormatada = `${dia}/${mes}/${ano}`;
-
-                    const reflexaoDeHoje = reflexoes.find(r => r.data === dataAtualFormatada);
-
-                    if (reflexaoDeHoje) {
-                        container.innerHTML = `
-                            <p class="reflexao-frase">“${reflexaoDeHoje.frase}”</p>
-                            <p class="reflexao-autor">- ${reflexaoDeHoje.autor}</p>
-                            <p class="reflexao-texto">${reflexaoDeHoje.reflexao}</p>
-                            <p class="reflexao-data">Reflexão para o dia: ${reflexaoDeHoje.data}</p>
-                        `;
-                    } else {
-                        container.innerHTML = '<p>Nenhuma reflexão encontrada para hoje. Volte amanhã!</p>';
-                    }
-                } else if (reflexoes) {
-                    container.innerHTML = '<p>Nenhuma reflexão programada no momento.</p>';
-                }
-            }
-
-            async function carregarAniversariantes() {
-                const container = document.getElementById('aniversariantes-container');
-                const aniversariantes = await carregarDados('aniversariantes.json');
-                if (aniversariantes && aniversariantes.length > 0) {
-                    container.innerHTML = '';
-                    aniversariantes.forEach(aniversariante => {
-                        const imagemHTML = aniversariante.imagem ? `<img src="${aniversariante.imagem}" alt="${aniversariante.nome}">` : '<i class="fas fa-birthday-cake"></i>';
-                        const aniversarianteHTML = `
-                            <div class="aniversariante-card">
-                                <div class="aniversariante-img">${imagemHTML}</div>
-                                <div class="aniversariante-info">
-                                    <h3><i class="fas fa-birthday-cake"></i>${aniversariante.nome}</h3>
-                                    ${aniversariante.cargo ? `<p>${aniversariante.cargo}</p>` : ''}
-                                    <p class="aniversariante-data">${aniversariante.data}</p>
-                                </div>
-                            </div>
-                        `;
-                        container.innerHTML += aniversarianteHTML;
-                    });
-                } else if (aniversariantes) {
-                    container.innerHTML = '<p>Nenhum aniversariante encontrado para este mês.</p>';
-                }
-            }
-
-            async function carregarFerias() {
-                const feriasData = await carregarDados('ferias.json');
-                const tbody = document.getElementById('ferias-tbody');
-                const gridContainer = document.getElementById('ferias-grid-container');
-
-                if (feriasData && feriasData.length > 0) {
-                    if (tbody) tbody.innerHTML = '';
-                    if (gridContainer) gridContainer.innerHTML = '';
-
-                    feriasData.forEach(f => {
-                        // Para a tabela (desktop)
-                        if (tbody) {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>${f.colaborador}</td>
-                                <td>${f.departamento}</td>
-                                <td>${f.inicio}</td>
-                                <td>${f.retorno}</td>
-                            `;
-                            tbody.appendChild(tr);
-                        }
-
-                        // Para os cards (mobile)
-                        if (gridContainer) {
-                            const cardHTML = `
-                                <div class="ferias-card">
-                                    <div class="ferias-card-header">
-                                        <i class="fas fa-suitcase-rolling ferias-card-icon"></i>
-                                        <h4 class="ferias-card-colaborador">${f.colaborador}</h4>
-                                    </div>
-                                    <p class="ferias-card-periodo"><strong>Período:</strong> ${f.inicio} - ${f.retorno}</p>
-                                    <p class="ferias-card-departamento">Departamento: ${f.departamento}</p>
-                                </div>
-                            `;
-                            gridContainer.innerHTML += cardHTML;
-                        }
-                    });
-                } else if (feriasData) {
-                    if (tbody) tbody.innerHTML = '<tr><td colspan="4"><p>Nenhuma programação de férias encontrada.</p></td></tr>';
-                    if (gridContainer) gridContainer.innerHTML = '<p>Nenhuma programação de férias encontrada.</p>';
-                }
-            }
-
-            async function carregarCIPA() {
-                const container = document.getElementById('cipa-container');
-                const cipaMembros = await carregarDados('cipa.json');
-                if (cipaMembros && cipaMembros.length > 0) {
-                    container.innerHTML = '';
-                    cipaMembros.forEach(membro => {
-                        const cipaHTML = `
-                            <div class="cipa-card">
-                                <div class="cipa-icon"><i class="${membro.icone || 'fas fa-hard-hat'}"></i></div>
-                                <h3>${membro.nome}</h3>
-                                <p>${membro.cargo_cipa}</p>
-                                <p>Departamento: ${membro.departamento}</p>
-                                ${membro.contato ? `<p>Contato: ${membro.contato}</p>` : ''}
-                            </div>
-                        `;
-                        container.innerHTML += cipaHTML;
-                    });
-                } else if (cipaMembros) {
-                    container.innerHTML = '<p>Nenhum membro da CIPA encontrado.</p>';
-                }
-            }
-
-            carregarNovidades();
-            carregarReflexaoDoDia();
-            carregarAniversariantes();
-            carregarFerias();
-            carregarCIPA();
+            // Carregar todos os dados
+            loadJsonData('novidades.json', '#novidades .novidades-container', renderNovidades);
+            loadJsonData('reflexoes.json', '#reflexao-do-dia .reflexao-container', renderReflexao); // Assumindo que o JSON de reflexão é reflexoes.json
+            loadJsonData('aniversariantes.json', '#aniversariantes .aniversariantes-container', renderAniversariantes);
+            loadJsonData('ferias.json', '#ferias .ferias-container', renderFerias);
+            loadJsonData('cipa.json', '#cipa .cipa-container', renderCipa);
         });
     </script>
 </body>
