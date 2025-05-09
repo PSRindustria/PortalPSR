@@ -47,7 +47,7 @@ header {
 }
 .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; }
 .logo img { height: 40px; margin-right: 10px; }
-.logo span { color: var(--dourado); }
+.logo span { color: #fff; }
 .menu-toggle {
   display: none; background: none;
   border: none; color: var(--branco);
