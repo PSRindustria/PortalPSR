@@ -178,30 +178,53 @@
     })();
 
     // 6) renderiza Aniversariantes
-    (async () => {
-      const data = await fetchData('aniversariantes.json'),
-            c = document.getElementById('aniversariantes-container');
-      if (!data) {
-        c.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
-        return;
-      }
-      c.innerHTML = '';
-      data.forEach(a => {
-        const [dd, MM] = a.data.split('/'),
-              nm = meses[Number(MM)-1],
-              hojeÉ = Number(dd) === dia && Number(MM)-1 === mes,
-              cls = hojeÉ ? 'destaque-hoje' : '';
-        c.innerHTML += `
-          <div class="aniversariante-card ${cls}">
-            <div class="aniversariante-img">
-              ${a.imagem ? `<img src="${a.imagem}" alt="${a.nome}">` : '<i class="fas fa-birthday-cake"></i>'}
-            </div>
-            <h3>${a.nome}</h3>
-            ${a.cargo ? `<p>${a.cargo}</p>` : ''}
-            <p class="aniversariante-data">${dd} de ${nm}</p>
-          </div>`;
-      });
-    })();
+async function renderAniversariantes() {
+  const data = await fetchData('aniversariantes.json');
+  const container = document.getElementById('aniversariantes-container');
+  container.innerHTML = '';
+
+  // pega dia e mês de hoje em dois dígitos
+  const hoje = new Date();
+  const diaHoje = String(hoje.getDate()).padStart(2, '0');
+  const mesHoje = String(hoje.getMonth() + 1).padStart(2, '0');
+
+  // nomes dos meses para exibir "05 de maio"
+  const nomesMes = [
+    'janeiro','fevereiro','março','abril','maio','junho',
+    'julho','agosto','setembro','outubro','novembro','dezembro'
+  ];
+
+  data.forEach(a => {
+    // separa "DD/MM"
+    const [dia, mes] = a.data.split('/');
+
+    // monta o elemento card
+    const card = document.createElement('div');
+    card.className = 'aniversariante-card';
+
+    // se for aniversário hoje, adiciona destaque
+    if (dia === diaHoje && mes === mesHoje) {
+      card.classList.add('destaque-hoje');
+    }
+
+    // converte para "DD de mês"
+    const dataFormatada = `${dia} de ${nomesMes[Number(mes)-1]}`;
+
+    card.innerHTML = `
+      <div class="aniversariante-img">
+        ${a.imagem
+          ? `<img src="${a.imagem}" alt="${a.nome}">`
+          : '<i class="fas fa-birthday-cake"></i>'}
+      </div>
+      <div class="aniversariante-info">
+        <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
+        ${a.cargo ? `<p>${a.cargo}</p>` : ''}
+        <p class="aniversariante-data">${dataFormatada}</p>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
 
     // 7) renderiza Férias
     (async () => {
