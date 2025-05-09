@@ -358,10 +358,10 @@ main { padding-bottom: 40px; }
 }
 .ferias-table {
   width: 100%; border-collapse: collapse;
-  margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 15px;
 }
 .ferias-table th, .ferias-table td {
-  padding: 12px; text-align: left;
+  padding: 5px; text-align: center;box-shadow: 0 0px 1px rgba(0, 0, 0, 0.20);
 }
 .ferias-table thead {
   background: var(--azul-marinho); color: #fff;
