@@ -502,8 +502,9 @@ footer .footer-content {
   border-radius: 50%;
 }
 .novidade-card,
+.reflexao-card,
 .aniversariante-card,
 .ferias-card,
 .cipa-card {
-  border-radius: 15px !important;
+  border-radius: 15px;
 }
