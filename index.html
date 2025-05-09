@@ -69,11 +69,7 @@
             </tr>
           </thead>
           <tbody id="ferias-tbody">
-            <tr>
-              <td colspan="4">
-                <div class="loading"><div class="loading-spinner"></div></div>
-              </td>
-            </tr>
+            <tr><td colspan="4"><div class="loading"><div class="loading-spinner"></div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -98,9 +94,7 @@
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html`)
         .then(r => r.text())
-        .then(html => {
-          document.getElementById(`${file}-placeholder`).innerHTML = html;
-        });
+        .then(html => document.getElementById(`${file}-placeholder`).innerHTML = html);
     });
 
     // 2) Configura data de hoje
@@ -112,11 +106,11 @@
           hojePt = `${dia} de ${meses[mes]} de ${ano}`;
     document.getElementById('data-hoje-novidades').textContent = hojePt;
 
-    // 3) Função genérica fetch + JSON
-    const BASE = 'https://cdn.jsdelivr.net/gh/PSRindustria/PortalPSR@main';
+    // 3) Função genérica fetch + JSON com cache-buster
     async function fetchData(path) {
+      const cacheBuster = Date.now();
       try {
-        const res = await fetch(`${BASE}/${path}`);
+        const res = await fetch(`${path}?t=${cacheBuster}`);
         if (!res.ok) throw new Error(res.status);
         return await res.json();
       } catch {
