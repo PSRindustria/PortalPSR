@@ -171,13 +171,13 @@ main { padding-bottom: 40px; }
 .novidade-card:hover { transform: translateY(-5px); }
 .novidade-img {
   background: var(--azul-marinho);
-  color: #fff; padding: 20px; text-align: center;
+  color: #fff; padding: 10px; text-align: center;
   border-radius: 15px 15px 0px 0px;
 }
 .novidade-content { padding: 10px 30px 10px 30px; text-align: center; }
 .novidade-img .fas.fa-newspaper,
 .menu-azul .fas.fa-newspaper {
-  font-size: 24px;
+  font-size: 25px;
 }
 
 /* ==================================================
