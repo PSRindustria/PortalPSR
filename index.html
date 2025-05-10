@@ -92,73 +92,6 @@
 
   <!-- SCRIPTS -->
   <script>
-  // Função para tentar recarregar imagens que falharam
-  function setupImageRetryMechanism() {
-    // Observa o DOM para detectar quando novas imagens são adicionadas
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(mutation => {
-        if (mutation.addedNodes.length) {
-          mutation.addedNodes.forEach(node => {
-            // Verifica se o nó é um elemento e contém imagens
-            if (node.nodeType === Node.ELEMENT_NODE) {
-              const images = node.querySelectorAll('img');
-              images.forEach(setupImageRetry);
-            }
-          });
-        }
-      });
-    });
-    
-    // Configura o observer para observar todo o documento
-    observer.observe(document.body, { 
-      childList: true, 
-      subtree: true 
-    });
-    
-    // Configura o retry para imagens que já existem no documento
-    document.querySelectorAll('img').forEach(setupImageRetry);
-  }
-
-  // Configura o mecanismo de retry para uma imagem específica
-  function setupImageRetry(img) {
-    const MAX_RETRIES = 3;
-    let retryCount = 0;
-    const originalSrc = img.src;
-    
-    // Evita configurar o mesmo listener mais de uma vez
-    if (img.dataset.retrySetup) return;
-    img.dataset.retrySetup = 'true';
-    
-    img.addEventListener('error', function() {
-      if (retryCount < MAX_RETRIES) {
-        console.log(`Tentando recarregar imagem (${retryCount + 1}/${MAX_RETRIES}): ${originalSrc}`);
-        
-        // Incrementa contador de tentativas
-        retryCount++;
-        
-        // Adiciona timestamp para evitar cache
-        const cacheBuster = Date.now();
-        const separator = originalSrc.includes('?') ? '&' : '?';
-        
-        // Aguarda um momento antes de tentar novamente (tempo crescente)
-        setTimeout(() => {
-          // Limpa e redefine o src para forçar nova tentativa de carregamento
-          img.src = '';
-          img.src = `${originalSrc}${separator}retry=${cacheBuster}`;
-        }, retryCount * 1000); // Espera crescente: 1s, 2s, 3s
-      } else {
-        console.log(`Falha ao carregar imagem após ${MAX_RETRIES} tentativas: ${originalSrc}`);
-        // Após todas as tentativas, substitui pela imagem padrão ou ícone
-        img.onerror = null; // Impede loop infinito
-        if (img.closest('.aniversariante-img')) {
-          // Se for imagem de aniversariante, substitui pelo ícone padrão
-          const parent = img.closest('.aniversariante-img');
-          parent.innerHTML = '<i class="fas fa-birthday-cake"></i>';
-        }
-      }
-    });
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
     // 1) Injeta menu e rodapé
     ['menu','footer'].forEach(file => {
@@ -247,7 +180,7 @@
       const card = document.createElement('div');
       card.className = 'reflexao-card';
       card.innerHTML = `
-        <p class="reflexao-frase">"${r.frase}"</p>
+        <p class="reflexao-frase">“${r.frase}”</p>
         <p class="reflexao-autor">- ${r.autor}</p>
         <p class="reflexao-instrucao">Clique aqui para refletir</p>
         <div class="reflexao-extra">
@@ -393,9 +326,6 @@
     renderAniversariantes();
     renderFerias();
     renderCIPA();
-    
-    // 10) Inicializa o mecanismo de retry para imagens
-    setupImageRetryMechanism();
   });
   </script>
 </body>
