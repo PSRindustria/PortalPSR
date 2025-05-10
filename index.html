@@ -196,75 +196,84 @@
       c.appendChild(card);
     }
 
-    // 6) Renderiza Aniversariantes + fogos de artifício
-    async function renderAniversariantes() {
-      const data = await fetchData('aniversariantes.json'),
-            container = document.getElementById('aniversariantes-container');
-      if (!data) {
-        container.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
-        return;
-      }
-      container.innerHTML = '';
-      const hoje = new Date(),
-            diaHoje = String(hoje.getDate()).padStart(2,'0'),
-            mesHoje = String(hoje.getMonth()+1).padStart(2,'0'),
-            nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+// 6) Renderiza Aniversariantes + fogos de artifício
+async function renderAniversariantes() {
+  const data = await fetchData('aniversariantes.json'),
+        container = document.getElementById('aniversariantes-container');
+  if (!data) {
+    container.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
+    return;
+  }
+  container.innerHTML = '';
+  const hoje = new Date(),
+        diaHoje = String(hoje.getDate()).padStart(2,'0'),
+        mesHoje = String(hoje.getMonth()+1).padStart(2,'0'),
+        nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
-      data.forEach(a => {
-        const [dStr,mStr] = a.data.split('/');
-        const card = document.createElement('div');
-        card.className = 'aniversariante-card';
+  data.forEach(a => {
+    const [dStr,mStr] = a.data.split('/');
+    const card = document.createElement('div');
+    card.className = 'aniversariante-card';
 
-        // se for hoje, marca e insere zona de fogos
-        if (dStr === diaHoje && mStr === mesHoje) {
-          card.classList.add('destaque-hoje');
-          const tw = document.createElement('div');
-          tw.className = 'twinkle-lights';
-          card.appendChild(tw);
-          setInterval(()=>spawnFirework(tw), 700);
+    // se for hoje, marca e insere zona de fogos
+    if (dStr === diaHoje && mStr === mesHoje) {
+      card.classList.add('destaque-hoje');
+      const tw = document.createElement('div');
+      tw.className = 'twinkle-lights';
+      card.appendChild(tw);
+      setInterval(()=>spawnFirework(tw), 700);
+    }
+
+    const dataFmt = `${dStr} de ${nomesMes[Number(mStr)-1]}`;
+    
+    // Cria o elemento container para a imagem
+    const imgContainer = document.createElement('div');
+    imgContainer.className = 'aniversariante-img';
+    
+    // Se tiver imagem, cria o elemento img com tratamento de fallback
+    if (a.imagem) {
+      const img = document.createElement('img');
+      img.alt = a.nome;
+      
+      // Adiciona manipulador de erro para tentar fallback se disponível
+      img.onerror = function() {
+        if (a.imagem_fallback) {
+          // Tenta a imagem fallback se a primária falhar
+          this.onerror = function() {
+            // Se mesmo o fallback falhar, substitui pelo ícone
+            imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
+          };
+          this.src = a.imagem_fallback;
+        } else {
+          // Se não houver fallback, substitui pelo ícone
+          imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
         }
-
-        const dataFmt = `${dStr} de ${nomesMes[Number(mStr)-1]}`;
-        card.innerHTML += `
-          <div class="aniversariante-img">
-            ${a.imagem
-              ? `<img src="${a.imagem}" alt="${a.nome}">`
-              : '<i class="fas fa-birthday-cake"></i>'}
-          </div>
-          <div class="aniversariante-info">
-            <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
-            ${a.cargo ? `<p>${a.cargo}</p>` : ''}
-            <p class="aniversariante-data">${dataFmt}</p>
-          </div>`;
-        container.appendChild(card);
-      });
+      };
+      
+      // Define a fonte primária
+      img.src = a.imagem;
+      imgContainer.appendChild(img);
+    } else {
+      // Se não tiver imagem definida, usa o ícone padrão
+      imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
     }
-
-    // cria um fogo de artifício com partículas aleatórias
-    function spawnFirework(container) {
-      const firework = document.createElement('div');
-      firework.className = 'firework';
-      firework.style.top  = (20 + Math.random()*60) + '%';
-      firework.style.left = (20 + Math.random()*60) + '%';
-      container.appendChild(firework);
-
-      const particleCount = 12;
-      for (let i = 0; i < particleCount; i++) {
-        const p = document.createElement('div');
-        p.className = 'firework-particle';
-        const angle    = Math.random() * Math.PI * 2;
-        const distance = 30 + Math.random()*70;
-        p.style.setProperty('--dx', Math.cos(angle)*distance + 'px');
-        p.style.setProperty('--dy', Math.sin(angle)*distance + 'px');
-        const hue = Math.floor(Math.random()*360);
-        const color = `hsl(${hue},100%,60%)`;
-        p.style.background = color;
-        p.style.boxShadow  = `0 0 8px ${color},0 0 16px ${color}`;
-        firework.appendChild(p);
-      }
-
-      setTimeout(()=>firework.remove(), 1000);
-    }
+    
+    card.appendChild(imgContainer);
+    
+    // Adiciona as informações do aniversariante
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'aniversariante-info';
+    infoDiv.innerHTML = `
+      <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
+      ${a.cargo ? `<p>${a.cargo}</p>` : ''}
+      <p class="aniversariante-data">${dataFmt}</p>
+    `;
+    card.appendChild(infoDiv);
+    
+    // Adiciona o card completo ao container
+    container.appendChild(card);
+  });
+}
 
     // 7) Renderiza Férias
     async function renderFerias() {
