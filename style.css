@@ -399,10 +399,28 @@ main { padding-bottom: 40px; }
 /* ==================================================
    RODAPÉ
    ================================================== */
-footer {
-  background: var(--azul-marinho); color: #fff;
-  padding: 30px 20px; text-align: center;
-}
-footer .footer-content {
-  max-width: 800px; margin: 0 auto;
-}
+<footer>
+  <!-- Accent bar -->
+  <div class="footer-accent"></div>
+
+  <div class="footer-content">
+    <!-- Marca e slogan -->
+    <div class="footer-brand">
+      <h2>{{companyName}}</h2>
+      <p class="tagline">{{tagline}}</p>
+    </div>
+
+    <!-- Ícones sociais -->
+    <ul class="footer-social">
+      <li><a href="{{facebookUrl}}" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+      <li><a href="{{instagramUrl}}" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+      <li><a href="{{linkedinUrl}}" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+    </ul>
+
+    <!-- Contato e direitos -->
+    <div class="footer-legal">
+      <a href="#contato" class="contact-link">Entre em Contato</a>
+      <p>© {{year}} {{companyName}}. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
