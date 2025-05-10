@@ -14,111 +14,8 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
   />
-  <style>
-    /* Estilos para a tela de pré-carregamento */
-    #preloader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease-out;
-    }
-    
-    #preloader.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-    
-    .preloader-spinner {
-      width: 60px;
-      height: 60px;
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #3498db;
-      border-radius: 50%;
-      animation: spin 1.5s linear infinite;
-      margin-bottom: 20px;
-    }
-    
-    .preloader-text {
-      font-size: 18px;
-      color: #333;
-    }
-    
-    .preloader-progress {
-      width: 80%;
-      max-width: 300px;
-      height: 10px;
-      background-color: #f3f3f3;
-      border-radius: 5px;
-      margin-top: 20px;
-      overflow: hidden;
-    }
-    
-    .preloader-progress-bar {
-      height: 100%;
-      background-color: #3498db;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    /* Esconde o conteúdo inicial */
-    body > *:not(#preloader) {
-      opacity: 0;
-      transition: opacity 0.5s ease-in;
-    }
-    
-    body.loaded > *:not(#preloader) {
-      opacity: 1;
-    }
-    
-    /* Estilos para tratamento de falhas em imagens */
-    img.img-fallback {
-      border: 1px dashed #ccc;
-      background-color: #f9f9f9;
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    
-    img.img-fallback::after {
-      content: '🖼️';
-      font-size: 24px;
-      position: absolute;
-    }
-    
-    /* Debug - Remover em produção */
-    .image-debug {
-      background-color: rgba(255, 235, 59, 0.2);
-      border: 1px solid #FFC107;
-      padding: 2px;
-      box-sizing: border-box;
-    }
-  </style>
 </head>
 <body>
-  <!-- Preloader -->
-  <div id="preloader">
-    <div class="preloader-spinner"></div>
-    <div class="preloader-text">Carregando recursos...</div>
-    <div class="preloader-progress">
-      <div class="preloader-progress-bar" id="progress-bar"></div>
-    </div>
-  </div>
-
   <!-- MENU (será carregado via JS) -->
   <div id="menu-placeholder"></div>
 
@@ -195,190 +92,110 @@
 
   <!-- SCRIPTS -->
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Variáveis para controle do preloader
-    const preloader = document.getElementById('preloader');
-    const progressBar = document.getElementById('progress-bar');
-    const body = document.body;
-    let imagesToLoad = [];
-    let imagesLoaded = 0;
-    
-    // 1) Função para coletar todas as URLs de imagem do site
-    async function collectAllImageUrls() {
-      // Imagens dos menus e rodapé
-      try {
-        const menuHtml = await fetch('menu.html').then(r => r.text());
-        const footerHtml = await fetch('footer.html').then(r => r.text());
-        
-        // Injeta temporariamente no DOM para extrair imagens
-        const tempDiv = document.createElement('div');
-        tempDiv.style.display = 'none';
-        tempDiv.innerHTML = menuHtml + footerHtml;
-        document.body.appendChild(tempDiv);
-        
-        // Coleta URLs de imagens dos elementos injetados
-        const menuFooterImages = Array.from(tempDiv.querySelectorAll('img')).map(img => img.src);
-        document.body.removeChild(tempDiv);
-        
-        // Coleta URLs de dados JSON que contêm imagens
-        const jsonData = await Promise.all([
-          fetchData('novidades.json'),
-          fetchData('aniversariantes.json'),
-          fetchData('ferias.json'),
-          fetchData('cipa.json'),
-          fetchData('reflexaododia.json') // Adicionando reflexão do dia
-        ]);
-        
-        // Extrair URLs de imagens dos dados JSON
-        const jsonImages = [];
-        
-        // Novidades
-        if (jsonData[0]) {
-          jsonData[0].forEach(item => {
-            if (item.imagem) jsonImages.push(item.imagem);
-            // Procura por URLs em conteúdo ou resumo
-            if (item.conteudo && item.conteudo.includes('img src=')) {
-              const matches = item.conteudo.match(/src=["'](.*?)["']/g);
-              if (matches) {
-                matches.forEach(match => {
-                  const url = match.replace(/src=["'](.*?)["']/, '$1');
-                  jsonImages.push(url);
-                });
-              }
-            }
-            if (item.resumo && item.resumo.includes('img src=')) {
-              const matches = item.resumo.match(/src=["'](.*?)["']/g);
-              if (matches) {
-                matches.forEach(match => {
-                  const url = match.replace(/src=["'](.*?)["']/, '$1');
-                  jsonImages.push(url);
-                });
-              }
+  // Função para tentar recarregar imagens que falharam
+  function setupImageRetryMechanism() {
+    // Observa o DOM para detectar quando novas imagens são adicionadas
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        if (mutation.addedNodes.length) {
+          mutation.addedNodes.forEach(node => {
+            // Verifica se o nó é um elemento e contém imagens
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              const images = node.querySelectorAll('img');
+              images.forEach(setupImageRetry);
             }
           });
         }
-        
-        // Aniversariantes
-        if (jsonData[1]) {
-          jsonData[1].forEach(item => {
-            if (item.imagem) jsonImages.push(item.imagem);
-          });
-        }
-        
-        // Reflexão do dia
-        if (jsonData[4]) {
-          jsonData[4].forEach(item => {
-            if (item.imagem) jsonImages.push(item.imagem);
-            // Procura por URLs na reflexão
-            if (item.reflexao && item.reflexao.includes('img src=')) {
-              const matches = item.reflexao.match(/src=["'](.*?)["']/g);
-              if (matches) {
-                matches.forEach(match => {
-                  const url = match.replace(/src=["'](.*?)["']/, '$1');
-                  jsonImages.push(url);
-                });
-              }
-            }
-            // Procura por URLs na frase
-            if (item.frase && item.frase.includes('img src=')) {
-              const matches = item.frase.match(/src=["'](.*?)["']/g);
-              if (matches) {
-                matches.forEach(match => {
-                  const url = match.replace(/src=["'](.*?)["']/, '$1');
-                  jsonImages.push(url);
-                });
-              }
-            }
-          });
-        }
-        
-        // Filtra URLs vazias ou inválidas
-        const filteredImages = jsonImages
-          .filter(url => url && url.trim() !== '' && !url.startsWith('data:'))
-          .map(url => {
-            // Ensure URL is absolute
-            if (url.startsWith('http') || url.startsWith('//')) {
-              return url;
-            } else {
-              // Convert relative to absolute
-              return new URL(url, window.location.href).href;
-            }
-          });
-        
-        // Retorna todas as URLs de imagem encontradas (removendo duplicatas)
-        return [...new Set([...menuFooterImages, ...filteredImages])];
-      } catch (error) {
-        console.error('Erro ao coletar URLs de imagem:', error);
-        return [];
-      }
-    }
-    
-    // 2) Função para pré-carregar todas as imagens
-    function preloadImages(imageUrls) {
-      return new Promise((resolve) => {
-        if (imageUrls.length === 0) {
-          resolve(); // Nenhuma imagem para carregar
-          return;
-        }
-        
-        console.log(`Pré-carregando ${imageUrls.length} imagens...`);
-        const preloaderText = document.querySelector('.preloader-text');
-        
-        const totalImages = imageUrls.length;
-        let loadedCount = 0;
-        let errorCount = 0;
-        
-        // Lista para armazenar URLs de imagens com problemas
-        const problematicImages = [];
-        
-        const updateProgress = () => {
-          loadedCount++;
-          const progress = (loadedCount / totalImages) * 100;
-          progressBar.style.width = `${progress}%`;
-          preloaderText.textContent = `Carregando recursos... ${Math.round(progress)}%`;
-          
-          if (loadedCount === totalImages) {
-            if (problematicImages.length > 0) {
-              console.warn('Imagens com problema de carregamento:', problematicImages);
-            }
-            resolve(); // Todas as imagens foram processadas
-          }
-        };
-        
-        imageUrls.forEach((url, index) => {
-          setTimeout(() => {
-            const img = new Image();
-            
-            img.onload = () => {
-              updateProgress();
-            };
-            
-            img.onerror = () => {
-              errorCount++;
-              problematicImages.push(url);
-              console.warn(`Erro ao carregar imagem: ${url}`);
-              updateProgress();
-              
-              // Tenta carregar com um prefixo alternativo se falhar
-              // (Isso ajuda em casos onde as imagens estão em um subdiretório diferente)
-              if (!url.includes('/imagens/')) {
-                const alternativeUrl = url.startsWith('/') 
-                  ? `/imagens${url}` 
-                  : `/imagens/${url}`;
-                
-                const altImg = new Image();
-                altImg.src = alternativeUrl;
-                // Não precisamos esperar pelo evento de carregamento desta segunda tentativa
-              }
-            };
-            
-            img.src = url;
-          }, index * 50); // Espaçamento de 50ms entre tentativas para evitar sobrecarga
-        });
       });
-    }
+    });
     
-    // 3) Função genérica fetch + JSON com cache-buster (já existente no seu código)
+    // Configura o observer para observar todo o documento
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true 
+    });
+    
+    // Configura o retry para imagens que já existem no documento
+    document.querySelectorAll('img').forEach(setupImageRetry);
+  }
+
+  // Configura o mecanismo de retry para uma imagem específica
+  function setupImageRetry(img) {
+    const MAX_RETRIES = 3;
+    let retryCount = 0;
+    const originalSrc = img.src;
+    
+    // Evita configurar o mesmo listener mais de uma vez
+    if (img.dataset.retrySetup) return;
+    img.dataset.retrySetup = 'true';
+    
+    img.addEventListener('error', function() {
+      if (retryCount < MAX_RETRIES) {
+        console.log(`Tentando recarregar imagem (${retryCount + 1}/${MAX_RETRIES}): ${originalSrc}`);
+        
+        // Incrementa contador de tentativas
+        retryCount++;
+        
+        // Adiciona timestamp para evitar cache
+        const cacheBuster = Date.now();
+        const separator = originalSrc.includes('?') ? '&' : '?';
+        
+        // Aguarda um momento antes de tentar novamente (tempo crescente)
+        setTimeout(() => {
+          // Limpa e redefine o src para forçar nova tentativa de carregamento
+          img.src = '';
+          img.src = `${originalSrc}${separator}retry=${cacheBuster}`;
+        }, retryCount * 1000); // Espera crescente: 1s, 2s, 3s
+      } else {
+        console.log(`Falha ao carregar imagem após ${MAX_RETRIES} tentativas: ${originalSrc}`);
+        // Após todas as tentativas, substitui pela imagem padrão ou ícone
+        img.onerror = null; // Impede loop infinito
+        if (img.closest('.aniversariante-img')) {
+          // Se for imagem de aniversariante, substitui pelo ícone padrão
+          const parent = img.closest('.aniversariante-img');
+          parent.innerHTML = '<i class="fas fa-birthday-cake"></i>';
+        }
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1) Injeta menu e rodapé
+    ['menu','footer'].forEach(file => {
+      fetch(`${file}.html`)
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById(`${file}-placeholder`).innerHTML = html;
+          // ativa toggle apenas para o menu
+          if (file === 'menu') {
+            const toggle = document.getElementById('menu-toggle');
+            const menuEl = document.getElementById('menu');
+            if (toggle && menuEl) {
+            // abre/fecha ao clicar no hambúrguer
+            toggle.addEventListener('click', () => {
+            menuEl.classList.toggle('active');
+            });
+            // fecha o menu ao clicar em qualquer link
+            menuEl.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+            menuEl.classList.remove('active');
+            });
+          });
+        }
+      }
+        });
+    });
+
+    // 2) Configura data de hoje
+    const hoje = new Date(),
+          dia = hoje.getDate(),
+          mes = hoje.getMonth(),
+          ano = hoje.getFullYear(),
+          meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
+          hojePt = `${dia} de ${meses[mes]} de ${ano}`;
+    document.getElementById('data-hoje-novidades').textContent = hojePt;
+
+    // 3) Função genérica fetch + JSON com cache-buster
     async function fetchData(path) {
       const cacheBuster = Date.now();
       try {
@@ -389,109 +206,8 @@
         return null;
       }
     }
-    
-    // 4) Função para inicializar o site
-    async function initSite() {
-      try {
-        // 4.1) Injeta menu e rodapé
-        await Promise.all(['menu', 'footer'].map(async (file) => {
-          const html = await fetch(`${file}.html`).then(r => r.text());
-          document.getElementById(`${file}-placeholder`).innerHTML = html;
-          
-          // Ativa toggle apenas para o menu
-          if (file === 'menu') {
-            const toggle = document.getElementById('menu-toggle');
-            const menuEl = document.getElementById('menu');
-            if (toggle && menuEl) {
-              // Abre/fecha ao clicar no hambúrguer
-              toggle.addEventListener('click', () => {
-                menuEl.classList.toggle('active');
-              });
-              // Fecha o menu ao clicar em qualquer link
-              menuEl.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                  menuEl.classList.remove('active');
-                });
-              });
-            }
-          }
-        }));
-        
-        // 4.2) Coleta e pré-carrega todas as imagens
-        const imageUrls = await collectAllImageUrls();
-        await preloadImages(imageUrls);
-        
-        // 4.3) Configura data de hoje
-        const hoje = new Date(),
-              dia = hoje.getDate(),
-              mes = hoje.getMonth(),
-              ano = hoje.getFullYear(),
-              meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
-              hojePt = `${dia} de ${meses[mes]} de ${ano}`;
-        document.getElementById('data-hoje-novidades').textContent = hojePt;
-        
-        // 4.4) Dispara todas as renderizações
-        await Promise.all([
-          renderNovidades(),
-          renderReflexao(),
-          renderAniversariantes(),
-          renderFerias(),
-          renderCIPA()
-        ]);
-        
-        // 4.5) Remove o preloader e exibe o conteúdo
-        setTimeout(() => {
-          preloader.classList.add('fade-out');
-          body.classList.add('loaded');
-          setTimeout(() => {
-            preloader.style.display = 'none';
-          }, 500);
-          
-          // 4.6) Adiciona um tratamento global para imagens com erro
-          document.addEventListener('error', function(e) {
-            if (e.target.tagName.toLowerCase() !== 'img') return;
-            
-            console.warn(`Imagem com erro: ${e.target.src}`);
-            const originalSrc = e.target.src;
-            
-            // Tente diferentes caminhos alternativos
-            const paths = [
-              `/imgs${originalSrc.startsWith('/') ? '' : '/'}${originalSrc.split('/').pop()}`,
-              `/imagens${originalSrc.startsWith('/') ? '' : '/'}${originalSrc.split('/').pop()}`,
-              `imgs/${originalSrc.split('/').pop()}`
-            ];
-            
-            // Tenta o próximo caminho
-            let pathIndex = 0;
-            const tryNextPath = () => {
-              if (pathIndex < paths.length) {
-                e.target.src = paths[pathIndex];
-                pathIndex++;
-              } else {
-                // Se nenhum caminho funcionar, use um ícone adequado
-                e.target.style.display = 'none';
-                const icon = document.createElement('i');
-                icon.className = 'fas fa-image';
-                icon.style.fontSize = '2rem';
-                icon.style.color = '#ccc';
-                e.target.parentNode.appendChild(icon);
-              }
-            };
-            
-            e.target.onerror = tryNextPath;
-            tryNextPath();
-          }, true); // Capture phase
-        }, 500);
-        
-      } catch (error) {
-        console.error('Erro na inicialização do site:', error);
-        // Em caso de erro, ainda exibe o site
-        preloader.classList.add('fade-out');
-        body.classList.add('loaded');
-      }
-    }
-    
-    // 5) Renderiza Novidades
+
+    // 4) Renderiza Novidades
     async function renderNovidades() {
       const data = await fetchData('novidades.json'),
             c = document.getElementById('novidades-container');
@@ -513,7 +229,7 @@
       });
     }
 
-    // 6) Renderiza Reflexão do Dia
+    // 5) Renderiza Reflexão do Dia
     async function renderReflexao() {
       const data = await fetchData('reflexaododia.json'),
             c = document.getElementById('reflexao-container');
@@ -521,56 +237,23 @@
         c.innerHTML = '<p>Erro ao carregar reflexão.</p>';
         return;
       }
-      
-      // Cria a data atual no formato correto
-      const hoje = new Date();
-      const dia = hoje.getDate();
-      const mes = hoje.getMonth();
-      const ano = hoje.getFullYear();
-      const key = `${String(dia).padStart(2,'0')}/${String(mes+1).padStart(2,'0')}/${ano}`;
-      
-      const r = data.find(x => x.data === key);
+      const key = `${String(dia).padStart(2,'0')}/${String(mes+1).padStart(2,'0')}/${ano}`,
+            r = data.find(x => x.data === key);
       c.innerHTML = '';
       if (!r) {
         c.innerHTML = '<p>Sem reflexão para hoje.</p>';
         return;
       }
-      
-      // Processa a reflexão para corrigir possíveis problemas com imagens
-      let reflexaoTexto = r.reflexao || '';
-      let fraseTexto = r.frase || '';
-      
-      // Processa possíveis imagens na reflexão para adicionar tratamento de erro
-      if (reflexaoTexto.includes('img src=')) {
-        reflexaoTexto = reflexaoTexto.replace(/<img([^>]*)src=["']([^"']*)["']([^>]*)>/g, 
-          (match, p1, src, p2) => {
-            return `<img${p1}src="${src}" onerror="this.onerror=null; this.src='/imgs/${src}'; this.classList.add('img-fallback');"${p2}>`;
-          }
-        );
-      }
-      
-      // Processa possíveis imagens na frase para adicionar tratamento de erro
-      if (fraseTexto.includes('img src=')) {
-        fraseTexto = fraseTexto.replace(/<img([^>]*)src=["']([^"']*)["']([^>]*)>/g, 
-          (match, p1, src, p2) => {
-            return `<img${p1}src="${src}" onerror="this.onerror=null; this.src='/imgs/${src}'; this.classList.add('img-fallback');"${p2}>`;
-          }
-        );
-      }
-      
       const card = document.createElement('div');
       card.className = 'reflexao-card';
-      
-      // Usar texto processado com tratamento de imagens
       card.innerHTML = `
-        <p class="reflexao-frase">"${fraseTexto}"</p>
+        <p class="reflexao-frase">"${r.frase}"</p>
         <p class="reflexao-autor">- ${r.autor}</p>
         <p class="reflexao-instrucao">Clique aqui para refletir</p>
         <div class="reflexao-extra">
-          <p class="reflexao-texto">${reflexaoTexto}</p>
+          <p class="reflexao-texto">${r.reflexao}</p>
           <p class="reflexao-data">Reflexão: ${r.data}</p>
         </div>`;
-        
       const extra = card.querySelector('.reflexao-extra'),
             instr = card.querySelector('.reflexao-instrucao');
       extra.style.display = 'none';
@@ -580,7 +263,7 @@
       c.appendChild(card);
     }
 
-    // 7) Renderiza Aniversariantes + fogos de artifício
+    // 6) Renderiza Aniversariantes + fogos de artifício
     async function renderAniversariantes() {
       const data = await fetchData('aniversariantes.json'),
             container = document.getElementById('aniversariantes-container');
@@ -609,52 +292,22 @@
         }
 
         const dataFmt = `${dStr} de ${nomesMes[Number(mStr)-1]}`;
-        
-        // Cria o elemento de imagem com tratamento de erro
-        const imgElement = document.createElement('div');
-        imgElement.className = 'aniversariante-img';
-        
-        if (a.imagem) {
-          const img = document.createElement('img');
-          img.alt = a.nome;
-          img.src = a.imagem;
-          
-          // Adiciona tratamento de erro para a imagem
-          img.onerror = function() {
-            console.warn(`Erro ao carregar imagem do aniversariante: ${a.nome}`);
-            // Tenta com prefixo alternativo
-            this.src = a.imagem.startsWith('/') 
-              ? `/imgs${a.imagem}` 
-              : `/imgs/${a.imagem}`;
-              
-            // Se ainda falhar, use ícone
-            this.onerror = function() {
-              imgElement.innerHTML = '<i class="fas fa-birthday-cake"></i>';
-            };
-          };
-          
-          imgElement.appendChild(img);
-        } else {
-          imgElement.innerHTML = '<i class="fas fa-birthday-cake"></i>';
-        }
-        
-        card.appendChild(imgElement);
-        
-        // Adiciona as informações do aniversariante
-        const infoElement = document.createElement('div');
-        infoElement.className = 'aniversariante-info';
-        infoElement.innerHTML = `
-          <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
-          ${a.cargo ? `<p>${a.cargo}</p>` : ''}
-          <p class="aniversariante-data">${dataFmt}</p>
-        `;
-        
-        card.appendChild(infoElement);
+        card.innerHTML += `
+          <div class="aniversariante-img">
+            ${a.imagem
+              ? `<img src="${a.imagem}" alt="${a.nome}">`
+              : '<i class="fas fa-birthday-cake"></i>'}
+          </div>
+          <div class="aniversariante-info">
+            <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
+            ${a.cargo ? `<p>${a.cargo}</p>` : ''}
+            <p class="aniversariante-data">${dataFmt}</p>
+          </div>`;
         container.appendChild(card);
       });
     }
 
-    // Cria um fogo de artifício com partículas aleatórias
+    // cria um fogo de artifício com partículas aleatórias
     function spawnFirework(container) {
       const firework = document.createElement('div');
       firework.className = 'firework';
@@ -680,7 +333,7 @@
       setTimeout(()=>firework.remove(), 1000);
     }
 
-    // 8) Renderiza Férias
+    // 7) Renderiza Férias
     async function renderFerias() {
       const data = await fetchData('ferias.json'),
             grid = document.getElementById('ferias-grid-container'),
@@ -714,7 +367,7 @@
       });
     }
 
-    // 9) Renderiza CIPA
+    // 8) Renderiza CIPA
     async function renderCIPA() {
       const raw = await fetchData('cipa.json'),
             c = document.getElementById('cipa-container');
@@ -734,8 +387,15 @@
       });
     }
 
-    // Inicializa o site com preloader
-    initSite();
+    // 9) Dispara todas as renderizações
+    renderNovidades();
+    renderReflexao();
+    renderAniversariantes();
+    renderFerias();
+    renderCIPA();
+    
+    // 10) Inicializa o mecanismo de retry para imagens
+    setupImageRetryMechanism();
   });
   </script>
 </body>
