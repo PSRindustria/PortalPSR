@@ -1,6 +1,6 @@
 [
   {
-    "nome": "Fernando Alcântara",
+    "nome": "Fernando",
     "cargo": "Gente e Gestao",
     "data": "02/05",
     "imagem": "https://i.postimg.cc/F77h4GsY/fernando-alcantara.jpg",
@@ -14,21 +14,21 @@
     "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/jose-marcelo.jpg"
   },
   {
-    "nome": "Fernanda Venancio",
+    "nome": "Fernanda",
     "cargo": "QSMS",
     "data": "13/05",
     "imagem": "https://i.postimg.cc/qgBkm4PX/fernanda-costa.jpg",
     "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/fernanda-costa.jpg"
   },
   {
-    "nome": "Joao Pedro",
+    "nome": "João Pedro",
     "cargo": "Financeiro",
     "data": "13/05",
     "imagem": "https://i.postimg.cc/CxyB4q5w/joao-pedro.jpg",
     "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/joao-pedro.jpg"
   },
   {
-    "nome": "Elizeu Amaral",
+    "nome": "Elizeu",
     "cargo": "Financeiro",
     "data": "17/05",
     "imagem": "https://i.postimg.cc/n9LpMG4w/elizeu-amaral.jpg",
