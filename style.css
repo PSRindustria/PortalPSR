@@ -411,7 +411,7 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   BARRA DE DESTAQUE (ACCENT BAR)
+   BARRA DE DESTAQUE
    ================================================== */
 footer .footer-accent {
   background: var(--dourado);
@@ -476,7 +476,7 @@ footer .footer-content {
   transform: scale(1.1);
 }
 
-/* Contato e legal */
+/* Contato e direitos */
 .footer-legal {
   text-align: right;
   font-size: 0.9rem;
