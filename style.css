@@ -403,126 +403,214 @@ main { padding-bottom: 40px; }
    VARIÁVEIS DE COR E ESPAÇAMENTO
    ================================================== */
 :root {
-  --bg-light:    #FAFAFA;
-  --text-dark:   #333333;
-  --primary:     #003366; /* azul-marinho */
-  --highlight:   #DAA520; /* dourado */
-  --whatsapp:    #25D366;
-  --gap:         20px;
-  --padding-lg:  40px 20px;
-  --padding-sm:  12px 20px;
+  --azul-marinho: #003366;
+  --azul-claro: #004c99;
+  --dourado: #DAA520;
+  --dourado-claro: #f0c14b;
+  --branco: #ffffff;
+  --cinza-claro: #f5f5f5;
+  --gap: 24px;
+  --padding: 50px 30px 40px;
+  --borda-radius: 6px;
+  --transicao: 0.3s ease;
+}
+
+/* ==================================================
+   BARRA DE DESTAQUE
+   ================================================== */
+footer .footer-accent {
+  background: linear-gradient(90deg, var(--dourado) 0%, var(--dourado-claro) 100%);
+  height: 6px;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* ==================================================
    RODAPÉ
    ================================================== */
 footer {
-  background: var(--bg-light);
-  color: var(--text-dark);
+  background: linear-gradient(to bottom, #004080, var(--azul-marinho));
+  color: var(--branco);
   font-family: 'Roboto', sans-serif;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Conteúdo principal: marca / social / contato */
-footer .footer-main {
+footer .footer-content {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  max-width: 1100px;
+  gap: var(--gap);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--padding-lg);
-  border-top: 1px solid #e0e0e0;
+  padding: var(--padding);
+  position: relative;
 }
 
-/* Marca + slogan */
+/* Marca e slogan */
 .footer-brand {
-  flex: 1;
+  position: relative;
+  padding-bottom: 12px;
 }
+
+.footer-brand::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--dourado);
+  border-radius: 3px;
+}
+
 .footer-brand h2 {
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.5rem, 4vw, 2rem);
   margin: 0 0 0.25em;
-  color: var(--primary);
-}
-.footer-brand .tagline {
-  font-size: 1rem;
-  opacity: 0.8;
+  font-weight: 700;
   letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.footer-brand .tagline {
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  opacity: 0.95;
+  letter-spacing: 0.6px;
+  font-weight: 300;
 }
 
 /* Ícones sociais */
 .footer-social {
-  flex: 1;
-  text-align: center;
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
 }
+
+.footer-social li {
+  margin: 0;
+}
+
 .footer-social a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  margin: 0 var(--gap);
-  background: #e0e0e0;
-  color: var(--primary);
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  font-size: 1.1rem;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
-}
-.footer-social a:hover {
-  background: var(--primary);
-  color: #fff;
-  transform: scale(1.1);
-}
-
-/* Botão de contato/WhatsApp */
-.footer-contact {
-  flex: 1;
-  text-align: right;
-}
-.footer-contact .contact-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--whatsapp);
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 4px;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  transition: all var(--transicao);
+  color: var(--branco);
   text-decoration: none;
-  transition: background 0.2s, transform 0.2s;
-}
-.footer-contact .contact-button:hover {
-  background: darken(var(--whatsapp), 10%);
-  transform: scale(1.05);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Linha de destaque dourada (opcional) */
-footer .footer-accent {
-  background: var(--highlight);
-  height: 4px;
+.footer-social a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background: var(--dourado);
+  opacity: 0;
+  transform: scale(0);
+  transition: all var(--transicao);
+  z-index: -1;
+  border-radius: 50%;
 }
 
-/* Rodapé legal */
-footer .footer-bottom {
+.footer-social a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border-color: var(--dourado);
+}
+
+.footer-social a:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Contato e direitos */
+.footer-legal {
+  text-align: right;
+  font-size: 0.95rem;
+}
+
+.footer-legal .contact-link {
+  display: inline-block;
+  margin-bottom: 0.75em;
+  padding: 10px 20px;
+  background: var(--dourado);
+  color: var(--azul-marinho);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: var(--borda-radius);
+  transition: all var(--transicao);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.footer-legal .contact-link:hover {
+  background: var(--dourado-claro);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.footer-legal .contact-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.footer-legal p {
+  margin: 15px 0 0;
+  opacity: 0.8;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+}
+
+/* Barra de copyright */
+.footer-copyright {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px 0;
   text-align: center;
   font-size: 0.85rem;
-  color: #777777;
-  padding: var(--padding-sm);
-  border-top: 1px solid #e0e0e0;
+  opacity: 0.8;
 }
 
-/* Mobile */
-@media (max-width: 600px) {
-  .footer-main {
+.footer-copyright .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ==================================================
+   ADAPTAÇÃO MOBILE
+   ================================================== */
+@media (max-width: 768px) {
+  footer .footer-content {
     flex-direction: column;
     text-align: center;
+    padding: 40px 20px 30px;
   }
-  .footer-contact {
-    margin-top: var(--gap);
+  
+  .footer-brand::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .footer-legal {
     text-align: center;
   }
-  .footer-contact .contact-button {
-    width: 100%;
+  
+  .footer-social {
     justify-content: center;
+    margin: 20px 0;
   }
 }
