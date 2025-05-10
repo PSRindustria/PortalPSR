@@ -459,7 +459,7 @@ footer .footer-content {
 
 .footer-brand::after {
   content: '';
-  position: center;
+  position: absolut;
   bottom: 0;
   left: 0;
   width: 60px;
