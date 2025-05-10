@@ -82,6 +82,31 @@
     body.loaded > *:not(#preloader) {
       opacity: 1;
     }
+    
+    /* Estilos para tratamento de falhas em imagens */
+    img.img-fallback {
+      border: 1px dashed #ccc;
+      background-color: #f9f9f9;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    img.img-fallback::after {
+      content: '🖼️';
+      font-size: 24px;
+      position: absolute;
+    }
+    
+    /* Debug - Remover em produção */
+    .image-debug {
+      background-color: rgba(255, 235, 59, 0.2);
+      border: 1px solid #FFC107;
+      padding: 2px;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body>
@@ -200,7 +225,8 @@
           fetchData('novidades.json'),
           fetchData('aniversariantes.json'),
           fetchData('ferias.json'),
-          fetchData('cipa.json')
+          fetchData('cipa.json'),
+          fetchData('reflexaododia.json') // Adicionando reflexão do dia
         ]);
         
         // Extrair URLs de imagens dos dados JSON
@@ -210,6 +236,25 @@
         if (jsonData[0]) {
           jsonData[0].forEach(item => {
             if (item.imagem) jsonImages.push(item.imagem);
+            // Procura por URLs em conteúdo ou resumo
+            if (item.conteudo && item.conteudo.includes('img src=')) {
+              const matches = item.conteudo.match(/src=["'](.*?)["']/g);
+              if (matches) {
+                matches.forEach(match => {
+                  const url = match.replace(/src=["'](.*?)["']/, '$1');
+                  jsonImages.push(url);
+                });
+              }
+            }
+            if (item.resumo && item.resumo.includes('img src=')) {
+              const matches = item.resumo.match(/src=["'](.*?)["']/g);
+              if (matches) {
+                matches.forEach(match => {
+                  const url = match.replace(/src=["'](.*?)["']/, '$1');
+                  jsonImages.push(url);
+                });
+              }
+            }
           });
         }
         
@@ -220,8 +265,48 @@
           });
         }
         
-        // Retorna todas as URLs de imagem encontradas
-        return [...menuFooterImages, ...jsonImages];
+        // Reflexão do dia
+        if (jsonData[4]) {
+          jsonData[4].forEach(item => {
+            if (item.imagem) jsonImages.push(item.imagem);
+            // Procura por URLs na reflexão
+            if (item.reflexao && item.reflexao.includes('img src=')) {
+              const matches = item.reflexao.match(/src=["'](.*?)["']/g);
+              if (matches) {
+                matches.forEach(match => {
+                  const url = match.replace(/src=["'](.*?)["']/, '$1');
+                  jsonImages.push(url);
+                });
+              }
+            }
+            // Procura por URLs na frase
+            if (item.frase && item.frase.includes('img src=')) {
+              const matches = item.frase.match(/src=["'](.*?)["']/g);
+              if (matches) {
+                matches.forEach(match => {
+                  const url = match.replace(/src=["'](.*?)["']/, '$1');
+                  jsonImages.push(url);
+                });
+              }
+            }
+          });
+        }
+        
+        // Filtra URLs vazias ou inválidas
+        const filteredImages = jsonImages
+          .filter(url => url && url.trim() !== '' && !url.startsWith('data:'))
+          .map(url => {
+            // Ensure URL is absolute
+            if (url.startsWith('http') || url.startsWith('//')) {
+              return url;
+            } else {
+              // Convert relative to absolute
+              return new URL(url, window.location.href).href;
+            }
+          });
+        
+        // Retorna todas as URLs de imagem encontradas (removendo duplicatas)
+        return [...new Set([...menuFooterImages, ...filteredImages])];
       } catch (error) {
         console.error('Erro ao coletar URLs de imagem:', error);
         return [];
@@ -236,23 +321,59 @@
           return;
         }
         
+        console.log(`Pré-carregando ${imageUrls.length} imagens...`);
+        const preloaderText = document.querySelector('.preloader-text');
+        
         const totalImages = imageUrls.length;
         let loadedCount = 0;
+        let errorCount = 0;
         
-        imageUrls.forEach(url => {
-          const img = new Image();
+        // Lista para armazenar URLs de imagens com problemas
+        const problematicImages = [];
+        
+        const updateProgress = () => {
+          loadedCount++;
+          const progress = (loadedCount / totalImages) * 100;
+          progressBar.style.width = `${progress}%`;
+          preloaderText.textContent = `Carregando recursos... ${Math.round(progress)}%`;
           
-          img.onload = img.onerror = () => {
-            loadedCount++;
-            const progress = (loadedCount / totalImages) * 100;
-            progressBar.style.width = `${progress}%`;
-            
-            if (loadedCount === totalImages) {
-              resolve(); // Todas as imagens foram carregadas
+          if (loadedCount === totalImages) {
+            if (problematicImages.length > 0) {
+              console.warn('Imagens com problema de carregamento:', problematicImages);
             }
-          };
-          
-          img.src = url;
+            resolve(); // Todas as imagens foram processadas
+          }
+        };
+        
+        imageUrls.forEach((url, index) => {
+          setTimeout(() => {
+            const img = new Image();
+            
+            img.onload = () => {
+              updateProgress();
+            };
+            
+            img.onerror = () => {
+              errorCount++;
+              problematicImages.push(url);
+              console.warn(`Erro ao carregar imagem: ${url}`);
+              updateProgress();
+              
+              // Tenta carregar com um prefixo alternativo se falhar
+              // (Isso ajuda em casos onde as imagens estão em um subdiretório diferente)
+              if (!url.includes('/imgs/')) {
+                const alternativeUrl = url.startsWith('/') 
+                  ? `/imgs${url}` 
+                  : `/imgs/${url}`;
+                
+                const altImg = new Image();
+                altImg.src = alternativeUrl;
+                // Não precisamos esperar pelo evento de carregamento desta segunda tentativa
+              }
+            };
+            
+            img.src = url;
+          }, index * 50); // Espaçamento de 50ms entre tentativas para evitar sobrecarga
         });
       });
     }
@@ -325,6 +446,41 @@
           setTimeout(() => {
             preloader.style.display = 'none';
           }, 500);
+          
+          // 4.6) Adiciona um tratamento global para imagens com erro
+          document.addEventListener('error', function(e) {
+            if (e.target.tagName.toLowerCase() !== 'img') return;
+            
+            console.warn(`Imagem com erro: ${e.target.src}`);
+            const originalSrc = e.target.src;
+            
+            // Tente diferentes caminhos alternativos
+            const paths = [
+              `/imgs${originalSrc.startsWith('/') ? '' : '/'}${originalSrc.split('/').pop()}`,
+              `/imagens${originalSrc.startsWith('/') ? '' : '/'}${originalSrc.split('/').pop()}`,
+              `imgs/${originalSrc.split('/').pop()}`
+            ];
+            
+            // Tenta o próximo caminho
+            let pathIndex = 0;
+            const tryNextPath = () => {
+              if (pathIndex < paths.length) {
+                e.target.src = paths[pathIndex];
+                pathIndex++;
+              } else {
+                // Se nenhum caminho funcionar, use um ícone adequado
+                e.target.style.display = 'none';
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-image';
+                icon.style.fontSize = '2rem';
+                icon.style.color = '#ccc';
+                e.target.parentNode.appendChild(icon);
+              }
+            };
+            
+            e.target.onerror = tryNextPath;
+            tryNextPath();
+          }, true); // Capture phase
         }, 500);
         
       } catch (error) {
@@ -365,23 +521,56 @@
         c.innerHTML = '<p>Erro ao carregar reflexão.</p>';
         return;
       }
-      const key = `${String(dia).padStart(2,'0')}/${String(mes+1).padStart(2,'0')}/${ano}`,
-            r = data.find(x => x.data === key);
+      
+      // Cria a data atual no formato correto
+      const hoje = new Date();
+      const dia = hoje.getDate();
+      const mes = hoje.getMonth();
+      const ano = hoje.getFullYear();
+      const key = `${String(dia).padStart(2,'0')}/${String(mes+1).padStart(2,'0')}/${ano}`;
+      
+      const r = data.find(x => x.data === key);
       c.innerHTML = '';
       if (!r) {
         c.innerHTML = '<p>Sem reflexão para hoje.</p>';
         return;
       }
+      
+      // Processa a reflexão para corrigir possíveis problemas com imagens
+      let reflexaoTexto = r.reflexao || '';
+      let fraseTexto = r.frase || '';
+      
+      // Processa possíveis imagens na reflexão para adicionar tratamento de erro
+      if (reflexaoTexto.includes('img src=')) {
+        reflexaoTexto = reflexaoTexto.replace(/<img([^>]*)src=["']([^"']*)["']([^>]*)>/g, 
+          (match, p1, src, p2) => {
+            return `<img${p1}src="${src}" onerror="this.onerror=null; this.src='/imgs/${src}'; this.classList.add('img-fallback');"${p2}>`;
+          }
+        );
+      }
+      
+      // Processa possíveis imagens na frase para adicionar tratamento de erro
+      if (fraseTexto.includes('img src=')) {
+        fraseTexto = fraseTexto.replace(/<img([^>]*)src=["']([^"']*)["']([^>]*)>/g, 
+          (match, p1, src, p2) => {
+            return `<img${p1}src="${src}" onerror="this.onerror=null; this.src='/imgs/${src}'; this.classList.add('img-fallback');"${p2}>`;
+          }
+        );
+      }
+      
       const card = document.createElement('div');
       card.className = 'reflexao-card';
+      
+      // Usar texto processado com tratamento de imagens
       card.innerHTML = `
-        <p class="reflexao-frase">"${r.frase}"</p>
+        <p class="reflexao-frase">"${fraseTexto}"</p>
         <p class="reflexao-autor">- ${r.autor}</p>
         <p class="reflexao-instrucao">Clique aqui para refletir</p>
         <div class="reflexao-extra">
-          <p class="reflexao-texto">${r.reflexao}</p>
+          <p class="reflexao-texto">${reflexaoTexto}</p>
           <p class="reflexao-data">Reflexão: ${r.data}</p>
         </div>`;
+        
       const extra = card.querySelector('.reflexao-extra'),
             instr = card.querySelector('.reflexao-instrucao');
       extra.style.display = 'none';
@@ -420,17 +609,47 @@
         }
 
         const dataFmt = `${dStr} de ${nomesMes[Number(mStr)-1]}`;
-        card.innerHTML += `
-          <div class="aniversariante-img">
-            ${a.imagem
-              ? `<img src="${a.imagem}" alt="${a.nome}">`
-              : '<i class="fas fa-birthday-cake"></i>'}
-          </div>
-          <div class="aniversariante-info">
-            <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
-            ${a.cargo ? `<p>${a.cargo}</p>` : ''}
-            <p class="aniversariante-data">${dataFmt}</p>
-          </div>`;
+        
+        // Cria o elemento de imagem com tratamento de erro
+        const imgElement = document.createElement('div');
+        imgElement.className = 'aniversariante-img';
+        
+        if (a.imagem) {
+          const img = document.createElement('img');
+          img.alt = a.nome;
+          img.src = a.imagem;
+          
+          // Adiciona tratamento de erro para a imagem
+          img.onerror = function() {
+            console.warn(`Erro ao carregar imagem do aniversariante: ${a.nome}`);
+            // Tenta com prefixo alternativo
+            this.src = a.imagem.startsWith('/') 
+              ? `/imgs${a.imagem}` 
+              : `/imgs/${a.imagem}`;
+              
+            // Se ainda falhar, use ícone
+            this.onerror = function() {
+              imgElement.innerHTML = '<i class="fas fa-birthday-cake"></i>';
+            };
+          };
+          
+          imgElement.appendChild(img);
+        } else {
+          imgElement.innerHTML = '<i class="fas fa-birthday-cake"></i>';
+        }
+        
+        card.appendChild(imgElement);
+        
+        // Adiciona as informações do aniversariante
+        const infoElement = document.createElement('div');
+        infoElement.className = 'aniversariante-info';
+        infoElement.innerHTML = `
+          <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
+          ${a.cargo ? `<p>${a.cargo}</p>` : ''}
+          <p class="aniversariante-data">${dataFmt}</p>
+        `;
+        
+        card.appendChild(infoElement);
         container.appendChild(card);
       });
     }
