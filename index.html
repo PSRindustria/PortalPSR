@@ -361,10 +361,10 @@
               
               // Tenta carregar com um prefixo alternativo se falhar
               // (Isso ajuda em casos onde as imagens estão em um subdiretório diferente)
-              if (!url.includes('/imgs/')) {
+              if (!url.includes('/imagens/')) {
                 const alternativeUrl = url.startsWith('/') 
-                  ? `/imgs${url}` 
-                  : `/imgs/${url}`;
+                  ? `/imagens${url}` 
+                  : `/imagens/${url}`;
                 
                 const altImg = new Image();
                 altImg.src = alternativeUrl;
