@@ -399,28 +399,116 @@ main { padding-bottom: 40px; }
 /* ==================================================
    RODAPÉ
    ================================================== */
-<footer>
-  <!-- Accent bar -->
-  <div class="footer-accent"></div>
+/* ==================================================
+   VARIÁVEIS DE COR E ESPAÇAMENTO
+   ================================================== */
+:root {
+  --azul-marinho: #003366;
+  --dourado:    #DAA520;
+  --branco:     #ffffff;
+  --gap:        20px;
+  --padding:    40px 20px;
+}
 
-  <div class="footer-content">
-    <!-- Marca e slogan -->
-    <div class="footer-brand">
-      <h2>{{companyName}}</h2>
-      <p class="tagline">{{tagline}}</p>
-    </div>
+/* ==================================================
+   BARRA DE DESTAQUE (ACCENT BAR)
+   ================================================== */
+footer .footer-accent {
+  background: var(--dourado);
+  height: 4px;
+  width: 100%;
+}
 
-    <!-- Ícones sociais -->
-    <ul class="footer-social">
-      <li><a href="{{facebookUrl}}" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-      <li><a href="{{instagramUrl}}" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
-      <li><a href="{{linkedinUrl}}" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
-    </ul>
+/* ==================================================
+   RODAPÉ
+   ================================================== */
+footer {
+  background: var(--azul-marinho);
+  color: var(--branco);
+  font-family: 'Roboto', sans-serif;
+}
 
-    <!-- Contato e direitos -->
-    <div class="footer-legal">
-      <a href="#contato" class="contact-link">Entre em Contato</a>
-      <p>© {{year}} {{companyName}}. Todos os direitos reservados.</p>
-    </div>
-  </div>
-</footer>
+footer .footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--padding);
+}
+
+/* Marca e slogan */
+.footer-brand h2 {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  margin: 0 0 0.25em;
+}
+.footer-brand .tagline {
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
+
+/* Ícones sociais */
+.footer-social {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.footer-social a:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1);
+}
+
+/* Contato e legal */
+.footer-legal {
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+.footer-legal .contact-link {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  color: var(--dourado);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.footer-legal .contact-link:hover {
+  opacity: 0.8;
+}
+
+.footer-legal p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* ==================================================
+   ADAPTAÇÃO MOBILE
+   ================================================== */
+@media (max-width: 600px) {
+  footer .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-legal {
+    text-align: center;
+  }
+}
