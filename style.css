@@ -406,6 +406,9 @@ main { padding-bottom: 40px; }
 /* ==================================================
    VARIÁVEIS DE COR E ESPAÇAMENTO
    ================================================== */
+/* ==================================================
+   VARIÁVEIS DE COR E ESPAÇAMENTO
+   ================================================== */
 :root {
   --azul-marinho: #003366;
   --azul-claro: #004c99;
@@ -441,31 +444,31 @@ footer {
 
 footer .footer-content {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  gap: var(--gap);
+  text-align: center;
   max-width: 1080px;
   margin: 0 auto;
-  padding: var(--padding);
+  padding: 30px 20px;
   position: relative;
 }
 
 /* Marca e slogan */
 .footer-brand {
   position: relative;
-  padding-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .footer-brand::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: -10px;
+  left: 50%;
   width: 60px;
   height: 3px;
   background: var(--dourado);
   border-radius: 3px;
+  transform: translateX(-50%);
 }
 
 .footer-brand h2 {
@@ -488,8 +491,9 @@ footer .footer-content {
   list-style: none;
   display: flex;
   gap: 15px;
-  margin: 0;
+  margin: 25px 0;
   padding: 0;
+  justify-content: center;
 }
 
 .footer-social li {
@@ -502,7 +506,7 @@ footer .footer-content {
   justify-content: center;
   width: 44px;
   height: 44px;
-  background: rgba(255, 255, 255, 0.1);
+  background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   font-size: 1.2rem;
@@ -513,41 +517,16 @@ footer .footer-content {
   overflow: hidden;
 }
 
-.footer-social a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--dourado);
-  opacity: 0;
-  transform: scale(0);
-  transition: all var(--transicao);
-  z-index: -1;
-  border-radius: 50%;
-}
-
 .footer-social a:hover {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border-color: var(--dourado);
 }
 
-.footer-social a:hover::before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Contato e direitos */
-.footer-legal {
-  text-align: right;
-  font-size: 0.95rem;
-}
-
-.footer-legal .contact-link {
+/* Botão Recursos Humanos */
+.recursos-humanos {
   display: inline-block;
-  margin-bottom: 0.75em;
+  margin: 10px 0 15px;
   padding: 10px 20px;
   background: var(--dourado);
   color: var(--azul-marinho);
@@ -561,60 +540,66 @@ footer .footer-content {
   font-size: 0.9rem;
 }
 
-.footer-legal .contact-link:hover {
+.recursos-humanos:hover {
   background: var(--dourado-claro);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.footer-legal .contact-link:active {
+.recursos-humanos:active {
   transform: translateY(0);
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
-.footer-legal p {
+/* Copyright e créditos */
+.copyright {
   margin: 15px 0 0;
-  opacity: 0.8;
-  font-weight: 300;
-  letter-spacing: 0.3px;
-}
-
-/* Barra de copyright */
-.footer-copyright {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 15px 0;
-  text-align: center;
   font-size: 0.85rem;
   opacity: 0.8;
+  font-weight: 300;
 }
 
-.footer-copyright .container {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 20px;
+.developer-credit {
+  margin-top: 15px;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  padding-bottom: 10px;
 }
 
 /* ==================================================
-   ADAPTAÇÃO MOBILE
+   ADAPTAÇÃO DESKTOP
    ================================================== */
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   footer .footer-content {
-    flex-direction: column;
-    text-align: center;
-    padding: 40px 20px 30px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: var(--padding);
+  }
+  
+  .footer-brand {
+    margin-bottom: 0;
   }
   
   .footer-brand::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .footer-legal {
-    text-align: center;
+    left: 0;
+    transform: none;
   }
   
   .footer-social {
-    justify-content: center;
-    margin: 20px 0;
+    margin: 0;
+  }
+  
+  .recursos-sociais-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .copyright-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
 }
