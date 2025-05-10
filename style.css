@@ -403,112 +403,126 @@ main { padding-bottom: 40px; }
    VARIÁVEIS DE COR E ESPAÇAMENTO
    ================================================== */
 :root {
-  --azul-marinho: #003366;
-  --dourado:    #DAA520;
-  --branco:     #ffffff;
-  --gap:        20px;
-  --padding:    40px 20px;
-}
-
-/* ==================================================
-   BARRA DE DESTAQUE
-   ================================================== */
-footer .footer-accent {
-  background: var(--dourado);
-  height: 4px;
-  width: 100%;
+  --bg-light:    #FAFAFA;
+  --text-dark:   #333333;
+  --primary:     #003366; /* azul-marinho */
+  --highlight:   #DAA520; /* dourado */
+  --whatsapp:    #25D366;
+  --gap:         20px;
+  --padding-lg:  40px 20px;
+  --padding-sm:  12px 20px;
 }
 
 /* ==================================================
    RODAPÉ
    ================================================== */
 footer {
-  background: var(--azul-marinho);
-  color: var(--branco);
+  background: var(--bg-light);
+  color: var(--text-dark);
   font-family: 'Roboto', sans-serif;
 }
 
-footer .footer-content {
+/* Conteúdo principal: marca / social / contato */
+footer .footer-main {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: var(--gap);
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: var(--padding);
+  padding: var(--padding-lg);
+  border-top: 1px solid #e0e0e0;
 }
 
-/* Marca e slogan */
+/* Marca + slogan */
+.footer-brand {
+  flex: 1;
+}
 .footer-brand h2 {
-  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
   margin: 0 0 0.25em;
+  color: var(--primary);
 }
 .footer-brand .tagline {
-  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-  opacity: 0.9;
+  font-size: 1rem;
+  opacity: 0.8;
   letter-spacing: 0.5px;
 }
 
 /* Ícones sociais */
 .footer-social {
-  list-style: none;
-  display: flex;
-  gap: 15px;
-  margin: 0;
-  padding: 0;
+  flex: 1;
+  text-align: center;
 }
-
 .footer-social a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: rgba(255,255,255,0.1);
+  margin: 0 var(--gap);
+  background: #e0e0e0;
+  color: var(--primary);
   border-radius: 50%;
   font-size: 1.1rem;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 }
-
 .footer-social a:hover {
-  background: rgba(255,255,255,0.2);
+  background: var(--primary);
+  color: #fff;
   transform: scale(1.1);
 }
 
-/* Contato e direitos */
-.footer-legal {
+/* Botão de contato/WhatsApp */
+.footer-contact {
+  flex: 1;
   text-align: right;
-  font-size: 0.9rem;
 }
-
-.footer-legal .contact-link {
-  display: inline-block;
-  margin-bottom: 0.5em;
-  color: var(--dourado);
+.footer-contact .contact-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--whatsapp);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 1rem;
   text-decoration: none;
-  font-weight: 500;
-  transition: opacity 0.2s;
+  transition: background 0.2s, transform 0.2s;
+}
+.footer-contact .contact-button:hover {
+  background: darken(var(--whatsapp), 10%);
+  transform: scale(1.05);
 }
 
-.footer-legal .contact-link:hover {
-  opacity: 0.8;
+/* Linha de destaque dourada (opcional) */
+footer .footer-accent {
+  background: var(--highlight);
+  height: 4px;
+  width: 100%;
 }
 
-.footer-legal p {
-  margin: 0;
-  opacity: 0.8;
+/* Rodapé legal */
+footer .footer-bottom {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #777777;
+  padding: var(--padding-sm);
+  border-top: 1px solid #e0e0e0;
 }
 
-/* ==================================================
-   ADAPTAÇÃO MOBILE
-   ================================================== */
+/* Mobile */
 @media (max-width: 600px) {
-  footer .footer-content {
+  .footer-main {
     flex-direction: column;
     text-align: center;
   }
-  .footer-legal {
+  .footer-contact {
+    margin-top: var(--gap);
     text-align: center;
+  }
+  .footer-contact .contact-button {
+    width: 100%;
+    justify-content: center;
   }
 }
