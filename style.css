@@ -175,6 +175,10 @@ main { padding-bottom: 40px; }
   border-radius: 15px 15px 0px 0px;
 }
 .novidade-content { padding: 10px 30px 10px 30px; text-align: center; }
+.novidade-img .fas.fa-newspaper,
+.menu-azul .fas.fa-newspaper {
+  font-size: 24px;
+}
 
 /* ==================================================
    REFLEXÃO DO DIA
