@@ -118,7 +118,16 @@
       }
         });
     });
-
+function preloadImages(urls) {
+  return Promise.all(urls.map(src => {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = resolve; // evita que trave se der erro
+      img.src = src;
+    });
+  }));
+}
     // 2) Configura data de hoje
     const hoje = new Date(),
           dia = hoje.getDate(),
@@ -321,11 +330,34 @@
     }
 
     // 9) Dispara todas as renderizações
-    renderNovidades();
-    renderReflexao();
-    renderAniversariantes();
-    renderFerias();
-    renderCIPA();
+async function startRender() {
+  // Coleta todas as URLs de imagem dos dados que você vai usar
+  const aniversariantesData = await fetchData('aniversariantes.json');
+  const feriasData = await fetchData('ferias.json');
+
+  const aniversariantesImgs = aniversariantesData
+    ? aniversariantesData.map(a => a.imagem).filter(Boolean)
+    : [];
+
+  // Se tiver mais imagens em outras seções, inclua aqui
+
+  const allImages = [
+    ...aniversariantesImgs,
+    // ...outras listas de imagens
+  ];
+
+  // Pré-carrega todas as imagens
+  await preloadImages(allImages);
+
+  // Só renderiza depois que as imagens foram carregadas
+  renderNovidades();
+  renderReflexao();
+  renderAniversariantes();
+  renderFerias();
+  renderCIPA();
+}
+
+startRender();
   });
   </script>
 </body>
