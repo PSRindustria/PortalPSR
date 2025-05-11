@@ -26,14 +26,13 @@
       text-align: center;
     }
 
-    /* container para desktop com melhor leitura */
+    /* container para desktop com leitura otimizada e sem scroll */
     .embed-container {
       width: 100%;
-      max-width: 1080px;
+      max-width: 1920px;
       height: calc(100vh - 70px);
       margin: 0 auto;
-      overflow-y: auto;   /* scroll vertical interno */
-      overflow-x: hidden; /* oculta barra horizontal */
+      overflow: hidden; /* remove barras de rolagem */
       position: relative;
     }
 
@@ -45,7 +44,7 @@
       left: -200px;            /* desloca para ocultar badge */
     }
 
-    /* mobile: full width e altura total, sem barras visíveis */
+    /* mobile: full-width e altura total, sem barras visíveis */
     @media (max-width: 768px) {
       .embed-container {
         max-width: 100%;
