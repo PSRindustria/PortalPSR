@@ -16,72 +16,75 @@
 
   <style>
     /* reset */
-    body, html { margin:0; padding:0; height:100%; }
-    main { margin-top:70px; text-align:center; }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    main {
+      margin-top: 70px; /* espaço para o menu dinâmico */
+      text-align: center;
+    }
 
+    /* wrapper com scroll vertical simulado e ocultação do badge */
     .scroll-wrapper {
       position: relative;
       width: 100%;
-      max-width: 800px;
+      max-width: 1080px;
       margin: 0 auto;
-      height: calc(100vh - 70px);
+      height: 800px;
+      overflow: hidden; /* esconde excesso horizontal */
     }
 
-    /* container que oculta o badge horizontalmente */
     .embed-container {
       width: 100%;
       height: 100%;
-      overflow: hidden;
+      overflow-y: auto;   /* ativa scroll vertical */
+      overflow-x: hidden; /* esconde excesso horizontal */
       position: relative;
     }
     .embed-container iframe {
       width: calc(100% + 400px); /* 100% + 2×200px */
-      height: 100%;
+      height: 1600px;            /* 2×800px para scroll */
       border: none;
       position: relative;
-      left: -200px;              /* desloca 200px para ocultar badge */
+      left: -200px;              /* desloca para ocultar badge */
     }
 
-    /* barra de rolagem externa – só em desktop */
-    #iframe-scrollbar {
+    /* botões de scroll (desktop) */
+    #scroll-up, #scroll-down {
       position: absolute;
-      top: 0;
-      right: -30px;
-      width: 20px;
-      height: 100%;
-      writing-mode: bt-lr;       /* vertical */
-      transform: rotate(180deg); /* inverte direção */
-      -webkit-appearance: none;
+      right: -50px;
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      line-height: 1;
       background: transparent;
-    }
-    /* thumb customizado */
-    #iframe-scrollbar::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      background: #888;
-      width: 20px;
-      height: 40px;
-      border-radius: 10px;
+      border: none;
       cursor: pointer;
     }
-    #iframe-scrollbar::-moz-range-thumb {
-      background: #888;
-      width: 20px;
-      height: 40px;
-      border-radius: 10px;
-      cursor: pointer;
+    #scroll-up {
+      top: calc(50% - 30px);
+    }
+    #scroll-down {
+      top: calc(50% + 10px);
     }
 
-    /* esconda a barra no mobile */
+    /* mobile: iframe full-screen e sem botões */
     @media (max-width: 768px) {
       .scroll-wrapper {
         max-width: 100%;
         height: calc(100vh - 70px);
       }
+      .embed-container {
+        overflow: hidden;
+      }
       .embed-container iframe {
         width: 100%;
+        height: 100%;
         left: 0;
       }
-      #iframe-scrollbar {
+      #scroll-up, #scroll-down {
         display: none;
       }
     }
@@ -92,9 +95,10 @@
   <!-- MENU dinâmico -->
   <div id="menu-placeholder"></div>
 
-  <!-- wrapper com scrollbar externa -->
+  <!-- Conteúdo principal -->
   <main>
     <div class="scroll-wrapper">
+      <button id="scroll-up" aria-label="Subir">▲</button>
       <div class="embed-container">
         <iframe
           src="https://trakto.link/JornalPSR"
@@ -102,14 +106,7 @@
           allowfullscreen>
         </iframe>
       </div>
-      <!-- controle de scroll vertical -->
-      <input
-        type="range"
-        id="iframe-scrollbar"
-        min="0"
-        max="100"
-        value="0"
-      />
+      <button id="scroll-down" aria-label="Descer">▼</button>
     </div>
   </main>
 
@@ -128,19 +125,17 @@
           .catch(err => console.error(`Erro ao carregar ${file}.html:`, err));
       });
 
-      // script da scrollbar externa
-      const iframe = document.querySelector('.embed-container iframe');
-      const scrollbar = document.getElementById('iframe-scrollbar');
+      // lógica dos botões de scroll
+      const container = document.querySelector('.embed-container');
+      const btnUp = document.getElementById('scroll-up');
+      const btnDown = document.getElementById('scroll-down');
+      const step = 200; // px por clique
 
-      scrollbar.addEventListener('input', () => {
-        // tenta calcular altura interna; se cross-origin, usa fallback grande
-        let maxScroll = 10000;
-        try {
-          const doc = iframe.contentWindow.document.documentElement;
-          maxScroll = doc.scrollHeight - iframe.clientHeight;
-        } catch {}
-        const pos = (scrollbar.value / 100) * maxScroll;
-        iframe.contentWindow.scrollTo(0, pos);
+      btnUp.addEventListener('click', () => {
+        container.scrollBy({ top: -step, behavior: 'smooth' });
+      });
+      btnDown.addEventListener('click', () => {
+        container.scrollBy({ top: step, behavior: 'smooth' });
       });
     });
   </script>
