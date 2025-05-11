@@ -23,12 +23,16 @@
       width: 100%;
       max-width: 800px;
       margin: 0 auto;
+      /* Mantém altura para preencher a viewport e usar a rolagem externa */
       height: 100vh;
+      overflow: hidden;
     }
     .embed-container iframe {
       width: 100%;
       height: 100%;
       border: none;
+      overflow: hidden;
+      /* Remove barra de rolagem interna */
     }
     @media (max-width: 768px) {
       .embed-container {
@@ -45,7 +49,7 @@
   <!-- Conteúdo principal com Jornal PSR incorporado -->
   <main>
     <div class="embed-container">
-      <iframe src="https://trakto.link/JornalPSR" allowfullscreen></iframe>
+      <iframe src="https://trakto.link/JornalPSR" scrolling="no"></iframe>
     </div>
   </main>
 
