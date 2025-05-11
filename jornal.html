@@ -15,45 +15,74 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* Reset básico */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    main {
-      margin-top: 70px; /* Espaço para o menu dinâmico (≈70px) */
-      padding: 0;
-      text-align: center; /* Centraliza o container */
+    /* reset */
+    body, html { margin:0; padding:0; height:100%; }
+    main { margin-top:70px; text-align:center; }
+
+    .scroll-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      height: calc(100vh - 70px);
     }
 
-    /* Container que esconde o badge */
+    /* container que oculta o badge horizontalmente */
     .embed-container {
       width: 100%;
-      max-width: 1080px;
-      margin: 0 auto;
-      height: calc(100vh - 70px); /* Ajuste para ocupar toda a área restante */
-      overflow: hidden;           /* Oculta o que ultrapassar */
+      height: 100%;
+      overflow: hidden;
       position: relative;
     }
-
-    /* Ajuste do iframe para “puxar” 200px de cada lado, ocultando o badge */
     .embed-container iframe {
       width: calc(100% + 400px); /* 100% + 2×200px */
       height: 100%;
       border: none;
       position: relative;
-      left: -200px;              /* Desloca 200px à esquerda */
+      left: -200px;              /* desloca 200px para ocultar badge */
     }
 
-    /* Mesma lógica em mobile */
+    /* barra de rolagem externa – só em desktop */
+    #iframe-scrollbar {
+      position: absolute;
+      top: 0;
+      right: -30px;
+      width: 20px;
+      height: 100%;
+      writing-mode: bt-lr;       /* vertical */
+      transform: rotate(180deg); /* inverte direção */
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    /* thumb customizado */
+    #iframe-scrollbar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      background: #888;
+      width: 20px;
+      height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #iframe-scrollbar::-moz-range-thumb {
+      background: #888;
+      width: 20px;
+      height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* esconda a barra no mobile */
     @media (max-width: 768px) {
-      .embed-container {
+      .scroll-wrapper {
         max-width: 100%;
+        height: calc(100vh - 70px);
       }
       .embed-container iframe {
-        width: calc(100% + 400px);
-        left: -200px;
+        width: 100%;
+        left: 0;
+      }
+      #iframe-scrollbar {
+        display: none;
       }
     }
   </style>
@@ -63,36 +92,55 @@
   <!-- MENU dinâmico -->
   <div id="menu-placeholder"></div>
 
-  <!-- Conteúdo principal com Jornal PSR incorporado -->
+  <!-- wrapper com scrollbar externa -->
   <main>
-    <div class="embed-container">
-      <iframe
-        src="https://trakto.link/JornalPSR"
-        title="Jornal PSR Incorporado"
-        allowfullscreen>
-      </iframe>
+    <div class="scroll-wrapper">
+      <div class="embed-container">
+        <iframe
+          src="https://trakto.link/JornalPSR"
+          title="Jornal PSR Incorporado"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <!-- controle de scroll vertical -->
+      <input
+        type="range"
+        id="iframe-scrollbar"
+        min="0"
+        max="100"
+        value="0"
+      />
     </div>
   </main>
 
   <!-- FOOTER dinâmico -->
   <div id="footer-placeholder"></div>
 
-  <!-- Scripts para injetar menu e footer -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // injetar menu e footer
       ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html`)
           .then(r => r.text())
           .then(html => {
-            const placeholder = document.getElementById(`${file}-placeholder`);
-            if (placeholder) placeholder.innerHTML = html;
-            // Após carregar o menu, inicialize eventuais interações:
-            if (file === 'menu') {
-              const menuEl = document.querySelector('nav');
-              // …seu código de toggle aqui…
-            }
+            document.getElementById(`${file}-placeholder`).innerHTML = html;
           })
           .catch(err => console.error(`Erro ao carregar ${file}.html:`, err));
+      });
+
+      // script da scrollbar externa
+      const iframe = document.querySelector('.embed-container iframe');
+      const scrollbar = document.getElementById('iframe-scrollbar');
+
+      scrollbar.addEventListener('input', () => {
+        // tenta calcular altura interna; se cross-origin, usa fallback grande
+        let maxScroll = 10000;
+        try {
+          const doc = iframe.contentWindow.document.documentElement;
+          maxScroll = doc.scrollHeight - iframe.clientHeight;
+        } catch {}
+        const pos = (scrollbar.value / 100) * maxScroll;
+        iframe.contentWindow.scrollTo(0, pos);
       });
     });
   </script>
