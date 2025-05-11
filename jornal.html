@@ -13,24 +13,32 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* Evitar rolagem no body se o menu e footer forem fixos e o main tiver overflow */
+    }
     /* Layout para incorporação do Jornal PSR */
     main {
-      margin-top: 70px;
+      margin-top: 70px; /* Assumindo que o menu-placeholder resultará em um menu de 70px de altura */
       padding: 0;
-      text-align: center;
+      text-align: center; /* Para centralizar o .embed-container se ele for inline-block ou tiver margens auto */
+      /* A altura do main deve ser gerenciada para que o .embed-container possa usar calc(100vh - altura_menu) */
+      /* Se o footer também for fixo na parte inferior da viewport, a altura do main precisará de mais ajustes */
     }
     .embed-container {
       width: 100%;
       max-width: 800px;
-      margin: 0 auto;
-      height: 100vh;
-      overflow: auto;
-      /* Hide scrollbar for all browsers */
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+      margin: 0 auto; /* Centraliza o container */
+      height: calc(100vh - 70px); /* Altura ajustada para descontar o menu de 70px */
+      overflow: auto; /* Permite rolagem interna do conteúdo do iframe */
+      /* Ocultar barras de rolagem */
+      -ms-overflow-style: none;  /* IE e Edge */
+      scrollbar-width: none;  /* Firefox */
     }
     .embed-container::-webkit-scrollbar {
-      display: none;
+      display: none; /* Chrome, Safari, Opera */
     }
     .embed-container iframe {
       width: 100%;
@@ -39,10 +47,8 @@
     }
     @media (max-width: 768px) {
       .embed-container {
-        max-width: 100%;
-      }
-      .embed-container iframe {
-        height: 100%;
+        max-width: 100%; /* Em telas menores, ocupa toda a largura */
+        /* A altura calc(100vh - 70px) ainda se aplica, assumindo que o menu de 70px persiste */
       }
     }
   </style>
@@ -54,7 +60,7 @@
   <!-- Conteúdo principal com Jornal PSR incorporado -->
   <main>
     <div class="embed-container">
-      <iframe src="https://trakto.link/JornalPSR"></iframe>
+      <iframe src="https://trakto.link/JornalPSR" title="Jornal PSR Incorporado"></iframe>
     </div>
   </main>
 
@@ -68,7 +74,11 @@
         fetch(`${file}.html`)
           .then(r => r.text())
           .then(html => {
-            document.getElementById(`${file}-placeholder`).innerHTML = html;
+            const placeholder = document.getElementById(`${file}-placeholder`);
+            if (placeholder) {
+                placeholder.innerHTML = html;
+            }
+            // Inicializar funcionalidades do menu após carregamento, se necessário
             if (file === 'menu') {
               const toggle = document.getElementById('menu-toggle');
               const menuEl = document.getElementById('menu');
@@ -76,6 +86,7 @@
                 toggle.addEventListener('click', () => {
                   menuEl.classList.toggle('active');
                 });
+                // Fechar menu ao clicar em um link (para SPAs ou navegação na mesma página)
                 menuEl.querySelectorAll('a').forEach(link => {
                   link.addEventListener('click', () => {
                     menuEl.classList.remove('active');
@@ -83,7 +94,7 @@
                 });
               }
             }
-          });
+          }).catch(error => console.error(`Erro ao carregar ${file}.html:`, error));
       });
     });
   </script>
