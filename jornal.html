@@ -22,7 +22,7 @@
       height: 100%;
     }
     main {
-      margin-top: 70px; /* espaço para o menu dinâmico */
+      margin-top: 0px; /* espaço para o menu dinâmico */
       text-align: center;
     }
 
@@ -80,16 +80,25 @@
 
   <!-- Scripts para injetar menu e footer -->
   <script>
+    // Injeta menu e rodapé e ativa toggle
     document.addEventListener('DOMContentLoaded', () => {
       ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html`)
           .then(r => r.text())
           .then(html => {
             document.getElementById(`${file}-placeholder`).innerHTML = html;
-          })
-          .catch(err => console.error(`Erro ao carregar ${file}.html:`, err));
-      });
-    });
+            if (file === 'menu') {
+              const toggle = document.getElementById('menu-toggle');
+              const menuEl = document.getElementById('menu');
+              if (toggle && menuEl) {
+                toggle.addEventListener('click', () => {
+                  menuEl.classList.toggle('active');
+                });
+                menuEl.querySelectorAll('a').forEach(link => {
+                  link.addEventListener('click', () => {
+                    menuEl.classList.remove('active');
+                  });
+                });
   </script>
 </body>
 </html>
