@@ -9,12 +9,10 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="favicon.png" type="image/png">
   <title>PSR Indústria - Jornal PSR</title>
-
   <!-- CSS principal -->
   <link rel="stylesheet" href="style.css" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
   <style>
     /* reset básico */
     body, html {
@@ -26,7 +24,6 @@
       margin-top: 0px; /* espaço para o menu dinâmico */
       text-align: center;
     }
-
     /* container para desktop com leitura otimizada e sem scroll */
     .embed-container {
       width: 100%;
@@ -36,7 +33,6 @@
       overflow: hidden; /* remove barras de rolagem */
       position: relative;
     }
-
     .embed-container iframe {
       width: calc(100% + 400px); /* 100% + 2×200px para ocultar badge */
       height: 100%;            /* ocupa toda altura do container */
@@ -44,7 +40,6 @@
       position: relative;
       left: -200px;            /* desloca para ocultar badge */
     }
-
     /* mobile: full-width e altura total, sem barras visíveis */
     @media (max-width: 768px) {
       .embed-container {
@@ -58,13 +53,63 @@
         left: 0;
       }
     }
+    
+    /* Estilos básicos para o menu mobile (caso não estejam no style.css) */
+    .menu-mobile {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .menu-mobile {
+        display: block;
+      }
+      
+      .menu-toggle {
+        cursor: pointer;
+        padding: 10px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 1000;
+      }
+      
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        right: -250px;
+        width: 250px;
+        height: 100%;
+        background-color: #fff;
+        z-index: 999;
+        transition: right 0.3s ease;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+        overflow-y: auto;
+      }
+      
+      .mobile-nav.active {
+        right: 0;
+      }
+      
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 998;
+      }
+      
+      .overlay.active {
+        display: block;
+      }
+    }
   </style>
 </head>
-
 <body>
   <!-- MENU dinâmico -->
   <div id="menu-placeholder"></div>
-
   <!-- Conteúdo principal: Jornal incorporado -->
   <main>
     <div class="embed-container">
@@ -75,21 +120,85 @@
       </iframe>
     </div>
   </main>
-
   <!-- FOOTER dinâmico -->
   <div id="footer-placeholder"></div>
-
+  
   <!-- Scripts para injetar menu e footer -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Carrega o menu e o footer
       ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html`)
           .then(r => r.text())
           .then(html => {
             document.getElementById(`${file}-placeholder`).innerHTML = html;
+            
+            // Inicializa o menu após o carregamento do menu.html
+            if (file === 'menu') {
+              initMobileMenu();
+            }
           })
           .catch(err => console.error(`Erro ao carregar ${file}.html:`, err));
       });
+      
+      // Função para inicializar o menu mobile
+      function initMobileMenu() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        
+        // Se o botão do menu não existir, adiciona o HTML necessário
+        if (!menuToggle) {
+          const menuHtml = `
+            <div class="menu-mobile">
+              <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+              </div>
+              <div class="overlay"></div>
+              <nav class="mobile-nav">
+                <!-- O conteúdo do menu mobile será preenchido com base no menu desktop -->
+              </nav>
+            </div>
+          `;
+          
+          // Adiciona o HTML do menu mobile ao topo do body ou no container do menu
+          const menuContainer = document.querySelector('#menu-placeholder');
+          if (menuContainer) {
+            // Adiciona o menu mobile ao container existente
+            menuContainer.insertAdjacentHTML('beforeend', menuHtml);
+            
+            // Tenta copiar links do menu desktop para o menu mobile
+            const desktopMenuLinks = document.querySelectorAll('#menu-placeholder .desktop-nav a');
+            const mobileNav = document.querySelector('.mobile-nav');
+            
+            if (desktopMenuLinks.length > 0 && mobileNav) {
+              let mobileMenuHtml = '<ul>';
+              desktopMenuLinks.forEach(link => {
+                mobileMenuHtml += `<li><a href="${link.getAttribute('href')}">${link.textContent}</a></li>`;
+              });
+              mobileMenuHtml += '</ul>';
+              mobileNav.innerHTML = mobileMenuHtml;
+            }
+          }
+        }
+        
+        // Adiciona eventos aos elementos do menu após garantir que existam
+        const menuToggleUpdated = document.querySelector('.menu-toggle');
+        const mobileNav = document.querySelector('.mobile-nav');
+        const overlay = document.querySelector('.overlay');
+        
+        if (menuToggleUpdated && mobileNav && overlay) {
+          // Toggle menu ao clicar no ícone de hambúrguer
+          menuToggleUpdated.addEventListener('click', function() {
+            mobileNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+          });
+          
+          // Fecha o menu ao clicar no overlay
+          overlay.addEventListener('click', function() {
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+          });
+        }
+      }
     });
   </script>
 </body>
