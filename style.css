@@ -322,7 +322,7 @@ main { padding-bottom: 40px; }
 }
 .ferias-table th, .ferias-table td {
   padding: 10px; 
-  text-align: left; 
+  text-align: center; 
   border-bottom: 1px solid #ddd; 
 }
 .ferias-table th:first-child, .ferias-table td:first-child {
