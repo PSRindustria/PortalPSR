@@ -1,26 +1,21 @@
 /* ==================================================
-   VARIÁVEIS DE COR - OTIMIZADAS E COMBINADAS
+   VARIÁVEIS DE COR
    ================================================== */
 :root {
   --azul-marinho: #003366;
   --azul-aco: #4682B4;
-  --azul-claro: #004c99;
   --cinza-escuro: #4B4B4B;
-  --cinza-claro: #f5f5f5;
   --branco: #FFFFFF;
   --dourado: #DAA520;
-  --dourado-claro: #f0c14b;
+  --verde: #006400;
   --rosa-claro-aniversario: #fde3e9;
   --borda-aniversario: #f08080;
   --cinza-claro-ferias-bg: #f0f3f8;
   --azul-claro-ferias-texto: #6c757d;
-  --gap: 24px;
-  --padding: 50px 30px 40px;
-  --transicao: 0.3s ease;
 }
 
 /* ==================================================
-   ESTILOS BÁSICOS E RESET
+   RESET E ESTILIZAÇÕES GERAIS
    ================================================== */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -52,6 +47,7 @@ header {
 }
 .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; }
 .logo img { height: 40px; margin-right: 10px; }
+.logo span { color: #fff; }
 .menu-toggle {
   display: none; background: none;
   border: none; color: var(--branco);
@@ -106,7 +102,7 @@ nav ul li a:hover {
 }
 
 /* ==================================================
-   SEÇÕES PRINCIPAIS
+   MAIN & SECTIONS
    ================================================== */
 main { padding-bottom: 40px; }
 .section {
@@ -125,7 +121,8 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   LAYOUT RESPONSIVO
+   LIMIT WIDTH (DESKTOP)
+   e Aniversariantes 4 colunas
    ================================================== */
 @media (min-width: 769px) {
   main { max-width: 1080px; margin: 0 auto; }
@@ -137,7 +134,7 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   CARREGAMENTO DE CONTEÚDO
+   LOADER
    ================================================== */
 .loading {
   display: flex; justify-content: center;
@@ -152,11 +149,11 @@ main { padding-bottom: 40px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ==================================================
-   SEÇÃO DE NOVIDADES
+   NOVIDADES
    ================================================== */
 .novidades-header {
   display: flex; align-items: center;
-  justify-content: center;
+  justify-content: center; /* centraliza o relógio */
   font-size: .9rem; color: var(--cinza-escuro);
   margin-bottom: 10px;
 }
@@ -184,7 +181,7 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   SEÇÃO DE REFLEXÃO DIÁRIA
+   REFLEXÃO DO DIA
    ================================================== */
 .reflexao-container {
   background: var(--branco);
@@ -215,7 +212,7 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   SEÇÃO DE ANIVERSARIANTES
+   ANIVERSARIANTES
    ================================================== */
 .aniversariantes-container {
   display: grid; gap: 20px;
@@ -235,14 +232,17 @@ main { padding-bottom: 40px; }
   border-radius: 50%; overflow: hidden;
   margin: 0 auto 10px;
 }
+/* img do aniversariante cobre todo o container */
 .aniversariante-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
+/* estilo da data no card */
 .aniversariante-data {
-  background: rgb(194, 233, 249);
-  color: var(--cinza-escuro);
+  background: rgb(194 233 249);
+  color: #4b4b4b;
   padding: 4px 18px;
   border-radius: 12px;
   font-size: 1.2rem;
@@ -250,28 +250,70 @@ main { padding-bottom: 40px; }
   margin-top: 0px;
 }
 
-/* ==================================================
-   DESTAQUE PARA ANIVERSARIANTES DO DIA
-   ================================================== */
+/* destaque animado do aniversariante do dia (pulse azul) */
 .destaque-hoje {
   position: relative;
-  box-shadow: 0 0 15px rgba(177, 234, 251, 0.7);
-  animation: pulse-border 2s infinite;
+  animation: blue-pulse 1.5s infinite alternate ease-in-out;
 }
-@keyframes pulse-border {
-  0% {
-    box-shadow: 0 0 15px rgba(177, 234, 251, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(177, 234, 251, 1);
-  }
-  100% {
-    box-shadow: 0 0 15px rgba(177, 234, 251, 0.7);
+@keyframes blue-pulse {
+  from { box-shadow: 0 0 8px rgba(0,123,255,0.5); }
+  to   { box-shadow: 0 0 16px rgba(0,123,255,1); }
+}
+
+/* cada faísca dentro do card */
+.destaque-hoje .spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(0,123,255,0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: spark-fly 0.8s infinite ease-in-out;
+}
+@keyframes spark-fly {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  50%  { opacity: 1; transform: translateY(-8px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-16px) scale(0.8); }
+}
+
+/* ==================================================
+   FOGO DE ARTIFÍCIO NO CARD DE ANIVERSARIANTE
+   ================================================== */
+/* container para os fogos dentro do card */
+.destaque-hoje .twinkle-lights {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+/* cada explosão */
+.destaque-hoje .firework {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
+}
+/* partícula individual */
+.destaque-hoje .firework-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: red;
+  border-radius: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: firework-explode 1s ease-out forwards;
+}
+@keyframes firework-explode {
+  to {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0);
   }
 }
 
 /* ==================================================
-   SEÇÃO DE FÉRIAS
+   FÉRIAS
    ================================================== */
 .ferias-container {
   width: 100%;
@@ -281,6 +323,11 @@ main { padding-bottom: 40px; }
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+}
+@media (max-width: 768px) {
+  .ferias-grid {
+    justify-content: center;
+  }
 }
 .ferias-card {
   background: var(--cinza-claro-ferias-bg);
@@ -297,6 +344,10 @@ main { padding-bottom: 40px; }
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 15px;
 }
+.ferias-card-icon {
+  font-size: 1.4rem; color: var(--azul-marinho);
+  margin-right: 10px;
+}
 .ferias-dates {
   display: flex; gap: 10px;
   justify-content: center; margin: 12px 0;
@@ -305,14 +356,10 @@ main { padding-bottom: 40px; }
 .ferias-card-retorno {
   display: inline-block; border-radius: 20px;
   padding: 6px 14px; font-size: 0.9rem; font-weight: 500;
-  color: var(--azul-marinho); background-color: var(--branco);
+  color: var(--azul-marinho); background-color: #fff;
   border: 1px solid var(--azul-aco);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-
-/* ==================================================
-   TABELA DE FÉRIAS
-   ================================================== */
 .ferias-table {
   width: 100%; border-collapse: collapse;
   margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 15px;
@@ -321,7 +368,7 @@ main { padding-bottom: 40px; }
   padding: 5px; text-align: center;box-shadow: 0 0px 1px rgba(0, 0, 0, 0.20);
 }
 .ferias-table thead {
-  background: var(--azul-marinho); color: var(--branco);
+  background: var(--azul-marinho); color: #fff;
 }
 @media (min-width: 769px) {
   .ferias-grid { display: none; }
@@ -331,30 +378,55 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   SEÇÃO CIPA
+   CIPA
    ================================================== */
 .cipa-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; 
-  justify-content: center;
+  display: flex; flex-wrap: wrap;
+  gap: 20px; justify-content: center;
 }
 .cipa-card {
-  background: var(--branco);
-  padding: 20px;
+  background: var(--branco); padding: 20px;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  flex: 1 1 260px; 
-  text-align: center;
+  flex: 1 1 260px; text-align: center;
   transition: transform .3s;
 }
 .cipa-card:hover { transform: translateY(-5px); }
 .cipa-icon {
   width: 50px; height: 50px;
-  background: var(--azul-marinho); color: var(--branco);
+  background: var(--azul-marinho); color: #fff;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 10px;
+}
+
+/* ==================================================
+   RODAPÉ
+   ================================================== */
+/* ==================================================
+   VARIÁVEIS DE COR E ESPAÇAMENTO
+   ================================================== */
+:root {
+  --azul-marinho: #003366;
+  --azul-claro: #004c99;
+  --dourado: #DAA520;
+  --dourado-claro: #f0c14b;
+  --branco: #ffffff;
+  --cinza-claro: #f5f5f5;
+  --gap: 24px;
+  --padding: 50px 30px 40px;
+  --borda-radius: 6px;
+  --transicao: 0.3s ease;
+}
+
+/* ==================================================
+   BARRA DE DESTAQUE
+   ================================================== */
+footer .footer-accent {
+  background: linear-gradient(90deg, var(--dourado) 0%, var(--dourado-claro) 100%);
+  height: 6px;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* ==================================================
@@ -365,12 +437,7 @@ footer {
   color: var(--branco);
   font-family: 'Roboto', sans-serif;
 }
-footer .footer-accent {
-  background: linear-gradient(90deg, var(--dourado) 0%, var(--dourado-claro) 100%);
-  height: 6px;
-  width: 100%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+
 footer .footer-content {
   display: flex;
   flex-direction: column;
@@ -379,11 +446,15 @@ footer .footer-content {
   max-width: 1080px;
   margin: 0 auto;
   padding: 30px 20px;
+  position: relative;
 }
+
+/* Marca e slogan */
 .footer-brand {
   position: relative;
   margin-bottom: 30px;
 }
+
 .footer-brand::after {
   content: '';
   position: absolute;
@@ -394,6 +465,7 @@ footer .footer-content {
   background: var(--dourado);
   transform: translateX(-50%);
 }
+
 .footer-brand h2 {
   font-size: clamp(1.5rem, 4vw, 2rem);
   margin: 0 0 0.25em;
@@ -401,12 +473,15 @@ footer .footer-content {
   letter-spacing: 0.5px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
+
 .footer-brand .tagline {
   font-size: clamp(0.95rem, 2.5vw, 1.15rem);
   opacity: 0.95;
   letter-spacing: 0.6px;
   font-weight: 300;
 }
+
+/* Ícones sociais */
 .footer-social {
   list-style: none;
   display: flex;
@@ -415,9 +490,11 @@ footer .footer-content {
   padding: 0;
   justify-content: center;
 }
+
 .footer-social li {
   margin: 0;
 }
+
 .footer-social a {
   display: inline-flex;
   align-items: center;
@@ -430,20 +507,25 @@ footer .footer-content {
   font-size: 1.2rem;
   transition: all var(--transicao);
   color: var(--branco);
+  text-decoration: none;
   position: relative;
   overflow: hidden;
 }
+
 .footer-social a:hover {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border-color: var(--dourado);
 }
+
+/* Botão Recursos Humanos */
 .recursos-humanos {
   display: inline-block;
   margin: 10px 0 15px;
   padding: 10px 20px;
-  background-color: var(--dourado);
+  background-color: var(--dourado) !important;
   color: var(--azul-marinho);
+  text-decoration: none;
   font-weight: 600;
   border-radius: 15px;
   transition: all var(--transicao);
@@ -454,23 +536,42 @@ footer .footer-content {
   width: auto;
   text-align: center;
 }
+
 .recursos-humanos:hover {
   background: var(--dourado-claro);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.recursos-humanos:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Copyright e créditos */
 .copyright {
   margin: 15px 0 0;
   font-size: 0.85rem;
   opacity: 0.8;
   font-weight: 300;
 }
+
 .developer-credit {
   margin: 0;
   font-size: 0.75rem;
   opacity: 0.7;
   padding: 8px 0;
   background-color: rgba(0, 0, 0, 0.3);
-  text-align: center;
+  text-align: center !important;
   width: 100%;
+}
+
+/* ==================================================
+   ADAPTAÇÃO DESKTOP - MANTÉM O MESMO LAYOUT VERTICAL
+   ================================================== */
+@media (min-width: 769px) {
+  footer .footer-content {
+    /* Mantemos direção em coluna para todos os dispositivos */
+    padding: 30px 20px;
+  }
 }
