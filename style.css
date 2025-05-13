@@ -594,18 +594,18 @@ footer .footer-content {
 /* Destaque para aniversariantes do dia */
 .destaque-hoje {
   position: relative;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+  box-shadow: 0 0 15px rgba(177, 234, 251, 0.7);
   animation: pulse-border 2s infinite;
 }
 
 @keyframes pulse-border {
   0% {
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 15px rgba(177, 234, 251, 0.7);
   }
   50% {
-    box-shadow: 0 0 25px rgba(255, 215, 0, 1);
+    box-shadow: 0 0 25px rgba(177, 234, 251, 1);
   }
   100% {
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 15px rgba(177, 234, 251, 0.7);
   }
 }
