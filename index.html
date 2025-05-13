@@ -409,6 +409,12 @@ function spawnFirework(container) {
     renderAniversariantes();
     renderFerias();
     renderCIPA();
+
+    // 10) Explosão de fogos nas ocasiões que você desejar
+    const fwContainer = document.getElementById('aniversariantes-container');
+    if (fwContainer) {
+      spawnFirework(fwContainer);
+    }
   });
   </script>
 </body>
