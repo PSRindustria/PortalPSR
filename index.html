@@ -109,9 +109,9 @@ function spawnFirework(container) {
 
   const colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF'];
   const particleCount = 30;
-  const speedMin = 2;
-  const speedMax = 6;
-  const gravity = 0.05;
+  const speedMin = 1;
+  const speedMax = 3;
+  const gravity = 0.02;
 
   for (let i = 0; i < particleCount; i++) {
     const particle = document.createElement('div');
@@ -144,7 +144,7 @@ function spawnFirework(container) {
       particle.style.left = `${x}px`;
       particle.style.top  = `${y}px`;
 
-      particle.style.opacity = parseFloat(particle.style.opacity) - 0.015;
+      particle.style.opacity = parseFloat(particle.style.opacity) - 0.010;
       const currentScale = parseFloat(particle.style.transform.replace(/scale\(|\)/g, '')) || 1;
       particle.style.transform = `scale(${currentScale * 0.98})`;
 
