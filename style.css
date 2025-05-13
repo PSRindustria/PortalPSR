@@ -174,7 +174,8 @@ main { padding-bottom: 40px; }
   background: var(--branco);
   padding: 5px 40px 20px 40px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  from { box-shadow: 0 0 8px rgba(177,234,251,0.5), 0 0 10px var(--azul-claro); }
+  to   { box-shadow: 0 0 16px rgba(177,234,251,1), 0 0 20px var(--azul-claro); }
   text-align: center;
   margin: auto;
   max-width: 1080px;
