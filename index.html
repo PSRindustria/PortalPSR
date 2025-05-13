@@ -9,18 +9,15 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="favicon.png" type="image/png">
   <meta property="og:title" content="Portal PSR">
-<meta property="og:description" content="Acesse nosso canal interno com notícias, cardápio, aniversariantes e mais!">
-<meta property="og:image" content="https://i.postimg.cc/6QTrrhr6/thumbnail.jpg">
-<meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
-<meta property="og:type" content="website">
+  <meta property="og:description" content="Acesse nosso canal interno com notícias, cardápio, aniversariantes e mais!">
+  <meta property="og:image" content="https://i.postimg.cc/6QTrrhr6/thumbnail.jpg">
+  <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
+  <meta property="og:type" content="website">
   <title>PSR Indústria</title>
   <!-- CSS principal -->
   <link rel="stylesheet" href="style.css" />
   <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
   <!-- MENU (será carregado via JS) -->
@@ -29,7 +26,7 @@
   <!-- BANNER -->
   <section class="banner" id="inicio">
     <h1>Bem-vindo ao PortalPSR</h1>
-    <p>Sua Fonte de Informações, Notícias e Recursos.</p>
+    <p id="banner-announcement">Sua Fonte de Informações, Notícias e Recursos.</p>
     <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
   </section>
 
@@ -100,102 +97,84 @@
   <!-- SCRIPTS -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-// Função para criar efeito de fogos de artifício
-function spawnFirework(container) {
-  const rect = container.getBoundingClientRect();
-  // ponto de explosão: posição aleatória dentro do container
-  const centerX = Math.random() * rect.width;
-  const centerY = Math.random() * rect.height;
+    // 0) Função para efeito de fogos de artifício
+    function spawnFirework(container) {
+      const rect = container.getBoundingClientRect();
+      const centerX = Math.random() * rect.width;
+      const centerY = Math.random() * rect.height;
+      const colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF'];
+      const particleCount = 30;
+      const speedMin = 1;
+      const speedMax = 3;
+      const gravity  = 0.02;
 
-  const colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF'];
-  const particleCount = 30;
-  const speedMin = 1;
-  const speedMax = 3;
-  const gravity = 0.02;
+      for (let i = 0; i < particleCount; i++) {
+        const p = document.createElement('div');
+        const size = Math.floor(Math.random() * 4) + 3;
+        Object.assign(p.style, {
+          position: 'absolute',
+          width: `${size}px`, height: `${size}px`,
+          backgroundColor: colors[Math.floor(Math.random()*colors.length)],
+          borderRadius: '50%',
+          left: `${centerX - size/2}px`,
+          top:  `${centerY - size/2}px`,
+          opacity: '1', pointerEvents: 'none', transform: 'scale(1)'
+        });
+        container.appendChild(p);
 
-  for (let i = 0; i < particleCount; i++) {
-    const particle = document.createElement('div');
-    const size = Math.floor(Math.random() * 4) + 3;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * (speedMax - speedMin) + speedMin;
+        let vx = Math.cos(angle)*speed;
+        let vy = Math.sin(angle)*speed;
 
-    Object.assign(particle.style, {
-      position: 'absolute',
-      width: `${size}px`,
-      height: `${size}px`,
-      backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-      borderRadius: '50%',
-      left: `${centerX - size/2}px`,
-      top: `${centerY - size/2}px`,
-      opacity: '1',
-      pointerEvents: 'none',
-      transform: 'scale(1)'
-    });
-
-    container.appendChild(particle);
-
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * (speedMax - speedMin) + speedMin;
-    let vx = Math.cos(angle) * speed;
-    let vy = Math.sin(angle) * speed;
-
-    (function animate() {
-      vy += gravity;
-      const x = parseFloat(particle.style.left) + vx;
-      const y = parseFloat(particle.style.top) + vy;
-      particle.style.left = `${x}px`;
-      particle.style.top  = `${y}px`;
-
-      particle.style.opacity = parseFloat(particle.style.opacity) - 0.010;
-      const currentScale = parseFloat(particle.style.transform.replace(/scale\(|\)/g, '')) || 1;
-      particle.style.transform = `scale(${currentScale * 0.98})`;
-
-      if (particle.style.opacity > 0) {
-        requestAnimationFrame(animate);
-      } else {
-        container.removeChild(particle);
+        (function animate() {
+          vy += gravity;
+          const x = parseFloat(p.style.left) + vx;
+          const y = parseFloat(p.style.top)  + vy;
+          p.style.left = `${x}px`;
+          p.style.top  = `${y}px`;
+          p.style.opacity = parseFloat(p.style.opacity) - 0.010;
+          const scale = (parseFloat(p.style.transform.replace(/scale\(|\)/g,''))||1)*0.98;
+          p.style.transform = `scale(${scale})`;
+          if (parseFloat(p.style.opacity) > 0) {
+            requestAnimationFrame(animate);
+          } else {
+            container.removeChild(p);
+          }
+        })();
       }
-    })();
-  }
-}
+    }
 
-// 1) Injeta menu e rodapé
-['menu','footer'].forEach(file => {
-  fetch(`${file}.html`)
-    .then(r => r.text())
-    .then(html => {
-      document.getElementById(`${file}-placeholder`).innerHTML = html;
-      if (file === 'menu') {
-        const toggle = document.getElementById('menu-toggle');
-        const menuEl = document.getElementById('menu');
-        if (toggle && menuEl) {
-          // abre/fecha ao clicar no hambúrguer
-          toggle.addEventListener('click', () => {
-            menuEl.classList.toggle('active');
-          });
-          // fecha o menu ao clicar em qualquer link
-          menuEl.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-              menuEl.classList.remove('active');
-            });
-          });
-        }
-      }
+    // 1) Injeta menu e rodapé
+    ['menu','footer'].forEach(file => {
+      fetch(`${file}.html`)
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById(`${file}-placeholder`).innerHTML = html;
+          if (file==='menu') {
+            const toggle = document.getElementById('menu-toggle'),
+                  menuEl = document.getElementById('menu');
+            if (toggle && menuEl) {
+              toggle.addEventListener('click', () => menuEl.classList.toggle('active'));
+              menuEl.querySelectorAll('a').forEach(a => a.addEventListener('click', ()=>menuEl.classList.remove('active')));
+            }
+          }
+        });
     });
-});
 
     // 2) Configura data de hoje
     const hoje = new Date(),
-          dia = hoje.getDate(),
-          mes = hoje.getMonth(),
-          ano = hoje.getFullYear(),
+          dia  = hoje.getDate(),
+          mes  = hoje.getMonth(),
+          ano  = hoje.getFullYear(),
           meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
           hojePt = `${dia} de ${meses[mes]} de ${ano}`;
     document.getElementById('data-hoje-novidades').textContent = hojePt;
 
-    // 3) Função genérica fetch + JSON com cache-buster
+    // 3) Função genérica fetch + cache-buster
     async function fetchData(path) {
-      const cacheBuster = Date.now();
       try {
-        const res = await fetch(`${path}?t=${cacheBuster}`);
+        const res = await fetch(`${path}?t=${Date.now()}`);
         if (!res.ok) throw new Error(res.status);
         return await res.json();
       } catch {
@@ -206,7 +185,7 @@ function spawnFirework(container) {
     // 4) Renderiza Novidades
     async function renderNovidades() {
       const data = await fetchData('novidades.json'),
-            c = document.getElementById('novidades-container');
+            c    = document.getElementById('novidades-container');
       if (!data) {
         c.innerHTML = '<p>Erro ao carregar novidades.</p>';
         return;
@@ -228,13 +207,13 @@ function spawnFirework(container) {
     // 5) Renderiza Reflexão do Dia
     async function renderReflexao() {
       const data = await fetchData('reflexaododia.json'),
-            c = document.getElementById('reflexao-container');
+            c    = document.getElementById('reflexao-container');
       if (!data) {
         c.innerHTML = '<p>Erro ao carregar reflexão.</p>';
         return;
       }
       const key = `${String(dia).padStart(2,'0')}/${String(mes+1).padStart(2,'0')}/${ano}`,
-            r = data.find(x => x.data === key);
+            r   = data.find(x => x.data===key);
       c.innerHTML = '';
       if (!r) {
         c.innerHTML = '<p>Sem reflexão para hoje.</p>';
@@ -253,87 +232,64 @@ function spawnFirework(container) {
       const extra = card.querySelector('.reflexao-extra'),
             instr = card.querySelector('.reflexao-instrucao');
       extra.style.display = 'none';
-      instr.addEventListener('click', () => {
-        extra.style.display = extra.style.display === 'none' ? 'block' : 'none';
+      instr.addEventListener('click', ()=> {
+        extra.style.display = extra.style.display==='none' ? 'block' : 'none';
       });
       c.appendChild(card);
     }
 
-    // 6) Renderiza Aniversariantes + fogos de artifício
+    // 6) Renderiza Aniversariantes + fogos
     async function renderAniversariantes() {
-      const data = await fetchData('aniversariantes.json'),
+      const data      = await fetchData('aniversariantes.json'),
             container = document.getElementById('aniversariantes-container');
       if (!data) {
         container.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
         return;
       }
       container.innerHTML = '';
-      const hoje = new Date(),
-            diaHoje = String(hoje.getDate()).padStart(2,'0'),
-            mesHoje = String(hoje.getMonth()+1).padStart(2,'0'),
+      const hojeN = new Date(),
+            dStr  = String(hojeN.getDate()).padStart(2,'0'),
+            mStr  = String(hojeN.getMonth()+1).padStart(2,'0'),
             nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
       data.forEach(a => {
-        const [dStr,mStr] = a.data.split('/');
+        const [d,m] = a.data.split('/');
         const card = document.createElement('div');
         card.className = 'aniversariante-card';
-
-        // se for hoje, marca e insere zona de fogos
-        if (dStr === diaHoje && mStr === mesHoje) {
+        if (d===dStr && m===mStr) {
           card.classList.add('destaque-hoje');
           const tw = document.createElement('div');
           tw.className = 'twinkle-lights';
           card.appendChild(tw);
           setInterval(()=>spawnFirework(tw), 700);
         }
-
-        const dataFmt = `${dStr} de ${nomesMes[Number(mStr)-1]}`;
-        
-        // Cria o elemento container para a imagem
+        const dataFmt = `${d} de ${nomesMes[Number(m)-1]}`;
         const imgContainer = document.createElement('div');
         imgContainer.className = 'aniversariante-img';
-        
-        // Se tiver imagem, cria o elemento img com tratamento de fallback
         if (a.imagem) {
           const img = document.createElement('img');
           img.alt = a.nome;
-          
-          // Adiciona manipulador de erro para tentar fallback se disponível
           img.onerror = function() {
             if (a.imagem_fallback) {
-              // Tenta a imagem fallback se a primária falhar
-              this.onerror = function() {
-                // Se mesmo o fallback falhar, substitui pelo ícone
-                imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
-              };
+              this.onerror = ()=> imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
               this.src = a.imagem_fallback;
             } else {
-              // Se não houver fallback, substitui pelo ícone
               imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
             }
           };
-          
-          // Define a fonte primária
           img.src = a.imagem;
           imgContainer.appendChild(img);
         } else {
-          // Se não tiver imagem definida, usa o ícone padrão
           imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
         }
-        
         card.appendChild(imgContainer);
-        
-        // Adiciona as informações do aniversariante
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'aniversariante-info';
-        infoDiv.innerHTML = `
+        const info = document.createElement('div');
+        info.className = 'aniversariante-info';
+        info.innerHTML = `
           <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
-          ${a.cargo ? `<p>${a.cargo}</p>` : ''}
-          <p class="aniversariante-data">${dataFmt}</p>
-        `;
-        card.appendChild(infoDiv);
-        
-        // Adiciona o card completo ao container
+          ${a.cargo? `<p>${a.cargo}</p>`: ''}
+          <p class="aniversariante-data">${dataFmt}</p>`;
+        card.appendChild(info);
         container.appendChild(card);
       });
     }
@@ -375,7 +331,7 @@ function spawnFirework(container) {
     // 8) Renderiza CIPA
     async function renderCIPA() {
       const raw = await fetchData('cipa.json'),
-            c = document.getElementById('cipa-container');
+            c   = document.getElementById('cipa-container');
       if (!raw) {
         c.innerHTML = '<p>Erro ao carregar CIPA.</p>';
         return;
@@ -392,28 +348,60 @@ function spawnFirework(container) {
       });
     }
 
-    // 9) Dispara todas as renderizações
-    renderNovidades();
-    renderReflexao();
-    renderAniversariantes();
-    renderFerias();
-    renderCIPA();
+    // 9) Atualiza banner de anúncios
+    async function updateBannerAnnouncement() {
+      const bannerEl = document.getElementById('banner-announcement');
+      if (!bannerEl) return;
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) injeta menu e footer
-  // 2) renderNovidades(), renderReflexao(), etc.
+      const anives = await fetchData('aniversariantes.json') || [];
+      const hoje    = new Date();
+      const d       = String(hoje.getDate()).padStart(2,'0');
+      const m       = String(hoje.getMonth()+1).padStart(2,'0');
+      const nomes = anives
+        .filter(a => {
+          const [ad,am] = a.data.split('/');
+          return ad===d && am===m;
+        })
+        .map(a => a.nome);
 
-// 3) dispara fogos aleatórios no aniversariantes-container a cada 1s
-const fwContainer = document.getElementById('aniversariantes-container');
-if (fwContainer) {
-  setInterval(() => {
-    // só dispara fogos quando a aba estiver visível
-    if (!document.hidden) {
-      spawnFirework(fwContainer);
+      if (nomes.length) {
+        const lista = nomes.join(nomes.length>1 ? ' e ' : '');
+        bannerEl.textContent = `Hoje é aniversário de ${lista}!`;
+        return;
+      }
+
+      const feriados = [
+        { date: '01/01', name: 'Confraternização Universal' },
+        { date: '25/12', name: 'Natal' },
+        // adicione mais feriados aqui
+      ];
+      const hojeStr = `${d}/${m}`;
+      const feriado = feriados.find(f => f.date===hojeStr);
+      if (feriado) {
+        bannerEl.textContent = `Feliz ${feriado.name}!`;
+        return;
+      }
+
+      bannerEl.textContent = 'Sua Fonte de Informações, Notícias e Recursos.';
     }
-  }, 1000);
-}
-});
+
+    // 10) Dispara todas as renderizações e anúncios
+    (async () => {
+      await renderNovidades();
+      await renderReflexao();
+      await renderAniversariantes();
+      await renderFerias();
+      await renderCIPA();
+      await updateBannerAnnouncement();
+    })();
+
+    // 11) Fogos aleatórios contínuos
+    const fwContainer = document.getElementById('aniversariantes-container');
+    if (fwContainer) {
+      setInterval(() => {
+        if (!document.hidden) spawnFirework(fwContainer);
+      }, 1000);
+    }
   });
   </script>
 </body>
