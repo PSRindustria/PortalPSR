@@ -34,11 +34,11 @@
       position: relative;
     }
     .embed-container iframe {
-      width: calc(100% + 400px); /* 100% + 2×200px para ocultar badge */
+      width: calc(100% + 600px); /* 100% + 2×300px para ocultar badge e aumentar visualização */
       height: 100%;            /* ocupa toda altura do container */
       border: none;
       position: relative;
-      left: -200px;            /* desloca para ocultar badge */
+      left: -300px;            /* desloca para ocultar badge */
     }
     /* mobile: full-width e altura total, sem barras visíveis */
     @media (max-width: 768px) {
@@ -143,60 +143,83 @@
       
       // Função para inicializar o menu mobile
       function initMobileMenu() {
-        const menuToggle = document.querySelector('.menu-toggle');
-        
-        // Se o botão do menu não existir, adiciona o HTML necessário
-        if (!menuToggle) {
-          const menuHtml = `
+        const menuContainer = document.querySelector('#menu-placeholder');
+        if (!menuContainer) {
+          console.error('Container do menu (#menu-placeholder) não encontrado.');
+          return;
+        }
+
+        // Tenta encontrar os elementos existentes dentro do container do menu
+        let menuToggle = menuContainer.querySelector('.menu-toggle');
+        let mobileNav = menuContainer.querySelector('.mobile-nav');
+        let overlay = menuContainer.querySelector('.overlay');
+        let menuMobileDiv = menuContainer.querySelector('.menu-mobile');
+
+        // Se a estrutura completa do menu mobile não existir dentro do container, crie-a.
+        if (!menuToggle || !mobileNav || !overlay || !menuMobileDiv) {
+          // Remove qualquer menu mobile parcial ou antigo dentro do container para evitar duplicação
+          if (menuMobileDiv) {
+            menuMobileDiv.remove();
+          }
+
+          const menuHtmlStructure = `
             <div class="menu-mobile">
               <div class="menu-toggle">
                 <i class="fas fa-bars"></i>
               </div>
               <div class="overlay"></div>
               <nav class="mobile-nav">
-                <!-- O conteúdo do menu mobile será preenchido com base no menu desktop -->
+                <!-- Conteúdo do menu será populado abaixo -->
               </nav>
             </div>
           `;
-          
-          // Adiciona o HTML do menu mobile ao topo do body ou no container do menu
-          const menuContainer = document.querySelector('#menu-placeholder');
-          if (menuContainer) {
-            // Adiciona o menu mobile ao container existente
-            menuContainer.insertAdjacentHTML('beforeend', menuHtml);
-            
-            // Tenta copiar links do menu desktop para o menu mobile
-            const desktopMenuLinks = document.querySelectorAll('#menu-placeholder .desktop-nav a');
-            const mobileNav = document.querySelector('.mobile-nav');
-            
-            if (desktopMenuLinks.length > 0 && mobileNav) {
-              let mobileMenuHtml = '<ul>';
-              desktopMenuLinks.forEach(link => {
-                mobileMenuHtml += `<li><a href="${link.getAttribute('href')}">${link.textContent}</a></li>`;
-              });
-              mobileMenuHtml += '</ul>';
-              mobileNav.innerHTML = mobileMenuHtml;
-            }
-          }
+          menuContainer.insertAdjacentHTML('beforeend', menuHtmlStructure);
+
+          // Re-seleciona os elementos recém-criados
+          menuToggle = menuContainer.querySelector('.menu-toggle');
+          mobileNav = menuContainer.querySelector('.mobile-nav');
+          overlay = menuContainer.querySelector('.overlay');
         }
-        
-        // Adiciona eventos aos elementos do menu após garantir que existam
-        const menuToggleUpdated = document.querySelector('.menu-toggle');
-        const mobileNav = document.querySelector('.mobile-nav');
-        const overlay = document.querySelector('.overlay');
-        
-        if (menuToggleUpdated && mobileNav && overlay) {
-          // Toggle menu ao clicar no ícone de hambúrguer
-          menuToggleUpdated.addEventListener('click', function() {
+
+        // Popula o menu mobile com links do menu desktop (se existirem)
+        if (mobileNav) { 
+            const desktopMenuLinks = menuContainer.querySelectorAll('.desktop-nav a'); 
+            if (desktopMenuLinks.length > 0) {
+                let mobileMenuContentHtml = '<ul>';
+                desktopMenuLinks.forEach(link => {
+                    mobileMenuContentHtml += `<li><a href="${link.getAttribute('href')}">${link.textContent}</a></li>`;
+                });
+                mobileMenuContentHtml += '</ul>';
+                mobileNav.innerHTML = mobileMenuContentHtml;
+            } else {
+                // mobileNav.innerHTML = '<ul><li>Nenhum item de menu encontrado</li></ul>'; // Fallback opcional
+                console.warn('Nenhum link de menu desktop encontrado para popular o menu mobile (#menu-placeholder .desktop-nav a).');
+            }
+        }
+
+        // Adiciona os event listeners se todos os componentes necessários existirem
+        if (menuToggle && mobileNav && overlay) {
+          menuToggle.addEventListener('click', function(event) {
+            event.stopPropagation(); 
             mobileNav.classList.toggle('active');
             overlay.classList.toggle('active');
           });
-          
-          // Fecha o menu ao clicar no overlay
+
           overlay.addEventListener('click', function() {
             mobileNav.classList.remove('active');
             overlay.classList.remove('active');
           });
+
+          if (mobileNav) {
+            mobileNav.addEventListener('click', function(event) {
+              if (event.target.tagName === 'A') {
+                mobileNav.classList.remove('active');
+                overlay.classList.remove('active');
+              }
+            });
+          }
+        } else {
+          console.error('Falha ao inicializar o menu mobile: um ou mais elementos chave (.menu-toggle, .mobile-nav, .overlay) não foram encontrados ou criados no #menu-placeholder.');
         }
       }
     });
