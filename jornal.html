@@ -21,8 +21,8 @@
       height: 100%;
     }
     main {
-      margin-top: 40px; /* espaço para o menu dinâmico */
-      margin-bottom: 0px; /* espaço para o menu dinâmico */
+      margin-top: 0px; /* espaço para o menu dinâmico */
+      padding-bottom: 0px; /* espaço para o menu dinâmico */
       text-align: center;
     }
     /* container para desktop com leitura otimizada, zoom e sem scroll */
@@ -35,7 +35,7 @@
     }
 
     .iframe-zoom-wrapper {
-      width: calc(1080px + 540px) / 1.25); /* 960px */
+      width: calc(800px / 5.25); /* 640px */
       height: calc((100vh - 70px) / 1.25);
       transform: scale(1.25);
       transform-origin: top left;
@@ -45,7 +45,7 @@
     }
 
     .iframe-zoom-wrapper iframe {
-      width: calc((1080px + 540px) / 1.25); /* 960px */
+      width: calc((800px + 400px) / 5.25); /* 960px */
       height: 100%; 
       border: none;
       position: relative;
