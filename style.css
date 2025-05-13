@@ -1,3 +1,4 @@
+/******/
 /* ==================================================
    VARIÁVEIS DE COR
    ================================================== */
@@ -7,11 +8,9 @@
   --cinza-escuro: #4B4B4B;
   --branco: #FFFFFF;
   --dourado: #DAA520;
-  --verde: #006400;
-  --rosa-claro-aniversario: #fde3e9;
-  --borda-aniversario: #f08080;
-  --cinza-claro-ferias-bg: #f0f3f8;
-  --azul-claro-ferias-texto: #6c757d;
+  --cinza-claro-ferias-bg: #f0f3f8; /* Usado em .ferias-card */
+  --dourado-claro: #f0c14b; /* Usado no footer */
+  --transicao: 0.3s ease; /* Usado no footer */
 }
 
 /* ==================================================
@@ -29,7 +28,9 @@ a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
 
 /* ==================================================
-   HEADER E NAVEGAÇÃO
+   HEADER E NAVEGAÇÃO (ASSUMIDO QUE menu.html CUIDA DISSO)
+   Estilos para header, .header-container, .logo, .menu-toggle, nav ul
+   serão mantidos caso menu.html dependa deles ou para consistência.
    ================================================== */
 header {
   background-color: var(--azul-marinho);
@@ -78,7 +79,8 @@ nav ul li a:hover {
    BANNER PRINCIPAL
    ================================================== */
 .banner {
-  margin-top: 35px; height: 400px;
+  margin-top: 35px; /* Ajustar se o header tiver altura diferente ou não for fixo */
+  height: 400px;
   background:
     linear-gradient(rgba(0,51,102,0.7),rgba(0,51,102,0.9)),
     url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg') center/cover no-repeat;
@@ -128,7 +130,7 @@ main { padding-bottom: 40px; }
   main { max-width: 1080px; margin: 0 auto; }
   .aniversariantes-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* 4 colunas para desktop */
     gap: 20px;
   }
 }
@@ -153,7 +155,7 @@ main { padding-bottom: 40px; }
    ================================================== */
 .novidades-header {
   display: flex; align-items: center;
-  justify-content: center; /* centraliza o relógio */
+  justify-content: center;
   font-size: .9rem; color: var(--cinza-escuro);
   margin-bottom: 10px;
 }
@@ -175,8 +177,7 @@ main { padding-bottom: 40px; }
   border-radius: 15px 15px 0px 0px;
 }
 .novidade-content { padding: 10px 30px 10px 30px; text-align: center; }
-.novidade-img .fas.fa-newspaper,
-.menu-azul .fas.fa-newspaper {
+.novidade-img .fas.fa-newspaper {
   font-size: 25px;
 }
 
@@ -189,7 +190,8 @@ main { padding-bottom: 40px; }
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);
   text-align: center;
-  margin: auto;
+  margin: auto; /* Centraliza o card de reflexão se ele for menor que a largura total */
+  max-width: 700px; /* Limita a largura do card de reflexão */
 }
 .reflexao-frase {
   font-style: italic; color: var(--azul-marinho);
@@ -207,7 +209,8 @@ main { padding-bottom: 40px; }
   margin-bottom: 8px;
 }
 .reflexao-extra {
-  display: none; text-align: justify;
+  /* display: none; é controlado por JS */
+  text-align: justify;
   margin-top: 10px;
 }
 
@@ -215,7 +218,10 @@ main { padding-bottom: 40px; }
    ANIVERSARIANTES
    ================================================== */
 .aniversariantes-container {
-  display: grid; gap: 20px;
+  display: grid; 
+  gap: 20px;
+  /* Por padrão (mobile), 1 coluna. Desktop é tratado em @media (min-width: 769px) */
+  grid-template-columns: 1fr;
 }
 .aniversariante-card {
   background: var(--branco);
@@ -224,22 +230,20 @@ main { padding-bottom: 40px; }
   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
   text-align: center;
   transition: transform .3s;
-  position: relative;
+  position: relative; /* Necessário para .twinkle-lights */
 }
 .aniversariante-card:hover { transform: translateY(-5px); }
 .aniversariante-img {
   width: 150px; height: 150px;
   border-radius: 50%; overflow: hidden;
   margin: 0 auto 10px;
+  background-color: #eee; /* Placeholder background */
 }
-/* img do aniversariante cobre todo o container */
 .aniversariante-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
-/* estilo da data no card */
 .aniversariante-data {
   background: rgb(194 233 249);
   color: #4b4b4b;
@@ -249,67 +253,22 @@ main { padding-bottom: 40px; }
   display: inline-block;
   margin-top: 0px;
 }
-
-/* destaque animado do aniversariante do dia (pulse azul) */
 .destaque-hoje {
   position: relative;
   animation: blue-pulse 1.5s infinite alternate ease-in-out;
 }
 @keyframes blue-pulse {
-  from { box-shadow: 0 0 8px rgba(0,123,255,0.5); }
-  to   { box-shadow: 0 0 16px rgba(0,123,255,1); }
+  from { box-shadow: 0 0 8px rgba(0,123,255,0.5), 0 0 10px var(--dourado); }
+  to   { box-shadow: 0 0 16px rgba(0,123,255,1), 0 0 20px var(--dourado); }
 }
 
-/* cada faísca dentro do card */
-.destaque-hoje .spark {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(0,123,255,0.8);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: spark-fly 0.8s infinite ease-in-out;
-}
-@keyframes spark-fly {
-  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
-  50%  { opacity: 1; transform: translateY(-8px) scale(1.2); }
-  100% { opacity: 0; transform: translateY(-16px) scale(0.8); }
-}
-
-/* ==================================================
-   FOGO DE ARTIFÍCIO NO CARD DE ANIVERSARIANTE
-   ================================================== */
-/* container para os fogos dentro do card */
+/* FOGO DE ARTIFÍCIO NO CARD DE ANIVERSARIANTE (Controlado por JS) */
 .destaque-hoje .twinkle-lights {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  overflow: hidden;
-}
-/* cada explosão */
-.destaque-hoje .firework {
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 50%;
-  left: 50%;
-}
-/* partícula individual */
-.destaque-hoje .firework-particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: red;
-  border-radius: 50%;
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  animation: firework-explode 1s ease-out forwards;
-}
-@keyframes firework-explode {
-  to {
-    opacity: 0;
-    transform: translate(var(--dx), var(--dy)) scale(0);
-  }
+  overflow: hidden; /* Garante que as partículas não saiam do card */
+  border-radius: 15px; /* Para acompanhar o border-radius do card */
 }
 
 /* ==================================================
@@ -319,25 +278,22 @@ main { padding-bottom: 40px; }
   width: 100%;
 }
 .ferias-grid {
-  display: flex;
+  display: flex; /* Mantido para mobile, escondido para desktop */
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
 }
-@media (max-width: 768px) {
-  .ferias-grid {
-    justify-content: center;
-  }
-}
-.ferias-card {
+
+.ferias-card { /* Estilo para os cards de férias no mobile */
   background: var(--cinza-claro-ferias-bg);
-  padding: 23px 0px 5px 0px;
+  padding: 23px 15px 15px 15px; /* Ajuste no padding */
   border-radius: 15px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.20);
   transition: transform 0.3s;
   text-align: center;
-  flex: 1 1 100%;
-  max-width: 100%;
+  flex: 1 1 100%; /* Ocupa toda a largura no mobile */
+  max-width: 350px; /* Limita a largura máxima no mobile */
+  margin: 0 auto 20px; /* Centraliza e adiciona margem inferior */
 }
 .ferias-card:hover { transform: translateY(-5px); }
 .ferias-card-header {
@@ -360,21 +316,45 @@ main { padding-bottom: 40px; }
   border: 1px solid var(--azul-aco);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-.ferias-table {
+
+.ferias-table { /* Estilo para a tabela de férias no desktop */
   width: 100%; border-collapse: collapse;
-  margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 15px;
+  margin-top: 20px; 
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border-radius: 8px; /* Suaviza as bordas da tabela */
+  overflow: hidden; /* Para o border-radius funcionar com o thead */
 }
 .ferias-table th, .ferias-table td {
-  padding: 5px; text-align: center;box-shadow: 0 0px 1px rgba(0, 0, 0, 0.20);
+  padding: 10px; /* Aumenta o padding para melhor leitura */
+  text-align: left; /* Alinha o texto à esquerda para melhor leitura */
+  border-bottom: 1px solid #ddd; /* Linhas horizontais mais suaves */
+}
+.ferias-table th:first-child, .ferias-table td:first-child {
+  padding-left: 15px;
+}
+.ferias-table th:last-child, .ferias-table td:last-child {
+  padding-right: 15px;
 }
 .ferias-table thead {
-  background: var(--azul-marinho); color: #fff;
+  background: var(--azul-marinho); 
+  color: #fff;
 }
+.ferias-table th {
+  font-weight: 600;
+}
+.ferias-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Controle de visibilidade: Cards no mobile, tabela no desktop */
 @media (min-width: 769px) {
-  .ferias-grid { display: none; }
+  .ferias-grid { display: none; } /* Esconde cards no desktop */
+  .ferias-table { display: table; } /* Mostra tabela no desktop */
 }
 @media (max-width: 768px) {
-  .ferias-table { display: none; }
+  .ferias-grid { display: flex; } /* Mostra cards no mobile */
+  .ferias-table { display: none; } /* Esconde tabela no mobile */
+  .ferias-card { max-width: 100%; } /* Permite que o card ocupe mais espaço se for o único */
 }
 
 /* ==================================================
@@ -401,26 +381,9 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   RODAPÉ
-   ================================================== */
-/* ==================================================
-   VARIÁVEIS DE COR E ESPAÇAMENTO
-   ================================================== */
-:root {
-  --azul-marinho: #003366;
-  --azul-claro: #004c99;
-  --dourado: #DAA520;
-  --dourado-claro: #f0c14b;
-  --branco: #ffffff;
-  --cinza-claro: #f5f5f5;
-  --gap: 24px;
-  --padding: 50px 30px 40px;
-  --borda-radius: 6px;
-  --transicao: 0.3s ease;
-}
-
-/* ==================================================
-   BARRA DE DESTAQUE
+   RODAPÉ (ASSUMIDO QUE footer.html CUIDA DISSO)
+   Estilos para footer, .footer-content, etc.
+   serão mantidos caso footer.html dependa deles ou para consistência.
    ================================================== */
 footer .footer-accent {
   background: linear-gradient(90deg, var(--dourado) 0%, var(--dourado-claro) 100%);
@@ -429,9 +392,6 @@ footer .footer-accent {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* ==================================================
-   RODAPÉ
-   ================================================== */
 footer {
   background: var(--azul-marinho);
   color: var(--branco);
@@ -449,7 +409,6 @@ footer .footer-content {
   position: relative;
 }
 
-/* Marca e slogan */
 .footer-brand {
   position: relative;
   margin-bottom: 30px;
@@ -481,7 +440,6 @@ footer .footer-content {
   font-weight: 300;
 }
 
-/* Ícones sociais */
 .footer-social {
   list-style: none;
   display: flex;
@@ -518,12 +476,11 @@ footer .footer-content {
   border-color: var(--dourado);
 }
 
-/* Botão Recursos Humanos */
 .recursos-humanos {
   display: inline-block;
   margin: 10px 0 15px;
   padding: 10px 20px;
-  background-color: var(--dourado) !important;
+  background-color: var(--dourado) !important; /* !important pode ser revisto se possível */
   color: var(--azul-marinho);
   text-decoration: none;
   font-weight: 600;
@@ -548,7 +505,6 @@ footer .footer-content {
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Copyright e créditos */
 .copyright {
   margin: 15px 0 0;
   font-size: 0.85rem;
@@ -562,16 +518,13 @@ footer .footer-content {
   opacity: 0.7;
   padding: 8px 0;
   background-color: rgba(0, 0, 0, 0.3);
-  text-align: center !important;
+  text-align: center !important; /* !important pode ser revisto se possível */
   width: 100%;
 }
 
-/* ==================================================
-   ADAPTAÇÃO DESKTOP - MANTÉM O MESMO LAYOUT VERTICAL
-   ================================================== */
+/* Adaptação Desktop para Footer - Mantém o mesmo layout vertical */
 @media (min-width: 769px) {
   footer .footer-content {
-    /* Mantemos direção em coluna para todos os dispositivos */
     padding: 30px 20px;
   }
 }
