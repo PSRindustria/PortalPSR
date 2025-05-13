@@ -97,8 +97,13 @@
   <!-- SCRIPTS -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // 0) Função para efeito de fogos de artifício
-    function spawnFirework(container) {
+    // 0) Função para efeito de fogos de artifício - AGORA COM CONTROLE DE VISIBILIDADE
+    function spawnFirework(container, isAniversarianteCard = false) {
+      // Se a página não estiver visível, não criar fogos
+      if (document.hidden) {
+        return;
+      }
+
       const rect = container.getBoundingClientRect();
       const centerX = Math.random() * rect.width;
       const centerY = Math.random() * rect.height;
@@ -118,7 +123,8 @@
           borderRadius: '50%',
           left: `${centerX - size/2}px`,
           top:  `${centerY - size/2}px`,
-          opacity: '1', pointerEvents: 'none', transform: 'scale(1)'
+          opacity: '1', pointerEvents: 'none', transform: 'scale(1)',
+          zIndex: isAniversarianteCard ? '1' : 'auto' // Garantir que fica contido no card
         });
         container.appendChild(p);
 
@@ -128,6 +134,12 @@
         let vy = Math.sin(angle)*speed;
 
         (function animate() {
+          // Se a página não estiver visível, remover a partícula
+          if (document.hidden) {
+            container.removeChild(p);
+            return;
+          }
+          
           vy += gravity;
           const x = parseFloat(p.style.left) + vx;
           const y = parseFloat(p.style.top)  + vy;
@@ -139,7 +151,9 @@
           if (parseFloat(p.style.opacity) > 0) {
             requestAnimationFrame(animate);
           } else {
-            container.removeChild(p);
+            if (container.contains(p)) {
+              container.removeChild(p);
+            }
           }
         })();
       }
@@ -251,18 +265,32 @@
             dStr  = String(hojeN.getDate()).padStart(2,'0'),
             mStr  = String(hojeN.getMonth()+1).padStart(2,'0'),
             nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+      
+      // Array para armazenar os cards dos aniversariantes do dia
+      const cardsAniversariantesDoDia = [];
 
       data.forEach(a => {
         const [d,m] = a.data.split('/');
         const card = document.createElement('div');
         card.className = 'aniversariante-card';
-if (dStr === diaHoje && mStr === mesHoje) {
-  card.classList.add('destaque-hoje');
-  const tw = document.createElement('div');
-  tw.className = 'twinkle-lights';
-  card.appendChild(tw);
-  setInterval(()=>spawnFirework(tw), 700);
-}
+        
+        // Verifica se é aniversariante do dia
+        const ehAniversarianteHoje = d === dStr && m === mStr;
+        
+        if (ehAniversarianteHoje) {
+          card.classList.add('destaque-hoje');
+          const tw = document.createElement('div');
+          tw.className = 'twinkle-lights';
+          tw.style.position = 'relative';
+          tw.style.overflow = 'hidden';
+          tw.style.width = '100%';
+          tw.style.height = '100%';
+          card.appendChild(tw);
+          
+          // Armazena os cards para adicionar os fogos depois
+          cardsAniversariantesDoDia.push({card, container: tw});
+        }
+        
         const dataFmt = `${d} de ${nomesMes[Number(m)-1]}`;
         const imgContainer = document.createElement('div');
         imgContainer.className = 'aniversariante-img';
@@ -292,6 +320,36 @@ if (dStr === diaHoje && mStr === mesHoje) {
         card.appendChild(info);
         container.appendChild(card);
       });
+      
+      // Adiciona os fogos de artifício apenas nos cards dos aniversariantes do dia
+      if (cardsAniversariantesDoDia.length > 0) {
+        // Adiciona um evento para limpar os fogos quando a página ficar invisível
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            cardsAniversariantesDoDia.forEach(({container}) => {
+              // Limpa os fogos quando a página fica em segundo plano
+              while (container.firstChild) {
+                container.removeChild(container.firstChild);
+              }
+            });
+          }
+        });
+        
+        // Configura os fogos apenas para os cards de aniversariante do dia
+        cardsAniversariantesDoDia.forEach(({container}) => {
+          const fireworkInterval = setInterval(() => {
+            // Só cria fogos se a página estiver visível
+            if (!document.hidden) {
+              spawnFirework(container, true);
+            }
+          }, 700);
+          
+          // Limpa o intervalo quando a página é fechada
+          window.addEventListener('beforeunload', () => {
+            clearInterval(fireworkInterval);
+          });
+        });
+      }
     }
 
     // 7) Renderiza Férias
@@ -395,13 +453,7 @@ if (dStr === diaHoje && mStr === mesHoje) {
       await updateBannerAnnouncement();
     })();
 
-    // 11) Fogos aleatórios contínuos
-    const fwContainer = document.getElementById('aniversariantes-container');
-    if (fwContainer) {
-      setInterval(() => {
-        if (!document.hidden) spawnFirework(fwContainer);
-      }, 1000);
-    }
+    // 11) Removido o código dos fogos aleatórios contínuos em toda a página
   });
   </script>
 </body>
