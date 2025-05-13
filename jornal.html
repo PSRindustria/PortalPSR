@@ -43,6 +43,12 @@
       position: absolute; 
       top: 0;
       left: 0; 
+      cursor: grab; /* Adiciona cursor de mãozinha quando o mouse parar em cima */
+    }
+    
+    /* Muda o cursor para "grabbing" quando estiver arrastando */
+    .iframe-zoom-wrapper.dragging {
+      cursor: grabbing;
     }
 
     .iframe-zoom-wrapper iframe {
@@ -51,6 +57,7 @@
       border: none;
       position: relative;
       left: calc(-550px / 1.25); /* -160px */
+      pointer-events: none; /* Impede que o iframe capture eventos de mouse */
     }
 
     /* mobile: full-width e altura total, sem zoom e sem barras visíveis */
@@ -71,6 +78,7 @@
         width: 100%; 
         height: 100%;
         left: 0; 
+        pointer-events: auto; /* Reativa eventos de toque em dispositivos móveis */
       }
     }
     
@@ -133,7 +141,7 @@
   <!-- Conteúdo principal: Jornal incorporado -->
   <main>
     <div class="embed-container">
-      <div class="iframe-zoom-wrapper">
+      <div class="iframe-zoom-wrapper" id="draggable-iframe">
         <iframe
           src="https://trakto.link/JornalPSR"
           title="Jornal PSR Incorporado"
@@ -177,7 +185,53 @@
           .catch(err => console.error(`Erro ao carregar ${file}.html:`, err));
       });
       
-// Função initMobileMenu removida para usar a lógica do exemplo.
+      // Implementar funcionalidade de arrastar para rolagem
+      const draggableElement = document.getElementById('draggable-iframe');
+      let isDown = false;
+      let startY;
+      let scrollTop;
+      
+      // Eventos para desktop
+      draggableElement.addEventListener('mousedown', (e) => {
+        isDown = true;
+        draggableElement.classList.add('dragging');
+        startY = e.pageY - draggableElement.offsetTop;
+        scrollTop = parseInt(draggableElement.style.top || '0');
+        e.preventDefault();
+      });
+      
+      document.addEventListener('mouseup', () => {
+        isDown = false;
+        draggableElement.classList.remove('dragging');
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if(!isDown) return;
+        e.preventDefault();
+        const y = e.pageY - draggableElement.offsetTop;
+        const scroll = y - startY;
+        draggableElement.style.top = `${Math.min(0, Math.max(-draggableElement.clientHeight * 0.5, scrollTop - scroll))}px`;
+      });
+      
+      // Eventos para dispositivos móveis (touch)
+      draggableElement.addEventListener('touchstart', (e) => {
+        isDown = true;
+        draggableElement.classList.add('dragging');
+        startY = e.touches[0].pageY - draggableElement.offsetTop;
+        scrollTop = parseInt(draggableElement.style.top || '0');
+      });
+      
+      document.addEventListener('touchend', () => {
+        isDown = false;
+        draggableElement.classList.remove('dragging');
+      });
+      
+      document.addEventListener('touchmove', (e) => {
+        if(!isDown) return;
+        const y = e.touches[0].pageY - draggableElement.offsetTop;
+        const scroll = y - startY;
+        draggableElement.style.top = `${Math.min(0, Math.max(-draggableElement.clientHeight * 0.5, scrollTop - scroll))}px`;
+      });
     });
   </script>
 </body>
