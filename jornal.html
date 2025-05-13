@@ -21,37 +21,54 @@
       height: 100%;
     }
     main {
-      margin-top: 40px; /* espaço para o menu dinâmico */
-      margin-bottom: 0px;
-      padding-bottom: 0px;
+      margin-top: 0px; /* espaço para o menu dinâmico */
       text-align: center;
     }
-    /* container para desktop com leitura otimizada e sem scroll */
+    /* container para desktop com leitura otimizada, zoom e sem scroll */
     .embed-container {
-      width: 1080px; /* Conteúdo visível de 800px para desktop */
+      width: 800px; 
       height: calc(100vh - 70px);
-      margin: 0 auto; /* Centraliza o container de 800px */
-      overflow: hidden; /* remove barras de rolagem */
+      margin: 0 auto;
+      overflow: hidden;
       position: relative;
     }
-    .embed-container iframe {
-      width: calc(100% + 400px); /* 100% + 2×200px para ocultar badge */
-      height: 100%;            /* ocupa toda altura do container */
+
+    .iframe-zoom-wrapper {
+      width: calc(800px / 1.25); /* 640px */
+      height: calc((100vh - 70px) / 1.25);
+      transform: scale(1.25);
+      transform-origin: top left;
+      position: absolute; 
+      top: 0;
+      left: 0; 
+    }
+
+    .iframe-zoom-wrapper iframe {
+      width: calc((800px + 400px) / 1.25); /* 960px */
+      height: 100%; 
       border: none;
       position: relative;
-      left: -200px;            /* desloca para ocultar badge */
+      left: calc(-200px / 1.25); /* -160px */
     }
-    /* mobile: full-width e altura total, sem barras visíveis */
+
+    /* mobile: full-width e altura total, sem zoom e sem barras visíveis */
     @media (max-width: 768px) {
       .embed-container {
-        max-width: 100%;
-        height: calc(100vh - 70px);
-        overflow: hidden;
+        width: 100%; 
+        max-width: 100%; 
       }
-      .embed-container iframe {
-        width: 100%;
+
+      .iframe-zoom-wrapper {
+        width: 100%; 
         height: 100%;
-        left: 0;
+        transform: none; 
+        position: static; 
+      }
+
+      .iframe-zoom-wrapper iframe {
+        width: 100%; 
+        height: 100%;
+        left: 0; 
       }
     }
     
@@ -114,11 +131,13 @@
   <!-- Conteúdo principal: Jornal incorporado -->
   <main>
     <div class="embed-container">
-      <iframe
-        src="https://trakto.link/JornalPSR"
-        title="Jornal PSR Incorporado"
-        allowfullscreen>
-      </iframe>
+      <div class="iframe-zoom-wrapper">
+        <iframe
+          src="https://trakto.link/JornalPSR"
+          title="Jornal PSR Incorporado"
+          allowfullscreen>
+        </iframe>
+      </div>
     </div>
   </main>
   <!-- FOOTER dinâmico -->
