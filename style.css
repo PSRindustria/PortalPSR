@@ -255,8 +255,8 @@ main { padding-bottom: 40px; }
   animation: blue-pulse 1.5s infinite alternate ease-in-out;
 }
 @keyframes blue-pulse {
-  from { box-shadow: 0 0 8px rgba(177,234,251,0.5), 0 0 10px var(--dourado); }
-  to   { box-shadow: 0 0 16px rgba(177,234,251,1), 0 0 20px var(--dourado); }
+  from { box-shadow: 0 0 8px rgba(177,234,251,0.5), 0 0 10px var(--azul-claro); }
+  to   { box-shadow: 0 0 16px rgba(177,234,251,1), 0 0 20px var(--azul-claro); }
 }
 
 .destaque-hoje .twinkle-lights {
