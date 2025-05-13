@@ -103,26 +103,19 @@
 // Função para criar efeito de fogos de artifício
 function spawnFirework(container) {
   const rect = container.getBoundingClientRect();
-  // ponto de explosão: centro do container
-  const centerX = rect.width / 2;
-  const centerY = rect.height / 2;
+  // ponto de explosão: posição aleatória dentro do container
+  const centerX = Math.random() * rect.width;
+  const centerY = Math.random() * rect.height;
 
-  const colors = [
-    '#FF0000', // vermelho
-    '#00FF00', // verde
-    '#0000FF', // azul
-    '#FFFF00', // amarelo
-    '#FF00FF', // magenta
-    '#00FFFF'  // ciano
-  ];
-  const particleCount = 30; // número de partículas por explosão
+  const colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF'];
+  const particleCount = 30;
   const speedMin = 2;
   const speedMax = 6;
   const gravity = 0.05;
 
   for (let i = 0; i < particleCount; i++) {
     const particle = document.createElement('div');
-    const size = Math.floor(Math.random() * 4) + 3; // 3px–6px
+    const size = Math.floor(Math.random() * 4) + 3;
 
     Object.assign(particle.style, {
       position: 'absolute',
@@ -130,8 +123,8 @@ function spawnFirework(container) {
       height: `${size}px`,
       backgroundColor: colors[Math.floor(Math.random() * colors.length)],
       borderRadius: '50%',
-      left: `${centerX - size / 2}px`,
-      top: `${centerY - size / 2}px`,
+      left: `${centerX - size/2}px`,
+      top: `${centerY - size/2}px`,
       opacity: '1',
       pointerEvents: 'none',
       transform: 'scale(1)'
@@ -139,23 +132,19 @@ function spawnFirework(container) {
 
     container.appendChild(particle);
 
-    // velocidade e direção iniciais
     const angle = Math.random() * Math.PI * 2;
     const speed = Math.random() * (speedMax - speedMin) + speedMin;
     let vx = Math.cos(angle) * speed;
     let vy = Math.sin(angle) * speed;
 
-    // animação
     (function animate() {
       vy += gravity;
       const x = parseFloat(particle.style.left) + vx;
       const y = parseFloat(particle.style.top) + vy;
       particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
+      particle.style.top  = `${y}px`;
 
-      // fade out
       particle.style.opacity = parseFloat(particle.style.opacity) - 0.015;
-      // encolhimento gradual
       const currentScale = parseFloat(particle.style.transform.replace(/scale\(|\)/g, '')) || 1;
       particle.style.transform = `scale(${currentScale * 0.98})`;
 
@@ -410,11 +399,16 @@ function spawnFirework(container) {
     renderFerias();
     renderCIPA();
 
-    // 10) Explosão de fogos nas ocasiões que você desejar
-    const fwContainer = document.getElementById('aniversariantes-container');
-    if (fwContainer) {
-      spawnFirework(fwContainer);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) injeta menu e footer
+  // 2) renderNovidades(), renderReflexao(), etc.
+
+  // 3) dispara fogos aleatórios no aniversariantes-container a cada 1s
+  const fwContainer = document.getElementById('aniversariantes-container');
+  if (fwContainer) {
+    setInterval(() => spawnFirework(fwContainer), 1000);
+  }
+});
   });
   </script>
 </body>
