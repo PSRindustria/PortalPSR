@@ -29,8 +29,6 @@ img { max-width: 100%; display: block; }
 
 /* ==================================================
    HEADER E NAVEGAÇÃO (ASSUMIDO QUE menu.html CUIDA DISSO)
-   Estilos para header, .header-container, .logo, .menu-toggle, nav ul
-   serão mantidos caso menu.html dependa deles ou para consistência.
    ================================================== */
 header {
   background-color: var(--azul-marinho);
@@ -79,7 +77,7 @@ nav ul li a:hover {
    BANNER PRINCIPAL
    ================================================== */
 .banner {
-  margin-top: 35px; /* Ajustar se o header tiver altura diferente ou não for fixo */
+  margin-top: 35px; 
   height: 400px;
   background:
     linear-gradient(rgba(0,51,102,0.7),rgba(0,51,102,0.9)),
@@ -120,19 +118,6 @@ main { padding-bottom: 40px; }
   width: 120px; height: 3px;
   background: var(--dourado);
   margin: 7px auto 0;
-}
-
-/* ==================================================
-   LIMIT WIDTH (DESKTOP)
-   e Aniversariantes 4 colunas
-   ================================================== */
-@media (min-width: 769px) {
-  main { max-width: 1080px; margin: 0 auto; }
-  .aniversariantes-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colunas para desktop */
-    gap: 20px;
-  }
 }
 
 /* ==================================================
@@ -190,8 +175,8 @@ main { padding-bottom: 40px; }
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);
   text-align: center;
-  margin: auto; /* Centraliza o card de reflexão se ele for menor que a largura total */
-  max-width: 700px; /* Limita a largura do card de reflexão */
+  margin: auto;
+  max-width: 700px;
 }
 .reflexao-frase {
   font-style: italic; color: var(--azul-marinho);
@@ -209,7 +194,6 @@ main { padding-bottom: 40px; }
   margin-bottom: 8px;
 }
 .reflexao-extra {
-  /* display: none; é controlado por JS */
   text-align: justify;
   margin-top: 10px;
 }
@@ -220,8 +204,7 @@ main { padding-bottom: 40px; }
 .aniversariantes-container {
   display: grid; 
   gap: 20px;
-  /* Por padrão (mobile), 1 coluna. Desktop é tratado em @media (min-width: 769px) */
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Padrão para mobile: 1 coluna */
 }
 .aniversariante-card {
   background: var(--branco);
@@ -230,14 +213,14 @@ main { padding-bottom: 40px; }
   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
   text-align: center;
   transition: transform .3s;
-  position: relative; /* Necessário para .twinkle-lights */
+  position: relative;
 }
 .aniversariante-card:hover { transform: translateY(-5px); }
 .aniversariante-img {
   width: 150px; height: 150px;
   border-radius: 50%; overflow: hidden;
   margin: 0 auto 10px;
-  background-color: #eee; /* Placeholder background */
+  background-color: #eee; 
 }
 .aniversariante-img img {
   width: 100%;
@@ -262,13 +245,12 @@ main { padding-bottom: 40px; }
   to   { box-shadow: 0 0 16px rgba(0,123,255,1), 0 0 20px var(--dourado); }
 }
 
-/* FOGO DE ARTIFÍCIO NO CARD DE ANIVERSARIANTE (Controlado por JS) */
 .destaque-hoje .twinkle-lights {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  overflow: hidden; /* Garante que as partículas não saiam do card */
-  border-radius: 15px; /* Para acompanhar o border-radius do card */
+  overflow: hidden; 
+  border-radius: 15px; 
 }
 
 /* ==================================================
@@ -277,23 +259,23 @@ main { padding-bottom: 40px; }
 .ferias-container {
   width: 100%;
 }
-.ferias-grid {
-  display: flex; /* Mantido para mobile, escondido para desktop */
+.ferias-grid { /* Visível em mobile, escondido em desktop */
+  display: flex; 
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
 }
 
-.ferias-card { /* Estilo para os cards de férias no mobile */
+.ferias-card { 
   background: var(--cinza-claro-ferias-bg);
-  padding: 23px 15px 15px 15px; /* Ajuste no padding */
+  padding: 23px 15px 15px 15px; 
   border-radius: 15px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.20);
   transition: transform 0.3s;
   text-align: center;
-  flex: 1 1 100%; /* Ocupa toda a largura no mobile */
-  max-width: 350px; /* Limita a largura máxima no mobile */
-  margin: 0 auto 20px; /* Centraliza e adiciona margem inferior */
+  flex: 1 1 100%; 
+  max-width: 350px; 
+  margin: 0 auto 20px; 
 }
 .ferias-card:hover { transform: translateY(-5px); }
 .ferias-card-header {
@@ -317,17 +299,17 @@ main { padding-bottom: 40px; }
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-.ferias-table { /* Estilo para a tabela de férias no desktop */
+.ferias-table { /* Visível em desktop, escondido em mobile */
   width: 100%; border-collapse: collapse;
   margin-top: 20px; 
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  border-radius: 8px; /* Suaviza as bordas da tabela */
-  overflow: hidden; /* Para o border-radius funcionar com o thead */
+  border-radius: 8px; 
+  overflow: hidden; 
 }
 .ferias-table th, .ferias-table td {
-  padding: 10px; /* Aumenta o padding para melhor leitura */
-  text-align: left; /* Alinha o texto à esquerda para melhor leitura */
-  border-bottom: 1px solid #ddd; /* Linhas horizontais mais suaves */
+  padding: 10px; 
+  text-align: left; 
+  border-bottom: 1px solid #ddd; 
 }
 .ferias-table th:first-child, .ferias-table td:first-child {
   padding-left: 15px;
@@ -344,17 +326,6 @@ main { padding-bottom: 40px; }
 }
 .ferias-table tbody tr:hover {
   background-color: #f5f5f5;
-}
-
-/* Controle de visibilidade: Cards no mobile, tabela no desktop */
-@media (min-width: 769px) {
-  .ferias-grid { display: none; } /* Esconde cards no desktop */
-  .ferias-table { display: table; } /* Mostra tabela no desktop */
-}
-@media (max-width: 768px) {
-  .ferias-grid { display: flex; } /* Mostra cards no mobile */
-  .ferias-table { display: none; } /* Esconde tabela no mobile */
-  .ferias-card { max-width: 100%; } /* Permite que o card ocupe mais espaço se for o único */
 }
 
 /* ==================================================
@@ -382,8 +353,6 @@ main { padding-bottom: 40px; }
 
 /* ==================================================
    RODAPÉ (ASSUMIDO QUE footer.html CUIDA DISSO)
-   Estilos para footer, .footer-content, etc.
-   serão mantidos caso footer.html dependa deles ou para consistência.
    ================================================== */
 footer .footer-accent {
   background: linear-gradient(90deg, var(--dourado) 0%, var(--dourado-claro) 100%);
@@ -395,7 +364,7 @@ footer .footer-accent {
 footer {
   background: var(--azul-marinho);
   color: var(--branco);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto	ypically, sans-serif;
 }
 
 footer .footer-content {
@@ -480,7 +449,7 @@ footer .footer-content {
   display: inline-block;
   margin: 10px 0 15px;
   padding: 10px 20px;
-  background-color: var(--dourado) !important; /* !important pode ser revisto se possível */
+  background-color: var(--dourado) !important; 
   color: var(--azul-marinho);
   text-decoration: none;
   font-weight: 600;
@@ -518,13 +487,55 @@ footer .footer-content {
   opacity: 0.7;
   padding: 8px 0;
   background-color: rgba(0, 0, 0, 0.3);
-  text-align: center !important; /* !important pode ser revisto se possível */
+  text-align: center !important; 
   width: 100%;
 }
 
-/* Adaptação Desktop para Footer - Mantém o mesmo layout vertical */
+/* ==================================================
+   MEDIA QUERIES ESPECÍFICAS PARA LAYOUT
+   ================================================== */
+
+/* Desktop e Telas Maiores */
 @media (min-width: 769px) {
-  footer .footer-content {
-    padding: 30px 20px;
+  main { 
+    max-width: 1080px; 
+    margin: 0 auto; 
+  }
+  /* Garante 4 colunas para aniversariantes em desktop */
+  #aniversariantes .aniversariantes-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .ferias-grid { display: none; } 
+  .ferias-table { display: table; } 
+}
+
+/* Tablets e Telas Menores */
+@media (max-width: 768px) {
+  /* Aniversariantes em 2 colunas para tablets, se desejado, ou manter 1 coluna */
+  /* Exemplo para 2 colunas em tablet:
+  #aniversariantes .aniversariantes-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  */
+  /* Por padrão, .aniversariantes-container já está como 1 coluna, então não precisa de regra aqui se for manter 1 coluna */
+
+  .ferias-grid { display: flex; } 
+  .ferias-table { display: none; } 
+  .ferias-card { 
+    max-width: 100%; 
+    flex-basis: calc(50% - 10px); /* Exemplo para 2 cards por linha em mobile, se houver espaço */
+  }
+  /* Se quiser estritamente 1 card por linha no mobile para ferias-card, remova flex-basis e max-width:350px pode ser ajustado */
+}
+
+/* Ajuste para telas muito pequenas, garantindo 1 coluna para aniversariantes */
+@media (max-width: 480px) {
+  #aniversariantes .aniversariantes-container {
+    grid-template-columns: 1fr;
+  }
+  .ferias-card {
+    flex-basis: 100%; /* Garante 1 card por linha */
   }
 }
