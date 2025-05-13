@@ -256,13 +256,19 @@
         const [d,m] = a.data.split('/');
         const card = document.createElement('div');
         card.className = 'aniversariante-card';
-        if (d===dStr && m===mStr) {
-          card.classList.add('destaque-hoje');
-          const tw = document.createElement('div');
-          tw.className = 'twinkle-lights';
-          card.appendChild(tw);
-          setInterval(()=>spawnFirework(tw), 700);
-        }
+if (dStr === diaHoje && mStr === mesHoje) {
+  card.classList.add('destaque-hoje');
+  const tw = document.createElement('div');
+  tw.className = 'twinkle-lights';
+  card.appendChild(tw);
+
+  setInterval(() => {
+    // só dispara fogos quando a aba estiver visível
+    if (!document.hidden) {
+      spawnFirework(tw);
+    }
+  }, 700);
+}
         const dataFmt = `${d} de ${nomesMes[Number(m)-1]}`;
         const imgContainer = document.createElement('div');
         imgContainer.className = 'aniversariante-img';
