@@ -403,11 +403,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1) injeta menu e footer
   // 2) renderNovidades(), renderReflexao(), etc.
 
-  // 3) dispara fogos aleatórios no aniversariantes-container a cada 1s
-  const fwContainer = document.getElementById('aniversariantes-container');
-  if (fwContainer) {
-    setInterval(() => spawnFirework(fwContainer), 1000);
-  }
+// 3) dispara fogos aleatórios no aniversariantes-container a cada 1s
+const fwContainer = document.getElementById('aniversariantes-container');
+if (fwContainer) {
+  setInterval(() => {
+    // só dispara fogos quando a aba estiver visível
+    if (!document.hidden) {
+      spawnFirework(fwContainer);
+    }
+  }, 1000);
+}
 });
   });
   </script>
