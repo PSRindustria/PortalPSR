@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma"        content="no-cache" />
@@ -18,6 +15,272 @@
   <link rel="stylesheet" href="style.css" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Estilos globais */
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* Estilos específicos para a seção de aniversariantes */
+    .aniversariantes-container {
+      padding: 10px;
+    }
+    
+    .aniversariantes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .aniversariante-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: #fff;
+      overflow: hidden;
+      height: 100%;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .aniversariante-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .destaque-hoje {
+      background-color: #f0f8ff !important;
+      box-shadow: 0 2px 10px rgba(70,130,180,0.3) !important;
+      border: 2px solid #add8e6 !important;
+    }
+    
+    .aniversariante-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #eef5ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .aniversariante-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .aniversariante-img i {
+      font-size: 40px;
+      color: #666;
+    }
+    
+    .aniversariante-info {
+      text-align: center;
+      width: 100%;
+      z-index: 2;
+    }
+    
+    .aniversariante-info h3 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .aniversariante-info p {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .aniversariante-data {
+      margin: 0 !important;
+      padding: 4px 10px !important;
+      background-color: #e6f2ff !important;
+      border-radius: 15px !important;
+      font-size: 14px !important;
+      display: inline-block !important;
+      color: #333 !important;
+    }
+    
+    .twinkle-lights {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .aniversariantes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+      }
+      
+      .aniversariante-img {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .aniversariante-info h3 {
+        font-size: 14px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .aniversariantes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 10px;
+      }
+    }
+  </style><!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <style>
+    /* Estilos globais */
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* Estilos específicos para a seção de aniversariantes */
+    .aniversariantes-container {
+      padding: 10px;
+    }
+    
+    .aniversariantes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .aniversariante-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: #fff;
+      overflow: hidden;
+      height: 100%;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .aniversariante-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .destaque-hoje {
+      background-color: #f0f8ff !important;
+      box-shadow: 0 2px 10px rgba(70,130,180,0.3) !important;
+      border: 2px solid #add8e6 !important;
+    }
+    
+    .aniversariante-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #eef5ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .aniversariante-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .aniversariante-img i {
+      font-size: 40px;
+      color: #666;
+    }
+    
+    .aniversariante-info {
+      text-align: center;
+      width: 100%;
+      z-index: 2;
+    }
+    
+    .aniversariante-info h3 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .aniversariante-info p {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .aniversariante-data {
+      margin: 0 !important;
+      padding: 4px 10px !important;
+      background-color: #e6f2ff !important;
+      border-radius: 15px !important;
+      font-size: 14px !important;
+      display: inline-block !important;
+      color: #333 !important;
+    }
+    
+    .twinkle-lights {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .aniversariantes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+      }
+      
+      .aniversariante-img {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .aniversariante-info h3 {
+        font-size: 14px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .aniversariantes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- MENU (será carregado via JS) -->
@@ -105,17 +368,18 @@
       }
 
       const rect = container.getBoundingClientRect();
-      const centerX = Math.random() * rect.width;
-      const centerY = Math.random() * rect.height;
+      // Limitar o posicionamento dos fogos para dentro do card
+      const centerX = Math.random() * rect.width * 0.8 + rect.width * 0.1;
+      const centerY = Math.random() * rect.height * 0.8 + rect.height * 0.1;
       const colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF'];
-      const particleCount = 30;
-      const speedMin = 1;
-      const speedMax = 3;
-      const gravity  = 0.02;
+      const particleCount = isAniversarianteCard ? 20 : 30; // Menos partículas para cards
+      const speedMin = isAniversarianteCard ? 0.5 : 1;
+      const speedMax = isAniversarianteCard ? 2 : 3;
+      const gravity  = isAniversarianteCard ? 0.01 : 0.02;
 
       for (let i = 0; i < particleCount; i++) {
         const p = document.createElement('div');
-        const size = Math.floor(Math.random() * 4) + 3;
+        const size = Math.floor(Math.random() * (isAniversarianteCard ? 3 : 4)) + (isAniversarianteCard ? 2 : 3);
         Object.assign(p.style, {
           position: 'absolute',
           width: `${size}px`, height: `${size}px`,
@@ -123,8 +387,11 @@
           borderRadius: '50%',
           left: `${centerX - size/2}px`,
           top:  `${centerY - size/2}px`,
-          opacity: '1', pointerEvents: 'none', transform: 'scale(1)',
-          zIndex: isAniversarianteCard ? '1' : 'auto' // Garantir que fica contido no card
+          opacity: '1', 
+          pointerEvents: 'none', 
+          transform: 'scale(1)',
+          zIndex: isAniversarianteCard ? '1' : 'auto',
+          boxShadow: isAniversarianteCard ? '0 0 2px rgba(255,255,255,0.7)' : 'none'
         });
         container.appendChild(p);
 
@@ -134,21 +401,40 @@
         let vy = Math.sin(angle)*speed;
 
         (function animate() {
-          // Se a página não estiver visível, remover a partícula
-          if (document.hidden) {
-            container.removeChild(p);
+          // Se a página não estiver visível ou o elemento foi removido, não continuar
+          if (document.hidden || !container.contains(p)) {
+            if (container.contains(p)) {
+              container.removeChild(p);
+            }
             return;
           }
           
           vy += gravity;
           const x = parseFloat(p.style.left) + vx;
           const y = parseFloat(p.style.top)  + vy;
+          
+          // Verificar se ainda está dentro dos limites do container
+          if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
+            container.removeChild(p);
+            return;
+          }
+          
           p.style.left = `${x}px`;
           p.style.top  = `${y}px`;
-          p.style.opacity = parseFloat(p.style.opacity) - 0.010;
+          p.style.opacity = parseFloat(p.style.opacity) - (isAniversarianteCard ? 0.02 : 0.01);
           const scale = (parseFloat(p.style.transform.replace(/scale\(|\)/g,''))||1)*0.98;
           p.style.transform = `scale(${scale})`;
+          
           if (parseFloat(p.style.opacity) > 0) {
+            requestAnimationFrame(animate);
+          } else {
+            if (container.contains(p)) {
+              container.removeChild(p);
+            }
+          }
+        })();
+      }
+    }opacity) > 0) {
             requestAnimationFrame(animate);
           } else {
             if (container.contains(p)) {
@@ -266,6 +552,15 @@
             mStr  = String(hojeN.getMonth()+1).padStart(2,'0'),
             nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
       
+      // Criar uma grade responsiva para os aniversariantes
+      const grid = document.createElement('div');
+      grid.className = 'aniversariantes-grid';
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(200px, 1fr))';
+      grid.style.gap = '20px';
+      grid.style.width = '100%';
+      container.appendChild(grid);
+      
       // Array para armazenar os cards dos aniversariantes do dia
       const cardsAniversariantesDoDia = [];
 
@@ -273,18 +568,37 @@
         const [d,m] = a.data.split('/');
         const card = document.createElement('div');
         card.className = 'aniversariante-card';
+        card.style.position = 'relative';
+        card.style.display = 'flex';
+        card.style.flexDirection = 'column';
+        card.style.alignItems = 'center';
+        card.style.padding = '15px';
+        card.style.borderRadius = '8px';
+        card.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        card.style.backgroundColor = '#fff';
+        card.style.overflow = 'hidden';
+        card.style.height = '100%';
         
         // Verifica se é aniversariante do dia
         const ehAniversarianteHoje = d === dStr && m === mStr;
         
         if (ehAniversarianteHoje) {
           card.classList.add('destaque-hoje');
+          card.style.backgroundColor = '#f0f8ff';
+          card.style.boxShadow = '0 2px 10px rgba(70,130,180,0.3)';
+          card.style.border = '2px solid #add8e6';
+          
+          // Container para os fogos limitado ao card
           const tw = document.createElement('div');
           tw.className = 'twinkle-lights';
-          tw.style.position = 'relative';
-          tw.style.overflow = 'hidden';
+          tw.style.position = 'absolute';
+          tw.style.top = '0';
+          tw.style.left = '0';
           tw.style.width = '100%';
           tw.style.height = '100%';
+          tw.style.pointerEvents = 'none';
+          tw.style.overflow = 'hidden';
+          tw.style.zIndex = '1';
           card.appendChild(tw);
           
           // Armazena os cards para adicionar os fogos depois
@@ -292,33 +606,81 @@
         }
         
         const dataFmt = `${d} de ${nomesMes[Number(m)-1]}`;
+        
+        // Container da imagem
         const imgContainer = document.createElement('div');
         imgContainer.className = 'aniversariante-img';
+        imgContainer.style.width = '100px';
+        imgContainer.style.height = '100px';
+        imgContainer.style.borderRadius = '50%';
+        imgContainer.style.overflow = 'hidden';
+        imgContainer.style.backgroundColor = '#eef5ff';
+        imgContainer.style.display = 'flex';
+        imgContainer.style.justifyContent = 'center';
+        imgContainer.style.alignItems = 'center';
+        imgContainer.style.marginBottom = '15px';
+        imgContainer.style.position = 'relative';
+        imgContainer.style.zIndex = '2'; // Superior aos fogos
+        
         if (a.imagem) {
           const img = document.createElement('img');
           img.alt = a.nome;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
           img.onerror = function() {
             if (a.imagem_fallback) {
-              this.onerror = ()=> imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
+              this.onerror = ()=> {
+                imgContainer.innerHTML = '<i class="fas fa-birthday-cake" style="font-size: 40px; color: #666;"></i>';
+              };
               this.src = a.imagem_fallback;
             } else {
-              imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
+              imgContainer.innerHTML = '<i class="fas fa-birthday-cake" style="font-size: 40px; color: #666;"></i>';
             }
           };
           img.src = a.imagem;
           imgContainer.appendChild(img);
         } else {
-          imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
+          imgContainer.innerHTML = '<i class="fas fa-birthday-cake" style="font-size: 40px; color: #666;"></i>';
         }
         card.appendChild(imgContainer);
+        
+        // Container das informações
         const info = document.createElement('div');
         info.className = 'aniversariante-info';
-        info.innerHTML = `
-          <h3><i class="fas fa-birthday-cake"></i> ${a.nome}</h3>
-          ${a.cargo? `<p>${a.cargo}</p>`: ''}
-          <p class="aniversariante-data">${dataFmt}</p>`;
+        info.style.textAlign = 'center';
+        info.style.width = '100%';
+        info.style.zIndex = '2'; // Superior aos fogos
+        
+        const nome = document.createElement('h3');
+        nome.innerHTML = `<i class="fas fa-birthday-cake"></i> ${a.nome}`;
+        nome.style.margin = '0 0 8px 0';
+        nome.style.fontSize = '16px';
+        nome.style.fontWeight = 'bold';
+        info.appendChild(nome);
+        
+        if (a.cargo) {
+          const cargo = document.createElement('p');
+          cargo.textContent = a.cargo;
+          cargo.style.margin = '0 0 8px 0';
+          cargo.style.fontSize = '14px';
+          cargo.style.color = '#666';
+          info.appendChild(cargo);
+        }
+        
+        const data = document.createElement('p');
+        data.className = 'aniversariante-data';
+        data.textContent = dataFmt;
+        data.style.margin = '0';
+        data.style.padding = '4px 10px';
+        data.style.backgroundColor = '#e6f2ff';
+        data.style.borderRadius = '15px';
+        data.style.fontSize = '14px';
+        data.style.display = 'inline-block';
+        info.appendChild(data);
+        
         card.appendChild(info);
-        container.appendChild(card);
+        grid.appendChild(card);
       });
       
       // Adiciona os fogos de artifício apenas nos cards dos aniversariantes do dia
