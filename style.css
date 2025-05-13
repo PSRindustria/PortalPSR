@@ -216,6 +216,20 @@ main { padding-bottom: 40px; }
   position: relative;
 }
 .aniversariante-card:hover { transform: translateY(-5px); }
+.aniversariante-card .aniversariante-info h3 {
+  margin-top: 0;
+  margin-bottom: 5px; /* Ajuste para o espaço ABAIXO do NOME */
+  font-size: 1.5rem; 
+  color: var(--cinza-escuro);
+}
+
+.aniversariante-card .aniversariante-info p {
+  margin-top: 5px;    /* Ajuste para o espaço ACIMA do CARGO */
+  margin-bottom: 10px; /* Ajuste para o espaço ABAIXO do CARGO */
+  font-size: 1rem; 
+  color: var(--cinza-escuro);
+  line-height: 1.4;
+}
 .aniversariante-img {
   width: 150px; height: 150px;
   border-radius: 50%; overflow: hidden;
@@ -234,7 +248,7 @@ main { padding-bottom: 40px; }
   border-radius: 12px;
   font-size: 1.2rem;
   display: inline-block;
-  margin-top: 0px;
+  margin-top: 10px;
 }
 .destaque-hoje {
   position: relative;
