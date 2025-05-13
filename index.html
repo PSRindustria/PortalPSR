@@ -261,13 +261,7 @@ if (dStr === diaHoje && mStr === mesHoje) {
   const tw = document.createElement('div');
   tw.className = 'twinkle-lights';
   card.appendChild(tw);
-
-  setInterval(() => {
-    // só dispara fogos quando a aba estiver visível
-    if (!document.hidden) {
-      spawnFirework(tw);
-    }
-  }, 700);
+  setInterval(()=>spawnFirework(tw), 700);
 }
         const dataFmt = `${d} de ${nomesMes[Number(m)-1]}`;
         const imgContainer = document.createElement('div');
