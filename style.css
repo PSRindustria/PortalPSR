@@ -199,11 +199,11 @@ main { padding-bottom: 40px; }
   font-weight: 600;
   margin-bottom: 8px;
   padding: 0.1em 0.2em; /* ajustar espaço interno, se quiser */
+  background-color: #b1eafb;
 }
 .reflexao-extra {
   text-align: justify;
   margin-top: 10px;
-  background-color: #b1eafb;
 }
 
 /* ==================================================
