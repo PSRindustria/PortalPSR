@@ -197,12 +197,12 @@ main { padding-bottom: 40px; }
   color: var(--azul-aco);
   cursor: pointer;
   font-weight: 600;
-  margin-bottom: 8px;
   padding: 0.2em 0.3em; /* ajustar espaço interno, se quiser */
   background-color: #b1eafb;
   display: block;
-  margin: 0 auto;
+  margin: 0 auto 8px;
   text-align: center;
+  max-width: 250px;
   border-radius:15px;
 }
 .reflexao-extra {
