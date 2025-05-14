@@ -196,9 +196,9 @@ main { padding-bottom: 40px; }
 .reflexao-instrucao {
   color: var(--azul-aco);
   cursor: pointer;
-  font-weight: 200;
+  font-weight: 600;
   margin-bottom: 8px;
-  padding: 0.1em 0.2em; /* ajustar espaço interno, se quiser */
+  padding: 0.2em 0.3em; /* ajustar espaço interno, se quiser */
   background-color: #b1eafb;
   border-radius:15px;
 }
