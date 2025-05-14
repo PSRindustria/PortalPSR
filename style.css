@@ -196,10 +196,11 @@ main { padding-bottom: 40px; }
 .reflexao-instrucao {
   color: var(--azul-aco);
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 200;
   margin-bottom: 8px;
   padding: 0.1em 0.2em; /* ajustar espaço interno, se quiser */
   background-color: #b1eafb;
+  border-radius:15px;
 }
 .reflexao-extra {
   text-align: justify;
