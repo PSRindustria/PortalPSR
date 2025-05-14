@@ -191,7 +191,8 @@ main { padding-bottom: 40px; }
 }
 .reflexao-autor {
   font-weight: bold; color: var(--dourado);
-  margin: 10px 0;
+  margin: 0px 0px 20px 0px;
+  margin-top: -15px;
 }
 .reflexao-instrucao {
   color: var(--azul-aco);
