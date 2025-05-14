@@ -198,10 +198,12 @@ main { padding-bottom: 40px; }
   cursor: pointer;
   font-weight: 600;
   margin-bottom: 8px;
+  padding: 0.1em 0.2em; /* ajustar espaço interno, se quiser */
 }
 .reflexao-extra {
   text-align: justify;
   margin-top: 10px;
+  background-color: #b1eafb;
 }
 
 /* ==================================================
