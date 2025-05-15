@@ -80,7 +80,7 @@ def get_dynamic_header_message():
         print(f"Erro ao processar feriados: {e}")
 
     if not messages:
-        return "<p>Sua Fonte de Informações, Notícias e Recursos.</p>"
+        return "<p>Aqui é o seu espaço. Aqui é PSR!</p>"
     else:
         # Join messages with <br> only if there are multiple messages. The <br> inside anniversary message handles its own line break.
         return "<p>" + "<br>".join(messages) + "</p>"
