@@ -116,7 +116,7 @@ main { padding-bottom: 40px; }
 .section-title::after {
   content: '';
   display: block;
-  width: 120px; height: 3px;
+  width: 120px; height: 3px; border-radius: 15px;
   background: var(--dourado);
   margin: 7px auto 0;
 }
@@ -416,10 +416,11 @@ footer .footer-content {
   position: absolute;
   bottom: -10px;
   left: 50%;
-  width: 60px;
-  height: 2px;
+  width: 120px;
+  height: 3px;
   background: var(--dourado);
   transform: translateX(-50%);
+  border-radius: 15px;
 }
 
 .footer-brand h2 {
