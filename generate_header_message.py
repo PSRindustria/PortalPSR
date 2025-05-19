@@ -10,7 +10,7 @@ def get_dynamic_header_message():
 
     # 1. Aniversariantes
     try:
-        with open("/home/ubuntu/portal_data/aniversariantes.json", "r", encoding="utf-8") as f:
+        with open("aniversariantes.json", "r", encoding="utf-8") as f:
             aniversariantes_data = json.load(f)
         
         hoje_aniversariantes = []
@@ -45,7 +45,7 @@ def get_dynamic_header_message():
 
     # 2. Retorno de Férias
     try:
-        with open("/home/ubuntu/ferias.json", "r", encoding="utf-8") as f:
+        with open("ferias.json", "r", encoding="utf-8") as f:
             ferias_data = json.load(f)
         
         retornando_hoje = []
@@ -62,7 +62,7 @@ def get_dynamic_header_message():
 
     # 3. Feriados
     try:
-        with open("/home/ubuntu/feriados.json", "r", encoding="utf-8") as f:
+        with open("feriados.json", "r", encoding="utf-8") as f:
             feriados_data = json.load(f)
         
         hoje_feriados = []
@@ -87,7 +87,7 @@ def get_dynamic_header_message():
 
 if __name__ == "__main__":
     header_html = get_dynamic_header_message()
-    # Salvar no diretório de upload onde o index.html está localizado
-    with open("/home/ubuntu/upload/header_message.html", "w", encoding="utf-8") as f_out:
+    # Salvar no diretório raiz do repositório
+    with open("header_message.html", "w", encoding="utf-8") as f_out:
         f_out.write(header_html)
     print(f"Arquivo header_message.html gerado com a mensagem: {header_html}")
