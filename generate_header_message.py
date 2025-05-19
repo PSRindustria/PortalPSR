@@ -45,7 +45,7 @@ def get_dynamic_header_message():
 
     # 2. Retorno de Férias
     try:
-        with open("/home/ubuntu/portal_data/ferias.json", "r", encoding="utf-8") as f:
+        with open("/home/ubuntu/ferias.json", "r", encoding="utf-8") as f:
             ferias_data = json.load(f)
         
         retornando_hoje = []
@@ -62,7 +62,7 @@ def get_dynamic_header_message():
 
     # 3. Feriados
     try:
-        with open("/home/ubuntu/portal_data/feriados.json", "r", encoding="utf-8") as f:
+        with open("/home/ubuntu/feriados.json", "r", encoding="utf-8") as f:
             feriados_data = json.load(f)
         
         hoje_feriados = []
