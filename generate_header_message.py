@@ -80,13 +80,14 @@ def get_dynamic_header_message():
         print(f"Erro ao processar feriados: {e}")
 
     if not messages:
-        return "<p>Aqui é o seu espaço. Aqui é PSR!</p>"
+        return "Aqui é o <stong>seu espaço</stong>. Aqui é <stong>PSR!</stong>"
     else:
         # Join messages with <br> only if there are multiple messages. The <br> inside anniversary message handles its own line break.
-        return "<p>" + "<br>".join(messages) + "</p>"
+        return "<br>".join(messages)
 
 if __name__ == "__main__":
     header_html = get_dynamic_header_message()
-    with open("/home/ubuntu/header_message.html", "w", encoding="utf-8") as f_out:
+    # Salvar no diretório de upload onde o index.html está localizado
+    with open("/home/ubuntu/upload/header_message.html", "w", encoding="utf-8") as f_out:
         f_out.write(header_html)
     print(f"Arquivo header_message.html gerado com a mensagem: {header_html}")
