@@ -361,11 +361,54 @@
     }
 
     // 7) Renderiza Férias
-    async function renderFerias() {
-      const data = await fetchData('ferias.json');
-      const grid = document.getElementById('ferias-grid-container');
-      const tb   = document.getElementById('ferias-tbody');
-      if (!grid || !tb) return;
+async function renderFerias() {
+  const data = await fetchData('ferias.json');
+  const grid = document.getElementById('ferias-grid-container');
+  const tb   = document.getElementById('ferias-tbody');
+  if (!grid || !tb) return;
+
+  // --- INÍCIO DO FILTRO ---
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+
+  // Filtra férias: só mostra quem retorna HOJE ou depois
+  const dataFiltrada = (data || []).filter(f => {
+    const [dia, mes, ano] = f.retorno.split('/');
+    const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
+    dataRetorno.setHours(0,0,0,0);
+    return dataRetorno >= hoje;
+  });
+
+  grid.innerHTML = '';
+  tb.innerHTML   = '';
+
+  if (dataFiltrada.length === 0) {
+    grid.innerHTML = '<p>Nenhum colaborador em férias no momento.</p>';
+    tb.innerHTML = '<tr><td colspan="4">Nenhum colaborador em férias no momento.</td></tr>';
+    return;
+  }
+  dataFiltrada.forEach(f => {
+    grid.innerHTML += `
+      <div class="ferias-card">
+        <div class="ferias-card-header">
+          <i class="fas fa-plane-departure ferias-card-icon"></i>
+          <span class="ferias-card-colaborador">${f.colaborador}</span>
+        </div>
+        <div class="ferias-dates">
+          <span class="ferias-card-inicio">${f.inicio}</span>
+          <span class="ferias-card-retorno">${f.retorno}</span>
+        </div>
+        <p class="ferias-card-departamento">${f.departamento}</p>
+      </div>`;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${f.colaborador}</td>
+      <td>${f.departamento}</td>
+      <td>${f.inicio}</td>
+      <td>${f.retorno}</td>`;
+    tb.appendChild(tr);
+  });
+}
 
       if (!data) {
         grid.innerHTML = '<p>Erro ao carregar férias.</p>';
