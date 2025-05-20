@@ -9,7 +9,7 @@
   --cinza-escuro: #4B4B4B;
   --branco: #FFFFFF;
   --dourado: #FFB600;
-  --cinza-claro-ferias-bg: #f0f3f8; /* Usado em .ferias-card */
+  --cinza-claro-ferias-bg: #FFFFFF; /* Usado em .ferias-card */
   --dourado-claro: #f0c14b; /* Usado no footer */
   --transicao: 0.3s ease; /* Usado no footer */
 }
