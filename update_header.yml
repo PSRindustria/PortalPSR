@@ -1,16 +1,12 @@
-name: Atualizar Header Message
+name: Atualizar Mensagem do Banner
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Executa diariamente à meia-noite
-  workflow_dispatch:  # Permite execução manual
-  push:
-    paths:
-      - 'aniversariantes.json'
-      - 'ferias.json'
+    - cron: '0 0 * * *'  # Executa diariamente à meia-noite UTC
+  workflow_dispatch:      # Permite execução manual
 
 jobs:
-  update-header:
+  update-message:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout código
@@ -19,8 +15,11 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.10'
           
+      - name: Instalar dependências
+        run: pip install unidecode
+        
       - name: Executar script
         run: python generate_header_message.py
         
@@ -29,5 +28,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add header_message.html
-          git commit -m "Atualiza mensagem do header [automated]" || echo "Sem alterações para commit"
+          git commit -m "Atualiza mensagem do banner" || echo "Sem alterações para commit"
           git push
