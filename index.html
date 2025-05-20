@@ -409,8 +409,7 @@ async function renderFerias() {
     tb.appendChild(tr);
   });
 }
-
-      if (!data) {
+      if (data === null) {
         grid.innerHTML = '<p>Erro ao carregar férias.</p>';
         tb.innerHTML = '<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>';
         return;
