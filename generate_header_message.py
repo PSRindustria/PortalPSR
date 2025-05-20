@@ -40,10 +40,10 @@ def main():
     diretorio = os.path.dirname(os.path.abspath(__file__))
     
     # Caminhos dos arquivos
-    aniversariantes_path = os.path.join(diretorio, 'upload', 'aniversariantes.json')
-    ferias_path = os.path.join(diretorio, 'upload', 'ferias.json')
-    feriados_path = os.path.join(diretorio, 'upload', 'feriados.json')
-    header_message_path = os.path.join(diretorio, 'upload', 'header_message.html')
+    aniversariantes_path = os.path.join(diretorio, 'aniversariantes.json')
+    ferias_path = os.path.join(diretorio, 'ferias.json')
+    feriados_path = os.path.join(diretorio, 'feriados.json')
+    header_message_path = os.path.join(diretorio, 'header_message.html')
     
     # Data atual
     hoje = datetime.datetime.now()
