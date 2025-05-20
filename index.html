@@ -17,8 +17,7 @@
   <!-- CSS principal -->
   <link rel="stylesheet" href="style.css" />
   <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
+  <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
   />
 </head>
@@ -29,7 +28,7 @@
   <!-- BANNER -->
   <section class="banner" id="inicio">
     <h1>Bem-vindo ao PortalPSR</h1>
-    <p>Aqui é o seu espaço. Aqui é PSR!</p> <!-- This will be updated by JS -->
+    <p>Aqui é o seu espaço. Aqui é PSR!</p> <!-- Este texto será atualizado via JS -->
     <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
   </section>
 
@@ -360,68 +359,34 @@
       });
     }
 
-    // 7) Renderiza Férias
-async function renderFerias() {
-  const data = await fetchData('ferias.json');
-  const grid = document.getElementById('ferias-grid-container');
-  const tb   = document.getElementById('ferias-tbody');
-  if (!grid || !tb) return;
+    // 7) Renderiza Férias (apenas UMA função, filtrando quem já voltou)
+    async function renderFerias() {
+      const data = await fetchData('ferias.json');
+      const grid = document.getElementById('ferias-grid-container');
+      const tb   = document.getElementById('ferias-tbody');
+      if (!grid || !tb) return;
 
-  // --- INÍCIO DO FILTRO ---
-  const hoje = new Date();
-  hoje.setHours(0,0,0,0);
+      // --- INÍCIO DO FILTRO ---
+      const hoje = new Date();
+      hoje.setHours(0,0,0,0);
 
-  // Filtra férias: só mostra quem retorna HOJE ou depois
-  const dataFiltrada = (data || []).filter(f => {
-    const [dia, mes, ano] = f.retorno.split('/');
-    const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
-    dataRetorno.setHours(0,0,0,0);
-    return dataRetorno >= hoje;
-  });
+      // Filtra férias: só mostra quem retorna HOJE ou depois
+      const dataFiltrada = (data || []).filter(f => {
+        const [dia, mes, ano] = f.retorno.split('/');
+        const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
+        dataRetorno.setHours(0,0,0,0);
+        return dataRetorno >= hoje;
+      });
 
-  grid.innerHTML = '';
-  tb.innerHTML   = '';
-
-  if (dataFiltrada.length === 0) {
-    grid.innerHTML = '<p>Nenhum colaborador em férias no momento.</p>';
-    tb.innerHTML = '<tr><td colspan="4">Nenhum colaborador em férias no momento.</td></tr>';
-    return;
-  }
-  dataFiltrada.forEach(f => {
-grid.innerHTML += `
-  <div class="ferias-card">
-    <div class="ferias-card-header">
-      <i class="fas fa-plane-departure ferias-card-icon"></i>
-      <span class="ferias-card-colaborador">${f.colaborador}</span>
-    </div>
-    <div class="ferias-dates">
-      <span class="ferias-card-inicio">${f.inicio}</span>
-      <span class="ferias-card-retorno">${f.retorno}</span>
-    </div>
-    <p class="ferias-card-departamento">${f.departamento}</p>
-  </div>`;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${f.colaborador}</td>
-      <td>${f.departamento}</td>
-      <td>${f.inicio}</td>
-      <td>${f.retorno}</td>`;
-    tb.appendChild(tr);
-  });
-}
-      if (data === null) {
-        grid.innerHTML = '<p>Erro ao carregar férias.</p>';
-        tb.innerHTML = '<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>';
-        return;
-      }
       grid.innerHTML = '';
       tb.innerHTML   = '';
-      if (data.length === 0) {
+
+      if (dataFiltrada.length === 0) {
         grid.innerHTML = '<p>Nenhum colaborador em férias no momento.</p>';
         tb.innerHTML = '<tr><td colspan="4">Nenhum colaborador em férias no momento.</td></tr>';
         return;
       }
-      data.forEach(f => {
+      dataFiltrada.forEach(f => {
         grid.innerHTML += `
           <div class="ferias-card">
             <div class="ferias-card-header">
@@ -442,6 +407,12 @@ grid.innerHTML += `
           <td>${f.retorno}</td>`;
         tb.appendChild(tr);
       });
+
+      // Se der erro no fetch:
+      if (data === null) {
+        grid.innerHTML = '<p>Erro ao carregar férias.</p>';
+        tb.innerHTML = '<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>';
+      }
     }
 
     // 8) Renderiza CIPA
@@ -475,9 +446,10 @@ grid.innerHTML += `
     renderAniversariantes();
     renderFerias();
     renderCIPA();
-
   });
   </script>
+
+  <!-- Banner dinâmico inteligente (aniversário, férias, feriado) -->
   <script>
 // Lista de nomes femininos comuns no Brasil
 const nomesFemininos = [
@@ -633,11 +605,9 @@ function juntarNomes(nomes) {
 
 // Função para pluralizar verbo e pronome
 function getPluralGenero(generos) {
-  // generos = array de "feminino"/"masculino"
   const femininoCount = generos.filter(g => g === "feminino").length;
   if (femininoCount === generos.length) return {pronome: "elas", verboVoltar: "voltam", verboAniv: "fazem"};
   if (femininoCount === 0) return {pronome: "eles", verboVoltar: "voltam", verboAniv: "fazem"};
-  // misto
   return {pronome: "eles", verboVoltar: "voltam", verboAniv: "fazem"};
 }
 
