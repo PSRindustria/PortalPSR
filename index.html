@@ -582,6 +582,23 @@ async function carregaJSON(arquivo) {
   }
 }
 
+// Função utilitária para juntar nomes: "A", "A e B", "A, B e C"
+function juntarNomes(nomes) {
+  if (nomes.length === 1) return nomes[0];
+  if (nomes.length === 2) return nomes[0] + ' e ' + nomes[1];
+  return nomes.slice(0, -1).join(', ') + ' e ' + nomes[nomes.length - 1];
+}
+
+// Função para pluralizar verbo e pronome
+function getPluralGenero(generos) {
+  // generos = array de "feminino"/"masculino"
+  const femininoCount = generos.filter(g => g === "feminino").length;
+  if (femininoCount === generos.length) return {pronome: "elas", verboVoltar: "voltam", verboAniv: "fazem"};
+  if (femininoCount === 0) return {pronome: "eles", verboVoltar: "voltam", verboAniv: "fazem"};
+  // misto
+  return {pronome: "eles", verboVoltar: "voltam", verboAniv: "fazem"};
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const hoje = new Date();
   const dia = String(hoje.getDate()).padStart(2, '0');
@@ -591,33 +608,49 @@ document.addEventListener('DOMContentLoaded', async () => {
   const dataCompleta = `${dia}/${mes}/${ano}`;
   let mensagens = [];
 
-  // Aniversariantes
+  // ===== Aniversariantes =====
   const aniversariantes = await carregaJSON('aniversariantes.json');
+  let nomesAniv = [];
+  let generosAniv = [];
   if (aniversariantes && Array.isArray(aniversariantes)) {
     aniversariantes.forEach(aniversariante => {
       if (aniversariante.data === dataAtualStr) {
-        const nome = aniversariante.nome;
-        const genero = determinarGenero(nome);
-        const pronome = genero === "feminino" ? "ela" : "ele";
-        mensagens.push(`🥳 Hoje é aniversário do${genero === "feminino" ? 'a' : ''} ${nome}, dê os parabéns para ${pronome}!`);
+        nomesAniv.push(aniversariante.nome);
+        generosAniv.push(determinarGenero(aniversariante.nome));
       }
     });
+    if (nomesAniv.length === 1) {
+      const pronome = generosAniv[0] === "feminino" ? "ela" : "ele";
+      mensagens.push(`🥳 Hoje é aniversário do${generosAniv[0] === "feminino" ? 'a' : ''} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`);
+    } else if (nomesAniv.length > 1) {
+      const nomesStr = juntarNomes(nomesAniv);
+      const plural = getPluralGenero(generosAniv);
+      mensagens.push(`🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns para ${plural.pronome}!`);
+    }
   }
 
-  // Retorno de férias
+  // ===== Retorno de férias =====
   const ferias = await carregaJSON('ferias.json');
+  let nomesFerias = [];
+  let generosFerias = [];
   if (ferias && Array.isArray(ferias)) {
     ferias.forEach(f => {
       if (f.retorno === dataCompleta) {
-        const nome = f.colaborador;
-        const genero = determinarGenero(nome);
-        const pronome = genero === "feminino" ? "ela" : "ele";
-        mensagens.push(`✈️ Hoje, ${nome} volta de férias. Dê as boas-vindas a ${pronome}!`);
+        nomesFerias.push(f.colaborador);
+        generosFerias.push(determinarGenero(f.colaborador));
       }
     });
+    if (nomesFerias.length === 1) {
+      const pronome = generosFerias[0] === "feminino" ? "ela" : "ele";
+      mensagens.push(`✈️ Hoje, ${nomesFerias[0]} volta de férias. Dê as boas-vindas a ${pronome}!`);
+    } else if (nomesFerias.length > 1) {
+      const nomesStr = juntarNomes(nomesFerias);
+      const plural = getPluralGenero(generosFerias);
+      mensagens.push(`✈️ Hoje, ${nomesStr} voltam de férias. Dê as boas-vindas a ${plural.pronome}!`);
+    }
   }
 
-  // Feriados
+  // ===== Feriados =====
   const feriados = await carregaJSON('feriados.json');
   if (feriados && Array.isArray(feriados)) {
     feriados.forEach(f => {
