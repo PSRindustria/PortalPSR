@@ -388,18 +388,18 @@ async function renderFerias() {
     return;
   }
   dataFiltrada.forEach(f => {
-    grid.innerHTML += `
-      <div class="ferias-card">
-        <div class="ferias-card-header">
-          <i class="fas fa-plane-departure ferias-card-icon"></i>
-          <span class="ferias-card-colaborador">${f.colaborador}</span>
-        </div>
-        <div class="ferias-dates">
-          <span class="ferias-card-inicio">${f.inicio}</span>
-          <span class="ferias-card-retorno">${f.retorno}</span>
-        </div>
-        <p class="ferias-card-departamento">${f.departamento}</p>
-      </div>`;
+grid.innerHTML += `
+  <div class="ferias-card">
+    <div class="ferias-card-header">
+      <i class="fas fa-plane-departure ferias-card-icon"></i>
+      <span class="ferias-card-colaborador">${f.colaborador}</span>
+    </div>
+    <div class="ferias-dates">
+      <span class="ferias-card-inicio">${f.inicio}</span>
+      <span class="ferias-card-retorno">${f.retorno}</span>
+    </div>
+    <p class="ferias-card-departamento">${f.departamento}</p>
+  </div>`;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${f.colaborador}</td>
