@@ -235,39 +235,6 @@
       }
     }
     
-    // Função para carregar a mensagem dinâmica do banner
-    async function renderDynamicBannerMessage() {
-      try {
-        // Assumes generate_header_message.py is run to create header_message.html
-        const response = await fetch('header_message.html?t=' + Date.now()); 
-        if (!response.ok) {
-          throw new Error('Failed to load header_message.html');
-        }
-        const messageHtml = await response.text();
-        const bannerParagraph = document.querySelector('.banner > p');
-        if (bannerParagraph) {
-          bannerParagraph.innerHTML = messageHtml;
-        } else {
-          const banner = document.querySelector('.banner');
-          if (banner) {
-            const h1 = banner.querySelector('h1');
-            const newP = document.createElement('p');
-            newP.innerHTML = messageHtml;
-            // Insert after h1 or as first child if h1 not present
-            if (h1 && h1.nextSibling) banner.insertBefore(newP, h1.nextSibling);
-            else if (h1) banner.appendChild(newP);
-            else banner.insertBefore(newP, banner.firstChild);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading dynamic banner message:', error);
-        const bannerParagraph = document.querySelector('.banner > p');
-        if (bannerParagraph) {
-            bannerParagraph.innerHTML = "Aqui é o seu espaço. Aqui é PSR!"; // Default message
-        }
-      }
-    }
-
     // 4) Renderiza Novidades
     async function renderNovidades() {
       const data = await fetchData('novidades.json');
@@ -461,7 +428,6 @@
     }
 
     // 9) Dispara todas as renderizações
-    renderDynamicBannerMessage();
     renderNovidades();
     renderReflexao();
     renderAniversariantes();
