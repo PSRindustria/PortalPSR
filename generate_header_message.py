@@ -52,10 +52,25 @@ def main():
     data_atual_str = f"{dia_atual:02d}/{mes_atual:02d}"
     data_completa = hoje.strftime("%d/%m/%Y")
     
-    # Mensagem padrão
-    mensagem = "Aqui é o seu espaço. Aqui é PSR!"
+    # Inicializa lista de mensagens
+    mensagens = []
     
-    # Verificar retorno de férias (prioridade máxima)
+    # Verificar aniversariantes
+    try:
+        with open(aniversariantes_path, 'r', encoding='utf-8') as f:
+            aniversariantes_data = json.load(f)
+            
+        for aniversariante in aniversariantes_data:
+            if aniversariante['data'] == data_atual_str:
+                nome = aniversariante['nome']
+                genero = determinar_genero(nome)
+                pronome = "ela" if genero == "feminino" else "ele"
+                # Emoji de festa 🥳 para aniversariantes
+                mensagens.append(f"🥳 Hoje é aniversário do {nome}, dê os parabéns para {pronome}!")
+    except Exception as e:
+        print(f"Erro ao processar arquivo de aniversariantes: {e}")
+    
+    # Verificar retorno de férias
     try:
         with open(ferias_path, 'r', encoding='utf-8') as f:
             ferias_data = json.load(f)
@@ -65,48 +80,36 @@ def main():
                 nome = ferias['colaborador']
                 genero = determinar_genero(nome)
                 pronome = "ela" if genero == "feminino" else "ele"
-                mensagem = f"Hoje, {nome} volta de férias. Dê as boas-vindas a {pronome}!"
-                # Encontrou retorno de férias, não precisa verificar outros eventos
-                break
+                # Adiciona emoji de avião chegando ✈️
+                mensagens.append(f"✈️ Hoje, {nome} volta de férias. Dê as boas-vindas a {pronome}!")
     except Exception as e:
         print(f"Erro ao processar arquivo de férias: {e}")
     
-    # Se não encontrou retorno de férias, verifica aniversariantes
-    if mensagem == "Aqui é o seu espaço. Aqui é PSR!":
-        try:
-            with open(aniversariantes_path, 'r', encoding='utf-8') as f:
-                aniversariantes_data = json.load(f)
-                
-            for aniversariante in aniversariantes_data:
-                if aniversariante['data'] == data_atual_str:
-                    nome = aniversariante['nome']
-                    genero = determinar_genero(nome)
-                    pronome = "ela" if genero == "feminino" else "ele"
-                    mensagem = f"Hoje é aniversário do {nome}, dê os parabéns para {pronome}!"
-                    # Encontrou aniversariante, não precisa verificar feriados
-                    break
-        except Exception as e:
-            print(f"Erro ao processar arquivo de aniversariantes: {e}")
+    # Verificar feriados
+    try:
+        with open(feriados_path, 'r', encoding='utf-8') as f:
+            feriados_data = json.load(f)
+            
+        for feriado in feriados_data:
+            if feriado['data'] == data_atual_str:
+                nome_feriado = feriado['nome']
+                # Adiciona emoji de calendário 📅
+                mensagens.append(f"📅 Hoje é {nome_feriado}. Bom feriado!")
+    except Exception as e:
+        print(f"Erro ao processar arquivo de feriados: {e}")
     
-    # Se não encontrou retorno de férias nem aniversariante, verifica feriados
-    if mensagem == "Aqui é o seu espaço. Aqui é PSR!":
-        try:
-            with open(feriados_path, 'r', encoding='utf-8') as f:
-                feriados_data = json.load(f)
-                
-            for feriado in feriados_data:
-                if feriado['data'] == data_atual_str:
-                    nome_feriado = feriado['nome']
-                    mensagem = f"Hoje é {nome_feriado}. Bom feriado!"
-                    break
-        except Exception as e:
-            print(f"Erro ao processar arquivo de feriados: {e}")
+    # Combinar mensagens ou usar mensagem padrão
+    if mensagens:
+        # Juntar com quebras de linha HTML
+        mensagem_final = "<br>".join(mensagens)
+    else:
+        mensagem_final = "Aqui é o seu espaço. Aqui é PSR!"
     
     # Escrever a mensagem no arquivo header_message.html
     try:
         with open(header_message_path, 'w', encoding='utf-8') as f:
-            f.write(mensagem)
-        print(f"Mensagem do dia gerada com sucesso: {mensagem}")
+            f.write(mensagem_final)
+        print(f"Mensagem do dia gerada com sucesso: {mensagem_final}")
     except Exception as e:
         print(f"Erro ao escrever arquivo header_message.html: {e}")
 
