@@ -594,7 +594,7 @@ footer .footer-content {
    }
    /* Garante que o hover não sobrescreva totalmente o piscar */
    .ferias-table tbody tr.retorno-hoje-piscar:hover {
-     background-color: #a8dde9; /* Um tom ligeiramente diferente no hover */
+     background-color: #ffffff; /* Um tom ligeiramente diferente no hover */
    }
  }
 
