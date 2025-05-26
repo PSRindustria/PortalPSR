@@ -576,8 +576,8 @@ footer .footer-content {
    0%, 100% {
      opacity: 1;
    }
-   10% {
-     opacity: 0.1;
+   30% {
+     opacity: 0.3;
    }
  }
 
@@ -589,7 +589,7 @@ footer .footer-content {
  /* Aplicação da animação para DESKTOP (linha da tabela) */
  @media (min-width: 769px) {
    .ferias-table tbody tr.retorno-hoje-piscar {
-     animation: piscar-azul-suave 1.8s infinite ease-in-out;
+     animation: piscar-azul-suave 2.5s infinite ease-in-out;
      background-color: var(--azul-claro); /* Cor base da animação */
    }
    /* Garante que o hover não sobrescreva totalmente o piscar */
