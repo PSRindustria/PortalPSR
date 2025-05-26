@@ -358,62 +358,114 @@
         container.appendChild(card);
       });
     }
+ ```javascript
+ // 7) Renderiza Férias (MODIFICADO para destacar retorno hoje)
+ async function renderFerias() {
+   const data = await fetchData("ferias.json");
+   const grid = document.getElementById("ferias-grid-container");
+   const tb   = document.getElementById("ferias-tbody");
+   if (!grid || !tb) return;
 
-    // 7) Renderiza Férias (apenas UMA função, filtrando quem já voltou)
-    async function renderFerias() {
-      const data = await fetchData('ferias.json');
-      const grid = document.getElementById('ferias-grid-container');
-      const tb   = document.getElementById('ferias-tbody');
-      if (!grid || !tb) return;
+   const hoje = new Date();
+   hoje.setHours(0, 0, 0, 0); // Zera horas para comparar apenas a data
 
-      // --- INÍCIO DO FILTRO ---
-      const hoje = new Date();
-      hoje.setHours(0,0,0,0);
+   // Função auxiliar para comparar datas (dd/mm/yyyy)
+   function isSameDate(dateStr, comparisonDate) {
+     try {
+       const [dia, mes, ano] = dateStr.split("/");
+       // Validação básica do formato
+       if (!dia || !mes || !ano || isNaN(Number(dia)) || isNaN(Number(mes)) || isNaN(Number(ano))) {
+         throw new Error("Formato de data inválido");
+       }
+       const dataObj = new Date(Number(ano), Number(mes) - 1, Number(dia));
+       // Verifica se a data criada é válida (ex: new Date(2023, 1, 30) é inválido)
+       if (isNaN(dataObj.getTime()) || dataObj.getDate() !== Number(dia) || dataObj.getMonth() !== Number(mes) - 1 || dataObj.getFullYear() !== Number(ano)) {
+          throw new Error("Data inválida após criação do objeto Date");
+       }
+       dataObj.setHours(0, 0, 0, 0);
+       return dataObj.getTime() === comparisonDate.getTime();
+     } catch (e) {
+       console.error("Erro ao parsear ou validar data:", dateStr, e);
+       return false;
+     }
+   }
 
-      // Filtra férias: só mostra quem retorna HOJE ou depois
-      const dataFiltrada = (data || []).filter(f => {
-        const [dia, mes, ano] = f.retorno.split('/');
-        const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
-        dataRetorno.setHours(0,0,0,0);
-        return dataRetorno >= hoje;
-      });
-
-      grid.innerHTML = '';
-      tb.innerHTML   = '';
-
-      if (dataFiltrada.length === 0) {
-        grid.innerHTML = '<p>Nenhum colaborador em férias no momento.</p>';
-        tb.innerHTML = '<tr><td colspan="4">Nenhum colaborador em férias no momento.</td></tr>';
-        return;
+   // Filtra férias: só mostra quem retorna HOJE ou depois
+   const dataFiltrada = (data || []).filter(f => {
+      try {
+         const [dia, mes, ano] = f.retorno.split("/");
+          // Validação básica do formato
+         if (!dia || !mes || !ano || isNaN(Number(dia)) || isNaN(Number(mes)) || isNaN(Number(ano))) {
+           throw new Error("Formato de data inválido para filtro");
+         }
+         const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
+         // Verifica se a data criada é válida
+         if (isNaN(dataRetorno.getTime()) || dataRetorno.getDate() !== Number(dia) || dataRetorno.getMonth() !== Number(mes) - 1 || dataRetorno.getFullYear() !== Number(ano)) {
+            throw new Error("Data de retorno inválida após criação do objeto Date para filtro");
+         }
+         dataRetorno.setHours(0, 0, 0, 0);
+         return dataRetorno >= hoje;
+      } catch (e) {
+         console.error("Erro ao filtrar data de retorno:", f.retorno, e);
+         return false; // Não inclui se a data for inválida
       }
-      dataFiltrada.forEach(f => {
-        grid.innerHTML += `
-          <div class="ferias-card">
-            <div class="ferias-card-header">
-              <i class="fas fa-plane-departure ferias-card-icon"></i>
-              <span class="ferias-card-colaborador">${f.colaborador}</span>
-            </div>
-            <div class="ferias-dates">
-              <span class="ferias-card-inicio">${f.inicio}</span>
-              <span class="ferias-card-retorno">${f.retorno}</span>
-            </div>
-            <p class="ferias-card-departamento">${f.departamento}</p>
-          </div>`;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${f.colaborador}</td>
-          <td>${f.departamento}</td>
-          <td>${f.inicio}</td>
-          <td>${f.retorno}</td>`;
-        tb.appendChild(tr);
-      });
+   });
 
-      // Se der erro no fetch:
-      if (data === null) {
-        grid.innerHTML = '<p>Erro ao carregar férias.</p>';
-        tb.innerHTML = '<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>';
-      }
-    }
+   grid.innerHTML = ""; // Limpa grid
+   tb.innerHTML   = ""; // Limpa tabela
+
+   if (data === null) { // Trata erro no fetch primeiro
+     const errorMsg = "<p>Erro ao carregar férias.</p>";
+     grid.innerHTML = errorMsg;
+     tb.innerHTML = `<tr><td colspan="4">${errorMsg}</td></tr>`;
+     return;
+   }
+
+   if (dataFiltrada.length === 0) {
+     const noDataMsg = "<p>Nenhum colaborador em férias retornando hoje ou futuramente.</p>";
+     grid.innerHTML = noDataMsg;
+     tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`;
+     return;
+   }
+
+   // Processa os dados filtrados
+   dataFiltrada.forEach(f => {
+     const retornaHoje = isSameDate(f.retorno, hoje); // Verifica se o retorno é hoje
+
+     // --- Cria o Card para Mobile --- (Usando createElement para adicionar classe dinamicamente)
+     const cardDiv = document.createElement("div");
+     cardDiv.className = "ferias-card"; // Classe base
+     if (retornaHoje) {
+       cardDiv.classList.add("retorno-hoje-piscar"); // Adiciona classe se retorna hoje
+     }
+     // Define o conteúdo interno do card
+     cardDiv.innerHTML = `
+       <div class="ferias-card-header">
+         <i class="fas fa-plane-departure ferias-card-icon"></i>
+         <span class="ferias-card-colaborador">${f.colaborador}</span>
+       </div>
+       <div class="ferias-dates">
+         <span class="ferias-card-inicio">Início: ${f.inicio}</span>
+         <span class="ferias-card-retorno">Retorno: ${f.retorno}</span>
+       </div>
+       <p class="ferias-card-departamento">${f.departamento}</p>
+     `;
+     grid.appendChild(cardDiv); // Adiciona o card ao grid
+
+     // --- Cria a Linha para Desktop --- (Usando createElement)
+     const tr = document.createElement("tr");
+     if (retornaHoje) {
+       tr.classList.add("retorno-hoje-piscar"); // Adiciona classe se retorna hoje
+     }
+     // Define o conteúdo interno da linha
+     tr.innerHTML = `
+       <td>${f.colaborador}</td>
+       <td>${f.departamento}</td>
+       <td>${f.inicio}</td>
+       <td>${f.retorno}</td>`;
+     tb.appendChild(tr); // Adiciona a linha à tabela
+   });
+ }
 
     // 8) Renderiza CIPA
     async function renderCIPA() {
