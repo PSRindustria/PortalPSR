@@ -576,8 +576,8 @@ footer .footer-content {
    0%, 100% {
      opacity: 1;
    }
-   90% {
-     opacity: 1.6;
+   10% {
+     opacity: 0.1;
    }
  }
 
