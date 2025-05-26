@@ -568,7 +568,6 @@ footer .footer-content {
     flex-basis: 100%; /* Garante 1 card por linha */
   }
 }
- ```css
 /* ==================================================
     ANIMAÇÃO PISCAR SUAVE AZUL PARA RETORNO DE FÉRIAS
     ================================================== */
@@ -615,4 +614,3 @@ footer .footer-content {
      box-shadow: 0 0 20px 8px rgba(177, 234, 251, 1), 0 3px 8px rgba(0,0,0,0.20); /* Sombra azul mais intensa + sombra original */
    }
  }
- ```
