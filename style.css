@@ -568,3 +568,51 @@ footer .footer-content {
     flex-basis: 100%; /* Garante 1 card por linha */
   }
 }
+ ```css
+/* ==================================================
+    ANIMAÇÃO PISCAR SUAVE AZUL PARA RETORNO DE FÉRIAS
+    ================================================== */
+
+ @keyframes piscar-azul-suave {
+   0%, 100% {
+     opacity: 1;
+   }
+   50% {
+     opacity: 0.6;
+   }
+ }
+
+ /* Estilo base para a classe (pode ser vazio se não houver estilo comum) */
+ .retorno-hoje-piscar {
+   /* Adicione aqui estilos comuns se necessário */
+ }
+
+ /* Aplicação da animação para DESKTOP (linha da tabela) */
+ @media (min-width: 769px) {
+   .ferias-table tbody tr.retorno-hoje-piscar {
+     animation: piscar-azul-suave 1.8s infinite ease-in-out;
+     background-color: var(--azul-claro); /* Cor base da animação */
+   }
+   /* Garante que o hover não sobrescreva totalmente o piscar */
+   .ferias-table tbody tr.retorno-hoje-piscar:hover {
+     background-color: #a8dde9; /* Um tom ligeiramente diferente no hover */
+   }
+ }
+
+ /* Aplicação da animação para MOBILE (card) */
+ @media (max-width: 768px) {
+   .ferias-card.retorno-hoje-piscar {
+     animation: piscar-azul-suave-shadow 1.8s infinite ease-in-out;
+     /* A animação de sombra é definida em um keyframe separado para clareza */
+   }
+ }
+
+ @keyframes piscar-azul-suave-shadow {
+   0%, 100% {
+     box-shadow: 0 0 12px 4px rgba(177, 234, 251, 0.7), 0 3px 8px rgba(0,0,0,0.20); /* Sombra azul + sombra original */
+   }
+   50% {
+     box-shadow: 0 0 20px 8px rgba(177, 234, 251, 1), 0 3px 8px rgba(0,0,0,0.20); /* Sombra azul mais intensa + sombra original */
+   }
+ }
+ ```
