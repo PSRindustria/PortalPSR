@@ -654,11 +654,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     if (nomesFerias.length === 1) {
       const pronome = generosFerias[0] === "feminino" ? "ela" : "ele";
-      mensagens.push(`✈️ Hoje, ${nomesFerias[0]} volta de férias. Dê as boas-vindas a ${pronome}!`);
+      mensagens.push(`✈️ Hoje, ${nomesFerias[0]} retorna de férias. Dê as boas-vindas a ${pronome}!`);
     } else if (nomesFerias.length > 1) {
       const nomesStr = juntarNomes(nomesFerias);
       const plural = getPluralGenero(generosFerias);
-      mensagens.push(`✈️ Hoje, ${nomesStr} voltam de férias. Dê as boas-vindas a ${plural.pronome}!`);
+      mensagens.push(`✈️ Hoje, ${nomesStr} retornam de férias. Dê as boas-vindas a ${plural.pronome}!`);
     }
   }
 
