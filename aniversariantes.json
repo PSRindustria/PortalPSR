@@ -1,31 +1,31 @@
 [
   {
     "nome": "Luciano da Silva",
-    "cargo": "Logistica",
+    "cargo": "Logística",
     "data": "02/06",
     "imagem": "https://i.postimg.cc/sgZpQWWL/Luciano-Costa.png"
   },
   {
     "nome": "Vinicius Ramos",
-    "cargo": "Logistica",
+    "cargo": "Logística",
     "data": "02/06",
     "imagem": "https://i.postimg.cc/mkD9b1R8/Vinicius-Ramos.png"
   },
   {
     "nome": "Lucas dos Santos",
-    "cargo": "Logistica",
+    "cargo": "Logística",
     "data": "06/06",
     "imagem": "https://i.postimg.cc/7YR3Z957/Lucas-Santos.png"
   },
   {
     "nome": "Rafael Pereira",
-    "cargo": "Producao",
+    "cargo": "Produção",
     "data": "06/06",
     "imagem": "https://i.postimg.cc/bJLbc9XZ/Rafael-Pereira.png"
   },
   {
-    "nome": "Adilaine de Pontes",
-    "cargo": "Producao",
+    "nome": "Adilaine Pontes",
+    "cargo": "Produção",
     "data": "07/06",
     "imagem": "https://i.postimg.cc/ZRLPYhNK/Adilaine-Pontes.png"
   },
@@ -37,7 +37,7 @@
   },
   {
     "nome": "Douglas do Amaral",
-    "cargo": "Producao",
+    "cargo": "Produção",
     "data": "12/06",
     "imagem": "https://i.postimg.cc/MKH0wNpq/Douglas-Amaral.png"
   },
@@ -49,13 +49,13 @@
   },
   {
     "nome": "Daniele Rocha",
-    "cargo": "Gente e Gestao",
+    "cargo": "Gente e Gestão",
     "data": "14/06",
     "imagem": "https://i.postimg.cc/zvtnWSps/Daniele-Rocha.png"
   },
   {
     "nome": "Jeferson Conceição",
-    "cargo": "Producao",
+    "cargo": "Produção",
     "data": "16/06",
     "imagem": "https://i.postimg.cc/J7P39Mmp/Jeferson-da-Conceicao.png"
   },
@@ -67,7 +67,7 @@
   },
   {
     "nome": "Jessica Faro",
-    "cargo": "Producao",
+    "cargo": "Produção",
     "data": "24/06",
     "imagem": "https://i.postimg.cc/PJrWPFbb/Jessica-Faro.png"
   }
