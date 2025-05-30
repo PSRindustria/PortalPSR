@@ -1,37 +1,74 @@
 [
   {
-    "nome": "Fernando",
+    "nome": "Luciano da Silva",
+    "cargo": "Logistica",
+    "data": "02/06",
+    "imagem": "https://i.postimg.cc/sgZpQWWL/Luciano-Costa.png"
+  },
+  {
+    "nome": "Vinicius Ramos",
+    "cargo": "Logistica",
+    "data": "02/06",
+    "imagem": "https://i.postimg.cc/mkD9b1R8/Vinicius-Ramos.png"
+  },
+  {
+    "nome": "Lucas dos Santos",
+    "cargo": "Logistica",
+    "data": "06/06",
+    "imagem": "https://i.postimg.cc/7YR3Z957/Lucas-Santos.png"
+  },
+  {
+    "nome": "Rafael Pereira",
+    "cargo": "Producao",
+    "data": "06/06",
+    "imagem": "https://i.postimg.cc/bJLbc9XZ/Rafael-Pereira.png"
+  },
+  {
+    "nome": "Adilaine de Pontes",
+    "cargo": "Producao",
+    "data": "07/06",
+    "imagem": "https://i.postimg.cc/ZRLPYhNK/Adilaine-Pontes.png"
+  },
+  {
+    "nome": "Monique Marques",
+    "cargo": "Comercial",
+    "data": "07/06",
+    "imagem": "https://i.postimg.cc/Zqt6rqF5/Monique-Marques.png"
+  },
+  {
+    "nome": "Douglas do Amaral",
+    "cargo": "Producao",
+    "data": "12/06",
+    "imagem": "https://i.postimg.cc/MKH0wNpq/Douglas-Amaral.png"
+  },
+  {
+    "nome": "Priscila Lima",
+    "cargo": "Comercial",
+    "data": "13/06",
+    "imagem": "https://i.postimg.cc/XJnFzDPM/Priscila-Rodrigues.png"
+  },
+  {
+    "nome": "Daniele Rocha",
     "cargo": "Gente e Gestao",
-    "data": "02/05",
-    "imagem": "https://i.postimg.cc/F77h4GsY/fernando-alcantara.jpg",
-    "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/fernando-alcantara.jpg"
+    "data": "14/06",
+    "imagem": "https://i.postimg.cc/zvtnWSps/Daniele-Rocha.png"
   },
   {
-    "nome": "José Marcelo",
-    "cargo": "Gente e Gestao",
-    "data": "06/05",
-    "imagem": "https://i.postimg.cc/XX2nmt3M/jose-marcelo.jpg",
-    "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/jose-marcelo.jpg"
+    "nome": "Jeferson Pinto",
+    "cargo": "Producao",
+    "data": "16/06",
+    "imagem": "https://i.postimg.cc/J7P39Mmp/Jeferson-da-Conceicao.png"
   },
   {
-    "nome": "Fernanda",
-    "cargo": "QSMS",
-    "data": "13/05",
-    "imagem": "https://i.postimg.cc/qgBkm4PX/fernanda-costa.jpg",
-    "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/fernanda-costa.jpg"
+    "nome": "Paulo Guimaraes",
+    "cargo": "Comercial",
+    "data": "19/06",
+    "imagem": "https://i.postimg.cc/fbcm5hBj/Paulo-Guimaraes.png"
   },
   {
-    "nome": "João Pedro",
-    "cargo": "Financeiro",
-    "data": "13/05",
-    "imagem": "https://i.postimg.cc/CxyB4q5w/joao-pedro.jpg",
-    "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/joao-pedro.jpg"
-  },
-  {
-    "nome": "Elizeu",
-    "cargo": "Financeiro",
-    "data": "17/05",
-    "imagem": "https://i.postimg.cc/n9LpMG4w/elizeu-amaral.jpg",
-    "imagem_fallback": "https://raw.githubusercontent.com/PSRindustria/PortalPSR/main/imagens/elizeu-amaral.jpg"
+    "nome": "Jessica Faro",
+    "cargo": "Producao",
+    "data": "24/06",
+    "imagem": "https://i.postimg.cc/PJrWPFbb/Jessica-Faro.png"
   }
 ]
