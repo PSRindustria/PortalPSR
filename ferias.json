@@ -1,37 +1,25 @@
 [
   {
-    "colaborador": "Iasmim Ferreira",
-    "departamento": "Compras",
-    "inicio": "05/05/2025",
-    "retorno": "20/05/2025"
-  },
-  {
-    "colaborador": "Israel Scoralick",
-    "departamento": "Produção",
-    "inicio": "05/05/2025",
-    "retorno": "26/05/2025"
-  },
-  {
-    "colaborador": "Jorge Felipe",
-    "departamento": "PCP",
-    "inicio": "05/05/2025",
-    "retorno": "19/05/2025"
-  },
-  {
-    "colaborador": "Leandro Santos",
-    "departamento": "Produção",
-    "inicio": "05/05/2025",
-    "retorno": "26/05/2025"
-  },
-  {
-    "colaborador": "Monique Marques",
+    "colaborador": "Rogéria Santos",
     "departamento": "Comercial",
-    "inicio": "05/05/2025",
+    "inicio": "15/05/2025",
+    "retorno": "04/06/2025"
+  },
+  {
+    "colaborador": "Claudio de Oliveira",
+    "departamento": "Produção",
+    "inicio": "15/05/2025",
     "retorno": "04/06/2025"
   },
   {
     "colaborador": "Rhafael Mendes",
     "departamento": "Logistica",
+    "inicio": "05/05/2025",
+    "retorno": "04/06/2025"
+  },
+  {
+    "colaborador": "Monique Marques",
+    "departamento": "Comercial",
     "inicio": "05/05/2025",
     "retorno": "04/06/2025"
   },
@@ -42,21 +30,38 @@
     "retorno": "04/06/2025"
   },
   {
-    "colaborador": "Simone Moura",
-    "departamento": "Logistica",
-    "inicio": "07/05/2025",
-    "retorno": "17/05/2025"
+    "colaborador": "Douglas da Silva",
+    "inicio": "02/06/2025",
+    "retorno": "21/06/2025"
   },
   {
-    "colaborador": "Claudio de Oliveira",
-    "departamento": "Produção",
-    "inicio": "15/05/2025",
-    "retorno": "04/06/2025"
+    "colaborador": "Leandro De Oliveira",
+    "inicio": "02/06/2025",
+    "retorno": "21/06/2025"
   },
   {
-    "colaborador": "Rogéria Santos",
-    "departamento": "Comercial",
-    "inicio": "15/05/2025",
-    "retorno": "04/06/2025"
+    "colaborador": "Pedro Camargo",
+    "inicio": "02/06/2025",
+    "retorno": "01/07/2025"
+  },
+  {
+    "colaborador": "Thamiries Oliveira",
+    "inicio": "02/06/2025",
+    "retorno": "21/06/2025"
+  },
+  {
+    "colaborador": "Vinicius Ramos",
+    "inicio": "02/06/2025",
+    "retorno": "01/07/2025"
+  },
+  {
+    "colaborador": "Solanie Paz",
+    "inicio": "09/06/2025",
+    "retorno": "28/06/2025"
+  },
+  {
+    "colaborador": "Waldir Advincula",
+    "inicio": "12/06/2025",
+    "retorno": "01/07/2025"
   }
 ]
