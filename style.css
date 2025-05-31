@@ -23,7 +23,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--branco);
   color: var(--cinza-escuro);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
@@ -296,7 +296,7 @@ main { padding-bottom: 40px; }
 
 .ferias-card { 
   background: var(--cinza-claro-ferias-bg);
-  padding: 23px 15px 15px 15px; 
+  padding: 40px 15px 15px 15px; 
   border-radius: 15px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.20);
   transition: transform 0.3s;
