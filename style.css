@@ -296,14 +296,15 @@ main { padding-bottom: 40px; }
 
 .ferias-card { 
   background: var(--cinza-claro-ferias-bg);
-  padding: 40px 15px 15px 15px; 
+  padding: 28px 15px 0px 15px; 
   border-radius: 15px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   transition: transform 0.3s;
   text-align: center;
   flex: 1 1 100%; 
   max-width: 350px; 
-  margin: 0 auto 20px; 
+  margin: 0 auto 20px;
+  font-size: 1.2rem;
 }
 .ferias-card:hover { transform: translateY(-5px); }
 .ferias-card-header {
@@ -311,7 +312,7 @@ main { padding-bottom: 40px; }
   margin-bottom: 15px;
 }
 .ferias-card-icon {
-  font-size: 1.4rem; color: var(--azul-marinho);
+  font-size: 1.2rem; color: var(--azul-marinho);
   margin-right: 10px;
 }
 .ferias-dates {
