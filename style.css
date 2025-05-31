@@ -224,7 +224,7 @@ main { padding-bottom: 40px; }
   background: var(--branco);
   padding: 35px 35px 25px 35px;
   border-radius: 15px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   text-align: center;
   transition: transform .3s;
   position: relative;
@@ -298,7 +298,7 @@ main { padding-bottom: 40px; }
   background: var(--cinza-claro-ferias-bg);
   padding: 40px 15px 15px 15px; 
   border-radius: 15px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.20);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   transition: transform 0.3s;
   text-align: center;
   flex: 1 1 100%; 
