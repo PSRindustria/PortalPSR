@@ -29,63 +29,142 @@
       padding-top: 30px;
     }
 
-    /* Controles externos ao container */
+    /* Controles flutuantes para modo nativo */
     .viewer-controls {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      opacity: 0.6;
+      scale: 0.85;
+    }
+
+    .viewer-controls:hover {
+      opacity: 1;
+      scale: 1;
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    /* Controles para modo revista (centralizados no topo) */
+    .viewer-controls.book-mode-controls {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      flex-direction: row;
       gap: 15px;
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      width: fit-content;
-      margin: 0 auto 30px auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      opacity: 0.9;
+      scale: 1;
+    }
+
+    .viewer-controls.book-mode-controls:hover {
+      background: rgba(255, 255, 255, 0.98);
+      opacity: 1;
     }
 
     .control-btn {
-      background: #333;
-      color: white;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
       border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
+      padding: 8px 10px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .control-btn:hover {
-      background: #555;
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .control-btn:active {
+      transform: translateY(0);
     }
 
     .control-btn:disabled {
-      background: #ccc;
+      background: rgba(255, 255, 255, 0.5);
+      color: #999;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Controles no modo revista */
+    .book-mode-controls .control-btn {
+      background: #333;
+      color: white;
+      padding: 10px 15px;
+      font-size: 16px;
+    }
+
+    .book-mode-controls .control-btn:hover {
+      background: #555;
+    }
+
+    .book-mode-controls .control-btn:disabled {
+      background: #ccc;
+      color: #999;
     }
 
     .mode-toggle {
-      background: #007bff;
+      background: #007bff !important;
+      color: white !important;
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+
+    .mode-toggle:hover {
+      background: #0056b3 !important;
+    }
+
+    .book-mode-controls .mode-toggle {
+      background: #007bff !important;
       font-size: 14px;
       padding: 8px 12px;
     }
 
-    .mode-toggle:hover {
-      background: #0056b3;
-    }
-
     .zoom-controls {
       display: flex;
+      flex-direction: column;
       gap: 5px;
-      align-items: center;
+    }
+
+    .book-mode-controls .zoom-controls {
+      flex-direction: row;
+      gap: 5px;
     }
 
     .page-counter {
-      background: #f8f9fa;
+      background: rgba(255, 255, 255, 0.9);
       color: #333;
-      padding: 8px 12px;
-      border-radius: 5px;
+      padding: 6px 10px;
+      border-radius: 8px;
       font-weight: bold;
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    .book-mode-controls .page-counter {
+      background: #f8f9fa;
+      padding: 8px 12px;
+      font-size: 14px;
       border: 1px solid #ddd;
     }
 
@@ -111,13 +190,16 @@
       transition: transform 0.3s ease;
     }
 
-    /* Modo Livro - Simulação de revista com páginas lado a lado */
+    /* Modo Livro - Container maior e mais realista */
     .book-mode {
       display: none;
       position: relative;
-      height: 600px;
-      perspective: 1200px;
-      width: 100%;
+      height: 85vh;
+      min-height: 700px;
+      perspective: 2000px;
+      width: 95vw;
+      max-width: 1400px;
+      margin: 0 auto;
       overflow: hidden;
     }
 
@@ -128,44 +210,117 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      transform-style: preserve-3d;
     }
 
     .book-page {
       position: absolute;
-      width: 48%;
-      height: 90%;
+      width: 45%;
+      height: 85%;
       background: white;
       border: 1px solid #ddd;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.8s ease-in-out;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       transform-origin: center;
       overflow: hidden;
+      border-radius: 8px;
+      transform-style: preserve-3d;
+    }
+
+    .book-page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0,0,0,0.05) 2%, 
+        transparent 5%, 
+        transparent 95%, 
+        rgba(0,0,0,0.05) 98%, 
+        transparent 100%);
+      pointer-events: none;
+      z-index: 2;
     }
 
     .book-page.left-page {
-      left: 1%;
+      left: 2.5%;
       transform-origin: right center;
+      box-shadow: 5px 8px 25px rgba(0,0,0,0.15);
     }
 
     .book-page.right-page {
-      right: 1%;
+      right: 2.5%;
       transform-origin: left center;
+      box-shadow: -5px 8px 25px rgba(0,0,0,0.15);
     }
 
     .book-page img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      border-radius: 8px;
     }
 
-    .book-page.flipping-out {
-      transform: rotateY(-180deg);
+    /* Animações mais realistas de virar página */
+    .book-page.page-turn-left {
+      transform: rotateY(-180deg) translateZ(-10px);
+      box-shadow: -15px 8px 35px rgba(0,0,0,0.3);
       z-index: 10;
     }
 
-    .book-page.flipping-in {
-      transform: rotateY(0deg);
+    .book-page.page-turn-right {
+      transform: rotateY(180deg) translateZ(-10px);
+      box-shadow: 15px 8px 35px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    .book-page.page-turning {
+      transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .book-page.page-reveal {
+      transform: rotateY(0deg) translateZ(0px);
       z-index: 5;
+    }
+
+    /* Efeito de dobra na página */
+    .book-page.page-turning::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0,0,0,0.1) 50%, 
+        rgba(255,255,255,0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .book-page.left-page.page-turning::after {
+      right: 0;
+      background: linear-gradient(-90deg, 
+        transparent, 
+        rgba(0,0,0,0.15) 50%, 
+        rgba(255,255,255,0.2));
+    }
+
+    .book-page.right-page.page-turning::after {
+      left: 0;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0,0,0,0.15) 50%, 
+        rgba(255,255,255,0.2));
+    }
+
+    .book-page.page-turning::after {
+      opacity: 1;
     }
 
     /* Zoom */
@@ -253,6 +408,26 @@
         display: block;
       }
     }
+
+    /* Animação suave para mudança de modo */
+    .journal-container {
+      transition: all 0.5s ease;
+    }
+
+    /* Efeito de fundo para o modo revista */
+    .book-mode::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, 
+        rgba(139, 69, 19, 0.1) 0%, 
+        rgba(101, 67, 33, 0.05) 50%, 
+        rgba(62, 39, 35, 0.1) 100%);
+      z-index: -1;
+    }
   </style>
 </head>
 <body>
@@ -261,34 +436,34 @@
   
   <!-- Conteúdo principal: Visualizador de Jornal -->
   <main>
-    <!-- Controles (apenas desktop) -->
-    <div class="viewer-controls">
-      <button class="control-btn" id="prevBtn" onclick="previousPage()">
+    <!-- Controles flutuantes -->
+    <div class="viewer-controls" id="viewerControls">
+      <button class="control-btn" id="prevBtn" onclick="previousPage()" title="Página Anterior">
         <i class="fas fa-chevron-left"></i>
       </button>
       
       <div class="page-counter">
-        <span id="currentPageNum">1</span> / <span id="totalPages">16</span>
+        <span id="currentPageNum">1</span>/<span id="totalPages">16</span>
       </div>
       
-      <button class="control-btn" id="nextBtn" onclick="nextPage()">
+      <button class="control-btn" id="nextBtn" onclick="nextPage()" title="Próxima Página">
         <i class="fas fa-chevron-right"></i>
       </button>
       
       <div class="zoom-controls">
-        <button class="control-btn" onclick="zoomOut()">
+        <button class="control-btn" onclick="zoomOut()" title="Diminuir Zoom">
           <i class="fas fa-search-minus"></i>
         </button>
-        <button class="control-btn" onclick="zoomIn()">
+        <button class="control-btn" onclick="zoomIn()" title="Aumentar Zoom">
           <i class="fas fa-search-plus"></i>
         </button>
-        <button class="control-btn" onclick="resetZoom()">
+        <button class="control-btn" onclick="resetZoom()" title="Resetar Zoom">
           <i class="fas fa-expand"></i>
         </button>
       </div>
       
-      <button class="control-btn mode-toggle" id="modeToggle" onclick="toggleMode()">
-        Modo Livro
+      <button class="control-btn mode-toggle" id="modeToggle" onclick="toggleMode()" title="Alternar Modo">
+        Revista
       </button>
     </div>
 
@@ -301,7 +476,7 @@
         <img class="page-image" src="https://i.postimg.cc/C1pgSKKL/02-Miss-o-e-Valores.jpg" alt="Página 3" loading="lazy">
         <img class="page-image" src="https://i.postimg.cc/BbqfPwDr/03-Tema-do-M-s.jpg" alt="Página 4" loading="lazy">
         <img class="page-image" src="https://i.postimg.cc/G2P121BP/04-Vale-a-Leitura.jpg" alt="Página 5" loading="lazy">
-        <img class="page-image" src="https://i.postimg.cc/qqjVsXxz/05-S-ries-e-Filmes.jpg" alt="Página 6" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/qqjVsXzz/05-S-ries-e-Filmes.jpg" alt="Página 6" loading="lazy">
         <img class="page-image" src="https://i.postimg.cc/FsHQ98hc/06-Reflex-o.jpg" alt="Página 7" loading="lazy">
         <img class="page-image" src="https://i.postimg.cc/Y23HBMBM/07-Bem-Estar.jpg" alt="Página 8" loading="lazy">
         <img class="page-image" src="https://i.postimg.cc/Hsv1jzLN/08-Meio-Ambiente.jpg" alt="Página 9" loading="lazy">
@@ -341,7 +516,7 @@
       'https://i.postimg.cc/C1pgSKKL/02-Miss-o-e-Valores.jpg',
       'https://i.postimg.cc/BbqfPwDr/03-Tema-do-M-s.jpg',
       'https://i.postimg.cc/G2P121BP/04-Vale-a-Leitura.jpg',
-      'https://i.postimg.cc/qqjVsXxz/05-S-ries-e-Filmes.jpg',
+      'https://i.postimg.cc/qqjVsXzz/05-S-ries-e-Filmes.jpg',
       'https://i.postimg.cc/FsHQ98hc/06-Reflex-o.jpg',
       'https://i.postimg.cc/Y23HBMBM/07-Bem-Estar.jpg',
       'https://i.postimg.cc/Hsv1jzLN/08-Meio-Ambiente.jpg',
@@ -362,6 +537,7 @@
     let zoomLevel = 1;
     let isDragging = false;
     let startX, startY, scrollLeft, scrollTop;
+    let isAnimating = false;
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
@@ -398,11 +574,13 @@
 
     // Navegação
     function nextPage() {
+      if (isAnimating) return;
+      
       if (isBookMode) {
         // No modo livro, avança 2 páginas (uma dupla)
         if (currentPage < totalPages - 2) {
           currentPage += 2;
-          updateBookPage();
+          updateBookPageWithAnimation('next');
         }
       } else {
         // No modo nativo, avança 1 página e rola até ela
@@ -415,11 +593,13 @@
     }
 
     function previousPage() {
+      if (isAnimating) return;
+      
       if (isBookMode) {
         // No modo livro, volta 2 páginas (uma dupla)
         if (currentPage >= 2) {
           currentPage -= 2;
-          updateBookPage();
+          updateBookPageWithAnimation('prev');
         }
       } else {
         // No modo nativo, volta 1 página e rola até ela
@@ -463,53 +643,73 @@
       const nativeMode = document.getElementById('nativeMode');
       const bookMode = document.getElementById('bookMode');
       const modeToggle = document.getElementById('modeToggle');
+      const controls = document.getElementById('viewerControls');
       
       if (isBookMode) {
         nativeMode.style.display = 'none';
         bookMode.style.display = 'block';
-        modeToggle.textContent = 'Modo Nativo';
+        modeToggle.textContent = 'Nativo';
+        controls.classList.add('book-mode-controls');
         // Ajusta para página par no modo livro
         if (currentPage % 2 !== 0) currentPage = Math.max(0, currentPage - 1);
         updateBookPage();
       } else {
         nativeMode.style.display = 'block';
         bookMode.style.display = 'none';
-        modeToggle.textContent = 'Modo Livro';
+        modeToggle.textContent = 'Revista';
+        controls.classList.remove('book-mode-controls');
         scrollToCurrentPage();
       }
       updatePageCounter();
+    }
+
+    function updateBookPageWithAnimation(direction) {
+      if (isAnimating) return;
+      
+      isAnimating = true;
+      const leftPageDiv = document.getElementById('leftPage');
+      const rightPageDiv = document.getElementById('rightPage');
+      
+      // Adiciona classes de animação
+      leftPageDiv.classList.add('page-turning');
+      rightPageDiv.classList.add('page-turning');
+      
+      if (direction === 'next') {
+        rightPageDiv.classList.add('page-turn-right');
+      } else {
+        leftPageDiv.classList.add('page-turn-left');
+      }
+      
+      setTimeout(() => {
+        // Atualiza as imagens
+        updateBookPage();
+        
+        // Remove classes de animação e revela páginas
+        setTimeout(() => {
+          leftPageDiv.classList.remove('page-turning', 'page-turn-left');
+          rightPageDiv.classList.remove('page-turning', 'page-turn-right');
+          leftPageDiv.classList.add('page-reveal');
+          rightPageDiv.classList.add('page-reveal');
+          
+          setTimeout(() => {
+            leftPageDiv.classList.remove('page-reveal');
+            rightPageDiv.classList.remove('page-reveal');
+            isAnimating = false;
+          }, 100);
+        }, 100);
+      }, 750);
     }
 
     function updateBookPage() {
       const leftPage = document.getElementById('leftPage').querySelector('img');
       const rightPage = document.getElementById('rightPage').querySelector('img');
       
-      // Adiciona animação de virar página
-      const leftPageDiv = document.getElementById('leftPage');
-      const rightPageDiv = document.getElementById('rightPage');
+      // Atualiza as imagens
+      leftPage.src = pages[currentPage] || '';
+      rightPage.src = pages[currentPage + 1] || '';
       
-      leftPageDiv.classList.add('flipping-out');
-      rightPageDiv.classList.add('flipping-out');
-      
-      setTimeout(() => {
-        // Atualiza as imagens
-        leftPage.src = pages[currentPage] || '';
-        rightPage.src = pages[currentPage + 1] || '';
-        
-        leftPage.alt = `Página ${currentPage + 1}`;
-        rightPage.alt = `Página ${currentPage + 2}`;
-        
-        // Remove animação e mostra páginas
-        leftPageDiv.classList.remove('flipping-out');
-        rightPageDiv.classList.remove('flipping-out');
-        leftPageDiv.classList.add('flipping-in');
-        rightPageDiv.classList.add('flipping-in');
-        
-        setTimeout(() => {
-          leftPageDiv.classList.remove('flipping-in');
-          rightPageDiv.classList.remove('flipping-in');
-        }, 100);
-      }, 400);
+      leftPage.alt = `Página ${currentPage + 1}`;
+      rightPage.alt = `Página ${currentPage + 2}`;
     }
 
     // Zoom
