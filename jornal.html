@@ -26,6 +26,7 @@
       padding-bottom: 0px;
       text-align: center;
       position: relative;
+      padding-top: 30px;
     }
 
     /* Controles externos ao container */
@@ -34,8 +35,13 @@
       justify-content: center;
       align-items: center;
       gap: 15px;
-      margin-bottom: 20px;
-      padding: 10px;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: fit-content;
+      margin: 0 auto 30px auto;
     }
 
     .control-btn {
@@ -105,47 +111,61 @@
       transition: transform 0.3s ease;
     }
 
-    /* Modo Livro - Simulação de revista */
+    /* Modo Livro - Simulação de revista com páginas lado a lado */
     .book-mode {
       display: none;
       position: relative;
       height: 600px;
-      perspective: 1000px;
+      perspective: 1200px;
+      width: 100%;
+      overflow: hidden;
     }
 
-    .book-mode .page-image {
+    .book-spread {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .book-page {
       position: absolute;
-      top: 0;
-      left: 0;
+      width: 48%;
+      height: 90%;
+      background: white;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.8s ease-in-out;
+      transform-origin: center;
+      overflow: hidden;
+    }
+
+    .book-page.left-page {
+      left: 1%;
+      transform-origin: right center;
+    }
+
+    .book-page.right-page {
+      right: 1%;
+      transform-origin: left center;
+    }
+
+    .book-page img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
-      transform-origin: center;
     }
 
-    .book-mode .page-image.current {
-      transform: rotateY(0deg);
-      opacity: 1;
+    .book-page.flipping-out {
+      transform: rotateY(-180deg);
       z-index: 10;
     }
 
-    .book-mode .page-image.next {
-      transform: rotateY(-90deg);
-      opacity: 0;
+    .book-page.flipping-in {
+      transform: rotateY(0deg);
       z-index: 5;
-    }
-
-    .book-mode .page-image.prev {
-      transform: rotateY(90deg);
-      opacity: 0;
-      z-index: 5;
-    }
-
-    .book-mode .page-image.hidden {
-      transform: rotateY(180deg);
-      opacity: 0;
-      z-index: 1;
     }
 
     /* Zoom */
@@ -297,23 +317,14 @@
 
       <!-- Modo Livro -->
       <div class="book-mode" id="bookMode">
-        <img class="page-image current" src="https://i.postimg.cc/qvYrDwVK/0-CAPA.jpg" alt="Página 1" data-page="0">
-        <img class="page-image hidden" src="https://i.postimg.cc/5tCVhzbR/01-Sum-rio.jpg" alt="Página 2" data-page="1">
-        <img class="page-image hidden" src="https://i.postimg.cc/C1pgSKKL/02-Miss-o-e-Valores.jpg" alt="Página 3" data-page="2">
-        <img class="page-image hidden" src="https://i.postimg.cc/BbqfPwDr/03-Tema-do-M-s.jpg" alt="Página 4" data-page="3">
-        <img class="page-image hidden" src="https://i.postimg.cc/G2P121BP/04-Vale-a-Leitura.jpg" alt="Página 5" data-page="4">
-        <img class="page-image hidden" src="https://i.postimg.cc/qqjVsXzz/05-S-ries-e-Filmes.jpg" alt="Página 6" data-page="5">
-        <img class="page-image hidden" src="https://i.postimg.cc/FsHQ98hc/06-Reflex-o.jpg" alt="Página 7" data-page="6">
-        <img class="page-image hidden" src="https://i.postimg.cc/Y23HBMBM/07-Bem-Estar.jpg" alt="Página 8" data-page="7">
-        <img class="page-image hidden" src="https://i.postimg.cc/Hsv1jzLN/08-Meio-Ambiente.jpg" alt="Página 9" data-page="8">
-        <img class="page-image hidden" src="https://i.postimg.cc/4xKkcc7x/09-Dia-das-M-es.jpg" alt="Página 10" data-page="9">
-        <img class="page-image hidden" src="https://i.postimg.cc/9Qv3YfZt/10-Aniversariantes.jpg" alt="Página 11" data-page="10">
-        <img class="page-image hidden" src="https://i.postimg.cc/s2Sk6RJF/11-Comunicado-de-F-rias.jpg" alt="Página 12" data-page="11">
-        <img class="page-image hidden" src="https://i.postimg.cc/bdcbRkYf/12-Novos-Contratados.png" alt="Página 13" data-page="12">
-        <img class="page-image hidden" src="https://i.postimg.cc/1tQLbYW8/13-Desligamento.png" alt="Página 14" data-page="13">
-        <img class="page-image hidden" src="https://i.postimg.cc/8zGXprRY/14-Hist-ria-do-Mundo.jpg" alt="Página 15" data-page="14">
-        <img class="page-image hidden" src="https://i.postimg.cc/HsXP1ty5/15-Novos-Clientes.jpg" alt="Página 16" data-page="15">
-        <img class="page-image hidden" src="https://i.postimg.cc/sgJ6vDKg/16-Cipa-em-A-o.jpg" alt="Página 17" data-page="16">
+        <div class="book-spread">
+          <div class="book-page left-page" id="leftPage">
+            <img src="https://i.postimg.cc/qvYrDwVK/0-CAPA.jpg" alt="Página Esquerda">
+          </div>
+          <div class="book-page right-page" id="rightPage">
+            <img src="https://i.postimg.cc/5tCVhzbR/01-Sum-rio.jpg" alt="Página Direita">
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -323,9 +334,30 @@
   
   <!-- Scripts -->
   <script>
+    // Array com todas as páginas
+    const pages = [
+      'https://i.postimg.cc/qvYrDwVK/0-CAPA.jpg',
+      'https://i.postimg.cc/5tCVhzbR/01-Sum-rio.jpg',
+      'https://i.postimg.cc/C1pgSKKL/02-Miss-o-e-Valores.jpg',
+      'https://i.postimg.cc/BbqfPwDr/03-Tema-do-M-s.jpg',
+      'https://i.postimg.cc/G2P121BP/04-Vale-a-Leitura.jpg',
+      'https://i.postimg.cc/qqjVsXzz/05-S-ries-e-Filmes.jpg',
+      'https://i.postimg.cc/FsHQ98hc/06-Reflex-o.jpg',
+      'https://i.postimg.cc/Y23HBMBM/07-Bem-Estar.jpg',
+      'https://i.postimg.cc/Hsv1jzLN/08-Meio-Ambiente.jpg',
+      'https://i.postimg.cc/4xKkcc7x/09-Dia-das-M-es.jpg',
+      'https://i.postimg.cc/9Qv3YfZt/10-Aniversariantes.jpg',
+      'https://i.postimg.cc/s2Sk6RJF/11-Comunicado-de-F-rias.jpg',
+      'https://i.postimg.cc/bdcbRkYf/12-Novos-Contratados.png',
+      'https://i.postimg.cc/1tQLbYW8/13-Desligamento.png',
+      'https://i.postimg.cc/8zGXprRY/14-Hist-ria-do-Mundo.jpg',
+      'https://i.postimg.cc/HsXP1ty5/15-Novos-Clientes.jpg',
+      'https://i.postimg.cc/sgJ6vDKg/16-Cipa-em-A-o.jpg'
+    ];
+
     // Estado global
     let currentPage = 0;
-    let totalPages = 17;
+    let totalPages = pages.length;
     let isBookMode = false;
     let zoomLevel = 1;
     let isDragging = false;
@@ -361,33 +393,68 @@
       });
 
       updatePageCounter();
+      updateTotalPagesDisplay();
     });
 
     // Navegação
     function nextPage() {
-      if (currentPage < totalPages - 1) {
-        currentPage++;
-        if (isBookMode) {
+      if (isBookMode) {
+        // No modo livro, avança 2 páginas (uma dupla)
+        if (currentPage < totalPages - 2) {
+          currentPage += 2;
           updateBookPage();
         }
-        updatePageCounter();
+      } else {
+        // No modo nativo, avança 1 página e rola até ela
+        if (currentPage < totalPages - 1) {
+          currentPage++;
+          scrollToCurrentPage();
+        }
       }
+      updatePageCounter();
     }
 
     function previousPage() {
-      if (currentPage > 0) {
-        currentPage--;
-        if (isBookMode) {
+      if (isBookMode) {
+        // No modo livro, volta 2 páginas (uma dupla)
+        if (currentPage >= 2) {
+          currentPage -= 2;
           updateBookPage();
         }
-        updatePageCounter();
+      } else {
+        // No modo nativo, volta 1 página e rola até ela
+        if (currentPage > 0) {
+          currentPage--;
+          scrollToCurrentPage();
+        }
+      }
+      updatePageCounter();
+    }
+
+    function scrollToCurrentPage() {
+      const images = document.querySelectorAll('#nativeMode .page-image');
+      if (images[currentPage]) {
+        images[currentPage].scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
       }
     }
 
     function updatePageCounter() {
       document.getElementById('currentPageNum').textContent = currentPage + 1;
-      document.getElementById('prevBtn').disabled = currentPage === 0;
-      document.getElementById('nextBtn').disabled = currentPage === totalPages - 1;
+      
+      if (isBookMode) {
+        document.getElementById('prevBtn').disabled = currentPage < 2;
+        document.getElementById('nextBtn').disabled = currentPage >= totalPages - 2;
+      } else {
+        document.getElementById('prevBtn').disabled = currentPage === 0;
+        document.getElementById('nextBtn').disabled = currentPage === totalPages - 1;
+      }
+    }
+
+    function updateTotalPagesDisplay() {
+      document.getElementById('totalPages').textContent = totalPages;
     }
 
     // Modo Livro
@@ -401,29 +468,48 @@
         nativeMode.style.display = 'none';
         bookMode.style.display = 'block';
         modeToggle.textContent = 'Modo Nativo';
+        // Ajusta para página par no modo livro
+        if (currentPage % 2 !== 0) currentPage = Math.max(0, currentPage - 1);
         updateBookPage();
       } else {
         nativeMode.style.display = 'block';
         bookMode.style.display = 'none';
         modeToggle.textContent = 'Modo Livro';
+        scrollToCurrentPage();
       }
+      updatePageCounter();
     }
 
     function updateBookPage() {
-      const pages = document.querySelectorAll('#bookMode .page-image');
-      pages.forEach((page, index) => {
-        page.classList.remove('current', 'next', 'prev', 'hidden');
+      const leftPage = document.getElementById('leftPage').querySelector('img');
+      const rightPage = document.getElementById('rightPage').querySelector('img');
+      
+      // Adiciona animação de virar página
+      const leftPageDiv = document.getElementById('leftPage');
+      const rightPageDiv = document.getElementById('rightPage');
+      
+      leftPageDiv.classList.add('flipping-out');
+      rightPageDiv.classList.add('flipping-out');
+      
+      setTimeout(() => {
+        // Atualiza as imagens
+        leftPage.src = pages[currentPage] || '';
+        rightPage.src = pages[currentPage + 1] || '';
         
-        if (index === currentPage) {
-          page.classList.add('current');
-        } else if (index === currentPage + 1) {
-          page.classList.add('next');
-        } else if (index === currentPage - 1) {
-          page.classList.add('prev');
-        } else {
-          page.classList.add('hidden');
-        }
-      });
+        leftPage.alt = `Página ${currentPage + 1}`;
+        rightPage.alt = `Página ${currentPage + 2}`;
+        
+        // Remove animação e mostra páginas
+        leftPageDiv.classList.remove('flipping-out');
+        rightPageDiv.classList.remove('flipping-out');
+        leftPageDiv.classList.add('flipping-in');
+        rightPageDiv.classList.add('flipping-in');
+        
+        setTimeout(() => {
+          leftPageDiv.classList.remove('flipping-in');
+          rightPageDiv.classList.remove('flipping-in');
+        }, 100);
+      }, 400);
     }
 
     // Zoom
@@ -456,6 +542,21 @@
           disableImageDrag(img);
         }
       });
+
+      // Aplicar zoom no modo livro também
+      if (isBookMode) {
+        const bookImages = container.querySelectorAll('.book-page img');
+        bookImages.forEach(img => {
+          img.style.transform = `scale(${zoomLevel})`;
+          if (zoomLevel > 1) {
+            img.classList.add('zoomed');
+            enableImageDrag(img);
+          } else {
+            img.classList.remove('zoomed');
+            disableImageDrag(img);
+          }
+        });
+      }
     }
 
     // Arrastar imagem quando com zoom
