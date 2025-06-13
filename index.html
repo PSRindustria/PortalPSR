@@ -685,7 +685,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     if (nomesAniv.length === 1) {
       const pronome = generosAniv[0] === "feminino" ? "ela" : "ele";
-      mensagens.push(`🥳 Hoje é aniversário do${generosAniv[0] === "feminino" ? 'a' : ''} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`);
+      mensagens.push(`🥳 Hoje é aniversário d${generosAniv[0] === "feminino" ? 'a' : ''} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`);
     } else if (nomesAniv.length > 1) {
       const nomesStr = juntarNomes(nomesAniv);
       const plural = getPluralGenero(generosAniv);
