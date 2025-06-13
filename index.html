@@ -673,25 +673,47 @@ document.addEventListener('DOMContentLoaded', async () => {
   let mensagens = [];
 
   // ===== Aniversariantes =====
-  const aniversariantes = await carregaJSON('aniversariantes.json');
-  let nomesAniv = [];
-  let generosAniv = [];
-  if (aniversariantes && Array.isArray(aniversariantes)) {
-    aniversariantes.forEach(aniversariante => {
-      if (aniversariante.data === dataAtualStr) {
-        nomesAniv.push(aniversariante.nome);
-        generosAniv.push(determinarGenero(aniversariante.nome));
-      }
-    });
-    if (nomesAniv.length === 1) {
-      const pronome = generosAniv[0] === "feminino" ? "ela" : "ele";
-      mensagens.push(`🥳 Hoje é aniversário d${generosAniv[0] === "feminino" ? 'a' : ''} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`);
-    } else if (nomesAniv.length > 1) {
-      const nomesStr = juntarNomes(nomesAniv);
-      const plural = getPluralGenero(generosAniv);
-      mensagens.push(`🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns a ${plural.pronome}!`);
+function getArtigoSingular(genero) {
+  return genero === 'feminino' ? 'da' : 'do';
+}
+
+function getArtigoPlural(generos) {
+  const todasFeminino = generos.every(g => g === 'feminino');
+  return todasFeminino ? 'das' : 'dos';
+}
+
+const aniversariantes = await carregaJSON('aniversariantes.json');
+const nomesAniv = [];
+const generosAniv = [];
+
+if (Array.isArray(aniversariantes)) {
+  aniversariantes.forEach(({ nome, data }) => {
+    if (data === dataAtualStr) {
+      nomesAniv.push(nome);
+      generosAniv.push(determinarGenero(nome)); // “masculino” ou “feminino”
     }
+  });
+
+  if (nomesAniv.length === 1) {
+    const genero = generosAniv[0];
+    const pronome = genero === 'feminino' ? 'ela' : 'ele';
+    const artigo = getArtigoSingular(genero); // “da” ou “do”
+    mensagens.push(
+      `🥳 Hoje é aniversário ${artigo} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`
+    );
   }
+  else if (nomesAniv.length > 1) {
+    const nomesStr = juntarNomes(nomesAniv);
+    const artigo = getArtigoPlural(generosAniv); // “das” ou “dos”
+    const pronome = generosAniv.every(g => g === 'feminino')
+      ? 'elas'
+      : 'eles';
+    mensagens.push(
+      `🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns ${artigo} ${pronome}!`
+    );
+  }
+}
+
 
   // ===== Retorno de férias =====
   const ferias = await carregaJSON('ferias.json');
