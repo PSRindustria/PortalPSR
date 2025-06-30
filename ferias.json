@@ -1,39 +1,39 @@
 [
   {
-    "colaborador": "Rogéria Santos",
-    "departamento": "Comercial",
-    "inicio": "15/05/2025",
-    "retorno": "04/06/2025"
-  },
-  {
-    "colaborador": "Claudio de Oliveira",
-    "departamento": "Produção",
-    "inicio": "15/05/2025",
-    "retorno": "04/06/2025"
-  },
-  {
-    "colaborador": "Rhafael Mendes",
+    "colaborador": "Denilson da Silva",
     "departamento": "Logística",
-    "inicio": "05/05/2025",
-    "retorno": "04/06/2025"
+    "inicio": "01/07/2025",
+    "retorno": "30/07/2025"
   },
   {
-    "colaborador": "Monique Marques",
-    "departamento": "Comercial",
-    "inicio": "05/05/2025",
-    "retorno": "04/06/2025"
+    "colaborador": "Eduardo Luiz",
+    "departamento": "Gente E Gestão",
+    "inicio": "01/07/2025",
+    "retorno": "30/07/2025"
   },
   {
-    "colaborador": "Selma Botelho",
-    "departamento": "Gente e Gestão",
-    "inicio": "05/05/2025",
-    "retorno": "04/06/2025"
-  },
-  {
-    "colaborador": "Douglas da Silva",
+    "colaborador": "Marcos Cardoso",
     "departamento": "Produção",
-    "inicio": "02/06/2025",
-    "retorno": "23/06/2025"
+    "inicio": "01/07/2025",
+    "retorno": "30/07/2025"
+  },
+  {
+    "colaborador": "Robson Luz",
+    "departamento": "Produção",
+    "inicio": "01/07/2025",
+    "retorno": "30/07/2025"
+  },
+  {
+    "colaborador": "Vanessa Teixeira",
+    "departamento": "QSMS",
+    "inicio": "01/07/2025",
+    "retorno": "30/07/2025"
+  },
+  {
+    "colaborador": "Paulo Guimarães",
+    "departamento": "Comercial",
+    "inicio": "14/07/2025",
+    "retorno": "02/08/2025"
   },
   {
     "colaborador": "Leandro De Oliveira",
@@ -46,12 +46,6 @@
     "departamento": "Produção",
     "inicio": "02/06/2025",
     "retorno": "02/07/2025"
-  },
-  {
-    "colaborador": "Thamiries Oliveira",
-    "departamento": "Produção",
-    "inicio": "02/06/2025",
-    "retorno": "23/06/2025"
   },
   {
     "colaborador": "Vinicius Ramos",
@@ -70,5 +64,11 @@
     "departamento": "QSMS",
     "inicio": "12/06/2025",
     "retorno": "02/07/2025"
+  },
+  {
+    "colaborador": "Fillipe Soares",
+    "departamento": "Desenvolvimento",
+    "inicio": "21/07/2025",
+    "retorno": "25/07/2025"
   }
 ]
