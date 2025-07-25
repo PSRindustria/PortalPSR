@@ -47,17 +47,17 @@
     "data": "20/07",
     "imagem": "https://i.postimg.cc/brPXQNm7/20-Bruno-Jos.jpg"
   },
-    {
-    "nome": "Pedro",
-    "cargo": "Produção",
-    "data": "24/07",
-    "imagem": "https://i.postimg.cc/mk1yj2vN/24-Pedro-Cavalcanti.jpg"
-  },
   {
     "nome": "Evelyn",
     "cargo": "QSMS",
     "data": "23/07",
     "imagem": "https://i.postimg.cc/gjHC4F5n/23-Evelyn-Soares.jpg"
+  },
+      {
+    "nome": "Pedro",
+    "cargo": "Comercial",
+    "data": "24/07",
+    "imagem": "https://i.postimg.cc/mk1yj2vN/24-Pedro-Cavalcanti.jpg"
   },
   {
     "nome": "Kayo",
