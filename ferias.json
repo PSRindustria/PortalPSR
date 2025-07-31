@@ -36,33 +36,39 @@
     "retorno": "04/08/2025"
   },
   {
-    "colaborador": "Pedro Camargo",
-    "departamento": "Produção",
-    "inicio": "02/06/2025",
-    "retorno": "02/07/2025"
+    "colaborador": "Carlos Victor",
+    "departamento": "PRODUÇÃO",
+    "inicio": "04/08/2025",
+    "retorno": "23/08/2025"
   },
   {
-    "colaborador": "Vinicius Ramos",
-    "departamento": "Logística",
-    "inicio": "02/06/2025",
-    "retorno": "02/07/2025"
+    "colaborador": "Victor Guilherme",
+    "departamento": "PRODUÇÃO",
+    "inicio": "04/08/2025",
+    "retorno": "02/09/2025"
   },
   {
-    "colaborador": "Solanie Paz",
-    "departamento": "Comercial",
-    "inicio": "09/06/2025",
-    "retorno": "30/06/2025"
+    "colaborador": "Iuri Lopes",
+    "departamento": "FINANCEIRO",
+    "inicio": "04/08/2025",
+    "retorno": "23/08/2025"
   },
   {
-    "colaborador": "Waldir Advincula",
+    "colaborador": "Fernanda Cristina",
     "departamento": "QSMS",
-    "inicio": "12/06/2025",
-    "retorno": "02/07/2025"
+    "inicio": "04/08/2025",
+    "retorno": "02/09/2025"
   },
   {
-    "colaborador": "Fillipe Soares",
-    "departamento": "Desenvolvimento",
-    "inicio": "21/07/2025",
-    "retorno": "28/07/2025"
+    "colaborador": "Emerson Reis",
+    "departamento": "PRODUÇÃO",
+    "inicio": "04/08/2025",
+    "retorno": "02/09/2025"
+  },
+  {
+    "colaborador": "Ana Carolina",
+    "departamento": "PRODUÇÃO",
+    "inicio": "04/08/2025",
+    "retorno": "23/08/2025"
   }
 ]
