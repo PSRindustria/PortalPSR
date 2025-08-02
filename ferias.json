@@ -1,35 +1,5 @@
 [
   {
-    "colaborador": "Denilson da Silva",
-    "departamento": "Logística",
-    "inicio": "01/07/2025",
-    "retorno": "31/07/2025"
-  },
-  {
-    "colaborador": "Eduardo Luiz",
-    "departamento": "Gente e Gestão",
-    "inicio": "01/07/2025",
-    "retorno": "31/07/2025"
-  },
-  {
-    "colaborador": "Marcos Cardoso",
-    "departamento": "Produção",
-    "inicio": "01/07/2025",
-    "retorno": "31/07/2025"
-  },
-  {
-    "colaborador": "Robson Luz",
-    "departamento": "Produção",
-    "inicio": "01/07/2025",
-    "retorno": "31/07/2025"
-  },
-  {
-    "colaborador": "Vanessa Teixeira",
-    "departamento": "QSMS",
-    "inicio": "01/07/2025",
-    "retorno": "31/07/2025"
-  },
-  {
     "colaborador": "Paulo Guimarães",
     "departamento": "Comercial",
     "inicio": "14/07/2025",
@@ -39,7 +9,7 @@
     "colaborador": "Carlos Victor",
     "departamento": "Produção",
     "inicio": "04/08/2025",
-    "retorno": "24/08/2025"
+    "retorno": "25/08/2025"
   },
   {
     "colaborador": "Victor Guilherme",
@@ -51,7 +21,7 @@
     "colaborador": "Iuri Lopes",
     "departamento": "Financeiro",
     "inicio": "04/08/2025",
-    "retorno": "24/08/2025"
+    "retorno": "25/08/2025"
   },
   {
     "colaborador": "Fernanda Cristina",
@@ -69,6 +39,6 @@
     "colaborador": "Ana Carolina",
     "departamento": "Produção",
     "inicio": "04/08/2025",
-    "retorno": "24/08/2025"
+    "retorno": "25/08/2025"
   }
 ]
