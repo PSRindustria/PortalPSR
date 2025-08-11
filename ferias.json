@@ -1,13 +1,19 @@
 [
   {
-    "colaborador": "Paulo Guimarães",
-    "departamento": "Comercial",
-    "inicio": "14/07/2025",
-    "retorno": "04/08/2025"
-  },
-  {
     "colaborador": "Carlos Victor",
     "departamento": "Produção",
+    "inicio": "04/08/2025",
+    "retorno": "25/08/2025"
+  },
+  {
+    "colaborador": "Ana Carolina",
+    "departamento": "Produção",
+    "inicio": "04/08/2025",
+    "retorno": "25/08/2025"
+  },
+  {
+    "colaborador": "Iuri Lopes",
+    "departamento": "Financeiro",
     "inicio": "04/08/2025",
     "retorno": "25/08/2025"
   },
@@ -16,12 +22,6 @@
     "departamento": "Produção",
     "inicio": "04/08/2025",
     "retorno": "03/09/2025"
-  },
-  {
-    "colaborador": "Iuri Lopes",
-    "departamento": "Financeiro",
-    "inicio": "04/08/2025",
-    "retorno": "25/08/2025"
   },
   {
     "colaborador": "Fernanda Cristina",
@@ -34,11 +34,5 @@
     "departamento": "Produção",
     "inicio": "04/08/2025",
     "retorno": "03/09/2025"
-  },
-  {
-    "colaborador": "Ana Carolina",
-    "departamento": "Produção",
-    "inicio": "04/08/2025",
-    "retorno": "25/08/2025"
   }
 ]
