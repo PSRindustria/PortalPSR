@@ -704,7 +704,7 @@ if (Array.isArray(aniversariantes)) {
   }
   else if (nomesAniv.length > 1) {
     const nomesStr = juntarNomes(nomesAniv);
-    const artigo = getArtigoPlural(generosAniv); // “das” ou “dos”
+    const artigo = getArtigoPlural(generosAniv); // “a” ou “a”
     const pronome = generosAniv.every(g => g === 'feminino')
       ? 'elas'
       : 'eles';
@@ -756,3 +756,4 @@ if (Array.isArray(aniversariantes)) {
 </script>
 </body>
 </html>
+
