@@ -679,7 +679,7 @@ function getArtigoSingular(genero) {
 
 function getArtigoPlural(generos) {
   const todasFeminino = generos.every(g => g === 'feminino');
-  return todasFeminino ? 'a' : 'a';
+  return todasFeminino ? 'da' : 'das';
 }
 
 const aniversariantes = await carregaJSON('aniversariantes.json');
@@ -704,12 +704,11 @@ if (Array.isArray(aniversariantes)) {
   }
   else if (nomesAniv.length > 1) {
     const nomesStr = juntarNomes(nomesAniv);
-    const artigo = getArtigoPlural(generosAniv); // “a” ou “a”
     const pronome = generosAniv.every(g => g === 'feminino')
       ? 'elas'
       : 'eles';
     mensagens.push(
-      `🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns ${artigo} ${pronome}!`
+      `🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns a ${pronome}!`
     );
   }
 }
@@ -756,5 +755,6 @@ if (Array.isArray(aniversariantes)) {
 </script>
 </body>
 </html>
+
 
 
