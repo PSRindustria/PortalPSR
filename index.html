@@ -679,7 +679,7 @@ function getArtigoSingular(genero) {
 
 function getArtigoPlural(generos) {
   const todasFeminino = generos.every(g => g === 'feminino');
-  return todasFeminino ? 'das' : 'dos';
+  return todasFeminino ? 'a' : 'a';
 }
 
 const aniversariantes = await carregaJSON('aniversariantes.json');
@@ -756,4 +756,5 @@ if (Array.isArray(aniversariantes)) {
 </script>
 </body>
 </html>
+
 
