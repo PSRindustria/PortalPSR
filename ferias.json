@@ -1,23 +1,5 @@
 [
   {
-    "colaborador": "Carlos Victor",
-    "departamento": "Produção",
-    "inicio": "04/08/2025",
-    "retorno": "25/08/2025"
-  },
-  {
-    "colaborador": "Ana Carolina",
-    "departamento": "Produção",
-    "inicio": "04/08/2025",
-    "retorno": "25/08/2025"
-  },
-  {
-    "colaborador": "Iuri Lopes",
-    "departamento": "Financeiro",
-    "inicio": "04/08/2025",
-    "retorno": "25/08/2025"
-  },
-  {
     "colaborador": "Victor Guilherme",
     "departamento": "Produção",
     "inicio": "04/08/2025",
@@ -34,5 +16,29 @@
     "departamento": "Produção",
     "inicio": "04/08/2025",
     "retorno": "03/09/2025"
+  },
+    {
+    "colaborador": "Daniele Rocha",
+    "departamento": "Gente e Gestão",
+    "inicio": "01/09/2025",
+    "retorno": "13/09/2025"
+  },
+  {
+    "colaborador": "Rafaela Taborda",
+    "departamento": "Produção",
+    "inicio": "01/09/2025",
+    "retorno": "21/09/2025"
+  },
+  {
+    "colaborador": "Marco Aurélio",
+    "departamento": "Produção",
+    "inicio": "01/09/2025",
+    "retorno": "21/09/2025"
+  },
+  {
+    "colaborador": "Tiago Ferraz",
+    "departamento": "Marketing",
+    "inicio": "22/09/2025",
+    "retorno": "22/10/2025"
   }
 ]
