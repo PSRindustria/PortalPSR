@@ -1,68 +1,38 @@
 [
   {
-    "nome": "Dalva",
+    "nome": "Bernado",
     "cargo": "Produção",
-    "data": "03/08",
-    "imagem": "https://i.postimg.cc/ht124PRJ/03-08-Dalva-Silva.png"
+    "data": "06/09",
+    "imagem": "https://i.postimg.cc/wTPfPHyz/06-09-Bernado-Brand-o.png"
   },
   {
-    "nome": "Amanda",
-    "cargo": "Logística",
-    "data": "05/08",
-    "imagem": "https://i.postimg.cc/xdjtXD96/05-08-Amanda-Azevedo.png"
-  },
-  {
-    "nome": "Raphael",
-    "cargo": "Comercial",
-    "data": "06/08",
-    "imagem": "https://i.postimg.cc/NM5Dx69T/06-08-Raphael-Roland.png"
-  },
-  {
-    "nome": "Emerson",
+    "nome": "Marcos",
     "cargo": "Produção",
-    "data": "10/08",
-    "imagem": "https://i.postimg.cc/Ss3r1nCP/10-08-Emerson-Reis.png"
+    "data": "12/09",
+    "imagem": "https://i.postimg.cc/NMgpTjV6/12-09-Marcos-Rodrigues.png"
   },
   {
-    "nome": "Victor",
-    "cargo": "Produção",
-    "data": "11/08",
-    "imagem": "https://i.postimg.cc/HLS35Zxd/11-08-Carlos-Victor.png"
+    "nome": "Robson",
+    "cargo": "Clicheria",
+    "data": "12/09",
+    "imagem": "https://i.postimg.cc/XvKspC2N/12-09-Robson-Junior.png"
   },
   {
-    "nome": "Fabio",
-    "cargo": "Produção",
-    "data": "14/08",
-    "imagem": "https://i.postimg.cc/Y0Fx5txC/14-08-Fabio-Alberto.png"
+    "nome": "Leandro",
+    "cargo": "Clicheria",
+    "data": "13/09",
+    "imagem": "https://i.postimg.cc/xdVsfR3F/13-09-Leandro-Santos.png"
   },
   {
-    "nome": "Roberto",
-    "cargo": "Logística",
-    "data": "17/08",
-    "imagem": "https://i.postimg.cc/ryRg09L2/17-08-Roberto-Felix.png"
+    "nome": "Tiago",
+    "cargo": "Marketing",
+    "data": "16/09",
+    "imagem": "https://i.postimg.cc/d14n9KPz/16-09-Tiago-Ferraz.png"
   },
   {
-    "nome": "Ana Carolina",
-    "cargo": "Produção",
-    "data": "18/08",
-    "imagem": "https://i.postimg.cc/L6dDzZHY/18-08-Ana-Carolina-C.png"
-  },
-  {
-    "nome": "Dione",
-    "cargo": "Desenvolvimento",
-    "data": "21/08",
-    "imagem": "https://i.postimg.cc/3JgB9JRL/21-08-Dione-Nascibem.png"
-  },
-  {
-    "nome": "Thais",
-    "cargo": "Gente e Gestão",
-    "data": "21/08",
-    "imagem": "https://i.postimg.cc/nhp1Wb9n/21-08-Thais-Araujo.png"
-  },
-  {
-    "nome": "Tayane",
-    "cargo": "PCP",
-    "data": "24/08",
-    "imagem": "https://i.postimg.cc/13BKhCDw/24-08-Tayane-Santos.png"
+    "nome": "Iuri",
+    "cargo": "Controladoria",
+    "data": "22/09",
+    "imagem": "https://i.postimg.cc/ZnnH7DJ0/22-09-Iuri-Mendon-a.png"
   }
 ]
