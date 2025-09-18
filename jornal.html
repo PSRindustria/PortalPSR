@@ -20,15 +20,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     /* reset básico */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
+    html, body { margin: 0; padding: 0; height: 100%; }
     main {
       margin-top: 50px;
-      margin-bottom: 0px;
-      padding-bottom: 0px;
+      margin-bottom: 0;
+      padding-bottom: 0;
       text-align: center;
       position: relative;
       padding-top: 30px;
@@ -53,12 +49,7 @@
       opacity: 0.6;
       scale: 0.85;
     }
-
-    .viewer-controls:hover {
-      opacity: 1;
-      scale: 1;
-      background: rgba(0, 0, 0, 0.85);
-    }
+    .viewer-controls:hover { opacity: 1; scale: 1; background: rgba(0, 0, 0, 0.85); }
 
     /* Controles para modo revista (centralizados no topo) */
     .viewer-controls.book-mode-controls {
@@ -74,11 +65,7 @@
       opacity: 0.9;
       scale: 1;
     }
-
-    .viewer-controls.book-mode-controls:hover {
-      background: rgba(255, 255, 255, 0.98);
-      opacity: 1;
-    }
+    .viewer-controls.book-mode-controls:hover { background: rgba(255, 255, 255, 0.98); opacity: 1; }
 
     .control-btn {
       background: rgba(255, 255, 255, 0.9);
@@ -92,68 +79,21 @@
       backdrop-filter: blur(5px);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-
-    .control-btn:hover {
-      background: rgba(255, 255, 255, 1);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    .control-btn:active {
-      transform: translateY(0);
-    }
-
-    .control-btn:disabled {
-      background: rgba(255, 255, 255, 0.5);
-      color: #999;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .control-btn:hover { background: rgba(255, 255, 255, 1); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .control-btn:active { transform: translateY(0); }
+    .control-btn:disabled { background: rgba(255, 255, 255, 0.5); color: #999; cursor: not-allowed; transform: none; }
 
     /* Controles no modo revista */
-    .book-mode-controls .control-btn {
-      background: #333;
-      color: white;
-      padding: 10px 15px;
-      font-size: 16px;
-    }
+    .book-mode-controls .control-btn { background: #333; color: #fff; padding: 10px 15px; font-size: 16px; }
+    .book-mode-controls .control-btn:hover { background: #555; }
+    .book-mode-controls .control-btn:disabled { background: #ccc; color: #999; }
 
-    .book-mode-controls .control-btn:hover {
-      background: #555;
-    }
+    .mode-toggle { background: #007bff !important; color: #fff !important; font-size: 12px; padding: 6px 10px; }
+    .mode-toggle:hover { background: #0056b3 !important; }
+    .book-mode-controls .mode-toggle { background: #007bff !important; font-size: 14px; padding: 8px 12px; }
 
-    .book-mode-controls .control-btn:disabled {
-      background: #ccc;
-      color: #999;
-    }
-
-    .mode-toggle {
-      background: #007bff !important;
-      color: white !important;
-      font-size: 12px;
-      padding: 6px 10px;
-    }
-
-    .mode-toggle:hover {
-      background: #0056b3 !important;
-    }
-
-    .book-mode-controls .mode-toggle {
-      background: #007bff !important;
-      font-size: 14px;
-      padding: 8px 12px;
-    }
-
-    .zoom-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .book-mode-controls .zoom-controls {
-      flex-direction: row;
-      gap: 5px;
-    }
+    .zoom-controls { display: flex; flex-direction: column; gap: 5px; }
+    .book-mode-controls .zoom-controls { flex-direction: row; gap: 5px; }
 
     .page-counter {
       background: rgba(255, 255, 255, 0.9);
@@ -165,13 +105,7 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(5px);
     }
-
-    .book-mode-controls .page-counter {
-      background: #f8f9fa;
-      padding: 8px 12px;
-      font-size: 14px;
-      border: 1px solid #ddd;
-    }
+    .book-mode-controls .page-counter { background: #f8f9fa; padding: 8px 12px; font-size: 14px; border: 1px solid #ddd; }
 
     /* Container do visualizador */
     .journal-container {
@@ -180,13 +114,11 @@
       margin: 0 auto;
       position: relative;
       overflow: hidden;
+      transition: all 0.5s ease;
     }
 
     /* Modo Nativo - Imagens empilhadas */
-    .native-mode {
-      display: block;
-    }
-
+    .native-mode { display: block; }
     .native-mode .page-image {
       width: 100%;
       height: auto;
@@ -207,7 +139,6 @@
       margin: 0 auto;
       overflow: hidden;
     }
-
     .book-spread {
       position: relative;
       width: 100%;
@@ -217,219 +148,91 @@
       align-items: center;
       transform-style: preserve-3d;
     }
-
     .book-page {
       position: absolute;
       width: 45%;
       height: 85%;
-      background: white;
+      background: #fff;
       border: 1px solid #ddd;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       transform-origin: center;
-      overflow: hidden;
+      overflow: auto; /* << permitir pan quando com zoom */
       border-radius: 8px;
       transform-style: preserve-3d;
+      scrollbar-gutter: stable;
     }
-
     .book-page::before {
       content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      position: absolute; inset: 0;
       background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(0,0,0,0.05) 2%, 
-        transparent 5%, 
-        transparent 95%, 
-        rgba(0,0,0,0.05) 98%, 
-        transparent 100%);
-      pointer-events: none;
-      z-index: 2;
+        transparent 0%, rgba(0,0,0,0.05) 2%, transparent 5%, 
+        transparent 95%, rgba(0,0,0,0.05) 98%, transparent 100%);
+      pointer-events: none; z-index: 2;
     }
-
-    .book-page.left-page {
-      left: 2.5%;
-      transform-origin: right center;
-      box-shadow: 5px 8px 25px rgba(0,0,0,0.15);
-    }
-
-    .book-page.right-page {
-      right: 2.5%;
-      transform-origin: left center;
-      box-shadow: -5px 8px 25px rgba(0,0,0,0.15);
-    }
-
+    .book-page.left-page { left: 2.5%; transform-origin: right center; box-shadow: 5px 8px 25px rgba(0,0,0,0.15); }
+    .book-page.right-page { right: 2.5%; transform-origin: left center;  box-shadow: -5px 8px 25px rgba(0,0,0,0.15); }
     .book-page img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 8px;
+      width: 100%; height: 100%; object-fit: contain; border-radius: 8px;
+      /* importante: não usar translate para pan, usaremos scroll do contêiner */
     }
 
-    /* Animações mais realistas de virar página */
-    .book-page.page-turn-left {
-      transform: rotateY(-180deg) translateZ(-10px);
-      box-shadow: -15px 8px 35px rgba(0,0,0,0.3);
-      z-index: 10;
-    }
-
-    .book-page.page-turn-right {
-      transform: rotateY(180deg) translateZ(-10px);
-      box-shadow: 15px 8px 35px rgba(0,0,0,0.3);
-      z-index: 10;
-    }
-
-    .book-page.page-turning {
-      transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
-    .book-page.page-reveal {
-      transform: rotateY(0deg) translateZ(0px);
-      z-index: 5;
-    }
+    /* Animações virar página */
+    .book-page.page-turn-left  { transform: rotateY(-180deg) translateZ(-10px); box-shadow: -15px 8px 35px rgba(0,0,0,0.3); z-index: 10; }
+    .book-page.page-turn-right { transform: rotateY(180deg)  translateZ(-10px); box-shadow:  15px 8px 35px rgba(0,0,0,0.3); z-index: 10; }
+    .book-page.page-turning { transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1); }
+    .book-page.page-reveal { transform: rotateY(0deg) translateZ(0px); z-index: 5; }
 
     /* Efeito de dobra na página */
     .book-page.page-turning::after {
       content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 50px;
-      background: linear-gradient(90deg, 
-        transparent, 
-        rgba(0,0,0,0.1) 50%, 
-        rgba(255,255,255,0.1));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-      z-index: 3;
+      position: absolute; top: 0; bottom: 0; width: 50px;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1) 50%, rgba(255,255,255,0.1));
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 3;
     }
+    .book-page.left-page.page-turning::after  { right: 0; background: linear-gradient(-90deg, transparent, rgba(0,0,0,0.15) 50%, rgba(255,255,255,0.2)); }
+    .book-page.right-page.page-turning::after { left:  0; background: linear-gradient( 90deg, transparent, rgba(0,0,0,0.15) 50%, rgba(255,255,255,0.2)); }
+    .book-page.page-turning::after { opacity: 1; }
 
-    .book-page.left-page.page-turning::after {
-      right: 0;
-      background: linear-gradient(-90deg, 
-        transparent, 
-        rgba(0,0,0,0.15) 50%, 
-        rgba(255,255,255,0.2));
-    }
-
-    .book-page.right-page.page-turning::after {
-      left: 0;
-      background: linear-gradient(90deg, 
-        transparent, 
-        rgba(0,0,0,0.15) 50%, 
-        rgba(255,255,255,0.2));
-    }
-
-    .book-page.page-turning::after {
-      opacity: 1;
-    }
-
-    /* Zoom */
-    .zoomed {
-      transform-origin: center;
-      cursor: grab;
-    }
-
-    .zoomed:active {
-      cursor: grabbing;
-    }
+    /* Zoom / pan UX */
+    .zoomed { transform-origin: center; cursor: grab; }
+    .zoomed:active { cursor: grabbing; }
+    .dragging, .zoomed { cursor: grabbing !important; }
 
     /* Mobile responsivo */
     @media (max-width: 768px) {
-      .viewer-controls {
-        display: none;
-      }
-
-      .journal-container {
-        max-width: 100%;
-        padding: 0 10px;
-      }
-
-      .book-mode {
-        display: none !important;
-      }
-
-      .native-mode {
-        display: block !important;
-      }
-
-      .native-mode .page-image {
-        margin-bottom: 5px;
-      }
+      .viewer-controls { display: none; }
+      .journal-container { max-width: 100%; padding: 0 10px; }
+      .book-mode { display: none !important; }
+      .native-mode { display: block !important; }
+      .native-mode .page-image { margin-bottom: 5px; }
     }
-    
+
     /* Estilos básicos para o menu mobile */
-    .menu-mobile {
-      display: none;
-    }
-    
+    .menu-mobile { display: none; }
     @media (max-width: 768px) {
-      .menu-mobile {
-        display: block;
-      }
-      
+      .menu-mobile { display: block; }
       .menu-toggle {
-        cursor: pointer;
-        padding: 10px;
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        z-index: 1000;
+        cursor: pointer; padding: 10px; position: absolute; top: 15px; right: 15px; z-index: 1000;
       }
-      
       .mobile-nav {
-        position: fixed;
-        top: 0;
-        right: -250px;
-        width: 250px;
-        height: 100%;
-        background-color: #fff;
-        z-index: 999;
-        transition: right 0.3s ease;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-        overflow-y: auto;
+        position: fixed; top: 0; right: -250px; width: 250px; height: 100%;
+        background-color: #fff; z-index: 999; transition: right 0.3s ease;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.2); overflow-y: auto;
       }
-      
-      .mobile-nav.active {
-        right: 0;
-      }
-      
+      .mobile-nav.active { right: 0; }
       .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        z-index: 998;
+        display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); z-index: 998;
       }
-      
-      .overlay.active {
-        display: block;
-      }
-    }
-
-    /* Animação suave para mudança de modo */
-    .journal-container {
-      transition: all 0.5s ease;
+      .overlay.active { display: block; }
     }
 
     /* Efeito de fundo para o modo revista */
     .book-mode::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(ellipse at center, 
-        rgba(139, 69, 19, 0.1) 0%, 
-        rgba(101, 67, 33, 0.05) 50%, 
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center,
+        rgba(139, 69, 19, 0.1) 0%,
+        rgba(101, 67, 33, 0.05) 50%,
         rgba(62, 39, 35, 0.1) 100%);
       z-index: -1;
     }
@@ -438,7 +241,7 @@
 <body>
   <!-- MENU dinâmico -->
   <div id="menu-placeholder"></div>
-  
+
   <!-- Conteúdo principal: Visualizador de Jornal -->
   <main>
     <!-- Controles flutuantes -->
@@ -446,27 +249,21 @@
       <button class="control-btn" id="prevBtn" onclick="previousPage()" title="Página Anterior">
         <i class="fas fa-chevron-left"></i>
       </button>
-      
+
       <div class="page-counter">
         <span id="currentPageNum">1</span>/<span id="totalPages">15</span>
       </div>
-      
+
       <button class="control-btn" id="nextBtn" onclick="nextPage()" title="Próxima Página">
         <i class="fas fa-chevron-right"></i>
       </button>
-      
+
       <div class="zoom-controls">
-        <button class="control-btn" onclick="zoomOut()" title="Diminuir Zoom">
-          <i class="fas fa-search-minus"></i>
-        </button>
-        <button class="control-btn" onclick="zoomIn()" title="Aumentar Zoom">
-          <i class="fas fa-search-plus"></i>
-        </button>
-        <button class="control-btn" onclick="resetZoom()" title="Resetar Zoom">
-          <i class="fas fa-expand"></i>
-        </button>
+        <button class="control-btn" onclick="zoomOut()" title="Diminuir Zoom"><i class="fas fa-search-minus"></i></button>
+        <button class="control-btn" onclick="zoomIn()"  title="Aumentar Zoom"><i class="fas fa-search-plus"></i></button>
+        <button class="control-btn" onclick="resetZoom()" title="Resetar Zoom"><i class="fas fa-expand"></i></button>
       </div>
-      
+
       <button class="control-btn mode-toggle" id="modeToggle" onclick="toggleMode()" title="Alternar Modo">
         Revista
       </button>
@@ -475,60 +272,62 @@
     <!-- Container do visualizador -->
     <div class="journal-container" id="journalContainer">
       <!-- Modo Nativo (padrão) -->
-<div class="native-mode" id="nativeMode">
-  <img class="page-image" src="https://i.postimg.cc/ZKbJ2Kr5/0-CAPA.jpg" alt="Página 1" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/VLKz8QRB/01-Sum-rio.jpg" alt="Página 2" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/P5NTf3VG/02-Miss-o-e-Valores.jpg" alt="Página 3" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/4xMZY6jY/03-Tema-do-M-s.jpg" alt="Página 4" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/Ls1SLqMN/04-Vale-a-Leitura.jpg" alt="Página 5" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/qRHTLkJ0/05-S-ries-e-Filmes.jpg" alt="Página 6" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/5yxWhnQR/06-Reflex-o.jpg" alt="Página 7" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/LXkMQr5P/06-1-Reflex-o-2.jpg" alt="Página 8" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/KjJhxBnv/07-Bem-Estar.jpg" alt="Página 9" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/1RHQGhLh/08-Meio-Ambiente.jpg" alt="Página 10" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/xT1Sgp2k/09-Aniversariantes.jpg" alt="Página 11" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/xTpVZGf6/10-Hist-ria-do-Mundo.jpg" alt="Página 12" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/YC4BB4jM/11-Desligamento.jpg" alt="Página 13" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/Bnd9Sq1D/12-Novos-Clientes.jpg" alt="Página 14" loading="lazy">
-  <img class="page-image" src="https://i.postimg.cc/sXrkWwmg/13-Cipa-em-A-o.jpg" alt="Página 15" loading="lazy">
-</div>
+      <div class="native-mode" id="nativeMode">
+        <img class="page-image" src="https://i.postimg.cc/ZKbJ2Kr5/0-CAPA.jpg" alt="Página 1" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/VLKz8QRB/01-Sum-rio.jpg" alt="Página 2" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/P5NTf3VG/02-Miss-o-e-Valores.jpg" alt="Página 3" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/4xMZY6jY/03-Tema-do-M-s.jpg" alt="Página 4" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/Ls1SLqMN/04-Vale-a-Leitura.jpg" alt="Página 5" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/qRHTLkJ0/05-S-ries-e-Filmes.jpg" alt="Página 6" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/5yxWhnQR/06-Reflex-o.jpg" alt="Página 7" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/LXkMQr5P/06-1-Reflex-o-2.jpg" alt="Página 8" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/KjJhxBnv/07-Bem-Estar.jpg" alt="Página 9" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/1RHQGhLh/08-Meio-Ambiente.jpg" alt="Página 10" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/xT1Sgp2k/09-Aniversariantes.jpg" alt="Página 11" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/xTpVZGf6/10-Hist-ria-do-Mundo.jpg" alt="Página 12" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/YC4BB4jM/11-Desligamento.jpg" alt="Página 13" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/Bnd9Sq1D/12-Novos-Clientes.jpg" alt="Página 14" loading="lazy">
+        <img class="page-image" src="https://i.postimg.cc/sXrkWwmg/13-Cipa-em-A-o.jpg" alt="Página 15" loading="lazy">
+      </div>
+
       <!-- Modo Livro -->
       <div class="book-mode" id="bookMode">
         <div class="book-spread">
           <div class="book-page left-page" id="leftPage">
-            <img src="https://i.postimg.cc/qvYrDwVK/0-CAPA.jpg" alt="Página Esquerda">
+            <!-- usar URLs novas para evitar flicker antes do JS -->
+            <img src="https://i.postimg.cc/ZKbJ2Kr5/0-CAPA.jpg" alt="Página Esquerda">
           </div>
           <div class="book-page right-page" id="rightPage">
-            <img src="https://i.postimg.cc/5tCVhzbR/01-Sum-rio.jpg" alt="Página Direita">
+            <img src="https://i.postimg.cc/VLKz8QRB/01-Sum-rio.jpg" alt="Página Direita">
           </div>
         </div>
       </div>
     </div>
   </main>
-  
+
   <!-- FOOTER dinâmico -->
   <div id="footer-placeholder"></div>
-  
+
   <!-- Scripts -->
   <script>
-    // Array com todas as páginas
-  const pages = [
-    'https://i.postimg.cc/ZKbJ2Kr5/0-CAPA.jpg',
-    'https://i.postimg.cc/VLKz8QRB/01-Sum-rio.jpg',
-    'https://i.postimg.cc/P5NTf3VG/02-Miss-o-e-Valores.jpg',
-    'https://i.postimg.cc/4xMZY6jY/03-Tema-do-M-s.jpg',
-    'https://i.postimg.cc/Ls1SLqMN/04-Vale-a-Leitura.jpg',
-    'https://i.postimg.cc/qRHTLkJ0/05-S-ries-e-Filmes.jpg',
-    'https://i.postimg.cc/5yxWhnQR/06-Reflex-o.jpg',
-    'https://i.postimg.cc/LXkMQr5P/06-1-Reflex-o-2.jpg',
-    'https://i.postimg.cc/KjJhxBnv/07-Bem-Estar.jpg',
-    'https://i.postimg.cc/1RHQGhLh/08-Meio-Ambiente.jpg',
-    'https://i.postimg.cc/xT1Sgp2k/09-Aniversariantes.jpg',
-    'https://i.postimg.cc/xTpVZGf6/10-Hist-ria-do-Mundo.jpg',
-    'https://i.postimg.cc/YC4BB4jM/11-Desligamento.jpg',
-    'https://i.postimg.cc/Bnd9Sq1D/12-Novos-Clientes.jpg',
-    'https://i.postimg.cc/sXrkWwmg/13-Cipa-em-A-o.jpg'
-  ];
+    // Array com todas as páginas (15)
+    const pages = [
+      'https://i.postimg.cc/ZKbJ2Kr5/0-CAPA.jpg',
+      'https://i.postimg.cc/VLKz8QRB/01-Sum-rio.jpg',
+      'https://i.postimg.cc/P5NTf3VG/02-Miss-o-e-Valores.jpg',
+      'https://i.postimg.cc/4xMZY6jY/03-Tema-do-M-s.jpg',
+      'https://i.postimg.cc/Ls1SLqMN/04-Vale-a-Leitura.jpg',
+      'https://i.postimg.cc/qRHTLkJ0/05-S-ries-e-Filmes.jpg',
+      'https://i.postimg.cc/5yxWhnQR/06-Reflex-o.jpg',
+      'https://i.postimg.cc/LXkMQr5P/06-1-Reflex-o-2.jpg',
+      'https://i.postimg.cc/KjJhxBnv/07-Bem-Estar.jpg',
+      'https://i.postimg.cc/1RHQGhLh/08-Meio-Ambiente.jpg',
+      'https://i.postimg.cc/xT1Sgp2k/09-Aniversariantes.jpg',
+      'https://i.postimg.cc/xTpVZGf6/10-Hist-ria-do-Mundo.jpg',
+      'https://i.postimg.cc/YC4BB4jM/11-Desligamento.jpg',
+      'https://i.postimg.cc/Bnd9Sq1D/12-Novos-Clientes.jpg',
+      'https://i.postimg.cc/sXrkWwmg/13-Cipa-em-A-o.jpg'
+    ];
 
     // Estado global
     let currentPage = 0;
@@ -538,6 +337,7 @@
     let isDragging = false;
     let startX, startY, scrollLeft, scrollTop;
     let isAnimating = false;
+    let dragContainer = null;
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
@@ -546,19 +346,16 @@
         fetch(`${file}.html`)
           .then(r => r.text())
           .then(html => {
-            document.getElementById(`${file}-placeholder`).innerHTML = html;
-            
+            const placeholder = document.getElementById(`${file}-placeholder`);
+            if (placeholder) placeholder.innerHTML = html;
+
             if (file === 'menu') {
               const toggle = document.getElementById('menu-toggle');
               const menuEl = document.getElementById('menu');
               if (toggle && menuEl) {
-                toggle.addEventListener('click', () => {
-                  menuEl.classList.toggle('active');
-                });
+                toggle.addEventListener('click', () => menuEl.classList.toggle('active'));
                 menuEl.querySelectorAll('a').forEach(link => {
-                  link.addEventListener('click', () => {
-                    menuEl.classList.remove('active');
-                  });
+                  link.addEventListener('click', () => menuEl.classList.remove('active'));
                 });
               } else {
                 console.warn("AVISO: Elementos do menu não encontrados.");
@@ -575,7 +372,7 @@
     // Navegação
     function nextPage() {
       if (isAnimating) return;
-      
+
       if (isBookMode) {
         // No modo livro, avança 2 páginas (uma dupla)
         if (currentPage < totalPages - 2) {
@@ -594,7 +391,7 @@
 
     function previousPage() {
       if (isAnimating) return;
-      
+
       if (isBookMode) {
         // No modo livro, volta 2 páginas (uma dupla)
         if (currentPage >= 2) {
@@ -614,16 +411,13 @@
     function scrollToCurrentPage() {
       const images = document.querySelectorAll('#nativeMode .page-image');
       if (images[currentPage]) {
-        images[currentPage].scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
+        images[currentPage].scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
     function updatePageCounter() {
       document.getElementById('currentPageNum').textContent = currentPage + 1;
-      
+
       if (isBookMode) {
         document.getElementById('prevBtn').disabled = currentPage < 2;
         document.getElementById('nextBtn').disabled = currentPage >= totalPages - 2;
@@ -644,7 +438,7 @@
       const bookMode = document.getElementById('bookMode');
       const modeToggle = document.getElementById('modeToggle');
       const controls = document.getElementById('viewerControls');
-      
+
       if (isBookMode) {
         nativeMode.style.display = 'none';
         bookMode.style.display = 'block';
@@ -665,32 +459,32 @@
 
     function updateBookPageWithAnimation(direction) {
       if (isAnimating) return;
-      
+
       isAnimating = true;
       const leftPageDiv = document.getElementById('leftPage');
       const rightPageDiv = document.getElementById('rightPage');
-      
+
       // Adiciona classes de animação
       leftPageDiv.classList.add('page-turning');
       rightPageDiv.classList.add('page-turning');
-      
+
       if (direction === 'next') {
         rightPageDiv.classList.add('page-turn-right');
       } else {
         leftPageDiv.classList.add('page-turn-left');
       }
-      
+
       setTimeout(() => {
         // Atualiza as imagens
         updateBookPage();
-        
+
         // Remove classes de animação e revela páginas
         setTimeout(() => {
           leftPageDiv.classList.remove('page-turning', 'page-turn-left');
           rightPageDiv.classList.remove('page-turning', 'page-turn-right');
           leftPageDiv.classList.add('page-reveal');
           rightPageDiv.classList.add('page-reveal');
-          
+
           setTimeout(() => {
             leftPageDiv.classList.remove('page-reveal');
             rightPageDiv.classList.remove('page-reveal');
@@ -701,37 +495,34 @@
     }
 
     function updateBookPage() {
-      const leftPage = document.getElementById('leftPage').querySelector('img');
-      const rightPage = document.getElementById('rightPage').querySelector('img');
-      
+      const leftPage = document.querySelector('#leftPage img');
+      const rightPage = document.querySelector('#rightPage img');
+
       // Atualiza as imagens
-      leftPage.src = pages[currentPage] || '';
+      leftPage.src  = pages[currentPage]     || '';
       rightPage.src = pages[currentPage + 1] || '';
-      
-      leftPage.alt = `Página ${currentPage + 1}`;
+
+      leftPage.alt  = `Página ${currentPage + 1}`;
       rightPage.alt = `Página ${currentPage + 2}`;
     }
 
     // Zoom
-    function zoomIn() {
-      zoomLevel = Math.min(zoomLevel + 0.25, 3);
-      applyZoom();
-    }
-
-    function zoomOut() {
-      zoomLevel = Math.max(zoomLevel - 0.25, 0.5);
-      applyZoom();
-    }
-
+    function zoomIn()  { zoomLevel = Math.min(zoomLevel + 0.25, 3);  applyZoom(); }
+    function zoomOut() { zoomLevel = Math.max(zoomLevel - 0.25, 0.5); applyZoom(); }
     function resetZoom() {
       zoomLevel = 1;
       applyZoom();
+      // limpa estados de drag se houver
+      isDragging = false; dragContainer = null;
+      document.body.classList.remove('dragging');
+      const pagesEls = document.querySelectorAll('.book-page');
+      pagesEls.forEach(p => p.classList.remove('dragging'));
     }
 
     function applyZoom() {
       const container = document.getElementById('journalContainer');
       const images = container.querySelectorAll('.page-image');
-      
+
       images.forEach(img => {
         img.style.transform = `scale(${zoomLevel})`;
         if (zoomLevel > 1) {
@@ -744,29 +535,26 @@
       });
 
       // Aplicar zoom no modo livro também
-      if (isBookMode) {
-        const bookImages = container.querySelectorAll('.book-page img');
-        bookImages.forEach(img => {
-          img.style.transform = `scale(${zoomLevel})`;
-          if (zoomLevel > 1) {
-            img.classList.add('zoomed');
-            enableImageDrag(img);
-          } else {
-            img.classList.remove('zoomed');
-            disableImageDrag(img);
-          }
-        });
-      }
+      const bookImages = container.querySelectorAll('.book-page img');
+      bookImages.forEach(img => {
+        img.style.transform = `scale(${zoomLevel})`;
+        if (zoomLevel > 1) {
+          img.classList.add('zoomed');
+          enableImageDrag(img);
+        } else {
+          img.classList.remove('zoomed');
+          disableImageDrag(img);
+        }
+      });
     }
 
-    // Arrastar imagem quando com zoom
+    // Arrastar imagem quando com zoom (pan)
     function enableImageDrag(img) {
       img.addEventListener('mousedown', startDrag);
       img.addEventListener('mousemove', drag);
       img.addEventListener('mouseup', endDrag);
       img.addEventListener('mouseleave', endDrag);
     }
-
     function disableImageDrag(img) {
       img.removeEventListener('mousedown', startDrag);
       img.removeEventListener('mousemove', drag);
@@ -775,45 +563,65 @@
     }
 
     function startDrag(e) {
+      if (zoomLevel <= 1) return; // só pan quando houver zoom
       isDragging = true;
-      startX = e.pageX - e.target.offsetLeft;
-      startY = e.pageY - e.target.offsetTop;
-      scrollLeft = e.target.scrollLeft;
-      scrollTop = e.target.scrollTop;
+      e.preventDefault();
+
+      // No book mode, rolamos o contêiner .book-page. No nativo, rolamos a janela.
+      dragContainer = e.target.closest('.book-page') || null;
+
+      startX = e.pageX;
+      startY = e.pageY;
+
+      if (dragContainer) {
+        scrollLeft = dragContainer.scrollLeft;
+        scrollTop  = dragContainer.scrollTop;
+        dragContainer.classList.add('dragging');
+      } else {
+        scrollLeft = window.scrollX;
+        scrollTop  = window.scrollY;
+        document.body.classList.add('dragging');
+      }
     }
 
     function drag(e) {
       if (!isDragging) return;
       e.preventDefault();
-      const x = e.pageX - e.target.offsetLeft;
-      const y = e.pageY - e.target.offsetTop;
-      const walkX = (x - startX) * 2;
-      const walkY = (y - startY) * 2;
-      e.target.scrollLeft = scrollLeft - walkX;
-      e.target.scrollTop = scrollTop - walkY;
+
+      const dx = (e.pageX - startX);
+      const dy = (e.pageY - startY);
+
+      if (dragContainer) {
+        dragContainer.scrollLeft = scrollLeft - dx;
+        dragContainer.scrollTop  = scrollTop  - dy;
+      } else {
+        window.scrollTo(scrollLeft - dx, scrollTop - dy);
+      }
     }
 
     function endDrag() {
+      if (!isDragging) return;
       isDragging = false;
+
+      if (dragContainer) {
+        dragContainer.classList.remove('dragging');
+      } else {
+        document.body.classList.remove('dragging');
+      }
+      dragContainer = null;
     }
 
     // Navegação por teclado
     document.addEventListener('keydown', (e) => {
       if (window.innerWidth > 768) { // Apenas desktop
         switch(e.key) {
-          case 'ArrowLeft':
-            previousPage();
-            break;
-          case 'ArrowRight':
-            nextPage();
-            break;
+          case 'ArrowLeft': previousPage(); break;
+          case 'ArrowRight': nextPage(); break;
           case ' ':
             e.preventDefault();
             nextPage();
             break;
-          case 'Escape':
-            resetZoom();
-            break;
+          case 'Escape': resetZoom(); break;
         }
       }
     });
