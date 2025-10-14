@@ -1,38 +1,32 @@
 [
   {
-    "nome": "Bernado",
+    "nome": "Kauã",
     "cargo": "Produção",
-    "data": "06/09",
-    "imagem": "https://i.postimg.cc/wTPfPHyz/06-09-Bernado-Brand-o.png"
+    "data": "13/10",
+    "imagem": "https://i.postimg.cc/SRnG5FXT/13-Kau-Campos.jpg"
   },
   {
-    "nome": "Marcos",
+    "nome": "João V.",
     "cargo": "Produção",
-    "data": "12/09",
-    "imagem": "https://i.postimg.cc/NMgpTjV6/12-09-Marcos-Rodrigues.png"
+    "data": "17/10",
+    "imagem": "https://i.postimg.cc/pr3BMGz2/17-Jo-o-Victor-Gouveia.jpg"
   },
   {
-    "nome": "Robson",
-    "cargo": "Clicheria",
-    "data": "12/09",
-    "imagem": "https://i.postimg.cc/XvKspC2N/12-09-Robson-Junior.png"
+    "nome": "Luciano.",
+    "cargo": "Automação",
+    "data": "18/10",
+    "imagem": "https://i.postimg.cc/XNPL5JhT/18-Luciano-Silva.jpg"
   },
   {
-    "nome": "Leandro",
-    "cargo": "Clicheria",
-    "data": "13/09",
-    "imagem": "https://i.postimg.cc/xdVsfR3F/13-09-Leandro-Santos.png"
+    "nome": "Denner",
+    "cargo": "Gente e Gestão",
+    "data": "19/10",
+    "imagem": "https://i.postimg.cc/J4Bq58Ct/19-Denner-Pacheco.jpg"
   },
   {
-    "nome": "Tiago",
-    "cargo": "Marketing",
-    "data": "16/09",
-    "imagem": "https://i.postimg.cc/d14n9KPz/16-09-Tiago-Ferraz.png"
-  },
-  {
-    "nome": "Iuri",
-    "cargo": "Controladoria",
-    "data": "22/09",
-    "imagem": "https://i.postimg.cc/ZnnH7DJ0/22-09-Iuri-Mendon-a.png"
+    "nome": "João V.",
+    "cargo": "Produção",
+    "data": "21/10",
+    "imagem": "https://i.postimg.cc/kg3yjH7s/21-Jo-o-Victor-Luiz.jpg"
   }
 ]
