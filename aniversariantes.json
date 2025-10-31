@@ -1,32 +1,50 @@
 [
   {
-    "nome": "Kauã",
-    "cargo": "Produção",
-    "data": "13/10",
-    "imagem": "https://i.postimg.cc/SRnG5FXT/13-Kau-Campos.jpg"
-  },
-  {
-    "nome": "João V.",
-    "cargo": "Produção",
-    "data": "17/10",
-    "imagem": "https://i.postimg.cc/pr3BMGz2/17-Jo-o-Victor-Gouveia.jpg"
-  },
-  {
-    "nome": "Luciano.",
-    "cargo": "Automação",
-    "data": "18/10",
-    "imagem": "https://i.postimg.cc/XNPL5JhT/18-Luciano-Silva.jpg"
-  },
-  {
-    "nome": "Denner",
+    "nome": "Milene",
     "cargo": "Gente e Gestão",
-    "data": "19/10",
-    "imagem": "https://i.postimg.cc/J4Bq58Ct/19-Denner-Pacheco.jpg"
+    "data": "03/11",
+    "imagem": "https://i.postimg.cc/g20trt7M/03-Milene-Franca.jpg"
   },
   {
-    "nome": "João V.",
+    "nome": "Zélia",
+    "cargo": "Gente e Gestão",
+    "data": "06/11",
+    "imagem": "https://i.postimg.cc/CxKrdr23/06-Zelia-Mendes.jpg"
+  },
+  {
+    "nome": "Robson",
     "cargo": "Produção",
-    "data": "21/10",
-    "imagem": "https://i.postimg.cc/kg3yjH7s/21-Jo-o-Victor-Luiz.jpg"
+    "data": "08/11",
+    "imagem": "https://i.postimg.cc/XYv1X1hM/08-Robson-Luz.jpg"
+  },
+  {
+    "nome": "Bruno",
+    "cargo": "Produção",
+    "data": "11/11",
+    "imagem": "https://i.postimg.cc/P5qVNVcH/11-Bruno-Salgado.jpg"
+  },
+  {
+    "nome": "Flávio",
+    "cargo": "Gente e Gestão",
+    "data": "24/11",
+    "imagem": "https://i.postimg.cc/T3PNhNSG/24-Flavio-Ferreira.jpg"
+  },
+  {
+    "nome": "Marcelo",
+    "cargo": "Produção",
+    "data": "29/11",
+    "imagem": "https://i.postimg.cc/mg6X9NxJ/29-Marcelo-Coutinho.jpg"
+  },
+  {
+    "nome": "Wallace",
+    "cargo": "Comercial",
+    "data": "29/11",
+    "imagem": "https://i.postimg.cc/Jzd6Xcw9/29-Wallace-Terto.jpg"
+  },
+  {
+    "nome": "Rodolfo",
+    "cargo": "Compras",
+    "data": "30/11",
+    "imagem": "https://i.postimg.cc/6p1jZLJ6/30-Rodolfo-Ramalho.jpg"
   }
 ]
