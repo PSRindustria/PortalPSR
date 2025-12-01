@@ -1,50 +1,26 @@
 [
   {
-    "nome": "Milene",
-    "cargo": "Gente e Gestão",
-    "data": "03/11",
-    "imagem": "https://i.postimg.cc/g20trt7M/03-Milene-Franca.jpg"
+    "nome": "CEO Paulo",
+    "cargo": "Diretor",
+    "data": "04/12",
+    "imagem": "https://i.postimg.cc/qvLky5jD/04-12-Paulo-Roberto.jpg"
   },
   {
-    "nome": "Zélia",
-    "cargo": "Gente e Gestão",
-    "data": "06/11",
-    "imagem": "https://i.postimg.cc/CxKrdr23/06-Zelia-Mendes.jpg"
-  },
-  {
-    "nome": "Robson",
+    "nome": "Lelinho",
     "cargo": "Produção",
-    "data": "08/11",
-    "imagem": "https://i.postimg.cc/XYv1X1hM/08-Robson-Luz.jpg"
+    "data": "12/12",
+    "imagem": "https://i.postimg.cc/pLZ2z6qS/12-12-Marco-Aurelio.jpg"
   },
   {
-    "nome": "Bruno",
+    "nome": "Israel",
     "cargo": "Produção",
-    "data": "11/11",
-    "imagem": "https://i.postimg.cc/P5qVNVcH/11-Bruno-Salgado.jpg"
+    "data": "26/12",
+    "imagem": "https://i.postimg.cc/qvLky5jY/26-12-Israel-Scoralick.jpg"
   },
   {
-    "nome": "Flávio",
-    "cargo": "Gente e Gestão",
-    "data": "24/11",
-    "imagem": "https://i.postimg.cc/T3PNhNSG/24-Flavio-Ferreira.jpg"
-  },
-  {
-    "nome": "Marcelo",
-    "cargo": "Produção",
-    "data": "29/11",
-    "imagem": "https://i.postimg.cc/mg6X9NxJ/29-Marcelo-Coutinho.jpg"
-  },
-  {
-    "nome": "Wallace",
-    "cargo": "Comercial",
-    "data": "29/11",
-    "imagem": "https://i.postimg.cc/Jzd6Xcw9/29-Wallace-Terto.jpg"
-  },
-  {
-    "nome": "Rodolfo",
-    "cargo": "Compras",
-    "data": "30/11",
-    "imagem": "https://i.postimg.cc/6p1jZLJ6/30-Rodolfo-Ramalho.jpg"
+    "nome": "Nilo",
+    "cargo": "QSMS",
+    "data": "28/12",
+    "imagem": "https://i.postimg.cc/nhkHBP0P/28-12-Nilo-Sergio.jpg"
   }
 ]
