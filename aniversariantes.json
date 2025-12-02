@@ -6,6 +6,12 @@
     "imagem": "https://i.postimg.cc/qvLky5jD/04-12-Paulo-Roberto.jpg"
   },
   {
+    "nome": "Thamires",
+    "cargo": "Produção",
+    "data": "10/12",
+    "imagem": "https://i.postimg.cc/B6YYRzGF/10-12-Thamires-Oliveira.jpg"
+  },
+  {
     "nome": "Lelinho",
     "cargo": "Produção",
     "data": "12/12",
@@ -22,5 +28,11 @@
     "cargo": "QSMS",
     "data": "28/12",
     "imagem": "https://i.postimg.cc/nhkHBP0P/28-12-Nilo-Sergio.jpg"
+  },
+  {
+    "nome": "Solanie",
+    "cargo": "Comercial",
+    "data": "29/12",
+    "imagem": "https://i.postimg.cc/xCxxBZSM/29-12-Solanie-Paz.jpg"
   }
 ]
