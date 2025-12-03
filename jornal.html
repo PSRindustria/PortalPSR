@@ -3,36 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" href="favicon.png" type="image/png">
-  <meta property="og:title" content="Portal PSR">
-  <meta property="og:description" content="Jornal PSR">
-  <meta property="og:image" content="https://i.postimg.cc/y602YBCK/0-CAPA.jpg">
-  <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
-  <meta property="og:type" content="website">
   <title>PSR Indústria - Jornal PSR</title>
-  <!-- CSS principal -->
-  <link rel="stylesheet" href="style.css" />
+  
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
   <style>
-    /* reset básico */
-    html, body { margin: 0; padding: 0; height: 100%; background: #e0e0e0; font-family: sans-serif; }
+    /* --- ESTILOS GERAIS --- */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; background: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    
+    /* Cabeçalho Simples (Substituindo o menu externo) */
+    header {
+      background-color: #004aad; /* Cor da PSR ou azul padrão */
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0; width: 100%; z-index: 2000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      height: 60px;
+    }
+    header h1 { margin: 0; font-size: 1.2rem; }
+    header nav a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+    header nav a:hover { text-decoration: underline; }
+
     main {
-      margin-top: 50px;
-      margin-bottom: 0;
-      padding-bottom: 0;
-      text-align: center;
-      position: relative;
-      padding-top: 30px;
-      height: calc(100vh - 80px);
+      margin-top: 60px; /* Espaço do header */
+      height: calc(100vh - 60px);
       overflow: hidden;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    /* --- Controles flutuantes --- */
+    /* --- CONTROLES FLUTUANTES --- */
     .viewer-controls {
       position: fixed;
       top: 50%;
@@ -53,93 +61,91 @@
     }
     .viewer-controls:hover { opacity: 1; scale: 1; background: rgba(0, 0, 0, 0.85); }
 
+    /* Estilo dos controles no modo Revista */
     .viewer-controls.book-mode-controls {
-      position: fixed;
-      top: 20px;
+      top: 80px; /* Logo abaixo do header */
       left: 50%;
       right: auto;
       transform: translateX(-50%);
       flex-direction: row;
-      gap: 15px;
       background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
+      border: 1px solid #ccc;
       opacity: 0.9;
       scale: 1;
-      border: 1px solid #ccc;
     }
-    .viewer-controls.book-mode-controls:hover { background: rgba(255, 255, 255, 1); opacity: 1; }
+    .viewer-controls.book-mode-controls:hover { opacity: 1; }
 
     .control-btn {
       background: rgba(255, 255, 255, 0.9);
       color: #333;
       border: none;
-      padding: 8px 10px;
+      padding: 10px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 16px;
+      transition: all 0.2s;
     }
-    .control-btn:hover { background: rgba(255, 255, 255, 1); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .control-btn:disabled { background: rgba(255, 255, 255, 0.5); color: #999; cursor: not-allowed; transform: none; }
-
-    .book-mode-controls .control-btn { background: #333; color: #fff; padding: 10px 15px; font-size: 16px; }
+    .control-btn:hover { background: #fff; transform: scale(1.1); }
+    .control-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    
+    .book-mode-controls .control-btn { background: #333; color: #fff; }
     .book-mode-controls .control-btn:hover { background: #555; }
-    .book-mode-controls .control-btn:disabled { background: #ccc; color: #999; }
-
-    .mode-toggle { background: #007bff !important; color: #fff !important; font-size: 12px; padding: 6px 10px; }
-    .book-mode-controls .mode-toggle { background: #007bff !important; font-size: 14px; padding: 8px 12px; }
 
     .page-counter {
-      background: rgba(255, 255, 255, 0.9);
-      color: #333;
-      padding: 6px 10px;
-      border-radius: 8px;
+      background: rgba(255,255,255,0.9);
+      padding: 5px 10px;
+      border-radius: 5px;
       font-weight: bold;
-      font-size: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 14px;
+      display: flex; align-items: center;
     }
-    .book-mode-controls .page-counter { background: #f8f9fa; padding: 8px 12px; font-size: 14px; border: 1px solid #ddd; }
+    .book-mode-controls .page-counter { background: #f0f0f0; border: 1px solid #ccc; }
 
-    /* Container do visualizador */
+    .mode-toggle { background: #007bff !important; color: white !important; font-size: 12px; }
+    .book-mode-controls .mode-toggle { font-size: 14px; padding: 8px 15px; }
+
+    .zoom-controls { display: flex; flex-direction: column; gap: 5px; }
+    .book-mode-controls .zoom-controls { flex-direction: row; }
+
+    /* --- CONTAINER PRINCIPAL --- */
     .journal-container {
       width: 100%;
       max-width: 800px;
-      margin: 0 auto;
+      height: 100%;
       position: relative;
-      transition: all 0.5s ease;
+      transition: max-width 0.3s ease;
+      overflow-y: auto; /* Scroll para modo nativo */
     }
 
-    /* --- MODO NATIVO --- */
-    .native-mode { display: block; padding-bottom: 50px; }
+    /* --- MODO NATIVO (Scroll Vertical) --- */
+    .native-mode { padding: 20px; text-align: center; padding-bottom: 60px; }
     .native-mode .page-image {
       width: 100%;
       height: auto;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       display: block;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* --- MODO REVISTA (Efeito Realista) --- */
+    /* --- MODO REVISTA (3D) --- */
     .book-mode {
       display: none;
       position: relative;
-      height: 85vh;
+      height: 100%;
       width: 100%;
-      display: flex;
       align-items: center;
       justify-content: center;
-      perspective: 2000px; /* Perspectiva alta para suavizar o 3D */
+      perspective: 2500px;
+      overflow: hidden;
     }
-
+    
     .book-spread {
       position: relative;
       width: 90vw;
-      max-width: 1100px;
-      aspect-ratio: 1.5 / 1;
+      max-width: 1200px;
+      aspect-ratio: 1.5 / 1; /* Formato aberto */
       transform-style: preserve-3d;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* Sombra flutuante */
+      transition: transform 0.3s;
     }
 
     .book-page {
@@ -147,133 +153,139 @@
       width: 50%;
       height: 100%;
       top: 0;
-      background-color: #fdfdfd; /* Cor de papel levemente off-white */
+      background-color: #fdfdfd;
       overflow: hidden;
       transform-style: preserve-3d;
       backface-visibility: hidden;
-      /* Timing function ease-in-out para simular inércia do papel */
-      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), 
-                  box-shadow 0.9s cubic-bezier(0.4, 0, 0.2, 1),
-                  border-radius 0.5s ease; 
-      
-      /* Gradiente sutil para textura de papel */
-      background-image: linear-gradient(to right, rgba(0,0,0,0.02), rgba(0,0,0,0));
+      /* Transições suaves para simular papel */
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  border-radius 0.4s ease,
+                  box-shadow 0.4s ease;
     }
 
     .book-page img {
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-      user-select: none;
-      pointer-events: none; /* Evita arrastar a imagem fantasma */
+      width: 100%; height: 100%; object-fit: fill;
+      pointer-events: none; user-select: none;
     }
 
-    /* Configuração Página Esquerda */
+    /* Lado Esquerdo */
     .book-page.left-page {
       left: 0;
       transform-origin: right center;
-      border-radius: 4px 0 0 4px;
+      border-radius: 5px 0 0 5px;
       z-index: 1;
     }
-    /* Sombra na lombada esquerda */
-    .book-page.left-page::after {
-      content: ""; position: absolute; top:0; right:0; bottom:0; width: 40px;
+    .book-page.left-page::after { /* Sombra da lombada */
+      content: ""; position: absolute; top:0; right:0; bottom:0; width: 50px;
       background: linear-gradient(to left, rgba(0,0,0,0.15), transparent);
-      pointer-events: none; z-index: 5;
+      pointer-events: none;
     }
 
-    /* Configuração Página Direita */
+    /* Lado Direito */
     .book-page.right-page {
       right: 0;
       transform-origin: left center;
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 5px 5px 0;
       z-index: 1;
     }
-    /* Sombra na lombada direita */
-    .book-page.right-page::after {
-      content: ""; position: absolute; top:0; left:0; bottom:0; width: 40px;
+    .book-page.right-page::after { /* Sombra da lombada */
+      content: ""; position: absolute; top:0; left:0; bottom:0; width: 50px;
       background: linear-gradient(to right, rgba(0,0,0,0.15), transparent);
-      pointer-events: none; z-index: 5;
+      pointer-events: none;
     }
 
-    /* --- ANIMAÇÕES DE VIRADA COM EFEITO CURVADO --- */
+    /* --- ANIMAÇÕES DE VIRADA (Efeito "Curl") --- */
     
-    /* Virando da Direita para Esquerda (Next) */
-    .turn-to-left {
-      transform: rotateY(-180deg);
-      z-index: 20;
-    }
-    
-    /* Virando da Esquerda para Direita (Prev) */
-    .turn-to-right {
-      transform: rotateY(180deg);
-      z-index: 20;
-    }
+    /* Classes de rotação */
+    .turn-to-left { transform: rotateY(-180deg); z-index: 20; }
+    .turn-to-right { transform: rotateY(180deg); z-index: 20; }
 
-    /* Classe auxiliar para aplicar o efeito de "dobra" (border-radius) durante o movimento */
-    .bending-page {
-      /* Simula a folha dobrando no canto inferior durante a passagem */
-      border-bottom-right-radius: 100px !important;
-      border-top-right-radius: 20px !important; 
-      box-shadow: 10px 10px 30px rgba(0,0,0,0.2);
-    }
-    
-    /* Para a página esquerda voltando */
-    .bending-page-left {
-      border-bottom-left-radius: 100px !important;
-      border-top-left-radius: 20px !important;
-      box-shadow: -10px 10px 30px rgba(0,0,0,0.2);
-    }
-
-    /* Estados auxiliares */
     .start-turned-left { transform: rotateY(-180deg); }
     .start-turned-right { transform: rotateY(180deg); }
     .notransition { transition: none !important; }
 
-    /* Zoom / Pan */
-    .zoomed { cursor: grab; transform-origin: top left; position: absolute; pointer-events: auto !important; }
-    .zoomed:active { cursor: grabbing; }
-
-    /* Mobile */
-    @media (max-width: 768px) {
-      .viewer-controls { display: none; }
-      .journal-container { max-width: 100%; padding: 0 10px; }
-      .book-mode { display: none !important; }
-      .native-mode { display: block !important; }
+    /* Efeito de papel dobrando (border-radius dinâmico) */
+    .bending-page-right {
+      /* Canto inferior direito levanta */
+      border-bottom-right-radius: 120px !important;
+      border-top-right-radius: 10px !important;
+      box-shadow: 15px 20px 40px rgba(0,0,0,0.3);
     }
     
-    /* Background realista */
+    .bending-page-left {
+      /* Canto inferior esquerdo levanta */
+      border-bottom-left-radius: 120px !important;
+      border-top-left-radius: 10px !important;
+      box-shadow: -15px 20px 40px rgba(0,0,0,0.3);
+    }
+
+    /* --- ZOOM --- */
+    .zoomed { cursor: grab; transform-origin: top left; position: absolute; pointer-events: auto !important; z-index: 50; }
+    .zoomed:active { cursor: grabbing; }
+
+    /* --- BACKGROUND DECORATIVO --- */
     .book-mode::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle, #ddd 0%, #bbb 100%);
+      background: radial-gradient(circle at center, #dcdcdc 0%, #b0b0b0 100%);
       z-index: -1;
+    }
+
+    /* --- MOBILE --- */
+    @media (max-width: 768px) {
+      .viewer-controls { display: none; } /* Oculta controles flutuantes no mobile */
+      header { justify-content: center; }
+      header nav { display: none; }
+      .book-mode { display: none !important; }
+      .native-mode { display: block !important; }
+      .journal-container { max-width: 100%; overflow-y: auto; }
     }
   </style>
 </head>
 <body>
-  <div id="menu-placeholder"></div>
+
+  <!-- HEADER EMBUTIDO (Para evitar erro 404 de menu externo) -->
+  <header>
+    <h1>Portal PSR - Jornal Digital</h1>
+    <nav>
+      <a href="#" onclick="alert('Início')">Início</a>
+      <a href="#" onclick="alert('Edições Anteriores')">Edições</a>
+      <a href="#" onclick="alert('Contato')">Contato</a>
+    </nav>
+  </header>
 
   <main>
+    <!-- CONTROLES -->
     <div class="viewer-controls" id="viewerControls">
       <button class="control-btn" id="prevBtn" onclick="previousPage()" title="Anterior"><i class="fas fa-chevron-left"></i></button>
-      <div class="page-counter"><span id="currentPageNum">1</span>/<span id="totalPages">17</span></div>
-      <button class="control-btn" id="nextBtn" onclick="nextPage()" title="Próximo"><i class="fas fa-chevron-right"></i></button>
       
+      <div class="page-counter">
+        <span id="currentPageNum">1</span> / <span id="totalPages">17</span>
+      </div>
+      
+      <button class="control-btn" id="nextBtn" onclick="nextPage()" title="Próximo"><i class="fas fa-chevron-right"></i></button>
+
       <div class="zoom-controls">
         <button class="control-btn" onclick="zoomOut()"><i class="fas fa-search-minus"></i></button>
         <button class="control-btn" onclick="zoomIn()"><i class="fas fa-search-plus"></i></button>
         <button class="control-btn" onclick="resetZoom()"><i class="fas fa-expand"></i></button>
       </div>
-      <button class="control-btn mode-toggle" id="modeToggle" onclick="toggleMode()">Revista</button>
+
+      <button class="control-btn mode-toggle" id="modeToggle" onclick="toggleMode()">
+        Revista
+      </button>
     </div>
 
+    <!-- CONTAINER DAS PÁGINAS -->
     <div class="journal-container" id="journalContainer">
-      <!-- MODO NATIVO -->
-      <div class="native-mode" id="nativeMode"></div>
+      
+      <!-- MODO NATIVO (Lista Vertical) -->
+      <div class="native-mode" id="nativeMode">
+        <!-- Imagens inseridas via JS -->
+      </div>
 
-      <!-- MODO REVISTA -->
+      <!-- MODO REVISTA (Livro 3D) -->
       <div class="book-mode" id="bookMode">
-        <div class="book-spread" id="bookSpread">
+        <div class="book-spread">
           <div class="book-page left-page" id="leftPage">
             <img src="" alt="Página Esquerda">
           </div>
@@ -282,12 +294,12 @@
           </div>
         </div>
       </div>
+
     </div>
   </main>
 
-  <div id="footer-placeholder"></div>
-
   <script>
+    /* --- CONFIGURAÇÃO --- */
     const pages = [
       'https://i.postimg.cc/y602YBCK/0-CAPA.jpg',
       'https://i.postimg.cc/pVK3XxMX/01-Sumario.jpg',
@@ -312,108 +324,134 @@
     const totalPages = pages.length;
     let isBookMode = false;
     let zoomLevel = 1;
-    let isDragging = false;
-    let startX, startY, imgX = 0, imgY = 0;
     let isAnimating = false;
-    let dragElement = null;
+    
+    // Variáveis para arrastar zoom
+    let isDragging = false, startX, startY, imgX=0, imgY=0, dragEl=null;
 
+    /* --- INICIALIZAÇÃO --- */
     document.addEventListener('DOMContentLoaded', () => {
-      const loadExternal = (id, file) => {
-        const el = document.getElementById(id);
-        if(el) fetch(`${file}.html`).then(r => r.text()).then(h => el.innerHTML = h).catch(e=>{});
-      };
-      loadExternal('menu-placeholder', 'menu.html');
-      loadExternal('footer-placeholder', 'footer.html');
-
-      const nativeContainer = document.getElementById('nativeMode');
-      pages.forEach((src, i) => {
+      // Preencher modo nativo
+      const nativeDiv = document.getElementById('nativeMode');
+      pages.forEach((src, idx) => {
         const img = document.createElement('img');
-        img.src = src; img.className = 'page-image'; img.loading = 'lazy';
-        nativeContainer.appendChild(img);
+        img.src = src;
+        img.className = 'page-image';
+        img.loading = 'lazy';
+        nativeDiv.appendChild(img);
       });
 
-      updatePageCounter();
-      document.getElementById('totalPages').textContent = totalPages;
+      // Configurar contadores
+      document.getElementById('totalPages').innerText = totalPages;
+      updateUI();
+      
+      // Carregar primeira página do modo revista (sem mostrar ainda)
       updateBookImages(0);
     });
 
+    /* --- NAVEGAÇÃO --- */
     function nextPage() {
       if (isAnimating) return;
+      
       if (isBookMode) {
-        if (currentPage < totalPages - 1) animateBookTurn('next');
+        if (currentPage < totalPages - 1) animateTurn('next');
       } else {
-        if (currentPage < totalPages - 1) { currentPage++; scrollToCurrentPage(); updatePageCounter(); }
+        if (currentPage < totalPages - 1) {
+          currentPage++;
+          scrollToNative();
+          updateUI();
+        }
       }
     }
 
     function previousPage() {
       if (isAnimating) return;
+
       if (isBookMode) {
-        if (currentPage >= 2) animateBookTurn('prev');
+        if (currentPage >= 2) animateTurn('prev');
       } else {
-        if (currentPage > 0) { currentPage--; scrollToCurrentPage(); updatePageCounter(); }
+        if (currentPage > 0) {
+          currentPage--;
+          scrollToNative();
+          updateUI();
+        }
       }
     }
 
-    // --- LÓGICA DE ANIMAÇÃO REALISTA ---
-    function animateBookTurn(direction) {
+    function updateUI() {
+      document.getElementById('currentPageNum').innerText = currentPage + 1;
+      
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      if (isBookMode) {
+        prevBtn.disabled = currentPage < 2;
+        // Permite ir até a última mesmo sendo ímpar
+        nextBtn.disabled = currentPage >= (totalPages % 2 === 0 ? totalPages - 2 : totalPages - 1);
+      } else {
+        prevBtn.disabled = currentPage === 0;
+        nextBtn.disabled = currentPage === totalPages - 1;
+      }
+    }
+
+    /* --- MODO REVISTA: ANIMAÇÃO REALISTA --- */
+    function animateTurn(direction) {
       isAnimating = true;
       const leftPage = document.getElementById('leftPage');
       const rightPage = document.getElementById('rightPage');
-      const duration = 900; // Tempo da transição CSS
+      const duration = 800; // ms
 
       if (direction === 'next') {
-        // 1. Inicia rotação
+        // 1. Inicia virada da direita para esquerda
         rightPage.classList.add('turn-to-left');
         
-        // 2. Aplica efeito de dobra (curva) no início da virada
-        setTimeout(() => { rightPage.classList.add('bending-page'); }, 50);
+        // 2. Aplica efeito de dobra (curl) no canto
+        setTimeout(() => rightPage.classList.add('bending-page-right'), 50);
 
-        // 3. Na metade (90 graus), troca conteúdo e remove a dobra
+        // 3. Meio do caminho (troca de conteúdo)
         setTimeout(() => {
           currentPage += 2;
           updateBookImages(currentPage);
-          updatePageCounter();
-          
-          // Troca instantânea de posições lógicas para visuais
-          rightPage.classList.remove('bending-page'); // Remove dobra
-          rightPage.classList.add('notransition');
-          rightPage.classList.remove('turn-to-left');
-          
-          leftPage.classList.add('notransition');
-          leftPage.classList.add('start-turned-right'); // Esquerda começa onde a direita parou
-          
-          // Força renderização
-          void leftPage.offsetWidth; 
-          
-          // Completa o movimento
-          leftPage.classList.remove('notransition');
-          leftPage.classList.remove('start-turned-right');
+          updateUI();
+
+          // Reset visual instantâneo (troca lógica das páginas)
+          rightPage.classList.remove('bending-page-right', 'turn-to-left');
+          rightPage.classList.add('notransition'); // Previne animação reversa
+
+          leftPage.classList.add('notransition', 'start-turned-right'); // Esquerda aparece já virada
+          void leftPage.offsetWidth; // Força repaint
+
+          // Finaliza movimento suave da esquerda (chegando no lugar)
+          leftPage.classList.remove('notransition', 'start-turned-right');
           rightPage.classList.remove('notransition');
-        }, duration / 2); // 450ms
+
+        }, duration / 2);
 
         setTimeout(() => { isAnimating = false; }, duration + 50);
 
       } else {
-        // Lógica Inversa (Prev)
-        leftPage.classList.add('turn-to-right');
-        setTimeout(() => { leftPage.classList.add('bending-page-left'); }, 50);
+        // Direção PREV (Esquerda para Direita)
+        leftPage.classList.add('turn-to-left'); // Usa mesma lógica de rotação mas inversa
+        leftPage.style.transform = "rotateY(0deg)"; // Reset forçado
+        
+        // Pequeno delay para browser registrar estado inicial
+        requestAnimationFrame(() => {
+            leftPage.classList.add('turn-to-right');
+            setTimeout(() => leftPage.classList.add('bending-page-left'), 50);
+        });
 
         setTimeout(() => {
           currentPage -= 2;
           updateBookImages(currentPage);
-          updatePageCounter();
+          updateUI();
 
-          leftPage.classList.remove('bending-page-left');
+          leftPage.classList.remove('bending-page-left', 'turn-to-right');
           leftPage.classList.add('notransition');
-          leftPage.classList.remove('turn-to-right');
 
-          rightPage.classList.add('notransition');
-          rightPage.classList.add('start-turned-left');
+          rightPage.classList.add('notransition', 'start-turned-left');
           void rightPage.offsetWidth;
 
-          rightPage.classList.remove('notransition');
-          rightPage.classList.remove('start-turned-left');
+          rightPage.classList.remove('notransition', 'start-turned-left');
           leftPage.classList.remove('notransition');
         }, duration / 2);
 
@@ -421,26 +459,27 @@
       }
     }
 
-    function updateBookImages(pageIndex) {
-      const leftImg = document.querySelector('#leftPage img');
-      const rightImg = document.querySelector('#rightPage img');
+    function updateBookImages(idx) {
+      const lImg = document.querySelector('#leftPage img');
+      const rImg = document.querySelector('#rightPage img');
+      
+      if (idx % 2 !== 0) idx--; // Garante par
 
-      if (pageIndex % 2 !== 0) pageIndex--; // Garante par
-
-      leftImg.src = pages[pageIndex] || '';
-      // GIF transparente se não tiver página
-      rightImg.src = pages[pageIndex + 1] || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+      lImg.src = pages[idx] || '';
+      // Pixel transparente se não houver página
+      rImg.src = pages[idx + 1] || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
       
       resetZoom();
     }
 
+    /* --- ALTERNAR MODOS --- */
     function toggleMode() {
       isBookMode = !isBookMode;
       const native = document.getElementById('nativeMode');
       const book = document.getElementById('bookMode');
       const container = document.getElementById('journalContainer');
       const controls = document.getElementById('viewerControls');
-      const toggleBtn = document.getElementById('modeToggle');
+      const btn = document.getElementById('modeToggle');
 
       resetZoom();
 
@@ -448,54 +487,46 @@
         native.style.display = 'none';
         book.style.display = 'flex';
         container.style.maxWidth = '100%';
-        toggleBtn.textContent = 'Nativo';
+        container.style.overflowY = 'hidden';
+        btn.textContent = 'Nativo';
         controls.classList.add('book-mode-controls');
+        
         if (currentPage % 2 !== 0) currentPage--;
         updateBookImages(currentPage);
       } else {
         native.style.display = 'block';
         book.style.display = 'none';
         container.style.maxWidth = '800px';
-        toggleBtn.textContent = 'Revista';
+        container.style.overflowY = 'auto';
+        btn.textContent = 'Revista';
         controls.classList.remove('book-mode-controls');
-        scrollToCurrentPage();
+        scrollToNative();
       }
-      updatePageCounter();
+      updateUI();
     }
 
-    function scrollToCurrentPage() {
-      const imgs = document.querySelectorAll('#nativeMode .page-image');
-      if (imgs[currentPage]) imgs[currentPage].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    function scrollToNative() {
+      const imgs = document.querySelectorAll('.native-mode .page-image');
+      if (imgs[currentPage]) imgs[currentPage].scrollIntoView({behavior: 'smooth', block: 'start'});
     }
 
-    function updatePageCounter() {
-      document.getElementById('currentPageNum').textContent = currentPage + 1;
-      const prev = document.getElementById('prevBtn');
-      const next = document.getElementById('nextBtn');
-      if (isBookMode) {
-        prev.disabled = currentPage < 2;
-        next.disabled = currentPage >= (totalPages % 2 === 0 ? totalPages - 2 : totalPages - 1);
-      } else {
-        prev.disabled = currentPage === 0;
-        next.disabled = currentPage === totalPages - 1;
-      }
-    }
-
-    // Zoom
+    /* --- ZOOM & PAN --- */
     function zoomIn() { if(zoomLevel < 3) { zoomLevel += 0.5; applyZoom(); } }
     function zoomOut() { if(zoomLevel > 1) { zoomLevel -= 0.5; applyZoom(); } }
     function resetZoom() { zoomLevel = 1; imgX = 0; imgY = 0; applyZoom(); }
-    
+
     function applyZoom() {
-      const targets = isBookMode ? document.querySelectorAll('.book-page img') : document.querySelectorAll('.native-mode .page-image');
-      targets.forEach(img => {
+      const selector = isBookMode ? '.book-page img' : '.native-mode .page-image';
+      const imgs = document.querySelectorAll(selector);
+
+      imgs.forEach(img => {
         if (zoomLevel > 1) {
-          img.style.transform = `scale(${zoomLevel}) translate(${imgX}px, ${imgY}px)`;
           img.classList.add('zoomed');
+          img.style.transform = `scale(${zoomLevel}) translate(${imgX}px, ${imgY}px)`;
           img.onmousedown = startDrag;
         } else {
-          img.style.transform = 'none';
           img.classList.remove('zoomed');
+          img.style.transform = 'none';
           img.onmousedown = null;
           imgX = 0; imgY = 0;
         }
@@ -506,28 +537,33 @@
       if (zoomLevel <= 1) return;
       e.preventDefault();
       isDragging = true;
-      dragElement = e.target;
+      dragEl = e.target;
       startX = e.clientX;
       startY = e.clientY;
-      document.addEventListener('mousemove', drag);
+      document.addEventListener('mousemove', onDrag);
       document.addEventListener('mouseup', endDrag);
     }
-    function drag(e) {
-      if (!isDragging || !dragElement) return;
+    
+    function onDrag(e) {
+      if (!isDragging || !dragEl) return;
       e.preventDefault();
+      // Dividir pelo zoomLevel para manter movimento 1:1 com mouse
       imgX += (e.clientX - startX) / zoomLevel;
       imgY += (e.clientY - startY) / zoomLevel;
-      dragElement.style.transform = `scale(${zoomLevel}) translate(${imgX}px, ${imgY}px)`;
+      
+      dragEl.style.transform = `scale(${zoomLevel}) translate(${imgX}px, ${imgY}px)`;
       startX = e.clientX;
       startY = e.clientY;
     }
+    
     function endDrag() {
       isDragging = false;
-      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mousemove', onDrag);
       document.removeEventListener('mouseup', endDrag);
     }
 
-    document.addEventListener('keydown', (e) => {
+    // Teclado
+    document.addEventListener('keydown', e => {
       if (window.innerWidth > 768) {
         if (e.key === 'ArrowRight') nextPage();
         if (e.key === 'ArrowLeft') previousPage();
