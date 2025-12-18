@@ -161,31 +161,41 @@
     }
 
     // Função para calcular a data da semana (Segunda a Sexta)
-    function obterTextoDataSemana() {
-        const hoje = new Date();
-        const diaSemana = hoje.getDay(); // 0 (Dom) a 6 (Sab)
-        // Ajuste para encontrar a Segunda-feira
-        const diff = diaSemana === 0 ? -6 : 1 - diaSemana;
-        
-        const segunda = new Date(hoje);
-        segunda.setDate(hoje.getDate() + diff);
-        
-        const sexta = new Date(segunda);
-        sexta.setDate(segunda.getDate() + 4);
-        
-        const meses = [
-            "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-            "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
-        ];
-        
-        const mesSeg = meses[segunda.getMonth()];
-        const mesSex = meses[sexta.getMonth()];
-        
-        // Funçãozinha para capitalizar (Ex: dezembro -> Dezembro)
-        const formatMes = (m) => m.charAt(0).toUpperCase() + m.slice(1);
-        
-        return `${segunda.getDate()} de ${formatMes(mesSeg)} a ${sexta.getDate()} de ${formatMes(mesSex)}`;
+function obterTextoDataSemana() {
+    const hoje = new Date();
+    const diaSemana = hoje.getDay(); // 0 (Dom) a 6 (Sab)
+    
+    // Ajuste para encontrar a Segunda-feira
+    const diff = diaSemana === 0 ? -6 : 1 - diaSemana;
+    
+    const segunda = new Date(hoje);
+    segunda.setDate(hoje.getDate() + diff);
+    
+    const sexta = new Date(segunda);
+    sexta.setDate(segunda.getDate() + 4);
+    
+    const meses = [
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+    ];
+    
+    // Pegamos os índices dos meses
+    const mesSegIndice = segunda.getMonth();
+    const mesSexIndice = sexta.getMonth();
+    
+    const formatMes = (m) => m.charAt(0).toUpperCase() + m.slice(1);
+    
+    // Lógica de abreviação:
+    if (mesSegIndice === mesSexIndice) {
+        // Se for o mesmo mês: "15 a 19 de Dezembro"
+        return `${segunda.getDate()} a ${sexta.getDate()} de ${formatMes(meses[mesSexIndice])}`;
+    } else {
+        // Se forem meses diferentes: "29 de Dezembro a 02 de Janeiro"
+        const mesSegNome = formatMes(meses[mesSegIndice]);
+        const mesSexNome = formatMes(meses[mesSexIndice]);
+        return `${segunda.getDate()} de ${mesSegNome} a ${sexta.getDate()} de ${mesSexNome}`;
     }
+}
 
     window.addEventListener('load', () => {
       const hojeNum = new Date().getDay();
@@ -268,14 +278,14 @@
             let cursorY = 82; 
             const margemEsquerda = 76; 
             const alturaLinha = 5; 
-            const alturaBlocoDia = 35.6; 
+            const alturaBlocoDia = 35.7; 
             
             diasMap.forEach((diaKey) => {
                 const item = dadosCardapio[diaKey];
                 const yInicialDia = cursorY;
 
                 if (item) {
-                    doc.setFontSize(11); 
+                    doc.setFontSize(12); 
                     // 1. Proteína (EM NEGRITO)
                     doc.setFont("helvetica", "bold"); 
                     doc.text(`${item.proteinas}`, margemEsquerda, cursorY);
