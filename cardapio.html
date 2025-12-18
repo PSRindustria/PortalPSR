@@ -4,13 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cardápio Semanal</title>
-  <!-- CSS principal -->
   <link rel="stylesheet" href="style.css" />
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <!-- Estilo customizado do Cardápio -->
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" href="favicon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     :root {
       --color-primary: #00c2ff;
@@ -21,33 +20,54 @@
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg-light);
       color: var(--color-text);
-      padding-top: 80px; /* Espaço para o menu fixo */
+      padding-top: 80px;
+      font-family: 'Poppins', sans-serif;
+      padding-bottom: 40px;
     }
 
-    /* Estilos apenas para o menu-placeholder */
-    #menu-placeholder {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
+    #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
+
+    .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; }
+
+    /* --- Botão PDF Centralizado --- */
+    .btn-pdf {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 30px auto; 
+        width: fit-content;
+        
+        background-color: transparent;
+        color: #99aab5;
+        border: 1px solid #e0e6ed;
+        padding: 8px 24px;
+        border-radius: 50px;
+        font-size: 0.85rem; 
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        gap: 8px;
+        transition: all 0.3s ease;
+        outline: none;
     }
 
-    .container {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 0 1rem;
+    .btn-pdf:hover {
+        color: var(--color-primary);
+        border-color: var(--color-primary);
+        background-color: white;
+        box-shadow: 0 4px 10px rgba(0, 194, 255, 0.15);
     }
+    
+    .btn-pdf:disabled {
+        opacity: 0.5;
+        cursor: wait;
+    }
+    /* ------------------------------ */
 
     .coluna {
       background: var(--card-bg);
@@ -58,95 +78,39 @@
       position: relative;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    .coluna:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
+    .coluna::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 12px; background: var(--color-primary); }
+    .orange::before { background: var(--color-highlight); }
+    .inativa { opacity: 0.6; filter: grayscale(50%); }
 
-    .coluna:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .coluna::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 12px;
-      background: var(--color-primary);
-    }
-
-    .orange::before {
-      background: var(--color-highlight);
-    }
-
-    .inativa {
-      opacity: 0.6;
-      filter: grayscale(50%);
-    }
-
-    .texto {
-      padding: 1.5rem;
-      line-height: 1.5;
-    }
-
-    p {
-      margin-bottom: 0.75rem;
-    }
-
-    .diaSemana {
-      font-size: 1.25rem;
-      text-transform: uppercase;
-    }
-
+    .texto { padding: 1.5rem; line-height: 1.5; }
+    p { margin-bottom: 0.75rem; }
+    
+    .diaSemana { font-size: 1.25rem; text-transform: uppercase; font-weight: 700; }
     .proteinas {
-      font-size: 1.75rem;
-      font-weight: bold;
+      font-size: 1.75rem; font-weight: bold;
       background-color: rgba(0, 0, 0, 0.05);
       border-left: 4px solid var(--color-highlight);
-      padding: 0.5rem;
-      border-radius: 4px;
+      padding: 0.5rem; border-radius: 4px;
     }
-
-    .opcional,
-    .opcional2 {
+    .opcional, .opcional2 {
       background-color: rgba(0, 0, 0, 0.05);
-      border-radius: 6px;
-      padding: 0.2rem 15px;
-      font-size: 1.1rem;
+      border-radius: 6px; padding: 0.2rem 15px; font-size: 1.1rem;
     }
+    .guarnicao, .saladas { font-size: 1rem; padding: 0px 18px; }
 
-    .guarnicao,
-    .saladas {
-      font-size: 1rem;
-      padding: 0px 18px;
-    }
-
-    /* Estilos para o footer placeholder */
-    #footer-placeholder {
-      margin-top: 2rem;
-    }
+    #footer-placeholder { margin-top: 2rem; }
 
     @media (max-width: 600px) {
-      .texto {
-        padding: 1.5rem;
-        font-size: 0.90rem;
-      }
-
-      .diaSemana {
-        font-size: 1.0rem;
-        padding: 10px 10px 1px 10px;
-      }
-
-      .proteinas {
-        font-size: 1.4rem;
-      }
+      .texto { padding: 1.5rem; font-size: 0.90rem; }
+      .diaSemana { font-size: 1.0rem; padding: 10px 10px 1px 10px; }
+      .proteinas { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
-  <!-- MENU FUNCIONAL -->
   <div id="menu-placeholder"></div>
 
-  <!-- CONTEÚDO DO CARDÁPIO -->
   <div class="container">
     <div class="coluna"><div class="texto"></div></div>
     <div class="coluna"><div class="texto"></div></div>
@@ -155,50 +119,72 @@
     <div class="coluna"><div class="texto"></div></div>
   </div>
 
-  <!-- RODAPÉ -->
+  <button id="btnDownload" class="btn-pdf" onclick="gerarPDF()">
+    <i class="fa-solid fa-file-pdf"></i> <span id="btnText">Baixar em PDF</span>
+  </button>
+
   <div id="footer-placeholder"></div>
 
-  <!-- SCRIPTS -->
   <script>
-    // Injeta menu e rodapé e ativa toggle
+    let dadosCardapio = {};
+
     document.addEventListener('DOMContentLoaded', () => {
       ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html`)
-          .then(r => r.text())
+          .then(r => r.ok ? r.text() : null)
           .then(html => {
-            document.getElementById(`${file}-placeholder`).innerHTML = html;
-            if (file === 'menu') {
-              const toggle = document.getElementById('menu-toggle');
-              const menuEl = document.getElementById('menu');
-              if (toggle && menuEl) {
-                toggle.addEventListener('click', () => {
-                  menuEl.classList.toggle('active');
-                });
-                menuEl.querySelectorAll('a').forEach(link => {
-                  link.addEventListener('click', () => {
-                    menuEl.classList.remove('active');
-                  });
-                });
-              }
+            if(html) {
+                document.getElementById(`${file}-placeholder`).innerHTML = html;
+                if (file === 'menu') {
+                  setTimeout(() => {
+                      const toggle = document.getElementById('menu-toggle');
+                      const menuEl = document.getElementById('menu');
+                      if (toggle && menuEl) {
+                        toggle.addEventListener('click', () => menuEl.classList.toggle('active'));
+                        menuEl.querySelectorAll('a').forEach(link => link.addEventListener('click', () => menuEl.classList.remove('active')));
+                      }
+                  }, 500);
+                }
             }
-          });
+          })
+          .catch(() => console.log('Menu/Footer não carregado (CORS local).'));
       });
     });
 
-    // Funções auxiliares
-    function isIOS() {
-      return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    }
+    function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
     function scrollToCenter(element) {
       const top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
       window.scrollTo({ top, behavior: 'auto' });
-      document.documentElement.scrollTop = top;
-      document.body.scrollTop = top;
     }
     function inativarColunasAntes(index, colunas) {
-      for (let i = 0; i < index; i++) {
-        colunas[i].classList.add('inativa');
-      }
+      for (let i = 0; i < index; i++) colunas[i].classList.add('inativa');
+    }
+
+    // Função para calcular a data da semana (Segunda a Sexta)
+    function obterTextoDataSemana() {
+        const hoje = new Date();
+        const diaSemana = hoje.getDay(); // 0 (Dom) a 6 (Sab)
+        // Ajuste para encontrar a Segunda-feira
+        const diff = diaSemana === 0 ? -6 : 1 - diaSemana;
+        
+        const segunda = new Date(hoje);
+        segunda.setDate(hoje.getDate() + diff);
+        
+        const sexta = new Date(segunda);
+        sexta.setDate(segunda.getDate() + 4);
+        
+        const meses = [
+            "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+            "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+        ];
+        
+        const mesSeg = meses[segunda.getMonth()];
+        const mesSex = meses[sexta.getMonth()];
+        
+        // Funçãozinha para capitalizar (Ex: dezembro -> Dezembro)
+        const formatMes = (m) => m.charAt(0).toUpperCase() + m.slice(1);
+        
+        return `${segunda.getDate()} de ${formatMes(mesSeg)} a ${sexta.getDate()} de ${formatMes(mesSex)}`;
     }
 
     window.addEventListener('load', () => {
@@ -217,7 +203,9 @@
       fetch('https://agenda-portal-2d149-default-rtdb.firebaseio.com/cardapio.json')
         .then(res => res.json())
         .then(data => {
+          dadosCardapio = data;
           const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+          
           dias.forEach((dia, i) => {
             const item = data[dia];
             if (item && colunas[i]) {
@@ -235,8 +223,108 @@
             }
           });
         })
-        .catch(err => console.error('Erro ao buscar dados do Firebase:', err));
+        .catch(err => console.error('Erro Firebase:', err));
     });
+
+    // --- LÓGICA DO PDF ---
+    async function gerarPDF() {
+        const btn = document.getElementById('btnDownload');
+        const btnText = document.getElementById('btnText');
+        const textoOriginal = btnText.innerText;
+        
+        btnText.innerText = "Gerando...";
+        btn.disabled = true;
+
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+            // Imagem de fundo
+            const imgUrlOriginal = "https://psrimpressao.com.br/wp-content/uploads/2025/12/Cardapio-Ferias-scaled.jpg";
+            const imgUrlProxy = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(imgUrlOriginal);
+
+            try {
+                const imgData = await carregarImagem(imgUrlProxy);
+                doc.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+            } catch (imgErro) {
+                const confirmar = confirm("Não foi possível carregar o fundo decorativo. Deseja baixar apenas o texto?");
+                if (!confirmar) throw new Error("Cancelado");
+            }
+
+            // Configuração de Texto
+            doc.setTextColor(8, 50, 96); // Azul
+            
+            // --- INSERIR DATA NO TOPO ---
+            const textoData = obterTextoDataSemana();
+            doc.setFontSize(13);
+            doc.setFont("helvetica", "bold");
+            // Centraliza o texto na largura da página A4 (210mm) na altura Y=62
+            doc.text(textoData, 105, 62, { align: "center" });
+            // ----------------------------
+
+            const diasMap = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+            
+            // Ajuste vertical (começa onde deve entrar o primeiro item)
+            let cursorY = 82; 
+            const margemEsquerda = 76; 
+            const alturaLinha = 5; 
+            const alturaBlocoDia = 35.6; 
+            
+            diasMap.forEach((diaKey) => {
+                const item = dadosCardapio[diaKey];
+                const yInicialDia = cursorY;
+
+                if (item) {
+                    doc.setFontSize(11); 
+                    // 1. Proteína (EM NEGRITO)
+                    doc.setFont("helvetica", "bold"); 
+                    doc.text(`${item.proteinas}`, margemEsquerda, cursorY);
+                    cursorY += alturaLinha;
+                    
+                    // 2. Acompanhamentos (REGULAR)
+                    doc.setFont("helvetica", "normal"); 
+                    doc.text(`${item.opcional1}`, margemEsquerda, cursorY);
+                    cursorY += alturaLinha;
+
+                    doc.text(`${item.opcional2}`, margemEsquerda, cursorY);
+                    cursorY += alturaLinha;
+
+                    doc.text(`${item.guarnicao}`, margemEsquerda, cursorY);
+                    cursorY += alturaLinha;
+
+                    doc.text(`${item.saladas}`, margemEsquerda, cursorY);
+                }
+                
+                cursorY = yInicialDia + alturaBlocoDia;
+            });
+
+            doc.save("cardapio-semanal.pdf");
+
+        } catch (error) {
+            if(error.message !== "Cancelado") alert("Erro ao gerar arquivo.");
+            console.error(error);
+        } finally {
+            btnText.innerText = textoOriginal;
+            btn.disabled = false;
+        }
+    }
+
+    function carregarImagem(url) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.src = url;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL('image/jpeg', 0.9));
+            };
+            img.onerror = reject;
+        });
+    }
   </script>
 </body>
 </html>
