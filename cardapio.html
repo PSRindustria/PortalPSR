@@ -1,14 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma"        content="no-cache" />
-  <meta http-equiv="Expires"       content="0" />
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" href="favicon.png" type="image/png">
-  <title>Cardápio Semanal - PortalPSR</title>
+  <title>Cardápio Semanal</title>
   
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -17,7 +12,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
-    /* Estilos específicos apenas para as colunas do cardápio */
     :root {
       --color-primary: #00c2ff;
       --color-highlight: #ffd324;
@@ -27,15 +21,28 @@
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       background: var(--bg-light);
       color: var(--color-text);
-      /* O padding-top deve ser o mesmo da index para o header não cobrir o conteúdo */
-      padding-top: 100px; 
+      padding-top: 80px;
+      /* Ajuste: A fonte Poppins agora só se aplica ao conteúdo, 
+         o header herdará Segoe UI do style.css */
       font-family: 'Poppins', sans-serif;
+      padding-bottom: 0px; 
     }
 
-    /* Removido o estilo manual do #menu-placeholder para não dar conflito com o style.css */
+    /* Garante que a fonte do menu seja a mesma do index (Segoe UI) */
+    #menu-placeholder header {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    }
+
+    #menu-placeholder a {
+      white-space: nowrap;
+    }
+
+    #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
 
     .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; }
 
@@ -64,6 +71,11 @@
         border-color: var(--color-primary);
         background-color: white;
         box-shadow: 0 4px 10px rgba(0, 194, 255, 0.15);
+    }
+    
+    .btn-pdf:disabled {
+        opacity: 0.5;
+        cursor: wait;
     }
 
     .coluna {
@@ -96,6 +108,8 @@
     }
     .guarnicao, .saladas { font-size: 1rem; padding: 0px 18px; }
 
+    #footer-placeholder { margin-top: 0px; }
+
     @media (max-width: 600px) {
       .texto { padding: 1.5rem; font-size: 0.90rem; }
       .diaSemana { font-size: 1.0rem; padding: 10px 10px 1px 10px; }
@@ -106,52 +120,50 @@
 <body>
   <div id="menu-placeholder"></div>
 
-  <main>
-    <div class="container">
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-    </div>
+  <div class="container">
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+  </div>
 
-    <button id="btnDownload" class="btn-pdf" onclick="gerarPDF()">
-      <i class="fa-solid fa-file-pdf"></i> <span id="btnText">Baixar em PDF</span>
-    </button>
-  </main>
+  <button id="btnDownload" class="btn-pdf" onclick="gerarPDF()">
+    <i class="fa-solid fa-file-pdf"></i> <span id="btnText">Baixar em PDF</span>
+  </button>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // 1) SCRIPT DE CARREGAMENTO PADRONIZADO (IGUAL À INDEX)
+    let dadosCardapio = {};
+
     document.addEventListener('DOMContentLoaded', () => {
-      ['menu','footer'].forEach(file => {
+      // 1) INJEÇÃO DE MENU E FOOTER IGUAL AO INDEX.HTML
+      // Isso garante que o toggle do menu mobile funcione perfeitamente.
+      ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html?t=${Date.now()}`)
           .then(r => r.text())
           .then(html => {
             const placeholder = document.getElementById(`${file}-placeholder`);
-            if (placeholder) placeholder.innerHTML = html;
-            if (file === 'menu') {
-              const toggle = document.getElementById('menu-toggle');
-              const menuEl = document.getElementById('menu');
-              if (toggle && menuEl) {
-                toggle.addEventListener('click', () => {
-                  menuEl.classList.toggle('active');
-                });
-                menuEl.querySelectorAll('a').forEach(link => {
-                  link.addEventListener('click', () => {
-                    menuEl.classList.remove('active');
-                  });
-                });
-              }
+            if (placeholder) {
+                placeholder.innerHTML = html;
+                if (file === 'menu') {
+                  const toggle = document.getElementById('menu-toggle');
+                  const menuEl = document.getElementById('menu');
+                  if (toggle && menuEl) {
+                    toggle.addEventListener('click', () => menuEl.classList.toggle('active'));
+                    menuEl.querySelectorAll('a').forEach(link => {
+                      link.addEventListener('click', () => menuEl.classList.remove('active'));
+                    });
+                  }
+                }
             }
-          }).catch(e => console.error(`Erro ao carregar ${file}.html:`, e));
+          })
+          .catch(e => console.error(`Erro ao carregar ${file}:`, e));
       });
     });
 
-    // --- Lógica de dados do Cardápio ---
-    let dadosCardapio = {};
-
+    // Funções auxiliares do Cardápio
     function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
     function scrollToCenter(element) {
       const top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
