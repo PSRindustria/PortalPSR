@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cardápio Semanal</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma"        content="no-cache" />
+  <meta http-equiv="Expires"       content="0" />
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <title>Cardápio Semanal - PortalPSR</title>
+  
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
@@ -11,7 +17,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
-    /* Estilos específicos apenas para o conteúdo do cardápio */
+    /* Estilos específicos apenas para as colunas do cardápio */
     :root {
       --color-primary: #00c2ff;
       --color-highlight: #ffd324;
@@ -21,15 +27,15 @@
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: var(--bg-light);
       color: var(--color-text);
-      padding-top: 80px; /* Espaço para o header fixo */
+      /* O padding-top deve ser o mesmo da index para o header não cobrir o conteúdo */
+      padding-top: 100px; 
       font-family: 'Poppins', sans-serif;
-      padding-bottom: 0px; 
     }
+
+    /* Removido o estilo manual do #menu-placeholder para não dar conflito com o style.css */
 
     .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; }
 
@@ -58,11 +64,6 @@
         border-color: var(--color-primary);
         background-color: white;
         box-shadow: 0 4px 10px rgba(0, 194, 255, 0.15);
-    }
-    
-    .btn-pdf:disabled {
-        opacity: 0.5;
-        cursor: wait;
     }
 
     .coluna {
@@ -95,8 +96,6 @@
     }
     .guarnicao, .saladas { font-size: 1rem; padding: 0px 18px; }
 
-    #footer-placeholder { margin-top: 0px; }
-
     @media (max-width: 600px) {
       .texto { padding: 1.5rem; font-size: 0.90rem; }
       .diaSemana { font-size: 1.0rem; padding: 10px 10px 1px 10px; }
@@ -107,47 +106,50 @@
 <body>
   <div id="menu-placeholder"></div>
 
-  <div class="container">
-    <div class="coluna"><div class="texto"></div></div>
-    <div class="coluna"><div class="texto"></div></div>
-    <div class="coluna"><div class="texto"></div></div>
-    <div class="coluna"><div class="texto"></div></div>
-    <div class="coluna"><div class="texto"></div></div>
-  </div>
+  <main>
+    <div class="container">
+      <div class="coluna"><div class="texto"></div></div>
+      <div class="coluna"><div class="texto"></div></div>
+      <div class="coluna"><div class="texto"></div></div>
+      <div class="coluna"><div class="texto"></div></div>
+      <div class="coluna"><div class="texto"></div></div>
+    </div>
 
-  <button id="btnDownload" class="btn-pdf" onclick="gerarPDF()">
-    <i class="fa-solid fa-file-pdf"></i> <span id="btnText">Baixar em PDF</span>
-  </button>
+    <button id="btnDownload" class="btn-pdf" onclick="gerarPDF()">
+      <i class="fa-solid fa-file-pdf"></i> <span id="btnText">Baixar em PDF</span>
+    </button>
+  </main>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // SCRIPT DE CARREGAMENTO PADRONIZADO COM A INDEX.HTML
+    // 1) SCRIPT DE CARREGAMENTO PADRONIZADO (IGUAL À INDEX)
     document.addEventListener('DOMContentLoaded', () => {
-      ['menu', 'footer'].forEach(file => {
-        fetch(`${file}.html?t=${Date.now()}`) // Cache-buster para garantir atualização
+      ['menu','footer'].forEach(file => {
+        fetch(`${file}.html?t=${Date.now()}`)
           .then(r => r.text())
           .then(html => {
             const placeholder = document.getElementById(`${file}-placeholder`);
-            if (placeholder) {
-              placeholder.innerHTML = html;
-              if (file === 'menu') {
-                // Lógica do menu mobile idêntica à index
-                const toggle = document.getElementById('menu-toggle');
-                const menuEl = document.getElementById('menu');
-                if (toggle && menuEl) {
-                  toggle.addEventListener('click', () => menuEl.classList.toggle('active'));
-                  menuEl.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => menuEl.classList.remove('active'));
+            if (placeholder) placeholder.innerHTML = html;
+            if (file === 'menu') {
+              const toggle = document.getElementById('menu-toggle');
+              const menuEl = document.getElementById('menu');
+              if (toggle && menuEl) {
+                toggle.addEventListener('click', () => {
+                  menuEl.classList.toggle('active');
+                });
+                menuEl.querySelectorAll('a').forEach(link => {
+                  link.addEventListener('click', () => {
+                    menuEl.classList.remove('active');
                   });
-                }
+                });
               }
             }
           }).catch(e => console.error(`Erro ao carregar ${file}.html:`, e));
       });
     });
 
-    // Mantido o restante da sua lógica de PDF e Dados intacta
+    // --- Lógica de dados do Cardápio ---
     let dadosCardapio = {};
 
     function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
