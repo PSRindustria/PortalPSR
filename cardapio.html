@@ -11,6 +11,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
+    /* Estilos específicos apenas para o conteúdo do cardápio */
     :root {
       --color-primary: #00c2ff;
       --color-highlight: #ffd324;
@@ -25,16 +26,10 @@
     body {
       background: var(--bg-light);
       color: var(--color-text);
-      padding-top: 80px;
+      padding-top: 80px; /* Espaço para o header fixo */
       font-family: 'Poppins', sans-serif;
       padding-bottom: 0px; 
     }
-
-    #menu-placeholder a {
-      white-space: nowrap;
-    }
-
-    #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
 
     .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; }
 
@@ -127,35 +122,34 @@
   <div id="footer-placeholder"></div>
 
   <script>
-    let dadosCardapio = {};
-
+    // SCRIPT DE CARREGAMENTO PADRONIZADO COM A INDEX.HTML
     document.addEventListener('DOMContentLoaded', () => {
-      // Sincronizado com a lógica da index.html (Injeção de menu e rodapé com cache-buster)
-      ['menu','footer'].forEach(file => {
-        fetch(`${file}.html?t=${Date.now()}`)
+      ['menu', 'footer'].forEach(file => {
+        fetch(`${file}.html?t=${Date.now()}`) // Cache-buster para garantir atualização
           .then(r => r.text())
           .then(html => {
             const placeholder = document.getElementById(`${file}-placeholder`);
-            if (placeholder) placeholder.innerHTML = html;
-            if (file === 'menu') {
-              const toggle = document.getElementById('menu-toggle');
-              const menuEl = document.getElementById('menu');
-              if (toggle && menuEl) {
-                toggle.addEventListener('click', () => {
-                  menuEl.classList.toggle('active');
-                });
-                menuEl.querySelectorAll('a').forEach(link => {
-                  link.addEventListener('click', () => {
-                    menuEl.classList.remove('active');
+            if (placeholder) {
+              placeholder.innerHTML = html;
+              if (file === 'menu') {
+                // Lógica do menu mobile idêntica à index
+                const toggle = document.getElementById('menu-toggle');
+                const menuEl = document.getElementById('menu');
+                if (toggle && menuEl) {
+                  toggle.addEventListener('click', () => menuEl.classList.toggle('active'));
+                  menuEl.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => menuEl.classList.remove('active'));
                   });
-                });
+                }
               }
             }
-          }).catch(e => console.error(`Error loading ${file}.html:`, e));
+          }).catch(e => console.error(`Erro ao carregar ${file}.html:`, e));
       });
     });
 
-    // --- Restante das funções do cardápio mantidas intactas ---
+    // Mantido o restante da sua lógica de PDF e Dados intacta
+    let dadosCardapio = {};
+
     function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
     function scrollToCenter(element) {
       const top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
