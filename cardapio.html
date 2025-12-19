@@ -266,7 +266,7 @@ function obterTextoDataSemana() {
             
             // --- INSERIR DATA NO TOPO ---
             const textoData = obterTextoDataSemana();
-            doc.setFontSize(13);
+            doc.setFontSize(15);
             doc.setFont("helvetica", "bold");
             // Centraliza o texto na largura da página A4 (210mm) na altura Y=62
             doc.text(textoData, 105, 62, { align: "center" });
@@ -278,7 +278,7 @@ function obterTextoDataSemana() {
             let cursorY = 82; 
             const margemEsquerda = 76; 
             const alturaLinha = 5; 
-            const alturaBlocoDia = 35.7; 
+            const alturaBlocoDia = 35.65; 
             
             diasMap.forEach((diaKey) => {
                 const item = dadosCardapio[diaKey];
