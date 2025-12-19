@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cardápio Semanal</title>
+  <title>Cardápio Semanal - PortalPSR</title>
   
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -26,24 +26,42 @@
     body {
       background: var(--bg-light);
       color: var(--color-text);
-      padding-top: 80px;
-      /* Ajuste: A fonte Poppins agora só se aplica ao conteúdo, 
-         o header herdará Segoe UI do style.css */
+      padding-top: 80px; /* Espaço para o menu fixo */
       font-family: 'Poppins', sans-serif;
+      margin: 0;
       padding-bottom: 0px; 
     }
 
-    /* Garante que a fonte do menu seja a mesma do index (Segoe UI) */
+    /* ==================================================
+       FIX PARA O MENU HEADER (EVITA QUEBRA DE LAYOUT)
+       ================================================== */
+    #menu-placeholder { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      z-index: 1000; 
+    }
+
+    /* Força a fonte Segoe UI no header para não alargar o texto como a Poppins faz */
     #menu-placeholder header {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
     }
 
-    #menu-placeholder a {
-      white-space: nowrap;
+    /* Impede que o texto "Reflexão do Dia" quebre em 2 linhas */
+    #menu-placeholder nav ul li a {
+      white-space: nowrap !important;
     }
 
-    #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
+    /* Ajuste fino para o menu não apertar em ecrãs médios */
+    @media (min-width: 769px) and (max-width: 1100px) {
+      nav ul li { margin-left: 10px !important; }
+      nav ul li a { font-size: 0.9rem; padding: 8px 5px !important; }
+    }
 
+    /* ==================================================
+       ESTILOS DO CONTEÚDO DO CARDÁPIO
+       ================================================== */
     .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; }
 
     .btn-pdf {
@@ -73,10 +91,7 @@
         box-shadow: 0 4px 10px rgba(0, 194, 255, 0.15);
     }
     
-    .btn-pdf:disabled {
-        opacity: 0.5;
-        cursor: wait;
-    }
+    .btn-pdf:disabled { opacity: 0.5; cursor: wait; }
 
     .coluna {
       background: var(--card-bg);
@@ -118,6 +133,7 @@
   </style>
 </head>
 <body>
+  
   <div id="menu-placeholder"></div>
 
   <div class="container">
@@ -138,32 +154,30 @@
     let dadosCardapio = {};
 
     document.addEventListener('DOMContentLoaded', () => {
-      // 1) INJEÇÃO DE MENU E FOOTER IGUAL AO INDEX.HTML
-      // Isso garante que o toggle do menu mobile funcione perfeitamente.
+      // 1) INJEÇÃO DE MENU E FOOTER (SINCRONIZADO COM INDEX.HTML)
       ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html?t=${Date.now()}`)
           .then(r => r.text())
           .then(html => {
             const placeholder = document.getElementById(`${file}-placeholder`);
             if (placeholder) {
-                placeholder.innerHTML = html;
-                if (file === 'menu') {
-                  const toggle = document.getElementById('menu-toggle');
-                  const menuEl = document.getElementById('menu');
-                  if (toggle && menuEl) {
-                    toggle.addEventListener('click', () => menuEl.classList.toggle('active'));
-                    menuEl.querySelectorAll('a').forEach(link => {
-                      link.addEventListener('click', () => menuEl.classList.remove('active'));
-                    });
-                  }
+              placeholder.innerHTML = html;
+              if (file === 'menu') {
+                const toggle = document.getElementById('menu-toggle');
+                const menuEl = document.getElementById('menu');
+                if (toggle && menuEl) {
+                  toggle.onclick = () => menuEl.classList.toggle('active');
+                  menuEl.querySelectorAll('a').forEach(link => {
+                    link.onclick = () => menuEl.classList.remove('active');
+                  });
                 }
+              }
             }
-          })
-          .catch(e => console.error(`Erro ao carregar ${file}:`, e));
+          }).catch(e => console.error(`Erro ao carregar ${file}:`, e));
       });
     });
 
-    // Funções auxiliares do Cardápio
+    // --- Lógica do Cardápio ---
     function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
     function scrollToCenter(element) {
       const top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
@@ -182,21 +196,20 @@
         const sexta = new Date(segunda);
         sexta.setDate(segunda.getDate() + 4);
         const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-        const mesSegIndice = segunda.getMonth();
-        const mesSexIndice = sexta.getMonth();
         const formatMes = (m) => m.charAt(0).toUpperCase() + m.slice(1);
-        if (mesSegIndice === mesSexIndice) {
-            return `${segunda.getDate()} a ${sexta.getDate()} de ${formatMes(meses[mesSexIndice])}`;
+        
+        if (segunda.getMonth() === sexta.getMonth()) {
+            return `${segunda.getDate()} a ${sexta.getDate()} de ${formatMes(meses[sexta.getMonth()])}`;
         } else {
-            const mesSegNome = formatMes(meses[mesSegIndice]);
-            const mesSexNome = formatMes(meses[mesSexIndice]);
-            return `${segunda.getDate()} de ${mesSegNome} a ${sexta.getDate()} de ${mesSexNome}`;
+            return `${segunda.getDate()} de ${formatMes(meses[segunda.getMonth()])} a ${sexta.getDate()} de ${formatMes(meses[sexta.getMonth()])}`;
         }
     }
 
     window.addEventListener('load', () => {
       const hojeNum = new Date().getDay();
       const colunas = document.querySelectorAll('.coluna');
+      
+      // Realça o dia atual
       if (hojeNum >= 1 && hojeNum <= 5) {
         colunas[hojeNum - 1].classList.add('orange');
         inativarColunasAntes(hojeNum - 1, colunas);
@@ -205,6 +218,8 @@
           else colunas[hojeNum - 1].scrollIntoView({ behavior: 'auto', block: 'center' });
         }, 500);
       }
+
+      // Procura dados no Firebase
       fetch('https://agenda-portal-2d149-default-rtdb.firebaseio.com/cardapio.json')
         .then(res => res.json())
         .then(data => {
@@ -219,8 +234,8 @@
               colunas[i].querySelector('.texto').innerHTML = `
                 <p class="diaSemana">${dia.toUpperCase()}-FEIRA</p>
                 <p class="proteinas">🔶 ${item.proteinas}</p>
-                <p class="opcional">💠: <strong>${item.opcional1}</p></strong>
-                <p class="opcional2">💠: <strong>${item.opcional2}</p></strong>
+                <p class="opcional">💠: <strong>${item.opcional1}</strong></p>
+                <p class="opcional2">💠: <strong>${item.opcional2}</strong></p>
                 <p class="guarnicao">🔹: ${item.guarnicao}</p>
                 <p class="saladas">🔹: ${item.saladas}</p>
               `;
@@ -230,34 +245,39 @@
         .catch(err => console.error('Erro Firebase:', err));
     });
 
+    // --- Geração de PDF ---
     async function gerarPDF() {
         const btn = document.getElementById('btnDownload');
         const btnText = document.getElementById('btnText');
         const textoOriginal = btnText.innerText;
         btnText.innerText = "Gerando...";
         btn.disabled = true;
+
         try {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            
             const imgUrlOriginal = "https://psrimpressao.com.br/wp-content/uploads/2025/12/Cardapio-Ferias-scaled.jpg";
             const imgUrlProxy = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(imgUrlOriginal);
+
             try {
                 const imgData = await carregarImagem(imgUrlProxy);
                 doc.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
             } catch (imgErro) {
-                const confirmar = confirm("Não foi possível carregar o fundo decorativo. Deseja baixar apenas o texto?");
-                if (!confirmar) throw new Error("Cancelado");
+                if (!confirm("Não foi possível carregar o fundo. Deseja baixar apenas o texto?")) throw new Error("Cancelado");
             }
+
             doc.setTextColor(8, 50, 96);
-            const textoData = obterTextoDataSemana();
             doc.setFontSize(15);
             doc.setFont("helvetica", "bold");
-            doc.text(textoData, 105, 62, { align: "center" });
+            doc.text(obterTextoDataSemana(), 105, 62, { align: "center" });
+
             const diasMap = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
             let cursorY = 82; 
             const margemEsquerda = 76; 
             const alturaLinha = 5; 
             const alturaBlocoDia = 35.65; 
+
             diasMap.forEach((diaKey) => {
                 const item = dadosCardapio[diaKey];
                 const yInicialDia = cursorY;
@@ -277,6 +297,7 @@
                 }
                 cursorY = yInicialDia + alturaBlocoDia;
             });
+
             doc.save("cardapio-semanal.pdf");
         } catch (error) {
             if(error.message !== "Cancelado") alert("Erro ao gerar arquivo.");
