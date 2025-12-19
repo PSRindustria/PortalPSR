@@ -4,56 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cardápio Semanal</title>
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
-    /* Variáveis restritas ao escopo do cardápio */
-    #cardapio-app {
+    :root {
       --color-primary: #00c2ff;
       --color-highlight: #ffd324;
       --color-text: #083260;
       --bg-light: #f0f4f8;
       --card-bg: #ffffff;
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      
-      font-family: 'Poppins', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
       background: var(--bg-light);
       color: var(--color-text);
-      padding: 20px 0 40px 0; /* Removido o padding-top de 80px que pode brigar com o menu */
-      min-height: 100vh;
+      padding-top: 80px;
+      font-family: 'Poppins', sans-serif;
+      padding-bottom: 40px;
     }
 
-    /* Reset local: Só afeta o que está dentro do cardápio */
-    #cardapio-app * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
+    #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
 
-    #menu-placeholder { width: 100%; }
+    .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; }
 
-    .container-cardapio { 
-      width: 100%; 
-      max-width: 600px; 
-      margin: 0 auto; 
-      padding: 0 1rem; 
-    }
-
-    /* Estilos de parágrafo apenas do cardápio */
-    #cardapio-app p { 
-      margin-bottom: 0.75rem; 
-      line-height: 1.5;
-    }
-
-    /* --- Botão PDF --- */
+    /* --- Botão PDF Centralizado --- */
     .btn-pdf {
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 30px auto; 
         width: fit-content;
+        
         background-color: transparent;
         color: #99aab5;
         border: 1px solid #e0e6ed;
@@ -75,9 +63,12 @@
         box-shadow: 0 4px 10px rgba(0, 194, 255, 0.15);
     }
     
-    .btn-pdf:disabled { opacity: 0.5; cursor: wait; }
+    .btn-pdf:disabled {
+        opacity: 0.5;
+        cursor: wait;
+    }
+    /* ------------------------------ */
 
-    /* --- Colunas do Cardápio --- */
     .coluna {
       background: var(--card-bg);
       border-radius: 16px;
@@ -92,7 +83,8 @@
     .orange::before { background: var(--color-highlight); }
     .inativa { opacity: 0.6; filter: grayscale(50%); }
 
-    .texto { padding: 1.5rem; }
+    .texto { padding: 1.5rem; line-height: 1.5; }
+    p { margin-bottom: 0.75rem; }
     
     .diaSemana { font-size: 1.25rem; text-transform: uppercase; font-weight: 700; }
     .proteinas {
@@ -117,26 +109,23 @@
   </style>
 </head>
 <body>
-
   <div id="menu-placeholder"></div>
 
-  <main id="cardapio-app">
-    <div class="container-cardapio">
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-      <div class="coluna"><div class="texto"></div></div>
-    </div>
+  <div class="container">
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+    <div class="coluna"><div class="texto"></div></div>
+  </div>
 
-    <button id="btnDownload" class="btn-pdf" onclick="gerarPDF()">
-      <i class="fa-solid fa-file-pdf"></i> <span id="btnText">Baixar em PDF</span>
-    </button>
-  </main>
+  <button id="btnDownload" class="btn-pdf" onclick="gerarPDF()">
+    <i class="fa-solid fa-file-pdf"></i> <span id="btnText">Baixar em PDF</span>
+  </button>
+
   <div id="footer-placeholder"></div>
 
   <script>
-    // O seu script permanece quase igual, apenas atualizei a referência da classe container
     let dadosCardapio = {};
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -162,7 +151,6 @@
       });
     });
 
-    // ... Resto das suas funções (isIOS, scrollToCenter, obterTextoDataSemana, etc) permanecem IGUAIS ...
     function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
     function scrollToCenter(element) {
       const top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
@@ -172,24 +160,42 @@
       for (let i = 0; i < index; i++) colunas[i].classList.add('inativa');
     }
 
-    function obterTextoDataSemana() {
-        const hoje = new Date();
-        const diaSemana = hoje.getDay(); 
-        const diff = diaSemana === 0 ? -6 : 1 - diaSemana;
-        const segunda = new Date(hoje);
-        segunda.setDate(hoje.getDate() + diff);
-        const sexta = new Date(segunda);
-        sexta.setDate(segunda.getDate() + 4);
-        const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-        const mesSegIndice = segunda.getMonth();
-        const mesSexIndice = sexta.getMonth();
-        const formatMes = (m) => m.charAt(0).toUpperCase() + m.slice(1);
-        if (mesSegIndice === mesSexIndice) {
-            return `${segunda.getDate()} a ${sexta.getDate()} de ${formatMes(meses[mesSexIndice])}`;
-        } else {
-            return `${segunda.getDate()} de ${formatMes(meses[mesSegIndice])} a ${sexta.getDate()} de ${formatMes(meses[mesSexIndice])}`;
-        }
+    // Função para calcular a data da semana (Segunda a Sexta)
+function obterTextoDataSemana() {
+    const hoje = new Date();
+    const diaSemana = hoje.getDay(); // 0 (Dom) a 6 (Sab)
+    
+    // Ajuste para encontrar a Segunda-feira
+    const diff = diaSemana === 0 ? -6 : 1 - diaSemana;
+    
+    const segunda = new Date(hoje);
+    segunda.setDate(hoje.getDate() + diff);
+    
+    const sexta = new Date(segunda);
+    sexta.setDate(segunda.getDate() + 4);
+    
+    const meses = [
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+    ];
+    
+    // Pegamos os índices dos meses
+    const mesSegIndice = segunda.getMonth();
+    const mesSexIndice = sexta.getMonth();
+    
+    const formatMes = (m) => m.charAt(0).toUpperCase() + m.slice(1);
+    
+    // Lógica de abreviação:
+    if (mesSegIndice === mesSexIndice) {
+        // Se for o mesmo mês: "15 a 19 de Dezembro"
+        return `${segunda.getDate()} a ${sexta.getDate()} de ${formatMes(meses[mesSexIndice])}`;
+    } else {
+        // Se forem meses diferentes: "29 de Dezembro a 02 de Janeiro"
+        const mesSegNome = formatMes(meses[mesSegIndice]);
+        const mesSexNome = formatMes(meses[mesSexIndice]);
+        return `${segunda.getDate()} de ${mesSegNome} a ${sexta.getDate()} de ${mesSexNome}`;
     }
+}
 
     window.addEventListener('load', () => {
       const hojeNum = new Date().getDay();
@@ -209,6 +215,7 @@
         .then(data => {
           dadosCardapio = data;
           const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+          
           dias.forEach((dia, i) => {
             const item = data[dia];
             if (item && colunas[i]) {
@@ -229,17 +236,20 @@
         .catch(err => console.error('Erro Firebase:', err));
     });
 
-    // --- LÓGICA DO PDF (Igual) ---
+    // --- LÓGICA DO PDF ---
     async function gerarPDF() {
         const btn = document.getElementById('btnDownload');
         const btnText = document.getElementById('btnText');
         const textoOriginal = btnText.innerText;
+        
         btnText.innerText = "Gerando...";
         btn.disabled = true;
 
         try {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+            // Imagem de fundo
             const imgUrlOriginal = "https://psrimpressao.com.br/wp-content/uploads/2025/12/Cardapio-Ferias-scaled.jpg";
             const imgUrlProxy = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(imgUrlOriginal);
 
@@ -247,16 +257,24 @@
                 const imgData = await carregarImagem(imgUrlProxy);
                 doc.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
             } catch (imgErro) {
-                if (!confirm("Não foi possível carregar o fundo. Baixar apenas o texto?")) throw new Error("Cancelado");
+                const confirmar = confirm("Não foi possível carregar o fundo decorativo. Deseja baixar apenas o texto?");
+                if (!confirmar) throw new Error("Cancelado");
             }
 
-            doc.setTextColor(8, 50, 96);
+            // Configuração de Texto
+            doc.setTextColor(8, 50, 96); // Azul
+            
+            // --- INSERIR DATA NO TOPO ---
             const textoData = obterTextoDataSemana();
             doc.setFontSize(15);
             doc.setFont("helvetica", "bold");
+            // Centraliza o texto na largura da página A4 (210mm) na altura Y=62
             doc.text(textoData, 105, 62, { align: "center" });
+            // ----------------------------
 
             const diasMap = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+            
+            // Ajuste vertical (começa onde deve entrar o primeiro item)
             let cursorY = 82; 
             const margemEsquerda = 76; 
             const alturaLinha = 5; 
@@ -265,25 +283,36 @@
             diasMap.forEach((diaKey) => {
                 const item = dadosCardapio[diaKey];
                 const yInicialDia = cursorY;
+
                 if (item) {
-                    doc.setFontSize(12);
+                    doc.setFontSize(12); 
+                    // 1. Proteína (EM NEGRITO)
                     doc.setFont("helvetica", "bold"); 
                     doc.text(`${item.proteinas}`, margemEsquerda, cursorY);
                     cursorY += alturaLinha;
+                    
+                    // 2. Acompanhamentos (REGULAR)
                     doc.setFont("helvetica", "normal"); 
                     doc.text(`${item.opcional1}`, margemEsquerda, cursorY);
                     cursorY += alturaLinha;
+
                     doc.text(`${item.opcional2}`, margemEsquerda, cursorY);
                     cursorY += alturaLinha;
+
                     doc.text(`${item.guarnicao}`, margemEsquerda, cursorY);
                     cursorY += alturaLinha;
+
                     doc.text(`${item.saladas}`, margemEsquerda, cursorY);
                 }
+                
                 cursorY = yInicialDia + alturaBlocoDia;
             });
+
             doc.save("cardapio-semanal.pdf");
+
         } catch (error) {
             if(error.message !== "Cancelado") alert("Erro ao gerar arquivo.");
+            console.error(error);
         } finally {
             btnText.innerText = textoOriginal;
             btn.disabled = false;
@@ -297,7 +326,8 @@
             img.src = url;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                canvas.width = img.width; canvas.height = img.height;
+                canvas.width = img.width;
+                canvas.height = img.height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
                 resolve(canvas.toDataURL('image/jpeg', 0.9));
