@@ -228,9 +228,16 @@
           dias.forEach((dia, i) => {
             const item = data[dia];
             if (item && colunas[i]) {
-              if ((item.proteinas || '').toLowerCase().includes('feriado')) {
-                colunas[i].classList.add('inativa');
-              }
+// Normaliza o texto para minúsculas para facilitar a busca
+const textoPrato = (item.proteinas || '').toLowerCase();
+
+// LISTA DE PALAVRAS: Adicione aqui as palavras que devem "apagar" o dia
+const termosBloqueio = ['feriado', 'recesso', 'fechado', 'folga', 'recesso de natal', 'recesso de fim de ano', 'sem expediente'];
+
+// Verifica se ALGUMA das palavras da lista está no texto
+if (termosBloqueio.some(termo => textoPrato.includes(termo))) {
+  colunas[i].classList.add('inativa');
+}
               colunas[i].querySelector('.texto').innerHTML = `
                 <p class="diaSemana">${dia.toUpperCase()}-FEIRA</p>
                 <p class="proteinas">🔶 ${item.proteinas}</p>
