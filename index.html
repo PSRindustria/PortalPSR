@@ -14,102 +14,26 @@
   <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
   <meta property="og:type" content="website">
   <title>PortalPSR</title>
-  
+  <!-- CSS principal -->
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <style>
-    /* 1. FORÇAR MODO CLARO (Remove Dark Mode) */
-    :root {
-      color-scheme: light; /* Informa ao navegador que suporta apenas light */
-      
-      /* Definição de cores claras padrão (Substitua pelos códigos exatos da sua marca se necessário) */
-      --bg-body: #f4f4f9;
-      --bg-card: #ffffff;
-      --text-primary: #333333;
-      --text-secondary: #666666;
-      --shadow: rgba(0,0,0,0.1);
-    }
-
-    /* Garante fundo claro independente do style.css antigo */
-    body {
-      background-color: var(--bg-body) !important;
-      color: var(--text-primary) !important;
-    }
-
-    /* Garante que os cards sejam brancos */
-    .novidade-card, .reflexao-card, .aniversariante-card, .ferias-card, .cipa-card {
-      background-color: var(--bg-card) !important;
-      color: var(--text-primary) !important;
-      box-shadow: 0 4px 6px var(--shadow);
-    }
-
-    /* 2. CONFIGURAÇÃO DE SCROLL SNAP (Página Centralizada) */
-    html {
-      scroll-behavior: smooth; /* Rolagem suave ao clicar no menu */
-      scroll-snap-type: y mandatory; /* Força a parada nas seções */
-      height: 100vh;
-      overflow-y: scroll;
-    }
-
-    /* Ajuste para garantir que o body ocupe tudo */
-    body, main {
-      margin: 0;
-      padding: 0;
-    }
-
-    /* Configuração das Seções para ocuparem 100% da tela */
-    section.banner, 
-    section.section {
-      height: 100vh; /* Ocupa 100% da altura da janela */
-      min-height: 100vh;
-      scroll-snap-align: start; /* O ponto de parada é o topo da seção */
-      scroll-snap-stop: always; /* Obriga a parar na seção, evita pular direto */
-      
-      /* Centralização do conteúdo dentro da seção */
-      display: flex;
-      flex-direction: column;
-      justify-content: center; /* Centraliza verticalmente */
-      align-items: center;     /* Centraliza horizontalmente */
-      padding: 20px;
-      box-sizing: border-box;
-      position: relative;
-    }
-
-    /* Ajustes específicos para containers internos não vazarem a tela */
-    .novidades-container, 
-    .reflexao-container, 
-    .aniversariantes-container, 
-    .ferias-container, 
-    .cipa-container {
-      max-height: 80vh; /* Limita altura do conteúdo interno */
-      overflow-y: auto; /* Permite rolar apenas o conteúdo interno se for muito grande */
-      width: 100%;
-      max-width: 1200px;
-      padding: 10px;
-    }
-
-    /* Ajuste do Banner */
-    section.banner {
-      background-attachment: fixed; /* Opcional: efeito parallax */
-    }
-
-    /* Se houver media query de dark mode no style.css, isso tenta sobrepor */
-    @media (prefers-color-scheme: dark) {
-      body { background-color: #f4f4f9 !important; color: #333 !important; }
-      .card { background-color: #fff !important; color: #333 !important; }
-    }
-  </style>
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
 </head>
 <body>
+  <!-- MENU (será carregado via JS) -->
   <div id="menu-placeholder"></div>
 
+  <!-- BANNER -->
   <section class="banner" id="inicio">
     <h1>Bem-vindo ao PortalPSR</h1>
-    <p>Aqui é o seu espaço. Aqui é PSR!</p> <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
+    <p>Aqui é o seu espaço. Aqui é PSR!</p> <!-- Este texto será atualizado via JS -->
+    <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
   </section>
 
   <main>
+    <!-- Novidades -->
     <section id="novidades" class="section">
       <h2 class="section-title">Novidades</h2>
       <div class="novidades-header">
@@ -121,6 +45,7 @@
       </div>
     </section>
 
+    <!-- Reflexão Estoica do Dia -->
     <section id="reflexao-do-dia" class="section">
       <h2 class="section-title">Reflexão Estoica</h2>
       <div id="reflexao-container" class="reflexao-container">
@@ -128,6 +53,7 @@
       </div>
     </section>
 
+    <!-- Aniversariantes -->
     <section id="aniversariantes" class="section">
       <h2 class="section-title">Aniversariantes do Mês</h2>
       <div id="aniversariantes-container" class="aniversariantes-container">
@@ -135,6 +61,7 @@
       </div>
     </section>
 
+    <!-- Férias -->
     <section id="ferias" class="section">
       <h2 class="section-title">Colaboradores em Férias</h2>
       <div class="ferias-container">
@@ -157,6 +84,7 @@
       </div>
     </section>
 
+    <!-- CIPA -->
     <section id="cipa" class="section">
       <h2 class="section-title">CIPA</h2>
       <div id="cipa-container" class="cipa-container">
@@ -165,8 +93,10 @@
     </section>
   </main>
 
+  <!-- FOOTER (será carregado via JS) -->
   <div id="footer-placeholder"></div>
 
+  <!-- SCRIPTS -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     // Função para criar efeito de fogos de artifício
@@ -571,6 +501,7 @@
   });
   </script>
 
+  <!-- Banner dinâmico inteligente (aniversário, férias, feriado) -->
   <script>
 // Lista de nomes femininos comuns no Brasil
 const nomesFemininos = [
