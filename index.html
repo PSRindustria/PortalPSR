@@ -19,13 +19,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* 1. TEMA CLARO E CORES */
+    /* 1. TEMA CLARO */
     :root {
       color-scheme: light;
       --bg-body: #f4f4f9;
       --bg-card: #ffffff;
       --text-primary: #333333;
-      --shadow: rgba(0,0,0,0.15); /* Sombra um pouco mais forte */
+      --shadow: rgba(0,0,0,0.15);
       --primary-color: #0056b3; 
     }
     body {
@@ -36,19 +36,33 @@
       overflow-x: hidden;
     }
     
-    /* 2. REGRAS DE CARDS (Incluindo a correção da sombra da Reflexão) */
+    /* 2. CONFIGURAÇÃO GERAL DOS CARDS */
     .novidade-card, 
     .aniversariante-card, 
     .ferias-card, 
-    .cipa-card,
-    .reflexao-card { /* Garante que reflexao-card tenha sombra */
+    .cipa-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
-      box-shadow: 0 4px 12px var(--shadow) !important; /* Força a sombra */
-      border-radius: 8px; /* Arredondamento suave padrão */
+      box-shadow: 0 4px 12px var(--shadow) !important;
+      border-radius: 8px;
     }
 
-    /* 3. LAYOUT FLUIDO (Sem buracos gigantes) */
+    /* 3. CORREÇÃO ESPECÍFICA DO CARD REFLEXÃO (SEM SOMBRA, TAMANHO ORIGINAL) */
+    .reflexao-card {
+      background-color: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      box-shadow: none !important; /* REMOVIDA A SOMBRA */
+      border: none !important;
+      border-radius: 8px;
+      
+      /* Tamanho restaurado (ocupa o container) */
+      width: 100%; 
+      padding: 30px;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    /* 4. LAYOUT DAS SEÇÕES E SCROLL */
     html {
       scroll-behavior: smooth;
       height: auto; 
@@ -63,15 +77,14 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 40px 20px; 
+      
+      /* Margem segura para o JS calcular o centro da tela corretamente */
+      padding: 60px 20px; 
       box-sizing: border-box;
-      /* Scroll-margin ajuda no alinhamento caso o JS falhe, mas o JS fará o principal */
-      scroll-margin-top: 15vh; 
     }
 
     section.banner {
       min-height: 400px;
-      padding: 60px 20px;
     }
 
     .section-title {
@@ -81,6 +94,7 @@
       font-size: 2rem;
     }
 
+    /* Containers */
     .novidades-container, 
     .reflexao-container, 
     .aniversariantes-container, 
@@ -96,24 +110,29 @@
       margin: 0 auto;
     }
 
-    /* 4. BOTÃO DE REFLEXÃO (Correção da quebra de linha) */
+    /* 5. CORREÇÃO DO BOTÃO (TEXTO CENTRALIZADO) */
     .reflexao-instrucao {
       background-color: var(--primary-color);
       color: white !important;
-      padding: 12px 24px;
+      
+      /* Flexbox para garantir centralização perfeita do texto */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      padding: 12px 30px; /* Mais padding lateral */
       border-radius: 50px;
       cursor: pointer;
-      text-align: center;
       font-weight: bold;
       text-transform: uppercase;
       font-size: 0.9rem;
       letter-spacing: 1px;
       border: none;
-      margin: 15px auto;
-      display: table;
       
-      white-space: nowrap; /* IMPEDE A QUEBRA DE LINHA */
+      /* Centraliza o botão dentro do card */
+      margin: 20px auto; 
       
+      white-space: nowrap;
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
       animation: pulse-btn 2s infinite;
@@ -133,15 +152,6 @@
       0% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.7); }
       70% { box-shadow: 0 0 0 10px rgba(0, 86, 179, 0); }
       100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
-    }
-
-    /* Estilo específico para o card de reflexão para garantir que fique bonito */
-    .reflexao-card {
-      padding: 30px;
-      max-width: 600px;
-      width: 100%;
-      text-align: center;
-      margin: 10px;
     }
 
     .ferias-table {
@@ -312,7 +322,7 @@
       }
     });
 
-    // 1) Injeta menu e rodapé + LÓGICA DE CLICK CENTRALIZADO
+    // 1) Injeta menu e rodapé + LÓGICA DE NAVEGAÇÃO CENTRALIZADA
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
         .then(r => r.text())
@@ -324,29 +334,24 @@
             const toggle = document.getElementById('menu-toggle');
             const menuEl = document.getElementById('menu');
             
-            // Lógica para toggle mobile
             if (toggle && menuEl) {
               toggle.addEventListener('click', () => {
                 menuEl.classList.toggle('active');
               });
             }
 
-            // --- LÓGICA DE NAVEGAÇÃO CENTRALIZADA (CORREÇÃO SOLICITADA) ---
+            // --- LÓGICA DE NAVEGAÇÃO AJUSTADA ---
             const links = placeholder.querySelectorAll('a[href^="#"]');
             links.forEach(link => {
               link.addEventListener('click', function(e) {
-                // Previne o pulo padrão pro topo
                 e.preventDefault();
-                
-                // Fecha menu mobile se estiver aberto
                 if (menuEl) menuEl.classList.remove('active');
 
-                // Pega o ID alvo (ex: #novidades -> novidades)
                 const targetId = this.getAttribute('href').substring(1);
                 const targetSection = document.getElementById(targetId);
 
                 if (targetSection) {
-                  // Mágica: Rola suavemente e coloca o elemento no CENTRO da tela
+                  // Centraliza a SECTION inteira no meio da tela verticalmente
                   targetSection.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center' 
@@ -354,7 +359,7 @@
                 }
               });
             });
-            // -------------------------------------------------------------
+            // -------------------------------------
           }
         }).catch(e => console.error(`Error loading ${file}.html:`, e));
     });
@@ -669,64 +674,13 @@ const nomesFemininos = [
     'patrícia', 'paulaine', 'paulina', 'penélope', 'perpétua', 'petra', 'pia', 'piedade',  
     'pigmeia', 'poliana', 'polyana', 'prisca', 'profiría', 'queli', 'quenia', 'quirina',  
     'racquel', 'rafaella', 'raiane', 'raina', 'ralphina', 'ramira', 'rebecca', 'regiane',  
-    'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita',  
+    'regina', 'rehia', 'relita', 'remosina', 'renata', 'renata', 'renilda', 'renilda', 'renita',  
     'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete',  
     'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane',  
     'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete',  
     'samara', 'samira', 'samuela', 'sandra', 'sandra', 'sandrine', 'sanita', 'sara',  
     'sarah', 'seila', 'selena', 'serena', 'serginia', 'severina', 'silene', 'sílvia',  
-    'simara', 'simona', 'sonia', 'sonja', 'sônia', 'soraya', 'stella', 'suzana',  
-    'suzette', 'talisa', 'tâmara', 'tamara', 'tâmara', 'tânia', 'teodora', 'teresinha',  
-    'thalia', 'thelma', 'thora', 'tina', 'túlia', 'valda', 'valdirene', 'vale',  
-    'valéria', 'vânia', 'vania', 'vanda', 'vania', 'vanília', 'vanusa', 'vênus',  
-    'verônica', 'vi', 'viana', 'victoria', 'victória', 'victorina', 'vilma', 'vulcana',  
-    'wilma', 'yara', 'yasmin', 'zelma', 'zelita', 'zina', 'zion', 'zoé',  
-    'zoraide', 'zorina', 'zuleica', 'zulmira', 'zuza', 'dade', 'daliane', 'dalva',  
-    'domingas', 'donatella', 'edir', 'edith', 'elea', 'elen', 'eliane', 'elisia',  
-    'elma', 'elvira', 'ena', 'enide', 'enue', 'eran', 'eri', 'erica',  
-    'erlana', 'ermelinda', 'erneste', 'eryka', 'esperança', 'ethere', 'etina', 'eurídice',  
-    'evas', 'evânia', 'evângela', 'ewa', 'exilda', 'fabíola', 'farida', 'fatima',  
-    'felicidade', 'fernanda', 'fiorella', 'flor', 'florencia', 'florinda', 'fortuna', 'francieli',  
-    'francelina', 'fransisca', 'frida', 'gabriela', 'gail', 'gal', 'galileia', 'garda',  
-    'gedda', 'genésia', 'geovana', 'genilda', 'ginete', 'gisela', 'giovana', 'gladys',  
-    'gláucia', 'glendha', 'glória', 'gorete', 'guilhermina', 'guta', 'harlene', 'hayley',  
-    'heloísa', 'helô', 'hermenegilda', 'herme', 'hermina', 'hildete', 'hilda', 'hildete',  
-    'hilde', 'hilka', 'hilka', 'hisa', 'hovana', 'húria', 'illya', 'iracema',  
-    'iraísa', 'ireine', 'irenita', 'irina', 'irmã', 'isa', 'isadora', 'isele',  
-    'isolda', 'ivane', 'ivanilda', 'ivonete', 'izaura', 'iziara', 'jadira', 'jael',  
-    'jane', 'janete', 'janira', 'janise', 'janitta', 'jara', 'jéssica', 'jessyca',  
-    'joella', 'joênia', 'jolanda', 'jonathas', 'joselita', 'josiane', 'journelle', 'joyce',  
-    'juana', 'judite', 'julieta', 'juline', 'junia', 'justina', 'kaela', 'kaiá',  
-    'kalina', 'kássia', 'katiane', 'keicy', 'keila', 'kelly', 'kemily', 'kenia',  
-    'kerolayne', 'kessia', 'ketlin', 'khatia', 'kia', 'kim', 'klemens', 'korina',  
-    'laetitia', 'laiara', 'laicia', 'laís', 'lailane', 'laine', 'lais', 'lara',  
-    'lars', 'larúcia', 'lasia', 'laura', 'leia', 'leila', 'leonor', 'leonora',  
-    'lerisa', 'leslie', 'liana', 'liane', 'liliane', 'lilisa', 'linda', 'linna',  
-    'lira', 'liuba', 'livia', 'loreta', 'lorine', 'lorrane', 'lourenza', 'lovisa',  
-    'luana', 'lubia', 'lucena', 'lucineia', 'lucineia', 'lucrecia', 'luísa', 'luisa',  
-    'lumena', 'lúcia', 'lusângela', 'luzia', 'lyara', 'lygia', 'lys', 'maira',  
-    'maisa', 'majô', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina',  
-    'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia',  
-    'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice',  
-    'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury',  
-    'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele',  
-    'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna',  
-    'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa',  
-    'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida',  
-    'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa',  
-    'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina',  
-    'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela',  
-    'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina',  
-    'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina',  
-    'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane',  
-    'regina', 'rehia', 'relita', 'remosina', 'renata', 'renata', 'renilda', 'renilde',  
-    'renite', 'reola', 'reteme', 'reuza', 'rica', 'ricarda', 'rígia', 'rinata',  
-    'rita', 'robina', 'robyn', 'rocela', 'rochelle', 'rodesia', 'rodolina', 'rogéria',  
-    'rosa', 'rosalba', 'rosalina', 'rosamaria', 'rosângela', 'roseni', 'rosifer', 'rosilene',  
-    'rosimeire', 'rosine', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete',  
-    'samara', 'samira', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly',  
-    'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena',  
-    'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara',  
+    'simara', 'simona', 'sintia', 'siomara',  
     'sirlene', 'sônia', 'sonia', 'soraia', 'soraya', 'sueli', 'súellen', 'suely',  
     'susana', 'susanne', 'sweetie', 'talitha', 'tamara', 'tâmara', 'tamilia', 'tanice',  
     'tarcila', 'tatiane', 'tchabi', 'tecla', 'teodora', 'teresinha', 'theresa', 'thícia',  
