@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* 1. FORÇAR TEMA CLARO */
+    /* 1. TEMA CLARO */
     :root {
       color-scheme: light;
       --bg-body: #f4f4f9;
@@ -36,7 +36,7 @@
       overflow-x: hidden;
     }
     
-    /* 2. CONFIGURAÇÃO GERAL DOS CARDS (COM SOMBRA) */
+    /* 2. CONFIGURAÇÃO GERAL DOS CARDS */
     .novidade-card, 
     .aniversariante-card, 
     .ferias-card, 
@@ -47,22 +47,20 @@
       border-radius: 8px;
     }
 
-    /* 3. CARD REFLEXÃO (SEM SOMBRA, TAMANHO TOTAL) */
+    /* CARD REFLEXÃO (Padrão Desktop) */
     .reflexao-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
-      
-      box-shadow: none !important; /* REMOVIDA A SOMBRA */
+      box-shadow: none !important; 
       border: none !important;
-      
       border-radius: 8px;
-      width: 100%; /* Ocupa largura total disponível */
+      width: 100%; 
       padding: 30px;
       text-align: center;
       margin: 10px 0;
     }
 
-    /* 4. LAYOUT DAS SEÇÕES */
+    /* 3. LAYOUT DAS SEÇÕES */
     html {
       scroll-behavior: smooth;
       height: auto; 
@@ -77,13 +75,9 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      
-      /* Espaçamento para visualização confortável e cálculo do centro */
       padding: 60px 20px; 
       box-sizing: border-box;
-      
-      /* Ajuda no scroll */
-      scroll-margin-block-start: 20px;
+      scroll-margin-block-start: 20px; /* Margem padrão para scroll */
     }
 
     section.banner {
@@ -113,16 +107,13 @@
       margin: 0 auto;
     }
 
-    /* 5. BOTÃO REFLEXÃO (CENTRALIZADO PERFEITAMENTE) */
+    /* 4. BOTÃO REFLEXÃO */
     .reflexao-instrucao {
       background-color: var(--primary-color);
       color: white !important;
-      
-      /* Flexbox para centralizar o texto dentro do botão */
       display: flex;
       justify-content: center;
       align-items: center;
-      
       padding: 12px 30px;
       border-radius: 50px;
       cursor: pointer;
@@ -131,11 +122,8 @@
       font-size: 0.9rem;
       letter-spacing: 1px;
       border: none;
-      
-      /* Margem para separar dos textos */
       margin: 20px auto; 
-      
-      white-space: nowrap; /* IMPEDE QUEBRA DE LINHA */
+      white-space: nowrap; 
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
       animation: pulse-btn 2s infinite;
@@ -161,6 +149,46 @@
       margin: 20px auto;
       max-width: 1000px;
       width: 100%;
+    }
+
+    /* =========================================
+       AJUSTES ESPECÍFICOS PARA MOBILE (Android/iOS)
+       ========================================= */
+    @media (max-width: 768px) {
+      
+      /* Ajuste de scroll para mobile (alinhar topo) */
+      section.section {
+        scroll-margin-top: 80px; /* Compensa cabeçalho fixo se houver, ou dá respiro */
+        padding: 40px 15px;      /* Reduz padding lateral para ganhar espaço */
+        justify-content: flex-start; /* Alinha conteúdo ao topo naturalmente */
+      }
+
+      /* Padronização de Largura: Aniversariantes e CIPA iguais */
+      .aniversariante-card,
+      .cipa-card {
+        width: 100% !important;        /* Força ocupar largura total do container */
+        max-width: none !important;    /* Remove limites de largura */
+        flex: 1 1 100%;                /* Garante comportamento flexível total */
+        box-sizing: border-box;
+      }
+
+      /* Melhoria de Legibilidade da Reflexão Estoica */
+      .reflexao-card {
+        padding: 20px 10px !important; /* Reduz padding interno para dar mais espaço ao texto */
+        width: 100% !important;
+        margin: 0 !important;          /* Remove margens externas que apertam o card */
+      }
+      
+      .reflexao-frase {
+        font-size: 1.1rem;      /* Ajusta tamanho da fonte se necessário */
+        line-height: 1.6;       /* Melhora altura da linha para leitura */
+        padding: 0 5px;         /* Pequeno respiro lateral */
+      }
+      
+      .reflexao-texto {
+        text-align: justify;    /* Opcional: justifica texto longo para ficar blocadinho */
+        padding: 0 5px;
+      }
     }
   </style>
 </head>
@@ -234,8 +262,7 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. INTERCEPTADOR DE NAVEGAÇÃO (GLOBAL) ---
-    // Garante que o clique no menu centralize a seção verticalmente
+    // --- 1. INTERCEPTADOR DE NAVEGAÇÃO INTELIGENTE (MOBILE vs DESKTOP) ---
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link) {
@@ -251,16 +278,21 @@
             const menuEl = document.getElementById('menu');
             if (menuEl) menuEl.classList.remove('active');
 
+            // DETECTA SE É MOBILE (largura < 768px)
+            const isMobile = window.innerWidth < 768;
+
+            // Se Mobile -> Alinha no TOPO ('start')
+            // Se Desktop -> Alinha no CENTRO ('center')
             targetSection.scrollIntoView({
               behavior: 'smooth',
-              block: 'center' // Mágica: Centraliza verticalmente
+              block: isMobile ? 'start' : 'center' 
             });
           }
         }
       }
     });
 
-    // --- 2. SCRIPT DE FOGOS (Versão Fluida) ---
+    // --- 2. SCRIPT DE FOGOS ---
     function spawnFirework(container) {
       if (!container) return;
       const rect = container.getBoundingClientRect();
@@ -351,7 +383,7 @@
       }
     });
 
-    // --- 3. INJEÇÃO DE MENU/FOOTER ---
+    // --- 3. MENU/FOOTER ---
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
         .then(r => r.text())
@@ -370,7 +402,7 @@
         }).catch(e => console.error(`Error loading ${file}.html:`, e));
     });
 
-    // --- 4. DATA DE HOJE ---
+    // --- 4. DATA ---
     const hoje = new Date();
     const dia = hoje.getDate();
     const mes = hoje.getMonth();
@@ -380,7 +412,7 @@
     const dataHojeEl = document.getElementById('data-hoje-novidades');
     if (dataHojeEl) dataHojeEl.textContent = hojePt;
 
-    // --- 5. FUNÇÕES DE FETCH ---
+    // --- 5. FETCH GENÉRICO ---
     async function fetchData(path) {
       const cacheBuster = Date.now();
       try {
@@ -437,7 +469,6 @@
       const card = document.createElement('div');
       card.className = 'reflexao-card';
       
-      // Conteúdo com botão estilizado
       card.innerHTML = `
         <p class="reflexao-frase">"${r.frase}"</p>
         <p class="reflexao-autor">- ${r.autor}</p>
@@ -628,7 +659,6 @@
       });
     }
 
-    // DISPARO INICIAL
     renderNovidades();
     renderReflexao();
     renderAniversariantes();
@@ -638,7 +668,6 @@
   </script>
 
   <script>
-// Lista de nomes femininos comuns no Brasil
 const nomesFemininos = [
     'abigail', 'abriele', 'adriane', 'agnes', 'aitana', 'alana', 'alba', 'alessia',  
     'alexia', 'aliceia', 'alzira', 'amalia', 'ana paula', 'anais', 'angelica', 'angelina',  
@@ -685,56 +714,6 @@ const nomesFemininos = [
     'patrícia', 'paulaine', 'paulina', 'penélope', 'perpétua', 'petra', 'pia', 'piedade',  
     'pigmeia', 'poliana', 'polyana', 'prisca', 'profiría', 'queli', 'quenia', 'quirina',  
     'racquel', 'rafaella', 'raiane', 'raina', 'ralphina', 'ramira', 'rebecca', 'regiane',  
-    'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita',  
-    'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete',  
-    'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane',  
-    'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete',  
-    'samara', 'samira', 'samuela', 'sandra', 'sandra', 'sandrine', 'sanita', 'sara',  
-    'sarah', 'seila', 'selena', 'serena', 'serginia', 'severina', 'silene', 'sílvia',  
-    'simara', 'simona', 'sonia', 'sonja', 'sônia', 'soraya', 'stella', 'suzana',  
-    'suzette', 'talisa', 'tâmara', 'tamara', 'tâmara', 'tânia', 'teodora', 'teresinha',  
-    'thalia', 'thelma', 'thora', 'tina', 'túlia', 'valda', 'valdirene', 'vale',  
-    'valéria', 'vânia', 'vania', 'vanda', 'vania', 'vanília', 'vanusa', 'vênus',  
-    'verônica', 'vi', 'viana', 'victoria', 'victória', 'victorina', 'vilma', 'vulcana',  
-    'wilma', 'yara', 'yasmin', 'zelma', 'zelita', 'zina', 'zion', 'zoé',  
-    'zoraide', 'zorina', 'zuleica', 'zulmira', 'zuza', 'dade', 'daliane', 'dalva',  
-    'domingas', 'donatella', 'edir', 'edith', 'elea', 'elen', 'eliane', 'elisia',  
-    'elma', 'elvira', 'ena', 'enide', 'enue', 'eran', 'eri', 'erica',  
-    'erlana', 'ermelinda', 'erneste', 'eryka', 'esperança', 'ethere', 'etina', 'eurídice',  
-    'evas', 'evânia', 'evângela', 'ewa', 'exilda', 'fabíola', 'farida', 'fatima',  
-    'felicidade', 'fernanda', 'fiorella', 'flor', 'florencia', 'florinda', 'fortuna', 'francieli',  
-    'francelina', 'fransisca', 'frida', 'gabriela', 'gail', 'gal', 'galileia', 'garda',  
-    'gedda', 'genésia', 'geovana', 'genilda', 'ginete', 'gisela', 'giovana', 'gladys',  
-    'gláucia', 'glendha', 'glória', 'gorete', 'guilhermina', 'guta', 'harlene', 'hayley',  
-    'heloísa', 'helô', 'hermenegilda', 'herme', 'hermina', 'hildete', 'hilda', 'hildete',  
-    'hilde', 'hilka', 'hilka', 'hisa', 'hovana', 'húria', 'illya', 'iracema',  
-    'iraísa', 'ireine', 'irenita', 'irina', 'irmã', 'isa', 'isadora', 'isele',  
-    'isolda', 'ivane', 'ivanilda', 'ivonete', 'izaura', 'iziara', 'jadira', 'jael',  
-    'jane', 'janete', 'janira', 'janise', 'janitta', 'jara', 'jéssica', 'jessyca',  
-    'joella', 'joênia', 'jolanda', 'jonathas', 'joselita', 'josiane', 'journelle', 'joyce',  
-    'juana', 'judite', 'julieta', 'juline', 'junia', 'justina', 'kaela', 'kaiá',  
-    'kalina', 'kássia', 'katiane', 'keicy', 'keila', 'kelly', 'kemily', 'kenia',  
-    'kerolayne', 'kessia', 'ketlin', 'khatia', 'kia', 'kim', 'klemens', 'korina',  
-    'laetitia', 'laiara', 'laicia', 'laís', 'lailane', 'laine', 'lais', 'lara',  
-    'lars', 'larúcia', 'lasia', 'laura', 'leia', 'leila', 'leonor', 'leonora',  
-    'lerisa', 'leslie', 'liana', 'liane', 'liliane', 'lilisa', 'linda', 'linna',  
-    'lira', 'liuba', 'livia', 'loreta', 'lorine', 'lorrane', 'lourenza', 'lovisa',  
-    'luana', 'lubia', 'lucena', 'lucineia', 'lucineia', 'lucrecia', 'luísa', 'luisa',  
-    'lumena', 'lúcia', 'lusângela', 'luzia', 'lyara', 'lygia', 'lys', 'maira',  
-    'maisa', 'majô', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina',  
-    'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia',  
-    'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice',  
-    'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury',  
-    'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele',  
-    'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna',  
-    'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa',  
-    'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida',  
-    'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa',  
-    'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina',  
-    'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela',  
-    'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina',  
-    'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina',  
-    'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane',  
     'regina', 'rehia', 'relita', 'remosina', 'renata', 'renata', 'renilda', 'renilde',  
     'renite', 'reola', 'reteme', 'reuza', 'rica', 'ricarda', 'rígia', 'rinata',  
     'rita', 'robina', 'robyn', 'rocela', 'rochelle', 'rodesia', 'rodolina', 'rogéria',  
@@ -755,12 +734,10 @@ const nomesFemininos = [
     'zelma', 'zélia', 'ziralda', 'zirene', 'iasmim', 'daniele', 'solanie Paz', 'tayane', 'solanie', 'milene', 'zoe'
 ];
 
-// Remove acentos (bem simples, serve para maioria dos casos)
 function removeAcentos(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// Função para determinar gênero pelo nome
 function determinarGenero(nome) {
   if (!nome) return 'masculino';
   let primeiroNome = nome.split(" ")[0].toLowerCase();
@@ -774,7 +751,6 @@ function determinarGenero(nome) {
   return 'masculino';
 }
 
-// Função para carregar um arquivo JSON (com cache buster)
 async function carregaJSON(arquivo) {
   try {
     return await fetch(arquivo + '?t=' + Date.now()).then(r => r.json());
@@ -783,14 +759,12 @@ async function carregaJSON(arquivo) {
   }
 }
 
-// Função utilitária para juntar nomes: "A", "A e B", "A, B e C"
 function juntarNomes(nomes) {
   if (nomes.length === 1) return nomes[0];
   if (nomes.length === 2) return nomes[0] + ' e ' + nomes[1];
   return nomes.slice(0, -1).join(', ') + ' e ' + nomes[nomes.length - 1];
 }
 
-// Função para pluralizar verbo e pronome
 function getPluralGenero(generos) {
   const femininoCount = generos.filter(g => g === "feminino").length;
   if (femininoCount === generos.length) return {pronome: "elas", verboVoltar: "voltam", verboAniv: "fazem"};
@@ -807,49 +781,46 @@ document.addEventListener('DOMContentLoaded', async () => {
   const dataCompleta = `${dia}/${mes}/${ano}`;
   let mensagens = [];
 
-  // ===== Aniversariantes =====
-function getArtigoSingular(genero) {
-  return genero === 'feminino' ? 'da' : 'do';
-}
+  function getArtigoSingular(genero) {
+    return genero === 'feminino' ? 'da' : 'do';
+  }
 
-function getArtigoPlural(generos) {
-  const todasFeminino = generos.every(g => g === 'feminino');
-  return todasFeminino ? 'da' : 'das';
-}
+  function getArtigoPlural(generos) {
+    const todasFeminino = generos.every(g => g === 'feminino');
+    return todasFeminino ? 'da' : 'das';
+  }
 
-const aniversariantes = await carregaJSON('aniversariantes.json');
-const nomesAniv = [];
-const generosAniv = [];
+  const aniversariantes = await carregaJSON('aniversariantes.json');
+  const nomesAniv = [];
+  const generosAniv = [];
 
-if (Array.isArray(aniversariantes)) {
-  aniversariantes.forEach(({ nome, data }) => {
-    if (data === dataAtualStr) {
-      nomesAniv.push(nome);
-      generosAniv.push(determinarGenero(nome)); // “masculino” ou “feminino”
+  if (Array.isArray(aniversariantes)) {
+    aniversariantes.forEach(({ nome, data }) => {
+      if (data === dataAtualStr) {
+        nomesAniv.push(nome);
+        generosAniv.push(determinarGenero(nome));
+      }
+    });
+
+    if (nomesAniv.length === 1) {
+      const genero = generosAniv[0];
+      const pronome = genero === 'feminino' ? 'ela' : 'ele';
+      const artigo = getArtigoSingular(genero);
+      mensagens.push(
+        `🥳 Hoje é aniversário ${artigo} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`
+      );
     }
-  });
-
-  if (nomesAniv.length === 1) {
-    const genero = generosAniv[0];
-    const pronome = genero === 'feminino' ? 'ela' : 'ele';
-    const artigo = getArtigoSingular(genero); // “da” ou “do”
-    mensagens.push(
-      `🥳 Hoje é aniversário ${artigo} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`
-    );
+    else if (nomesAniv.length > 1) {
+      const nomesStr = juntarNomes(nomesAniv);
+      const pronome = generosAniv.every(g => g === 'feminino')
+        ? 'elas'
+        : 'eles';
+      mensagens.push(
+        `🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns a ${pronome}!`
+      );
+    }
   }
-  else if (nomesAniv.length > 1) {
-    const nomesStr = juntarNomes(nomesAniv);
-    const pronome = generosAniv.every(g => g === 'feminino')
-      ? 'elas'
-      : 'eles';
-    mensagens.push(
-      `🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns a ${pronome}!`
-    );
-  }
-}
 
-
-  // ===== Retorno de férias =====
   const ferias = await carregaJSON('ferias.json');
   let nomesFerias = [];
   let generosFerias = [];
@@ -870,7 +841,6 @@ if (Array.isArray(aniversariantes)) {
     }
   }
 
-  // ===== Feriados =====
   const feriados = await carregaJSON('feriados.json');
   if (feriados && Array.isArray(feriados)) {
     feriados.forEach(f => {
@@ -880,13 +850,10 @@ if (Array.isArray(aniversariantes)) {
     });
   }
 
-  // Combina mensagens, ou usa padrão
   let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Aqui é PSR!";
-
-  // Atualiza o banner
   const bannerP = document.querySelector('.banner > p');
   if (bannerP) bannerP.innerHTML = mensagemFinal;
 });
-</script>
+  </script>
 </body>
 </html>
