@@ -210,7 +210,6 @@ main { padding-bottom: 40px; }
   padding: 5px 40px 20px 40px;
   border-radius: 15px;
   /* Borda dourada dupla estilo moldura */
-  border: 4px double var(--dourado-claro);
   text-align: center;
   margin: auto;
   max-width: 1080px;
@@ -241,7 +240,6 @@ main { padding-bottom: 40px; }
   margin: 0 auto 8px;
   text-align: center;
   border-radius: 50px;
-  border: 1px solid var(--dourado);
 }
 .reflexao-instrucao:hover {
   background-color: var(--dourado);
@@ -287,7 +285,6 @@ main { padding-bottom: 40px; }
   border-radius: 50%; overflow: hidden;
   margin: 0 auto 10px;
   background-color: #eee; 
-  border: 3px solid var(--dourado); /* Moldura Dourada */
   padding: 3px; /* Espaço entre foto e borda */
 }
 .aniversariante-img img {
@@ -522,3 +519,4 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); }
    50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
  }
+
