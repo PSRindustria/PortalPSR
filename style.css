@@ -1,20 +1,24 @@
 /******/
 /* ==================================================
-   VARIÁVEIS DE COR - TEMA NATALINO
+   VARIÁVEIS DE COR - TEMA ANO NOVO (RÉVEILLON)
    ================================================== */
 :root {
-  /* Substituição das cores originais por paleta de Natal */
-  --azul-marinho: #c31432; /* Vermelho Natalino (fundo headers, banner) */
-  --azul-aco: #146B3A;     /* Verde Pinheiro (ícones, detalhes) */
-  --azul-claro: #F8D800;   /* Dourado Vibrante (brilhos, destaques) */
+  /* Paleta Elegante: Azul Noite, Dourado e Prata */
+  --azul-marinho: #001f3f; /* Azul Noite (Fundo Header/Footer) */
+  --azul-aco: #D4AF37;     /* Dourado Metálico (Ícones, Detalhes) */
+  --azul-claro: #E5E4E2;   /* Platina/Prata (Fundos suaves, hovers) */
   
-  --cinza-escuro: #2c3e50; /* Mantido para texto, mas um tom mais frio */
+  --cinza-escuro: #333333; /* Texto Principal */
   --branco: #FFFFFF;
-  --dourado: #FFD700;      /* Dourado Clássico */
+  --dourado: #FFD700;      /* Dourado Vibrante (Brilhos) */
+  --prata-fundo: #f4f4f4;  /* Fundo da página */
   
-  --cinza-claro-ferias-bg: #fffbfb; /* Fundo levemente quente */
-  --dourado-claro: #fbecec; /* Tom creme/rosado para suavizar */
+  --cinza-claro-ferias-bg: #ffffff;
+  --dourado-claro: #F0E68C; /* Khaki para degradês suaves */
   --transicao: 0.3s ease;
+  
+  /* Sombra com brilho dourado */
+  --sombra-card: 0 5px 15px rgba(212, 175, 55, 0.15);
 }
 
 /* ==================================================
@@ -22,15 +26,17 @@
    ================================================== */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f9fa; /* Fundo levemente gelo/neve */
+  background-color: var(--prata-fundo);
   color: var(--cinza-escuro);
   line-height: 1.5;
-  /* Opcional: Textura de neve sutil */
-  background-image: radial-gradient(#e6e6e6 1px, transparent 1px);
-  background-size: 20px 20px;
+  /* Textura sutil de fundo (pontos) */
+  background-image: radial-gradient(#dcdcdc 1px, transparent 1px);
+  background-size: 30px 30px;
 }
+
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
 
@@ -38,13 +44,13 @@ img { max-width: 100%; display: block; }
    HEADER E NAVEGAÇÃO
    ================================================== */
 header {
-  background-color: var(--azul-marinho); /* Agora é Vermelho */
+  background-color: var(--azul-marinho); /* Azul Noite */
   color: var(--branco);
   padding: 15px 0;
   position: fixed;
   width: 100%; top: 0; z-index: 1000;
-  box-shadow: 0 4px 12px rgba(195, 20, 50, 0.3); /* Sombra avermelhada */
-  border-bottom: 3px solid var(--dourado);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  border-bottom: 2px solid var(--dourado); /* Linha dourada fina */
 }
 .header-container {
   width: 90%; max-width: 1080px;
@@ -54,22 +60,27 @@ header {
 }
 .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; }
 .logo img { height: 40px; margin-right: 10px; }
-.logo span { color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+.logo span { color: #fff; letter-spacing: 1px; }
+
 .menu-toggle {
   display: none; background: none;
   border: none; color: var(--branco);
   font-size: 1.5rem; cursor: pointer;
 }
+
 nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
 nav ul li { margin-left: 20px; }
 nav ul li a {
   padding: 8px 12px; border-radius: 4px;
-  font-weight: 500; transition: background-color 0.3s;
+  font-weight: 500; transition: all 0.3s;
+  color: #ddd;
 }
 nav ul li a:hover {
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(255, 215, 0, 0.15);
   color: var(--dourado);
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
+
 @media (max-width: 768px) {
   .menu-toggle { display: block; }
   nav ul {
@@ -83,59 +94,59 @@ nav ul li a:hover {
 }
 
 /* ==================================================
-   BANNER PRINCIPAL (NATALINO)
+   BANNER PRINCIPAL (ESTILO BASE)
+   Nota: O index.html possui estilos inline para garantir
+   a foto com o degradê específico. Aqui definimos o fallback.
    ================================================== */
 .banner {
   margin-top: 35px; 
   height: 400px;
-  /* Gradiente Vermelho para Verde Escuro */
-  background:
-    linear-gradient(135deg, rgba(195, 20, 50, 0.85), rgba(36, 11, 54, 0.9)),
-    url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg') center/cover no-repeat;
+  background-color: var(--azul-marinho);
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   text-align: center; color: var(--branco);
   padding: 0 30px;
   border-bottom: 5px solid var(--dourado);
 }
-.banner h1 { 
-  font-size: 2.2rem; margin-bottom: 10px; font-weight: 700; 
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-}
+.banner h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 700; }
 .banner p { font-size: 1.3rem; max-width: 700px; margin-bottom: 20px; margin-top: 0px; }
 .banner-btn {
   background-color: var(--dourado);
-  color: var(--azul-marinho); /* Texto vermelho */
-  padding: 12px 30px; border-radius: 50px;
+  color: var(--azul-marinho);
+  padding: 12px 24px; border-radius: 50px;
   font-weight: 700;
-  border: 2px solid #fff;
+  border: 1px solid #fff;
   transition: transform 0.3s, box-shadow 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .banner-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
   background-color: #fff;
+  color: var(--dourado);
 }
 
 /* ==================================================
    MAIN & SECTIONS
    ================================================== */
 main { padding-bottom: 40px; }
-.section {
-  padding: 30px 20px;
-}
+.section { padding: 30px 20px; }
+
 .section-title {
   text-align: center; font-size: 2rem;
   margin-bottom: 30px; position: relative; margin-top: 15px;
-  color: var(--azul-marinho); /* Título Vermelho */
+  color: var(--azul-marinho);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
-/* Detalhe abaixo do título (enfeite) */
+/* Detalhe Dourado abaixo do título */
 .section-title::after {
   content: '';
   display: block;
-  width: 120px; height: 4px; border-radius: 15px;
-  background: linear-gradient(to right, var(--azul-marinho), var(--azul-aco)); /* Vermelho e Verde */
-  margin: 7px auto 0;
+  width: 100px; height: 3px; border-radius: 15px;
+  background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+  margin: 10px auto 0;
 }
 
 /* ==================================================
@@ -146,8 +157,8 @@ main { padding-bottom: 40px; }
   align-items: center; padding: 20px;
 }
 .loading-spinner {
-  border: 5px solid rgba(195, 20, 50, 0.1);
-  border-top: 5px solid var(--azul-aco); /* Verde */
+  border: 4px solid rgba(212, 175, 55, 0.2);
+  border-top: 4px solid var(--dourado);
   border-radius: 50%; width: 40px; height: 40px;
   animation: spin 1s linear infinite;
 }
@@ -159,32 +170,37 @@ main { padding-bottom: 40px; }
 .novidades-header {
   display: flex; align-items: center;
   justify-content: center;
-  font-size: .9rem; color: var(--azul-aco); /* Verde */
+  font-size: .95rem; color: var(--azul-aco); /* Dourado */
   margin-bottom: 10px;
-  font-weight: bold;
+  font-weight: 600;
+  text-transform: uppercase;
 }
-.novidades-header i { margin-right: 6px; color: var(--azul-marinho); }
+.novidades-header i { margin-right: 6px; }
+
 .novidades-container {
   display: flex; flex-wrap: wrap;
   gap: 20px; justify-content: center;
 }
 .novidade-card {
   background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  flex: 1 1 280px; transition: transform .3s;
-  border-bottom: 3px solid var(--azul-aco); /* Borda verde embaixo */
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+  flex: 1 1 280px; transition: transform .3s, box-shadow .3s;
+  border-bottom: 3px solid var(--azul-aco); /* Borda Dourada embaixo */
 }
-.novidade-card:hover { transform: translateY(-5px); }
+.novidade-card:hover { 
+  transform: translateY(-5px); 
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+}
 .novidade-img {
-  background: var(--azul-marinho); /* Vermelho */
-  color: #fff; padding: 10px; text-align: center;
-  border-radius: 15px 15px 0px 0px;
+  background: var(--azul-marinho);
+  color: #fff; padding: 15px; text-align: center;
+  border-radius: 12px 12px 0px 0px;
 }
-.novidade-content { padding: 10px 30px 10px 30px; text-align: center; }
-.novidade-img .fas.fa-newspaper {
-  font-size: 25px;
+.novidade-img i {
+  color: var(--dourado); /* Ícone Dourado sobre fundo azul */
 }
+.novidade-content { padding: 15px 30px; text-align: center; }
 
 /* ==================================================
    REFLEXÃO DO DIA
@@ -193,51 +209,48 @@ main { padding-bottom: 40px; }
   background: var(--branco);
   padding: 5px 40px 20px 40px;
   border-radius: 15px;
-  /* Borda pontilhada estilo presente */
-  border: 2px dashed var(--azul-marinho); 
+  /* Borda dourada dupla estilo moldura */
+  border: 4px double var(--dourado-claro);
   text-align: center;
   margin: auto;
   max-width: 1080px;
-  /* Animação alterada para brilho dourado */
-  animation: christmas-glow 2s infinite alternate ease-in-out; 
+  /* Glow dourado suave */
+  animation: gold-pulse 3s infinite alternate ease-in-out;
 }
-@keyframes christmas-glow {
-  from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
-  to   { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+@keyframes gold-pulse {
+  from { box-shadow: 0 0 5px rgba(212, 175, 55, 0.1); }
+  to   { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
 }
 
 .reflexao-frase {
   font-style: italic; color: var(--azul-marinho);
-  font-size: 1.4rem;
-  padding: 0px 10px 0px 10px;
+  font-size: 1.4rem; padding: 0 10px;
 }
 .reflexao-autor {
-  font-weight: bold; color: var(--azul-aco); /* Verde */
-  margin: 0px 0px 20px 0px;
-  margin-top: -15px;
+  font-weight: bold; color: var(--azul-aco);
+  margin: -10px 0 20px 0;
+  font-size: 0.9rem;
 }
 .reflexao-instrucao {
   color: #fff;
   cursor: pointer;
   font-weight: 600;
-  padding: 8px 20px;
-  background-color: var(--azul-aco); /* Botão Verde */
+  padding: 8px 30px; 
+  background-color: var(--azul-marinho);
   display: inline-block;
   margin: 0 auto 8px;
   text-align: center;
   border-radius: 50px;
   border: 1px solid var(--dourado);
-  text-transform: uppercase;
-  font-size: 0.85rem;
 }
 .reflexao-instrucao:hover {
-  background-color: #0f522c;
-  transform: scale(1.02);
+  background-color: var(--dourado);
+  color: var(--azul-marinho);
 }
 .reflexao-extra {
   text-align: justify;
   margin-top: 10px;
-  padding: 0px 12px 0px 12px;
+  padding: 0 12px;
 }
 
 /* ==================================================
@@ -246,321 +259,214 @@ main { padding-bottom: 40px; }
 .aniversariantes-container {
   display: grid; 
   gap: 20px;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Mobile */
 }
 .aniversariante-card {
   background: var(--branco);
   padding: 35px 35px 25px 35px;
   border-radius: 15px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  box-shadow: var(--sombra-card);
   text-align: center;
   transition: transform .3s;
   position: relative;
-  border-top: 4px solid var(--azul-marinho); /* Topo vermelho */
+  /* Topo Dourado */
+  border-top: 4px solid var(--dourado);
 }
 .aniversariante-card:hover { transform: translateY(-5px); }
 
 .aniversariante-card .aniversariante-info h3 {
-  margin-top: 0;
-  margin-bottom: 5px; 
-  font-size: 1.5rem; 
-  color: var(--azul-marinho);
+  margin-top: 0; margin-bottom: 5px; 
+  font-size: 1.5rem; color: var(--azul-marinho);
+}
+.aniversariante-card .aniversariante-info p {
+  margin: 5px 0 10px; font-size: 1rem; color: #555;
 }
 
-.aniversariante-card .aniversariante-info p {
-  margin-top: 5px;    
-  margin-bottom: 10px; 
-  font-size: 1rem; 
-  color: var(--cinza-escuro);
-  line-height: 1.4;
-}
 .aniversariante-img {
   width: 150px; height: 150px;
   border-radius: 50%; overflow: hidden;
   margin: 0 auto 10px;
   background-color: #eee; 
-  border: 3px solid var(--dourado); /* Borda dourada na foto */
+  border: 3px solid var(--dourado); /* Moldura Dourada */
+  padding: 3px; /* Espaço entre foto e borda */
 }
 .aniversariante-img img {
   width: 100%; height: 100%; object-fit: cover;
+  border-radius: 50%;
 }
 .aniversariante-data {
-  background: rgba(20, 107, 58, 0.1); /* Fundo verde claro */
-  color: var(--azul-aco);
-  padding: 4px 18px;
-  border-radius: 12px;
-  font-size: 1.2rem;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  color: var(--azul-marinho);
+  padding: 5px 20px;
+  border-radius: 20px;
+  font-size: 1.1rem;
   display: inline-block;
   margin-top: 10px;
   font-weight: bold;
+  border: 1px solid #ddd;
 }
 
 /* Destaque do dia (Aniversariante) */
 .destaque-hoje {
   position: relative;
   border: 2px solid var(--dourado) !important;
-  animation: christmas-pulse 2s infinite ease-in-out;
+  /* Animação de brilho dourado intenso */
+  animation: shine-gold 2s infinite ease-in-out;
 }
-@keyframes christmas-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+@keyframes shine-gold {
+  0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
 }
 
 .destaque-hoje .twinkle-lights {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden; 
-  border-radius: 15px; 
+  position: absolute; inset: 0; pointer-events: none;
+  overflow: hidden; border-radius: 15px; 
 }
 
 /* ==================================================
    FÉRIAS
    ================================================== */
-.ferias-container {
-  width: 100%;
-}
+.ferias-container { width: 100%; }
 .ferias-grid { 
-  display: flex; 
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
 }
 
 .ferias-card { 
   background: #fff;
   padding: 28px 15px 0px 15px; 
   border-radius: 15px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  box-shadow: var(--sombra-card);
   transition: transform 0.3s;
   text-align: center;
-  flex: 1 1 100%; 
-  max-width: 350px; 
-  margin: 0 auto 20px;
-  font-size: 1.2rem;
-  border-left: 5px solid var(--azul-aco); /* Detalhe verde na lateral */
+  flex: 1 1 100%; max-width: 350px; 
+  margin: 0 auto 20px; font-size: 1.2rem;
+  /* Lateral Prateada/Dourada */
+  border-left: 5px solid var(--azul-aco); 
 }
 .ferias-card:hover { transform: translateY(-5px); }
+
 .ferias-card-header {
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 15px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
 }
 .ferias-card-icon {
-  font-size: 1.2rem; color: var(--azul-marinho);
-  margin-right: 10px;
+  font-size: 1.2rem; color: var(--azul-marinho); margin-right: 10px;
 }
 .ferias-dates {
-  display: flex; gap: 10px;
-  justify-content: center; margin: 12px 0;
+  display: flex; gap: 10px; justify-content: center; margin: 12px 0;
 }
-.ferias-card-inicio,
-.ferias-card-retorno {
+.ferias-card-inicio, .ferias-card-retorno {
   display: inline-block; border-radius: 20px;
   padding: 6px 14px; font-size: 0.9rem; font-weight: 500;
-  color: var(--azul-aco); background-color: #f0fff4;
-  border: 1px solid var(--azul-aco);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  color: var(--azul-marinho); background-color: #f9f9f9;
+  border: 1px solid #ccc;
 }
 
 .ferias-table { 
-  width: 100%; border-collapse: collapse;
-  margin-top: 20px; 
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  border-radius: 8px; 
-  overflow: hidden; 
+  width: 100%; border-collapse: collapse; margin-top: 20px; 
+  box-shadow: var(--sombra-card); border-radius: 8px; overflow: hidden; 
 }
 .ferias-table th, .ferias-table td {
-  padding: 10px; 
-  text-align: center; 
-  border-bottom: 1px solid #ddd; 
-}
-.ferias-table th:first-child, .ferias-table td:first-child {
-  padding-left: 15px;
-}
-.ferias-table th:last-child, .ferias-table td:last-child {
-  padding-right: 15px;
+  padding: 12px; text-align: center; border-bottom: 1px solid #eee; 
 }
 .ferias-table thead {
-  background: var(--azul-marinho); /* Cabeçalho Vermelho */
-  color: #fff;
-  border-bottom: 3px solid var(--dourado);
+  background: var(--azul-marinho); color: var(--dourado);
 }
-.ferias-table th {
-  font-weight: 600;
-}
-.ferias-table tbody tr:hover {
-  background-color: #fff5f5; /* Levemente avermelhado no hover */
-}
+.ferias-table th { font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+.ferias-table tbody tr:hover { background-color: #fcfcfc; }
 
 /* ==================================================
    CIPA
    ================================================== */
 .cipa-container {
-  display: flex; flex-wrap: wrap;
-  gap: 20px; justify-content: center;
+  display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
 }
 .cipa-card {
   background: var(--branco); padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: var(--sombra-card);
   flex: 1 1 260px; text-align: center;
   transition: transform .3s;
   border: 1px solid #eee;
 }
-.cipa-card:hover { transform: translateY(-5px); border-color: var(--dourado); }
+.cipa-card:hover { 
+  transform: translateY(-5px); 
+  border-color: var(--dourado); 
+}
 .cipa-icon {
   width: 50px; height: 50px;
-  background: var(--azul-aco); /* Verde */
+  background: linear-gradient(135deg, var(--azul-aco), #b8860b); /* Gradiente Dourado */
   color: #fff;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 10px;
-  box-shadow: 0 0 10px rgba(20, 107, 58, 0.4);
+  box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4);
 }
 
 /* ==================================================
    RODAPÉ
    ================================================== */
 footer .footer-accent {
-  background: linear-gradient(90deg, var(--dourado) 0%, #fff 50%, var(--dourado) 100%);
-  height: 6px;
-  width: 100%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+  height: 4px; width: 100%;
 }
 
 footer {
-  background: #1a1a1a; /* Fundo escuro para destacar o natalino */
-  color: var(--branco);
-  font-family: 'Roboto', sans-serif;
-  border-top: 5px solid var(--azul-marinho);
+  background: var(--azul-marinho);
+  color: #ccc;
+  font-family: 'Segoe UI', sans-serif;
+  border-top: none;
 }
 
 footer .footer-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 30px 20px;
-  position: relative;
-}
-
-.footer-brand {
-  position: relative;
-  margin-bottom: 30px;
-}
-
-.footer-brand::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  width: 120px;
-  height: 3px;
-  background: var(--dourado);
-  transform: translateX(-50%);
-  border-radius: 15px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; max-width: 1080px; margin: 0 auto;
+  padding: 40px 20px;
 }
 
 .footer-brand h2 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  margin: 0 0 0.25em;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  color: var(--azul-marinho); /* Marca em vermelho */
+  font-size: 1.8rem; margin: 0 0 0.25em; font-weight: 700;
+  color: var(--dourado); letter-spacing: 1px;
 }
-
-.footer-brand .tagline {
-  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
-  opacity: 0.95;
-  letter-spacing: 0.6px;
-  font-weight: 300;
-}
+.footer-brand .tagline { font-size: 1rem; opacity: 0.8; font-weight: 300; }
 
 .footer-social {
-  list-style: none;
-  display: flex;
-  gap: 15px;
-  margin: 25px 0;
-  padding: 0;
-  justify-content: center;
+  list-style: none; display: flex; gap: 15px; margin: 25px 0; padding: 0; justify-content: center;
 }
-
-.footer-social li {
-  margin: 0;
-}
-
 .footer-social a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: var(--azul-marinho); /* Ícones vermelhos */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  font-size: 1.2rem;
-  transition: all var(--transicao);
-  color: var(--branco);
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50%; font-size: 1.2rem;
+  transition: all var(--transicao); color: var(--branco);
 }
-
 .footer-social a:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 15px var(--azul-marinho);
-  background: var(--azul-aco); /* Vira verde no hover */
+  background: var(--dourado); color: var(--azul-marinho);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   border-color: var(--dourado);
 }
 
 .recursos-humanos {
-  display: inline-block;
-  margin: 10px 0 15px;
-  padding: 10px 20px;
-  background-color: var(--dourado) !important; 
-  color: #333;
-  text-decoration: none;
-  font-weight: 600;
-  border-radius: 15px;
-  transition: all var(--transicao);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.9rem;
-  width: auto;
-  text-align: center;
-}
-
-.recursos-humanos:hover {
-  background: #fff !important;
+  display: inline-block; margin: 10px 0 15px; padding: 10px 25px;
+  background: linear-gradient(to right, #D4AF37, #F0E68C); /* Botão Dourado */
   color: var(--azul-marinho);
+  text-decoration: none; font-weight: 700; border-radius: 25px;
+  transition: all var(--transicao);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  text-transform: uppercase; font-size: 0.9rem;
+}
+.recursos-humanos:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
 }
 
-.recursos-humanos:active {
-  transform: translateY(0);
-}
-
-.copyright {
-  margin: 15px 0 0;
-  font-size: 0.85rem;
-  opacity: 0.8;
-  font-weight: 300;
-}
-
+.copyright { margin: 15px 0 0; font-size: 0.85rem; opacity: 0.6; }
 .developer-credit {
-  margin: 0;
-  font-size: 0.75rem;
-  opacity: 0.7;
-  padding: 8px 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  text-align: center !important; 
-  width: 100%;
+  margin: 0; font-size: 0.75rem; opacity: 0.5; padding: 10px 0;
+  background-color: #001225; text-align: center !important; width: 100%;
 }
 
 /* ==================================================
@@ -569,8 +475,7 @@ footer .footer-content {
 @media (min-width: 769px) {
   main { max-width: 1080px; margin: 0 auto; }
   #aniversariantes .aniversariantes-container {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr); gap: 20px;
   }
   .ferias-grid { display: none; } 
   .ferias-table { display: table; } 
@@ -579,59 +484,41 @@ footer .footer-content {
 @media (max-width: 768px) {
   .ferias-grid { display: flex; } 
   .ferias-table { display: none; } 
-  .ferias-card { 
-    max-width: 100%; 
-    flex-basis: calc(50% - 10px); 
-  }
+  .ferias-card { max-width: 100%; flex-basis: calc(50% - 10px); }
 }
 
 @media (max-width: 480px) {
-  #aniversariantes .aniversariantes-container {
-    grid-template-columns: 1fr;
-  }
-  .ferias-card {
-    flex-basis: 100%; 
-  }
+  #aniversariantes .aniversariantes-container { grid-template-columns: 1fr; }
+  .ferias-card { flex-basis: 100%; }
 }
 
 /* ==================================================
-    ANIMAÇÃO PISCAR SUAVE (AGORA EM VERDE/DOURADO)
+    ANIMAÇÃO PISCAR SUAVE (DOURADA) - FÉRIAS
    ================================================== */
-
- @keyframes piscar-natal-suave {
-   0%, 100% { opacity: 1; }
-   30% { opacity: 0.4; }
+ @keyframes piscar-gold-suave {
+   0%, 100% { background-color: rgba(255, 215, 0, 0.05); }
+   50% { background-color: rgba(255, 215, 0, 0.25); }
  }
 
- .retorno-hoje-piscar {
-   /* Classe base */
- }
+ .retorno-hoje-piscar { /* Classe base */ }
 
- /* Aplicação da animação para DESKTOP */
+ /* Desktop */
  @media (min-width: 769px) {
    .ferias-table tbody tr.retorno-hoje-piscar {
-     animation: piscar-natal-suave 2.5s infinite ease-in-out;
-     background-color: rgba(20, 107, 58, 0.15); /* Verde suave */
-     border-left: 5px solid var(--azul-aco);
-   }
-   .ferias-table tbody tr.retorno-hoje-piscar:hover {
-     background-color: rgba(20, 107, 58, 0.25);
+     animation: piscar-gold-suave 2.5s infinite ease-in-out;
+     border-left: 3px solid var(--dourado);
    }
  }
 
- /* Aplicação da animação para MOBILE */
+ /* Mobile */
  @media (max-width: 768px) {
    .ferias-card.retorno-hoje-piscar {
-     animation: piscar-natal-suave-shadow 1.8s infinite ease-in-out;
-     border: 2px solid var(--azul-aco);
+     animation: piscar-gold-shadow 2s infinite ease-in-out;
+     border-color: var(--dourado);
    }
  }
 
- @keyframes piscar-natal-suave-shadow {
-   0%, 100% {
-     box-shadow: 0 0 12px 4px rgba(20, 107, 58, 0.3), 0 3px 8px rgba(0,0,0,0.20);
-   }
-   50% {
-     box-shadow: 0 0 20px 8px rgba(255, 215, 0, 0.6), 0 3px 8px rgba(0,0,0,0.20); /* Brilho dourado no meio */
-   }
+ @keyframes piscar-gold-shadow {
+   0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); }
+   50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
  }
