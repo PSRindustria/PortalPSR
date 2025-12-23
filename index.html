@@ -26,22 +26,23 @@
       --bg-card: #ffffff;
       --text-primary: #333333;
       --shadow: rgba(0,0,0,0.1);
+      --primary-color: #0056b3; /* Azul padrão corporativo para o botão */
     }
     body {
       background-color: var(--bg-body) !important;
       color: var(--text-primary) !important;
       margin: 0;
       padding: 0;
-      overflow-x: hidden; /* Evita rolagem lateral acidental */
+      overflow-x: hidden;
     }
-    /* Força cor branca nos cards para garantir contraste */
+    /* Cards brancos */
     .novidade-card, .reflexao-card, .aniversariante-card, .ferias-card, .cipa-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
       box-shadow: 0 4px 10px var(--shadow);
     }
 
-    /* 2. SCROLL SNAP (Travar rolagem) */
+    /* 2. ROLAGEM E ESPAÇAMENTO (VOLTANDO AO PADRÃO MAIS JUSTO) */
     html {
       scroll-behavior: smooth;
       scroll-snap-type: y mandatory;
@@ -49,42 +50,34 @@
       overflow-y: auto;
     }
 
-    /* 3. ALINHAMENTO E CENTRALIZAÇÃO (Correção do "Esquadro") */
     section.banner, 
     section.section {
-      height: 100vh;         /* Ocupa tela toda */
+      /* Mantém o comportamento de ocupar a tela (Snap) */
+      height: 100vh;
       min-height: 100vh;
       scroll-snap-align: start;
       scroll-snap-stop: always;
       
-      /* Centralização VERTICAL da Seção */
+      /* Centralização, mas com PADDING REDUZIDO para não espaçar demais */
       display: flex;
       flex-direction: column;
-      justify-content: center; 
+      justify-content: center;
       align-items: center;
       
-      padding: 40px 20px; /* Espaço nas laterais */
+      /* Padding reduzido para imitar o original */
+      padding: 10px; 
       box-sizing: border-box;
     }
 
-    /* Títulos centralizados */
+    /* Títulos mais compactos */
     .section-title {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 15px; /* Reduzido de 30px */
       width: 100%;
+      font-size: 1.8rem;
     }
 
-    /* Headers (como a data das novidades) centralizados */
-    .novidades-header {
-      justify-content: center;
-      display: flex;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    /* 4. CORREÇÃO DOS CONTAINERS DE CARDS 
-       Isso garante que os cards fiquem no centro e não jogados para a esquerda 
-    */
+    /* Containers ajustados para largura total e centro */
     .novidades-container, 
     .reflexao-container, 
     .aniversariantes-container, 
@@ -92,30 +85,59 @@
     .cipa-container,
     .ferias-grid {
       width: 100%;
-      max-width: 1200px; /* Limite de largura para não esticar demais em monitores wide */
-      
+      max-width: 1200px;
       display: flex;
-      flex-wrap: wrap;       /* Permite quebra de linha */
-      justify-content: center; /* CENTRALIZA OS CARDS HORIZONTALMENTE */
-      gap: 20px;             /* Espaço entre os cards */
-      
-      margin: 0 auto;        /* Centraliza o bloco container na tela */
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px; /* Gap menor, estilo original */
+      margin: 0 auto;
     }
 
-    /* Ajuste específico para a tabela de férias (desktop) */
+    /* 3. ESTILO DINÂMICO DO BOTÃO "CLIQUE AQUI PARA REFLETIR" */
+    .reflexao-instrucao {
+      background-color: var(--primary-color);
+      color: white !important; /* Força texto branco */
+      padding: 12px 24px;
+      border-radius: 50px; /* Borda redonda (Pill shape) */
+      cursor: pointer;
+      text-align: center;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      border: none;
+      margin: 15px auto;
+      display: table; /* Centraliza o botão */
+      
+      /* Efeitos de Transição */
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
+      
+      /* Animação de Pulso */
+      animation: pulse-btn 2s infinite;
+    }
+
+    .reflexao-instrucao:hover {
+      background-color: #004494;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 86, 179, 0.5);
+    }
+
+    .reflexao-instrucao:active {
+      transform: translateY(1px);
+    }
+
+    @keyframes pulse-btn {
+      0% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 86, 179, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
+    }
+
+    /* Ajuste da tabela de férias para não quebrar layout */
     .ferias-table {
-      margin: 20px auto;
+      margin: 10px auto;
       max-width: 1000px;
       width: 100%;
-    }
-
-    /* Responsividade para telas pequenas */
-    @media (max-height: 700px) {
-      /* Se a altura da tela for pequena, permite rolar dentro da seção se necessário */
-      section.section {
-        justify-content: flex-start;
-        padding-top: 80px;
-      }
     }
   </style>
 </head>
@@ -131,8 +153,8 @@
   <main>
     <section id="novidades" class="section">
       <h2 class="section-title">Novidades</h2>
-      <div class="novidades-header">
-        <i class="far fa-clock"></i>
+      <div class="novidades-header" style="justify-content: center; display: flex; width: 100%; margin-bottom: 10px;">
+        <i class="far fa-clock"></i>&nbsp;
         <span id="data-hoje-novidades"></span>
       </div>
       <div id="novidades-container" class="novidades-container">
@@ -189,16 +211,13 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     
-    // --- SCRIPT DE FOGOS MELHORADO (Física + Fluidez + Cores Vibrantes) ---
+    // --- SCRIPT DE FOGOS (MANTIDO DO ANTERIOR - FÍSICA MELHORADA) ---
     function spawnFirework(container) {
       if (!container) return;
       const rect = container.getBoundingClientRect();
-      
-      // Ponto de origem aleatório dentro do card
       const centerX = Math.random() * rect.width;
       const centerY = Math.random() * rect.height;
 
-      // Cores vibrantes (RGB + Dourado/Branco)
       const colors = ['#FFD700', '#FF4500', '#32CD32', '#1E90FF', '#FF1493', '#FFFFFF', '#FFFF00'];
       const particleCount = 40; 
 
@@ -216,22 +235,20 @@
           top: `${centerY}px`,
           opacity: '1',
           pointerEvents: 'none',
-          boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`, // Glow
+          boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`,
           transform: 'translate(-50%, -50%) scale(1)',
           zIndex: '10'
         });
 
         container.appendChild(particle);
 
-        // Física da partícula
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5 + 2; // Velocidade de explosão
+        const speed = Math.random() * 5 + 2;
         
         let vx = Math.cos(angle) * speed;
         let vy = Math.sin(angle) * speed;
-        
-        const friction = 0.94; // Desaceleração
-        const gravity = 0.15;  // Queda natural
+        const friction = 0.94;
+        const gravity = 0.15;
 
         (function animate() {
           vx *= friction;
@@ -256,7 +273,6 @@
         })();
       }
     }
-    // --- FIM DO SCRIPT DE FOGOS ---
 
     let fireworkIntervals = [];
 
@@ -267,7 +283,6 @@
 
     function startFireworkForElement(element) {
       if (!document.hidden) {
-        // Intervalo aleatório para parecer natural
         const intervalId = setInterval(() => {
           if (!document.hidden && element.closest('.destaque-hoje')) {
             spawnFirework(element);
@@ -375,10 +390,11 @@
       }
       const card = document.createElement('div');
       card.className = 'reflexao-card';
+      // NOTA: A classe "reflexao-instrucao" agora tem estilos de botão no CSS
       card.innerHTML = `
         <p class="reflexao-frase">"${r.frase}"</p>
         <p class="reflexao-autor">- ${r.autor}</p>
-        <p class="reflexao-instrucao">Clique aqui para refletir</p>
+        <button class="reflexao-instrucao">Clique aqui para refletir</button>
         <div class="reflexao-extra">
           <p class="reflexao-texto">${r.reflexao}</p>
           <p class="reflexao-data">Reflexão: ${r.data}</p>
