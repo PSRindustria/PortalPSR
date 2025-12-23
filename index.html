@@ -19,13 +19,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* 1. FORÇAR TEMA CLARO */
+    /* 1. TEMA CLARO E CORES */
     :root {
       color-scheme: light;
       --bg-body: #f4f4f9;
       --bg-card: #ffffff;
       --text-primary: #333333;
-      --shadow: rgba(0,0,0,0.1);
+      --shadow: rgba(0,0,0,0.15); /* Sombra um pouco mais forte */
       --primary-color: #0056b3; 
     }
     body {
@@ -36,47 +36,44 @@
       overflow-x: hidden;
     }
     
-    /* Força cards brancos */
-    .novidade-card, .reflexao-card, .aniversariante-card, .ferias-card, .cipa-card {
+    /* 2. REGRAS DE CARDS (Incluindo a correção da sombra da Reflexão) */
+    .novidade-card, 
+    .aniversariante-card, 
+    .ferias-card, 
+    .cipa-card,
+    .reflexao-card { /* Garante que reflexao-card tenha sombra */
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
-      box-shadow: 0 4px 10px var(--shadow);
+      box-shadow: 0 4px 12px var(--shadow) !important; /* Força a sombra */
+      border-radius: 8px; /* Arredondamento suave padrão */
     }
 
-    /* 2. REMOVENDO O SCROLL SNAP E A ALTURA FORÇADA DE 100VH 
-       Isso remove o espaço gigante e volta ao fluxo natural original */
+    /* 3. LAYOUT FLUIDO (Sem buracos gigantes) */
     html {
       scroll-behavior: smooth;
-      height: auto; /* Volta ao automático */
+      height: auto; 
       overflow-y: auto;
     }
 
     section.banner, 
     section.section {
-      /* REMOVIDO: height: 100vh; */
-      /* REMOVIDO: scroll-snap... */
-      
-      height: auto;         /* Altura baseada no conteúdo */
-      min-height: auto;     /* Remove obrigatoriedade de tela cheia */
-      
+      height: auto;         
+      min-height: auto;     
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      
-      /* Espaçamento original padrão */
       padding: 40px 20px; 
       box-sizing: border-box;
+      /* Scroll-margin ajuda no alinhamento caso o JS falhe, mas o JS fará o principal */
+      scroll-margin-top: 15vh; 
     }
 
-    /* Ajuste do Banner para ele, e APENAS ele, ter destaque maior se desejar, 
-       mas sem quebrar o resto. Se quiser igual ao original, mantenha auto. */
     section.banner {
-      min-height: 400px; /* Tamanho mínimo razoável para o banner */
+      min-height: 400px;
       padding: 60px 20px;
     }
 
-    /* Títulos */
     .section-title {
       text-align: center;
       margin-bottom: 30px;
@@ -84,7 +81,6 @@
       font-size: 2rem;
     }
 
-    /* Containers: Centralizados e com largura controlada */
     .novidades-container, 
     .reflexao-container, 
     .aniversariantes-container, 
@@ -100,7 +96,7 @@
       margin: 0 auto;
     }
 
-    /* 3. BOTÃO DE REFLEXÃO (Estilo mantido) */
+    /* 4. BOTÃO DE REFLEXÃO (Correção da quebra de linha) */
     .reflexao-instrucao {
       background-color: var(--primary-color);
       color: white !important;
@@ -115,6 +111,9 @@
       border: none;
       margin: 15px auto;
       display: table;
+      
+      white-space: nowrap; /* IMPEDE A QUEBRA DE LINHA */
+      
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
       animation: pulse-btn 2s infinite;
@@ -136,7 +135,15 @@
       100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
     }
 
-    /* Tabela de férias */
+    /* Estilo específico para o card de reflexão para garantir que fique bonito */
+    .reflexao-card {
+      padding: 30px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      margin: 10px;
+    }
+
     .ferias-table {
       margin: 20px auto;
       max-width: 1000px;
@@ -214,7 +221,7 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     
-    // --- SCRIPT DE FOGOS (MANTIDO E OTIMIZADO) ---
+    // --- SCRIPT DE FOGOS ---
     function spawnFirework(container) {
       if (!container) return;
       const rect = container.getBoundingClientRect();
@@ -305,26 +312,49 @@
       }
     });
 
-    // 1) Injeta menu e rodapé
+    // 1) Injeta menu e rodapé + LÓGICA DE CLICK CENTRALIZADO
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
         .then(r => r.text())
         .then(html => {
           const placeholder = document.getElementById(`${file}-placeholder`);
           if (placeholder) placeholder.innerHTML = html;
+          
           if (file === 'menu') {
             const toggle = document.getElementById('menu-toggle');
             const menuEl = document.getElementById('menu');
+            
+            // Lógica para toggle mobile
             if (toggle && menuEl) {
               toggle.addEventListener('click', () => {
                 menuEl.classList.toggle('active');
               });
-              menuEl.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                  menuEl.classList.remove('active');
-                });
-              });
             }
+
+            // --- LÓGICA DE NAVEGAÇÃO CENTRALIZADA (CORREÇÃO SOLICITADA) ---
+            const links = placeholder.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+              link.addEventListener('click', function(e) {
+                // Previne o pulo padrão pro topo
+                e.preventDefault();
+                
+                // Fecha menu mobile se estiver aberto
+                if (menuEl) menuEl.classList.remove('active');
+
+                // Pega o ID alvo (ex: #novidades -> novidades)
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                  // Mágica: Rola suavemente e coloca o elemento no CENTRO da tela
+                  targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center' 
+                  });
+                }
+              });
+            });
+            // -------------------------------------------------------------
           }
         }).catch(e => console.error(`Error loading ${file}.html:`, e));
     });
@@ -393,7 +423,7 @@
       }
       const card = document.createElement('div');
       card.className = 'reflexao-card';
-      // Botão dinâmico inserido
+      
       card.innerHTML = `
         <p class="reflexao-frase">"${r.frase}"</p>
         <p class="reflexao-autor">- ${r.autor}</p>
@@ -693,7 +723,7 @@ const nomesFemininos = [
     'renite', 'reola', 'reteme', 'reuza', 'rica', 'ricarda', 'rígia', 'rinata',  
     'rita', 'robina', 'robyn', 'rocela', 'rochelle', 'rodesia', 'rodolina', 'rogéria',  
     'rosa', 'rosalba', 'rosalina', 'rosamaria', 'rosângela', 'roseni', 'rosifer', 'rosilene',  
-    'rosimeire', 'rosine', 'rosita', 'roxana', 'ruth', 'sabina', 'sabrina', 'salete',  
+    'rosimeire', 'rosine', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete',  
     'samara', 'samira', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly',  
     'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena',  
     'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara',  
