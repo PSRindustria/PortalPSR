@@ -26,7 +26,7 @@
       --bg-card: #ffffff;
       --text-primary: #333333;
       --shadow: rgba(0,0,0,0.1);
-      --primary-color: #0056b3; /* Azul padrão corporativo para o botão */
+      --primary-color: #0056b3; 
     }
     body {
       background-color: var(--bg-body) !important;
@@ -35,49 +35,56 @@
       padding: 0;
       overflow-x: hidden;
     }
-    /* Cards brancos */
+    
+    /* Força cards brancos */
     .novidade-card, .reflexao-card, .aniversariante-card, .ferias-card, .cipa-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
       box-shadow: 0 4px 10px var(--shadow);
     }
 
-    /* 2. ROLAGEM E ESPAÇAMENTO (VOLTANDO AO PADRÃO MAIS JUSTO) */
+    /* 2. REMOVENDO O SCROLL SNAP E A ALTURA FORÇADA DE 100VH 
+       Isso remove o espaço gigante e volta ao fluxo natural original */
     html {
       scroll-behavior: smooth;
-      scroll-snap-type: y mandatory;
-      height: 100vh;
+      height: auto; /* Volta ao automático */
       overflow-y: auto;
     }
 
     section.banner, 
     section.section {
-      /* Mantém o comportamento de ocupar a tela (Snap) */
-      height: 100vh;
-      min-height: 100vh;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
+      /* REMOVIDO: height: 100vh; */
+      /* REMOVIDO: scroll-snap... */
       
-      /* Centralização, mas com PADDING REDUZIDO para não espaçar demais */
+      height: auto;         /* Altura baseada no conteúdo */
+      min-height: auto;     /* Remove obrigatoriedade de tela cheia */
+      
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       
-      /* Padding reduzido para imitar o original */
-      padding: 10px; 
+      /* Espaçamento original padrão */
+      padding: 40px 20px; 
       box-sizing: border-box;
     }
 
-    /* Títulos mais compactos */
-    .section-title {
-      text-align: center;
-      margin-bottom: 15px; /* Reduzido de 30px */
-      width: 100%;
-      font-size: 1.8rem;
+    /* Ajuste do Banner para ele, e APENAS ele, ter destaque maior se desejar, 
+       mas sem quebrar o resto. Se quiser igual ao original, mantenha auto. */
+    section.banner {
+      min-height: 400px; /* Tamanho mínimo razoável para o banner */
+      padding: 60px 20px;
     }
 
-    /* Containers ajustados para largura total e centro */
+    /* Títulos */
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
+      font-size: 2rem;
+    }
+
+    /* Containers: Centralizados e com largura controlada */
     .novidades-container, 
     .reflexao-container, 
     .aniversariantes-container, 
@@ -89,16 +96,16 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px; /* Gap menor, estilo original */
+      gap: 20px;
       margin: 0 auto;
     }
 
-    /* 3. ESTILO DINÂMICO DO BOTÃO "CLIQUE AQUI PARA REFLETIR" */
+    /* 3. BOTÃO DE REFLEXÃO (Estilo mantido) */
     .reflexao-instrucao {
       background-color: var(--primary-color);
-      color: white !important; /* Força texto branco */
+      color: white !important;
       padding: 12px 24px;
-      border-radius: 50px; /* Borda redonda (Pill shape) */
+      border-radius: 50px;
       cursor: pointer;
       text-align: center;
       font-weight: bold;
@@ -107,13 +114,9 @@
       letter-spacing: 1px;
       border: none;
       margin: 15px auto;
-      display: table; /* Centraliza o botão */
-      
-      /* Efeitos de Transição */
+      display: table;
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
-      
-      /* Animação de Pulso */
       animation: pulse-btn 2s infinite;
     }
 
@@ -133,9 +136,9 @@
       100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
     }
 
-    /* Ajuste da tabela de férias para não quebrar layout */
+    /* Tabela de férias */
     .ferias-table {
-      margin: 10px auto;
+      margin: 20px auto;
       max-width: 1000px;
       width: 100%;
     }
@@ -153,7 +156,7 @@
   <main>
     <section id="novidades" class="section">
       <h2 class="section-title">Novidades</h2>
-      <div class="novidades-header" style="justify-content: center; display: flex; width: 100%; margin-bottom: 10px;">
+      <div class="novidades-header" style="justify-content: center; display: flex; width: 100%; margin-bottom: 20px;">
         <i class="far fa-clock"></i>&nbsp;
         <span id="data-hoje-novidades"></span>
       </div>
@@ -211,7 +214,7 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     
-    // --- SCRIPT DE FOGOS (MANTIDO DO ANTERIOR - FÍSICA MELHORADA) ---
+    // --- SCRIPT DE FOGOS (MANTIDO E OTIMIZADO) ---
     function spawnFirework(container) {
       if (!container) return;
       const rect = container.getBoundingClientRect();
@@ -390,7 +393,7 @@
       }
       const card = document.createElement('div');
       card.className = 'reflexao-card';
-      // NOTA: A classe "reflexao-instrucao" agora tem estilos de botão no CSS
+      // Botão dinâmico inserido
       card.innerHTML = `
         <p class="reflexao-frase">"${r.frase}"</p>
         <p class="reflexao-autor">- ${r.autor}</p>
@@ -691,7 +694,7 @@ const nomesFemininos = [
     'rita', 'robina', 'robyn', 'rocela', 'rochelle', 'rodesia', 'rodolina', 'rogéria',  
     'rosa', 'rosalba', 'rosalina', 'rosamaria', 'rosângela', 'roseni', 'rosifer', 'rosilene',  
     'rosimeire', 'rosine', 'rosita', 'roxana', 'ruth', 'sabina', 'sabrina', 'salete',  
-    'samanta', 'samira', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly',  
+    'samara', 'samira', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly',  
     'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena',  
     'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara',  
     'sirlene', 'sônia', 'sonia', 'soraia', 'soraya', 'sueli', 'súellen', 'suely',  
