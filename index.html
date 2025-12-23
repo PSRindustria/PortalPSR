@@ -13,27 +13,46 @@
   <meta property="og:image" content="https://i.postimg.cc/6QTrrhr6/thumbnail.jpg">
   <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
   <meta property="og:type" content="website">
-  <title>PortalPSR</title>
+  <title>PortalPSR - Edição de Natal</title>
   
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* 1. TEMA CLARO */
+    /* 1. TEMA DE NATAL */
     :root {
       color-scheme: light;
-      --bg-body: #f4f4f9;
+      --bg-body: #f0f4f8; /* Branco gelo suave */
       --bg-card: #ffffff;
-      --text-primary: #333333;
-      --shadow: rgba(0,0,0,0.15);
-      --primary-color: #0056b3; 
+      --text-primary: #2c3e50;
+      --shadow: rgba(195, 20, 50, 0.15); /* Sombra levemente avermelhada */
+      
+      /* Cores de Natal */
+      --primary-color: #c31432; /* Vermelho Natalino */
+      --secondary-color: #146B3A; /* Verde Pinheiro */
+      --gold-color: #F8D800;    /* Dourado */
+      --snow-white: #ffffff;
     }
+
     body {
       background-color: var(--bg-body) !important;
       color: var(--text-primary) !important;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Fundo especial de Natal para o corpo (opcional, sutil) */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+        background-size: 30px 30px;
+        opacity: 0.2;
+        z-index: -1;
     }
     
     /* 2. CONFIGURAÇÃO GERAL DOS CARDS */
@@ -43,8 +62,14 @@
     .cipa-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
-      box-shadow: 0 4px 12px var(--shadow) !important;
-      border-radius: 8px;
+      box-shadow: 0 8px 20px var(--shadow) !important;
+      border-radius: 12px;
+      border-top: 4px solid var(--secondary-color); /* Topo verde */
+      transition: transform 0.3s ease;
+    }
+
+    .novidade-card:hover, .aniversariante-card:hover {
+        transform: translateY(-5px);
     }
 
     /* CARD REFLEXÃO (Padrão Desktop) */
@@ -52,20 +77,36 @@
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
       box-shadow: none !important; 
-      border: none !important;
-      border-radius: 8px;
+      border: 2px dashed var(--primary-color) !important; /* Borda tracejada estilo presente */
+      border-radius: 12px;
       width: 100%; 
       padding: 30px;
       text-align: center;
       margin: 10px 0;
+      position: relative;
+    }
+    
+    /* Ícone decorativo na reflexão */
+    .reflexao-card::after {
+        content: '\f786'; /* Ícone de presente (FontAwesome) */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        top: -15px;
+        right: -10px;
+        font-size: 2rem;
+        color: var(--primary-color);
+        background: var(--bg-body);
+        padding: 0 5px;
+        transform: rotate(15deg);
     }
 
-    /* --- NOVO: AJUSTE DO AUTOR DA REFLEXÃO --- */
     .reflexao-autor {
-      font-size: 0.85rem; /* Fonte menor */
-      opacity: 0.8;       /* Levemente mais suave */
+      font-size: 0.85rem;
+      opacity: 0.8;
       margin-top: 10px;
       font-style: italic;
+      color: var(--secondary-color);
     }
 
     /* 3. LAYOUT DAS SEÇÕES */
@@ -88,8 +129,36 @@
       scroll-margin-block-start: 20px; 
     }
 
+    /* BANNER NATALINO */
     section.banner {
       min-height: 400px;
+      background: linear-gradient(135deg, #c31432 0%, #240b36 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 5px solid var(--gold-color);
+    }
+    
+    section.banner h1 {
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Botão do Banner */
+    .banner-btn {
+        background-color: var(--gold-color);
+        color: #c31432 !important;
+        padding: 12px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(248, 216, 0, 0.4);
+        transition: all 0.3s;
+        border: 2px solid #fff;
+    }
+    .banner-btn:hover {
+        background-color: #fff;
+        color: #c31432 !important;
+        transform: scale(1.05);
     }
 
     .section-title {
@@ -97,6 +166,20 @@
       margin-bottom: 30px;
       width: 100%;
       font-size: 2rem;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    /* Decoração lateral nos títulos */
+    .section-title::before, .section-title::after {
+        content: "❄";
+        color: var(--secondary-color);
+        margin: 0 10px;
+        font-size: 1.5rem;
+        vertical-align: middle;
     }
 
     /* Containers */
@@ -114,10 +197,16 @@
       gap: 20px;
       margin: 0 auto;
     }
+    
+    /* Ícones das novidades em verde */
+    .novidade-img i {
+        color: var(--secondary-color);
+        font-size: 2rem;
+    }
 
     /* 4. BOTÃO REFLEXÃO */
     .reflexao-instrucao {
-      background-color: var(--primary-color);
+      background-color: var(--secondary-color); /* Botão Verde */
       color: white !important;
       display: flex;
       justify-content: center;
@@ -129,18 +218,18 @@
       text-transform: uppercase;
       font-size: 0.9rem;
       letter-spacing: 1px;
-      border: none;
+      border: 2px solid var(--gold-color);
       margin: 20px auto; 
       white-space: nowrap; 
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
+      box-shadow: 0 4px 15px rgba(20, 107, 58, 0.3);
       animation: pulse-btn 2s infinite;
     }
 
     .reflexao-instrucao:hover {
-      background-color: #004494;
+      background-color: #0f522c;
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 20px rgba(0, 86, 179, 0.5);
+      box-shadow: 0 6px 20px rgba(20, 107, 58, 0.5);
     }
 
     .reflexao-instrucao:active {
@@ -148,30 +237,71 @@
     }
 
     @keyframes pulse-btn {
-      0% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(0, 86, 179, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(20, 107, 58, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(20, 107, 58, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(20, 107, 58, 0); }
     }
 
     .ferias-table {
       margin: 20px auto;
       max-width: 1000px;
       width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .ferias-table thead tr {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    /* Aniversariante Destaque */
+    .destaque-hoje {
+        border: 2px solid var(--gold-color) !important;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6) !important;
+        position: relative;
+        overflow: visible !important; /* Para os fogos */
+    }
+    
+    /* Neve Caindo (Container) */
+    #snow-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+    }
+    
+    .snowflake {
+        position: absolute;
+        top: -10px;
+        color: white;
+        font-size: 1em;
+        opacity: 0.8;
+        user-select: none;
+        cursor: default;
+        animation-name: fall;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(105vh);
+        }
     }
 
     /* =========================================
-       AJUSTES ESPECÍFICOS PARA MOBILE (Android/iOS)
+       AJUSTES ESPECÍFICOS PARA MOBILE
        ========================================= */
     @media (max-width: 768px) {
-      
-      /* Ajuste de scroll para mobile (alinhar topo) */
       section.section {
         scroll-margin-top: 80px; 
         padding: 40px 15px;      
         justify-content: flex-start; 
       }
-
-      /* Padronização de Largura: Aniversariantes e CIPA iguais */
       .aniversariante-card,
       .cipa-card {
         width: 100% !important;        
@@ -179,40 +309,42 @@
         flex: 1 1 100%;                
         box-sizing: border-box;
       }
-
-      /* Melhoria de Legibilidade da Reflexão Estoica */
       .reflexao-card {
         padding: 15px 0px !important; 
         width: 100% !important;
         margin: 0 !important;          
       }
-      
       .reflexao-frase {
         font-size: 1.2rem;      
         line-height: 1.6;       
         padding: 0 5px;         
       }
-      
       .reflexao-texto {
         text-align: justify;    
         padding: 0 5px;
+      }
+      .reflexao-instrucao {
+          padding: 8px 40px; /* Ajuste para caber no mobile */
       }
     }
   </style>
 </head>
 <body>
+  <div id="snow-container"></div>
+  
   <div id="menu-placeholder"></div>
 
   <section class="banner" id="inicio">
+    <div style="font-size: 4rem; margin-bottom: 10px; opacity: 0.9;">🎄</div>
     <h1>Bem-vindo ao PortalPSR</h1>
-    <p>Aqui é o seu espaço. Aqui é PSR!</p>
+    <p>Aqui é o seu espaço. Feliz Natal e Próspero Ano Novo!</p>
     <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
   </section>
 
   <main>
     <section id="novidades" class="section">
       <h2 class="section-title">Novidades</h2>
-      <div class="novidades-header" style="justify-content: center; display: flex; width: 100%; margin-bottom: 20px;">
+      <div class="novidades-header" style="justify-content: center; display: flex; width: 100%; margin-bottom: 20px; color: var(--secondary-color);">
         <i class="far fa-clock"></i>&nbsp;
         <span id="data-hoje-novidades"></span>
       </div>
@@ -222,7 +354,7 @@
     </section>
 
     <section id="reflexao-do-dia" class="section">
-      <h2 class="section-title">Reflexão Estoica</h2>
+      <h2 class="section-title">Reflexão</h2>
       <div id="reflexao-container" class="reflexao-container">
         <div class="loading"><div class="loading-spinner"></div></div>
       </div>
@@ -270,7 +402,42 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. INTERCEPTADOR DE NAVEGAÇÃO INTELIGENTE (MOBILE vs DESKTOP) ---
+    // --- 0. SCRIPT DE NEVE (NOVO) ---
+    function createSnowflakes() {
+        const snowContainer = document.getElementById('snow-container');
+        if(!snowContainer) return;
+        
+        const symbols = ['❄', '❅', '❆', '•']; // Flocos variados
+        const numberOfSnowflakes = 50; // Quantidade de flocos
+        
+        for (let i = 0; i < numberOfSnowflakes; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            
+            // Posição aleatória
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            
+            // Tamanho aleatório
+            const size = Math.random() * 1.5 + 0.5 + 'rem';
+            snowflake.style.fontSize = size;
+            
+            // Duração da animação aleatória (cair mais rápido ou devagar)
+            const duration = Math.random() * 5 + 5 + 's';
+            snowflake.style.animationDuration = duration;
+            
+            // Atraso aleatório para não cair tudo junto
+            snowflake.style.animationDelay = Math.random() * 5 + 's';
+            
+            // Cor levemente transparente
+            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+
+            snowContainer.appendChild(snowflake);
+        }
+    }
+    createSnowflakes();
+
+    // --- 1. INTERCEPTADOR DE NAVEGAÇÃO ---
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link) {
@@ -282,15 +449,9 @@
 
           if (targetSection) {
             e.preventDefault(); 
-            
             const menuEl = document.getElementById('menu');
             if (menuEl) menuEl.classList.remove('active');
-
-            // DETECTA SE É MOBILE (largura < 768px)
             const isMobile = window.innerWidth < 768;
-
-            // Se Mobile -> Alinha no TOPO ('start')
-            // Se Desktop -> Alinha no CENTRO ('center')
             targetSection.scrollIntoView({
               behavior: 'smooth',
               block: isMobile ? 'start' : 'center' 
@@ -300,14 +461,15 @@
       }
     });
 
-    // --- 2. SCRIPT DE FOGOS ---
+    // --- 2. SCRIPT DE FOGOS (AJUSTADO PARA CORES DE NATAL) ---
     function spawnFirework(container) {
       if (!container) return;
       const rect = container.getBoundingClientRect();
       const centerX = Math.random() * rect.width;
       const centerY = Math.random() * rect.height;
 
-      const colors = ['#FFD700', '#FF4500', '#32CD32', '#1E90FF', '#FF1493', '#FFFFFF', '#FFFF00'];
+      // Cores de Natal: Vermelho, Verde, Dourado, Branco
+      const colors = ['#FF0000', '#008000', '#FFD700', '#FFFFFF', '#C31432', '#146B3A'];
       const particleCount = 40; 
 
       for (let i = 0; i < particleCount; i++) {
@@ -774,56 +936,6 @@ const nomesFemininos = [
     'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina',  
     'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina',  
     'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane',  
-    'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita',  
-    'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete',  
-    'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane',  
-    'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete',  
-    'samara', 'samira', 'samuela', 'sandra', 'sandra', 'sandrine', 'sanita', 'sara',  
-    'sarah', 'seila', 'selena', 'serena', 'serginia', 'severina', 'silene', 'sílvia',  
-    'simara', 'simona', 'sonia', 'sonja', 'sônia', 'soraya', 'stella', 'suzana',  
-    'suzette', 'talisa', 'tâmara', 'tamara', 'tâmara', 'tânia', 'teodora', 'teresinha',  
-    'thalia', 'thelma', 'thora', 'tina', 'túlia', 'valda', 'valdirene', 'vale',  
-    'valéria', 'vânia', 'vania', 'vanda', 'vania', 'vanília', 'vanusa', 'vênus',  
-    'verônica', 'vi', 'viana', 'victoria', 'victória', 'victorina', 'vilma', 'vulcana',  
-    'wilma', 'yara', 'yasmin', 'zelma', 'zelita', 'zina', 'zion', 'zoé',  
-    'zoraide', 'zorina', 'zuleica', 'zulmira', 'zuza', 'dade', 'daliane', 'dalva',  
-    'domingas', 'donatella', 'edir', 'edith', 'elea', 'elen', 'eliane', 'elisia',  
-    'elma', 'elvira', 'ena', 'enide', 'enue', 'eran', 'eri', 'erica',  
-    'erlana', 'ermelinda', 'erneste', 'eryka', 'esperança', 'ethere', 'etina', 'eurídice',  
-    'evas', 'evânia', 'evângela', 'ewa', 'exilda', 'fabíola', 'farida', 'fatima',  
-    'felicidade', 'fernanda', 'fiorella', 'flor', 'florencia', 'florinda', 'fortuna', 'francieli',  
-    'francelina', 'fransisca', 'frida', 'gabriela', 'gail', 'gal', 'galileia', 'garda',  
-    'gedda', 'genésia', 'geovana', 'genilda', 'ginete', 'gisela', 'giovana', 'gladys',  
-    'gláucia', 'glendha', 'glória', 'gorete', 'guilhermina', 'guta', 'harlene', 'hayley',  
-    'heloísa', 'helô', 'hermenegilda', 'herme', 'hermina', 'hildete', 'hilda', 'hildete',  
-    'hilde', 'hilka', 'hilka', 'hisa', 'hovana', 'húria', 'illya', 'iracema',  
-    'iraísa', 'ireine', 'irenita', 'irina', 'irmã', 'isa', 'isadora', 'isele',  
-    'isolda', 'ivane', 'ivanilda', 'ivonete', 'izaura', 'iziara', 'jadira', 'jael',  
-    'jane', 'janete', 'janira', 'janise', 'janitta', 'jara', 'jéssica', 'jessyca',  
-    'joella', 'joênia', 'jolanda', 'jonathas', 'joselita', 'josiane', 'journelle', 'joyce',  
-    'juana', 'judite', 'julieta', 'juline', 'junia', 'justina', 'kaela', 'kaiá',  
-    'kalina', 'kássia', 'katiane', 'keicy', 'keila', 'kelly', 'kemily', 'kenia',  
-    'kerolayne', 'kessia', 'ketlin', 'khatia', 'kia', 'kim', 'klemens', 'korina',  
-    'laetitia', 'laiara', 'laicia', 'laís', 'lailane', 'laine', 'lais', 'lara',  
-    'lars', 'larúcia', 'lasia', 'laura', 'leia', 'leila', 'leonor', 'leonora',  
-    'lerisa', 'leslie', 'liana', 'liane', 'liliane', 'lilisa', 'linda', 'linna',  
-    'lira', 'liuba', 'livia', 'loreta', 'lorine', 'lorrane', 'lourenza', 'lovisa',  
-    'luana', 'lubia', 'lucena', 'lucineia', 'lucineia', 'lucrecia', 'luísa', 'luisa',  
-    'lumena', 'lúcia', 'lusângela', 'luzia', 'lyara', 'lygia', 'lys', 'maira',  
-    'maisa', 'majô', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina',  
-    'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia',  
-    'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice',  
-    'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury',  
-    'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele',  
-    'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna',  
-    'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa',  
-    'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida',  
-    'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa',  
-    'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina',  
-    'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela',  
-    'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina',  
-    'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina',  
-    'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane',  
     'regina', 'rehia', 'relita', 'remosina', 'renata', 'renata', 'renilda', 'renilda', 'renita',  
     'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete',  
     'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane',  
@@ -959,11 +1071,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Aqui é PSR!";
+  let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Feliz Natal e Próspero Ano Novo!";
   const bannerP = document.querySelector('.banner > p');
   if (bannerP) bannerP.innerHTML = mensagemFinal;
 });
   </script>
 </body>
 </html>
-
