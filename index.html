@@ -19,19 +19,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* 1. TEMA DE ANO NOVO (RÉVEILLON) */
+    /* 1. TEMA DE ANO NOVO (CLEAN - SEM BORDAS) */
     :root {
       color-scheme: light;
-      --bg-body: #f9f9f9; /* Branco Gelo Clean */
+      --bg-body: #f9f9f9; 
       --bg-card: #ffffff;
       --text-primary: #333333;
       
       /* Cores de Ano Novo */
-      --primary-color: #001f3f; /* Azul Noite (Elegância) */
+      --primary-color: #001f3f; /* Azul Noite */
       --secondary-color: #C0C0C0; /* Prata */
-      --gold-color: #D4AF37;    /* Dourado Metálico */
-      --accent-color: #DAA520;  /* Goldenrod */
-      --shadow: rgba(212, 175, 55, 0.2); /* Sombra Dourada Suave */
+      --gold-color: #D4AF37;    /* Dourado */
+      --shadow: rgba(0, 0, 0, 0.1); /* Sombra neutra e suave */
+      --shadow-hover: rgba(212, 175, 55, 0.3); /* Sombra dourada apenas no hover */
     }
 
     body {
@@ -43,65 +43,63 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Fundo sutil com partículas estáticas */
+    /* Fundo sutil */
     body::before {
         content: "";
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         pointer-events: none;
         background-image: radial-gradient(circle, #D4AF37 0.5px, transparent 0.5px);
-        background-size: 40px 40px;
-        opacity: 0.15;
+        background-size: 50px 50px;
+        opacity: 0.1;
         z-index: -1;
     }
     
-    /* 2. CONFIGURAÇÃO GERAL DOS CARDS */
+    /* 2. CONFIGURAÇÃO GERAL DOS CARDS (SEM BORDAS) */
     .novidade-card, 
     .aniversariante-card, 
     .ferias-card, 
     .cipa-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
-      box-shadow: 0 8px 20px var(--shadow) !important;
+      /* Apenas sombra, sem border-top */
+      box-shadow: 0 4px 15px var(--shadow) !important; 
       border-radius: 12px;
-      border-top: 4px solid var(--gold-color); /* Topo Dourado */
+      border: none !important; /* Garante remoção de bordas */
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .novidade-card:hover, .aniversariante-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 25px rgba(212, 175, 55, 0.4) !important;
+        box-shadow: 0 12px 25px var(--shadow-hover) !important;
     }
 
-    /* CARD REFLEXÃO */
+    /* CARD REFLEXÃO (SEM CONTORNO) */
     .reflexao-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
-      box-shadow: none !important; 
-      border: 2px solid var(--gold-color) !important; 
+      box-shadow: 0 4px 15px var(--shadow) !important; 
+      border: none !important; /* Removido contorno */
       border-radius: 12px;
       width: 100%; 
       padding: 30px;
       text-align: center;
       margin: 10px 0;
       position: relative;
-      background: linear-gradient(to bottom right, #fff, #fafafa);
     }
     
-    /* Ícone decorativo na reflexão */
+    /* Ícone decorativo (Estrela) */
     .reflexao-card::after {
-        content: '\f005'; /* Estrela (FontAwesome) */
+        content: '\f005'; 
         font-family: "Font Awesome 6 Free";
         font-weight: 900;
         position: absolute;
-        top: -15px;
-        right: -10px;
-        font-size: 2rem;
+        top: -10px;
+        right: 10px;
+        font-size: 1.5rem;
         color: var(--gold-color);
-        background: var(--bg-body);
-        padding: 0 5px;
+        opacity: 0.5;
         transform: rotate(25deg);
-        text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
     .reflexao-autor {
@@ -132,27 +130,26 @@
       scroll-margin-block-start: 20px; 
     }
 
-    /* BANNER DE ANO NOVO COM A FOTO DE FUNDO */
+    /* BANNER (SEM BORDA INFERIOR) */
     section.banner {
       min-height: 400px;
-      /* AQUI: Mantivemos a foto original com um filtro Azul Noite/Preto semi-transparente */
       background: 
         linear-gradient(135deg, rgba(0, 31, 63, 0.85) 0%, rgba(17, 17, 17, 0.9) 100%),
         url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg') center/cover no-repeat;
       color: white;
       position: relative;
       overflow: hidden;
-      border-bottom: 5px solid var(--gold-color);
-      margin-top: 35px; /* Garante que não suba demais sobre o menu */
+      border: none !important; /* Removido contorno */
+      margin-top: 35px;
     }
     
     section.banner h1 {
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         font-weight: 800;
         letter-spacing: 1px;
     }
 
-    /* Botão do Banner */
+    /* Botão do Banner (Sem borda) */
     .banner-btn {
         background-color: var(--gold-color);
         color: #001f3f !important;
@@ -160,9 +157,9 @@
         border-radius: 50px;
         text-decoration: none;
         font-weight: bold;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        border: none !important; /* Removido contorno */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         transition: all 0.3s;
-        border: 1px solid #fff;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
@@ -170,7 +167,7 @@
         background-color: #fff;
         color: var(--gold-color) !important;
         transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
     }
 
     .section-title {
@@ -185,13 +182,13 @@
       display: inline-block;
     }
     
-    /* Decoração lateral nos títulos */
     .section-title::before, .section-title::after {
         content: "✦";
         color: var(--gold-color);
         margin: 0 15px;
         font-size: 1.2rem;
         vertical-align: middle;
+        opacity: 0.7;
     }
 
     /* Containers */
@@ -215,9 +212,9 @@
         font-size: 2rem;
     }
 
-    /* 4. BOTÃO REFLEXÃO */
+    /* 4. BOTÃO REFLEXÃO (SEM BORDA) */
     .reflexao-instrucao {
-      background-color: var(--primary-color); /* Azul Noite */
+      background-color: var(--primary-color);
       color: var(--gold-color) !important;
       display: flex;
       justify-content: center;
@@ -229,23 +226,22 @@
       text-transform: uppercase;
       font-size: 0.9rem;
       letter-spacing: 1px;
-      border: 1px solid var(--gold-color);
+      border: none !important; /* Removido contorno */
       margin: 20px auto; 
       white-space: nowrap; 
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 31, 63, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       animation: pulse-gold 2s infinite;
     }
 
     .reflexao-instrucao:hover {
       background-color: #003366;
-      color: #fff !important;
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     }
 
     @keyframes pulse-gold {
-      0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+      0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
       70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
       100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
     }
@@ -255,6 +251,7 @@
       max-width: 1000px;
       width: 100%;
       border-collapse: collapse;
+      border: none !important;
     }
     
     .ferias-table thead tr {
@@ -262,15 +259,16 @@
         color: var(--gold-color);
     }
     
-    /* Aniversariante Destaque */
+    /* Aniversariante Destaque (SEM BORDA, APENAS GLOW) */
     .destaque-hoje {
-        border: 2px solid var(--gold-color) !important;
-        box-shadow: 0 0 25px rgba(212, 175, 55, 0.5) !important;
+        border: none !important; /* Removido contorno */
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.6) !important;
         position: relative;
         overflow: visible !important;
+        z-index: 1;
     }
     
-    /* CONFETE DE ANO NOVO (Container) */
+    /* CONFETES */
     #confetti-container {
         position: fixed;
         top: 0;
@@ -395,43 +393,32 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 0. SCRIPT DE CONFETES (ANO NOVO) ---
+    // --- 0. SCRIPT DE CONFETES ---
     function createConfetti() {
         const container = document.getElementById('confetti-container');
         if(!container) return;
         
-        const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#DAA520']; // Dourado, Prata, Branco
+        const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#DAA520'];
         const numberOfConfetti = 60; 
         
         for (let i = 0; i < numberOfConfetti; i++) {
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
-            
-            // Cor aleatória
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Posição aleatória
             confetti.style.left = Math.random() * 100 + 'vw';
-            
-            // Tamanho aleatório (quadradinhos ou retângulos)
             const w = Math.random() * 8 + 5 + 'px';
             const h = Math.random() * 8 + 5 + 'px';
             confetti.style.width = w;
             confetti.style.height = h;
-            
-            // Duração da animação
             const duration = Math.random() * 3 + 4 + 's';
             confetti.style.animationDuration = duration;
-            
-            // Atraso
             confetti.style.animationDelay = Math.random() * 5 + 's';
-            
             container.appendChild(confetti);
         }
     }
     createConfetti();
 
-    // --- 1. INTERCEPTADOR DE NAVEGAÇÃO ---
+    // --- 1. INTERCEPTADOR ---
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link) {
@@ -455,14 +442,13 @@
       }
     });
 
-    // --- 2. SCRIPT DE FOGOS (MANTIDO E ADAPTADO PARA CORES FESTIVAS) ---
+    // --- 2. SCRIPT DE FOGOS ---
     function spawnFirework(container) {
       if (!container) return;
       const rect = container.getBoundingClientRect();
       const centerX = Math.random() * rect.width;
       const centerY = Math.random() * rect.height;
 
-      // Cores: Dourado, Prata, Branco, Azul
       const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#001f3f', '#FFD700'];
       const particleCount = 40; 
 
