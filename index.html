@@ -14,26 +14,121 @@
   <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
   <meta property="og:type" content="website">
   <title>PortalPSR</title>
-  <!-- CSS principal -->
+  
   <link rel="stylesheet" href="style.css" />
-  <!-- Font Awesome -->
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    /* 1. FORÇAR TEMA CLARO */
+    :root {
+      color-scheme: light;
+      --bg-body: #f4f4f9;
+      --bg-card: #ffffff;
+      --text-primary: #333333;
+      --shadow: rgba(0,0,0,0.1);
+    }
+    body {
+      background-color: var(--bg-body) !important;
+      color: var(--text-primary) !important;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden; /* Evita rolagem lateral acidental */
+    }
+    /* Força cor branca nos cards para garantir contraste */
+    .novidade-card, .reflexao-card, .aniversariante-card, .ferias-card, .cipa-card {
+      background-color: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      box-shadow: 0 4px 10px var(--shadow);
+    }
+
+    /* 2. SCROLL SNAP (Travar rolagem) */
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* 3. ALINHAMENTO E CENTRALIZAÇÃO (Correção do "Esquadro") */
+    section.banner, 
+    section.section {
+      height: 100vh;         /* Ocupa tela toda */
+      min-height: 100vh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      
+      /* Centralização VERTICAL da Seção */
+      display: flex;
+      flex-direction: column;
+      justify-content: center; 
+      align-items: center;
+      
+      padding: 40px 20px; /* Espaço nas laterais */
+      box-sizing: border-box;
+    }
+
+    /* Títulos centralizados */
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+
+    /* Headers (como a data das novidades) centralizados */
+    .novidades-header {
+      justify-content: center;
+      display: flex;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    /* 4. CORREÇÃO DOS CONTAINERS DE CARDS 
+       Isso garante que os cards fiquem no centro e não jogados para a esquerda 
+    */
+    .novidades-container, 
+    .reflexao-container, 
+    .aniversariantes-container, 
+    .ferias-container, 
+    .cipa-container,
+    .ferias-grid {
+      width: 100%;
+      max-width: 1200px; /* Limite de largura para não esticar demais em monitores wide */
+      
+      display: flex;
+      flex-wrap: wrap;       /* Permite quebra de linha */
+      justify-content: center; /* CENTRALIZA OS CARDS HORIZONTALMENTE */
+      gap: 20px;             /* Espaço entre os cards */
+      
+      margin: 0 auto;        /* Centraliza o bloco container na tela */
+    }
+
+    /* Ajuste específico para a tabela de férias (desktop) */
+    .ferias-table {
+      margin: 20px auto;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    /* Responsividade para telas pequenas */
+    @media (max-height: 700px) {
+      /* Se a altura da tela for pequena, permite rolar dentro da seção se necessário */
+      section.section {
+        justify-content: flex-start;
+        padding-top: 80px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- MENU (será carregado via JS) -->
   <div id="menu-placeholder"></div>
 
-  <!-- BANNER -->
   <section class="banner" id="inicio">
     <h1>Bem-vindo ao PortalPSR</h1>
-    <p>Aqui é o seu espaço. Aqui é PSR!</p> <!-- Este texto será atualizado via JS -->
+    <p>Aqui é o seu espaço. Aqui é PSR!</p>
     <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
   </section>
 
   <main>
-    <!-- Novidades -->
     <section id="novidades" class="section">
       <h2 class="section-title">Novidades</h2>
       <div class="novidades-header">
@@ -45,7 +140,6 @@
       </div>
     </section>
 
-    <!-- Reflexão Estoica do Dia -->
     <section id="reflexao-do-dia" class="section">
       <h2 class="section-title">Reflexão Estoica</h2>
       <div id="reflexao-container" class="reflexao-container">
@@ -53,7 +147,6 @@
       </div>
     </section>
 
-    <!-- Aniversariantes -->
     <section id="aniversariantes" class="section">
       <h2 class="section-title">Aniversariantes do Mês</h2>
       <div id="aniversariantes-container" class="aniversariantes-container">
@@ -61,7 +154,6 @@
       </div>
     </section>
 
-    <!-- Férias -->
     <section id="ferias" class="section">
       <h2 class="section-title">Colaboradores em Férias</h2>
       <div class="ferias-container">
@@ -84,7 +176,6 @@
       </div>
     </section>
 
-    <!-- CIPA -->
     <section id="cipa" class="section">
       <h2 class="section-title">CIPA</h2>
       <div id="cipa-container" class="cipa-container">
@@ -93,28 +184,27 @@
     </section>
   </main>
 
-  <!-- FOOTER (será carregado via JS) -->
   <div id="footer-placeholder"></div>
 
-  <!-- SCRIPTS -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Função para criar efeito de fogos de artifício
+    
+    // --- SCRIPT DE FOGOS MELHORADO (Física + Fluidez + Cores Vibrantes) ---
     function spawnFirework(container) {
       if (!container) return;
       const rect = container.getBoundingClientRect();
+      
+      // Ponto de origem aleatório dentro do card
       const centerX = Math.random() * rect.width;
       const centerY = Math.random() * rect.height;
 
-      const colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF'];
-      const particleCount = 30;
-      const speedMin = 1;
-      const speedMax = 3;
-      const gravity = 0.02;
+      // Cores vibrantes (RGB + Dourado/Branco)
+      const colors = ['#FFD700', '#FF4500', '#32CD32', '#1E90FF', '#FF1493', '#FFFFFF', '#FFFF00'];
+      const particleCount = 40; 
 
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
-        const size = Math.floor(Math.random() * 4) + 3;
+        const size = Math.random() * 4 + 2; 
 
         Object.assign(particle.style, {
           position: 'absolute',
@@ -122,43 +212,53 @@
           height: `${size}px`,
           backgroundColor: colors[Math.floor(Math.random() * colors.length)],
           borderRadius: '50%',
-          left: `${centerX - size/2}px`,
-          top: `${centerY - size/2}px`,
+          left: `${centerX}px`,
+          top: `${centerY}px`,
           opacity: '1',
           pointerEvents: 'none',
-          transform: 'scale(1)'
+          boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`, // Glow
+          transform: 'translate(-50%, -50%) scale(1)',
+          zIndex: '10'
         });
 
         container.appendChild(particle);
 
+        // Física da partícula
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * (speedMax - speedMin) + speedMin;
+        const speed = Math.random() * 5 + 2; // Velocidade de explosão
+        
         let vx = Math.cos(angle) * speed;
         let vy = Math.sin(angle) * speed;
+        
+        const friction = 0.94; // Desaceleração
+        const gravity = 0.15;  // Queda natural
 
         (function animate() {
+          vx *= friction;
+          vy *= friction;
           vy += gravity;
-          const x = parseFloat(particle.style.left) + vx;
-          const y = parseFloat(particle.style.top) + vy;
-          particle.style.left = `${x}px`;
-          particle.style.top  = `${y}px`;
 
-          particle.style.opacity = parseFloat(particle.style.opacity) - 0.010;
-          const currentScale = parseFloat(particle.style.transform.replace(/scale\(|\)/g, '')) || 1;
-          particle.style.transform = `scale(${currentScale * 0.98})`;
+          const currentLeft = parseFloat(particle.style.left);
+          const currentTop = parseFloat(particle.style.top);
+
+          particle.style.left = `${currentLeft + vx}px`;
+          particle.style.top  = `${currentTop + vy}px`;
+
+          particle.style.opacity = parseFloat(particle.style.opacity) - (0.01 + Math.random() * 0.015);
+          const currentScale = parseFloat(particle.style.transform.replace(/[^0-9.]/g, '')) || 1;
+          particle.style.transform = `translate(-50%, -50%) scale(${currentScale * 0.96})`;
 
           if (particle.style.opacity > 0) {
             requestAnimationFrame(animate);
           } else {
-            if (particle.parentElement) {
-                particle.parentElement.removeChild(particle);
-            }
+            particle.remove();
           }
         })();
       }
     }
+    // --- FIM DO SCRIPT DE FOGOS ---
 
-    let fireworkIntervals = []; // Store all active interval IDs
+    let fireworkIntervals = [];
 
     function clearAllFireworkIntervals() {
       fireworkIntervals.forEach(clearInterval);
@@ -166,12 +266,13 @@
     }
 
     function startFireworkForElement(element) {
-      if (!document.hidden) { // Only start if visible
+      if (!document.hidden) {
+        // Intervalo aleatório para parecer natural
         const intervalId = setInterval(() => {
-          if (!document.hidden && element.closest('.destaque-hoje')) { // Ensure card is still highlighted and tab visible
+          if (!document.hidden && element.closest('.destaque-hoje')) {
             spawnFirework(element);
           }
-        }, 700 + Math.random() * 300); // Add some randomness to interval
+        }, 800 + Math.random() * 500); 
         fireworkIntervals.push(intervalId);
       }
     }
@@ -180,7 +281,6 @@
       if (document.hidden) {
         clearAllFireworkIntervals();
       } else {
-        // Restart fireworks for all currently highlighted cards
         document.querySelectorAll('.destaque-hoje .twinkle-lights').forEach(tw => {
           startFireworkForElement(tw);
         });
@@ -221,7 +321,7 @@
     const dataHojeEl = document.getElementById('data-hoje-novidades');
     if (dataHojeEl) dataHojeEl.textContent = hojePt;
 
-    // 3) Função genérica fetch + JSON com cache-buster
+    // 3) Função genérica fetch + JSON
     async function fetchData(path) {
       const cacheBuster = Date.now();
       try {
@@ -294,7 +394,7 @@
       c.appendChild(card);
     }
 
-    // 6) Renderiza Aniversariantes + fogos de artifício
+    // 6) Renderiza Aniversariantes
     async function renderAniversariantes() {
       const data = await fetchData('aniversariantes.json');
       const container = document.getElementById('aniversariantes-container');
@@ -304,7 +404,7 @@
         return;
       }
       container.innerHTML = '';
-      clearAllFireworkIntervals(); // Clear previous intervals
+      clearAllFireworkIntervals();
 
       const hojeAtual = new Date();
       const diaHoje = String(hojeAtual.getDate()).padStart(2,'0');
@@ -359,113 +459,84 @@
       });
     }
 
- // 7) Renderiza Férias (MODIFICADO para destacar retorno hoje)
- async function renderFerias() {
-   const data = await fetchData("ferias.json");
-   const grid = document.getElementById("ferias-grid-container");
-   const tb   = document.getElementById("ferias-tbody");
-   if (!grid || !tb) return;
+    // 7) Renderiza Férias
+    async function renderFerias() {
+       const data = await fetchData("ferias.json");
+       const grid = document.getElementById("ferias-grid-container");
+       const tb   = document.getElementById("ferias-tbody");
+       if (!grid || !tb) return;
 
-   const hoje = new Date();
-   hoje.setHours(0, 0, 0, 0); // Zera horas para comparar apenas a data
+       const hoje = new Date();
+       hoje.setHours(0, 0, 0, 0);
 
-   // Função auxiliar para comparar datas (dd/mm/yyyy)
-   function isSameDate(dateStr, comparisonDate) {
-     try {
-       const [dia, mes, ano] = dateStr.split("/");
-       // Validação básica do formato
-       if (!dia || !mes || !ano || isNaN(Number(dia)) || isNaN(Number(mes)) || isNaN(Number(ano))) {
-         throw new Error("Formato de data inválido");
-       }
-       const dataObj = new Date(Number(ano), Number(mes) - 1, Number(dia));
-       // Verifica se a data criada é válida (ex: new Date(2023, 1, 30) é inválido)
-       if (isNaN(dataObj.getTime()) || dataObj.getDate() !== Number(dia) || dataObj.getMonth() !== Number(mes) - 1 || dataObj.getFullYear() !== Number(ano)) {
-          throw new Error("Data inválida após criação do objeto Date");
-       }
-       dataObj.setHours(0, 0, 0, 0);
-       return dataObj.getTime() === comparisonDate.getTime();
-     } catch (e) {
-       console.error("Erro ao parsear ou validar data:", dateStr, e);
-       return false;
-     }
-   }
-
-   // Filtra férias: só mostra quem retorna HOJE ou depois
-   const dataFiltrada = (data || []).filter(f => {
-      try {
-         const [dia, mes, ano] = f.retorno.split("/");
-          // Validação básica do formato
-         if (!dia || !mes || !ano || isNaN(Number(dia)) || isNaN(Number(mes)) || isNaN(Number(ano))) {
-           throw new Error("Formato de data inválido para filtro");
+       function isSameDate(dateStr, comparisonDate) {
+         try {
+           const [dia, mes, ano] = dateStr.split("/");
+           if (!dia || !mes || !ano || isNaN(Number(dia)) || isNaN(Number(mes)) || isNaN(Number(ano))) return false;
+           const dataObj = new Date(Number(ano), Number(mes) - 1, Number(dia));
+           dataObj.setHours(0, 0, 0, 0);
+           return dataObj.getTime() === comparisonDate.getTime();
+         } catch (e) {
+           return false;
          }
-         const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
-         // Verifica se a data criada é válida
-         if (isNaN(dataRetorno.getTime()) || dataRetorno.getDate() !== Number(dia) || dataRetorno.getMonth() !== Number(mes) - 1 || dataRetorno.getFullYear() !== Number(ano)) {
-            throw new Error("Data de retorno inválida após criação do objeto Date para filtro");
-         }
-         dataRetorno.setHours(0, 0, 0, 0);
-         return dataRetorno >= hoje;
-      } catch (e) {
-         console.error("Erro ao filtrar data de retorno:", f.retorno, e);
-         return false; // Não inclui se a data for inválida
-      }
-   });
+       }
 
-   grid.innerHTML = ""; // Limpa grid
-   tb.innerHTML   = ""; // Limpa tabela
+       const dataFiltrada = (data || []).filter(f => {
+          try {
+             const [dia, mes, ano] = f.retorno.split("/");
+             if (!dia || !mes || !ano || isNaN(Number(dia)) || isNaN(Number(mes)) || isNaN(Number(ano))) return false;
+             const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
+             dataRetorno.setHours(0, 0, 0, 0);
+             return dataRetorno >= hoje;
+          } catch (e) { return false; }
+       });
 
-   if (data === null) { // Trata erro no fetch primeiro
-     const errorMsg = "<p>Erro ao carregar férias.</p>";
-     grid.innerHTML = errorMsg;
-     tb.innerHTML = `<tr><td colspan="4">${errorMsg}</td></tr>`;
-     return;
-   }
+       grid.innerHTML = "";
+       tb.innerHTML   = "";
 
-   if (dataFiltrada.length === 0) {
-     const noDataMsg = "<p>Nenhum colaborador em férias retornando hoje ou futuramente.</p>";
-     grid.innerHTML = noDataMsg;
-     tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`;
-     return;
-   }
+       if (data === null) {
+         const errorMsg = "<p>Erro ao carregar férias.</p>";
+         grid.innerHTML = errorMsg;
+         tb.innerHTML = `<tr><td colspan="4">${errorMsg}</td></tr>`;
+         return;
+       }
 
-   // Processa os dados filtrados
-   dataFiltrada.forEach(f => {
-     const retornaHoje = isSameDate(f.retorno, hoje); // Verifica se o retorno é hoje
+       if (dataFiltrada.length === 0) {
+         const noDataMsg = "<p>Nenhum colaborador em férias retornando hoje ou futuramente.</p>";
+         grid.innerHTML = noDataMsg;
+         tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`;
+         return;
+       }
 
-     // --- Cria o Card para Mobile --- (Usando createElement para adicionar classe dinamicamente)
-     const cardDiv = document.createElement("div");
-     cardDiv.className = "ferias-card"; // Classe base
-     if (retornaHoje) {
-       cardDiv.classList.add("retorno-hoje-piscar"); // Adiciona classe se retorna hoje
+       dataFiltrada.forEach(f => {
+         const retornaHoje = isSameDate(f.retorno, hoje);
+         const cardDiv = document.createElement("div");
+         cardDiv.className = "ferias-card";
+         if (retornaHoje) cardDiv.classList.add("retorno-hoje-piscar");
+         
+         cardDiv.innerHTML = `
+           <div class="ferias-card-header">
+             <i class="fas fa-plane-departure ferias-card-icon"></i>
+             <span class="ferias-card-colaborador">${f.colaborador}</span>
+           </div>
+           <div class="ferias-dates">
+             <span class="ferias-card-inicio">Início: ${f.inicio}</span>
+             <span class="ferias-card-retorno">Retorno: ${f.retorno}</span>
+           </div>
+           <p class="ferias-card-departamento">${f.departamento}</p>
+         `;
+         grid.appendChild(cardDiv);
+
+         const tr = document.createElement("tr");
+         if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
+         tr.innerHTML = `
+           <td>${f.colaborador}</td>
+           <td>${f.departamento}</td>
+           <td>${f.inicio}</td>
+           <td>${f.retorno}</td>`;
+         tb.appendChild(tr);
+       });
      }
-     // Define o conteúdo interno do card
-     cardDiv.innerHTML = `
-       <div class="ferias-card-header">
-         <i class="fas fa-plane-departure ferias-card-icon"></i>
-         <span class="ferias-card-colaborador">${f.colaborador}</span>
-       </div>
-       <div class="ferias-dates">
-         <span class="ferias-card-inicio">Início: ${f.inicio}</span>
-         <span class="ferias-card-retorno">Retorno: ${f.retorno}</span>
-       </div>
-       <p class="ferias-card-departamento">${f.departamento}</p>
-     `;
-     grid.appendChild(cardDiv); // Adiciona o card ao grid
-
-     // --- Cria a Linha para Desktop --- (Usando createElement)
-     const tr = document.createElement("tr");
-     if (retornaHoje) {
-       tr.classList.add("retorno-hoje-piscar"); // Adiciona classe se retorna hoje
-     }
-     // Define o conteúdo interno da linha
-     tr.innerHTML = `
-       <td>${f.colaborador}</td>
-       <td>${f.departamento}</td>
-       <td>${f.inicio}</td>
-       <td>${f.retorno}</td>`;
-     tb.appendChild(tr); // Adiciona a linha à tabela
-   });
- }
 
     // 8) Renderiza CIPA
     async function renderCIPA() {
@@ -492,7 +563,7 @@
       });
     }
 
-    // 9) Dispara todas as renderizações
+    // 9) Dispara renderizações
     renderNovidades();
     renderReflexao();
     renderAniversariantes();
@@ -501,7 +572,6 @@
   });
   </script>
 
-  <!-- Banner dinâmico inteligente (aniversário, férias, feriado) -->
   <script>
 // Lista de nomes femininos comuns no Brasil
 const nomesFemininos = [
