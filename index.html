@@ -317,6 +317,23 @@
           padding: 8px 40px; 
       }
     }
+/* CORREÇÃO DE ALINHAMENTO - ANIVERSARIANTES */
+    #aniversariantes-container {
+      display: grid !important; /* Muda de Flex para Grid */
+      /* Cria colunas automáticas de no mínimo 240px. 
+         Isso garante 4 cards em telas grandes e alinha a última linha à esquerda */
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Ajuste para o card preencher a célula do grid */
+    #aniversariantes-container .aniversariante-card {
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important; /* Remove margens extras se houver */
+    }
   </style>
 </head>
 <body>
@@ -990,6 +1007,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
