@@ -455,7 +455,7 @@
       }
     });
 
-// --- SISTEMA DE FOGOS DE ARTIFÍCIO PREMIUM ---
+/ --- 2. SCRIPT DE FOGOS (PREMIUM & SUAVE) ---
 
 // Configuração de qualidade e performance
 const FIREWORK_CONFIG = {
@@ -724,7 +724,11 @@ const FireworkManager = {
     destaques.forEach(element => this.startForElement(element));
   }
 };
+// Inicializar sistema
+FireworkManager.init();
 
+// Exportar para uso externo se necessário
+window.FireworkManager = FireworkManager;
     // --- 3. MENU/FOOTER ---
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
@@ -1186,6 +1190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
