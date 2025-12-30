@@ -1,8 +1,128 @@
 [
   {
-    "colaborador": "Simone Moura",
-    "departamento": "Supply Chain",
-    "inicio": "17/11/2025",
-    "retorno": "07/12/2025"
+    "colaborador": "Robson Jr",
+    "departamento": "Produção",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Wallace Carvalho",
+    "departamento": "Produção",
+    "inicio": "05/01/2026",
+    "retorno": "24/01/2026"
+  },
+  {
+    "colaborador": "Gabriel Freire",
+    "departamento": "Produção",
+    "inicio": "12/01/2026",
+    "retorno": "31/01/2026"
+  },
+  {
+    "colaborador": "Tayane Modesto",
+    "departamento": "PCP",
+    "inicio": "05/01/2026",
+    "retorno": "24/01/2026"
+  },
+  {
+    "colaborador": "Marcelo Coutinho",
+    "departamento": "Produção",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Adelson Mattos",
+    "departamento": "Produção",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Fabio Pereira",
+    "departamento": "Produção",
+    "inicio": "12/01/2026",
+    "retorno": "31/01/2026"
+  },
+  {
+    "colaborador": "Luiz Henrique",
+    "departamento": "Produção",
+    "inicio": "12/01/2026",
+    "retorno": "31/01/2026"
+  },
+  {
+    "colaborador": "Rafaela Taborda",
+    "departamento": "Produção",
+    "inicio": "12/01/2026",
+    "retorno": "31/01/2026"
+  },
+  {
+    "colaborador": "Douglas Amaral",
+    "departamento": "Produção",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Luciano Costa",
+    "departamento": "Logística",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Paulo Guimarães",
+    "departamento": "Comercial",
+    "inicio": "05/01/2026",
+    "retorno": "14/01/2026"
+  },
+  {
+    "colaborador": "Rodolfo Ramalho",
+    "departamento": "Compras",
+    "inicio": "05/01/2026",
+    "retorno": "24/01/2026"
+  },
+  {
+    "colaborador": "Fernando Alcantara",
+    "departamento": "Gente e Gestão",
+    "inicio": "05/01/2026",
+    "retorno": "24/01/2026"
+  },
+  {
+    "colaborador": "Denner Costa",
+    "departamento": "Gente e Gestão",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Zelia Paixão",
+    "departamento": "Gente e Gestão",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "José Marcelo",
+    "departamento": "Produção",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Diogo Costa",
+    "departamento": "Logística",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Roberto Felix",
+    "departamento": "Logística",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Daniel Gomes",
+    "departamento": "Logística",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
+  },
+  {
+    "colaborador": "Nilo Santos",
+    "departamento": "Gente e Gestão",
+    "inicio": "05/01/2026",
+    "retorno": "03/02/2026"
   }
 ]
