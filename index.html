@@ -455,123 +455,275 @@
       }
     });
 
-// --- 2. SCRIPT DE FOGOS (PREMIUM & SUAVE) ---
-    function spawnFirework(container) {
-      if (!container) return;
+// --- SISTEMA DE FOGOS DE ARTIFÍCIO PREMIUM ---
+
+// Configuração de qualidade e performance
+const FIREWORK_CONFIG = {
+  particleCount: 80,
+  trailParticles: 15,
+  colors: {
+    gold: ['#FFD700', '#FFC700', '#FFB700', '#D4AF37'],
+    silver: ['#E8E8E8', '#D0D0D0', '#C0C0C0', '#F5F5F5'],
+    white: ['#FFFFFF', '#FAFAFA', '#F0F0F0'],
+    champagne: ['#F7E7CE', '#F0E68C', '#FFFACD']
+  },
+  physics: {
+    minVelocity: 2,
+    maxVelocity: 6,
+    gravity: 0.12,
+    friction: 0.97,
+    bounce: 0.3
+  }
+};
+
+// Classe para partículas individuais com física avançada
+class FireworkParticle {
+  constructor(x, y, color, isTrail = false) {
+    this.element = document.createElement('div');
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.isTrail = isTrail;
+    
+    // Física
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = Math.random() * 
+      (FIREWORK_CONFIG.physics.maxVelocity - FIREWORK_CONFIG.physics.minVelocity) + 
+      FIREWORK_CONFIG.physics.minVelocity;
+    
+    this.vx = Math.cos(angle) * velocity;
+    this.vy = Math.sin(angle) * velocity;
+    
+    // Propriedades visuais
+    this.life = 1.0;
+    this.decay = isTrail ? 0.025 : (Math.random() * 0.006 + 0.008);
+    this.size = isTrail ? (Math.random() * 1.5 + 1) : (Math.random() * 3 + 2);
+    this.brightness = Math.random() * 0.3 + 0.7;
+    this.twinkle = Math.random() * 0.5 + 0.5;
+    
+    this.setupElement();
+  }
+  
+  setupElement() {
+    const glowIntensity = this.isTrail ? 2 : 4;
+    
+    Object.assign(this.element.style, {
+      position: 'absolute',
+      top: '0',
+      left: '0',
+      width: `${this.size}px`,
+      height: `${this.size}px`,
+      backgroundColor: this.color,
+      borderRadius: '50%',
+      opacity: '0',
+      pointerEvents: 'none',
+      transform: `translate3d(${this.x}px, ${this.y}px, 0) scale(1)`,
+      boxShadow: `
+        0 0 ${this.size * glowIntensity}px ${this.color},
+        0 0 ${this.size * glowIntensity * 2}px ${this.color}40
+      `,
+      zIndex: '10',
+      willChange: 'transform, opacity',
+      filter: `brightness(${this.brightness})`
+    });
+  }
+  
+  update(boundaries) {
+    // Aplicar física
+    this.vx *= FIREWORK_CONFIG.physics.friction;
+    this.vy *= FIREWORK_CONFIG.physics.friction;
+    this.vy += FIREWORK_CONFIG.physics.gravity;
+    
+    this.x += this.vx;
+    this.y += this.vy;
+    
+    // Bounce nas bordas (efeito sutil)
+    if (boundaries) {
+      if (this.x < 0 || this.x > boundaries.width) {
+        this.vx *= -FIREWORK_CONFIG.physics.bounce;
+        this.x = Math.max(0, Math.min(boundaries.width, this.x));
+      }
+      if (this.y > boundaries.height) {
+        this.vy *= -FIREWORK_CONFIG.physics.bounce;
+        this.y = boundaries.height;
+        this.life *= 0.9; // Perde vida ao bater no chão
+      }
+    }
+    
+    // Decair vida
+    this.life -= this.decay;
+    
+    // Efeito twinkle (cintilar)
+    const twinkleEffect = Math.sin(Date.now() * 0.01) * 0.1 * this.twinkle;
+    const currentLife = Math.max(0, this.life + twinkleEffect);
+    
+    // Atualizar visual
+    this.element.style.transform = `
+      translate3d(${this.x}px, ${this.y}px, 0) 
+      scale(${currentLife})
+    `;
+    this.element.style.opacity = currentLife;
+    
+    return this.life > 0;
+  }
+}
+
+// Classe principal do fogos de artifício
+class Firework {
+  constructor(container) {
+    this.container = container;
+    this.particles = [];
+    this.animationFrame = null;
+    this.bounds = container.getBoundingClientRect();
+    
+    this.init();
+  }
+  
+  init() {
+    // Posição de explosão com margem das bordas
+    const margin = 40;
+    const explosionX = Math.random() * (this.bounds.width - margin * 2) + margin;
+    const explosionY = Math.random() * (this.bounds.height - margin * 2) + margin;
+    
+    // Escolher paleta de cores aleatória
+    const colorPalettes = Object.values(FIREWORK_CONFIG.colors);
+    const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+    
+    // Criar partículas principais
+    for (let i = 0; i < FIREWORK_CONFIG.particleCount; i++) {
+      const color = palette[Math.floor(Math.random() * palette.length)];
+      const particle = new FireworkParticle(explosionX, explosionY, color, false);
       
-      const rect = container.getBoundingClientRect();
+      this.particles.push(particle);
+      this.container.appendChild(particle.element);
       
-      // ALTERAÇÃO 1: Posição Aleatória (não mais fixa no centro)
-      // Define um ponto X e Y aleatório dentro do card (com uma margem de segurança)
-      const startX = (Math.random() * (rect.width - 40)) + 20; 
-      const startY = (Math.random() * (rect.height - 40)) + 20;
+      // Fade in suave
+      setTimeout(() => {
+        particle.element.style.opacity = '1';
+      }, Math.random() * 100);
+    }
+    
+    // Criar trilha/rastro (partículas menores e mais rápidas)
+    for (let i = 0; i < FIREWORK_CONFIG.trailParticles; i++) {
+      const color = palette[Math.floor(Math.random() * palette.length)];
+      const particle = new FireworkParticle(explosionX, explosionY, color, true);
+      
+      // Trilha com velocidade maior
+      particle.vx *= 1.5;
+      particle.vy *= 1.5;
+      
+      this.particles.push(particle);
+      this.container.appendChild(particle.element);
+      
+      setTimeout(() => {
+        particle.element.style.opacity = '1';
+      }, Math.random() * 50);
+    }
+    
+    this.animate();
+  }
+  
+  animate() {
+    const boundaries = {
+      width: this.bounds.width,
+      height: this.bounds.height
+    };
+    
+    // Atualizar todas as partículas
+    this.particles = this.particles.filter(particle => {
+      const isAlive = particle.update(boundaries);
+      
+      if (!isAlive) {
+        particle.element.remove();
+      }
+      
+      return isAlive;
+    });
+    
+    // Continuar animação se ainda há partículas vivas
+    if (this.particles.length > 0) {
+      this.animationFrame = requestAnimationFrame(() => this.animate());
+    }
+  }
+  
+  destroy() {
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+    }
+    this.particles.forEach(p => p.element.remove());
+    this.particles = [];
+  }
+}
 
-      // Cores nobres
-      const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#FFD700', '#F0E68C'];
-      const particleCount = 60; // Mais partículas para preencher melhor
-
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        
-        // Tamanho levemente menor para mais delicadeza
-        const size = Math.random() * 2 + 1.5; 
-        const color = colors[Math.floor(Math.random() * colors.length)];
-
-        Object.assign(particle.style, {
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          width: `${size}px`,
-          height: `${size}px`,
-          backgroundColor: color,
-          borderRadius: '50%',
-          opacity: '0', // Começa invisível para evitar glitch visual
-          pointerEvents: 'none',
-          transform: `translate3d(${startX}px, ${startY}px, 0) scale(1)`,
-          boxShadow: `0 0 ${size * 3}px ${color}`,
-          zIndex: '10'
-        });
-
-        container.appendChild(particle);
-
-        // ALTERAÇÃO 2: Física "Slow Motion"
-        const angle = Math.random() * Math.PI * 2;
-        // Velocidade reduzida (2 a 4) para não ser agressivo
-        const velocity = Math.random() * 3 + 1; 
-        
-        let vx = Math.cos(angle) * velocity;
-        let vy = Math.sin(angle) * velocity;
-        
-        let x = startX;
-        let y = startY;
-        
-        let life = 1.0;
-        // Vida mais longa (decai mais devagar)
-        const decay = Math.random() * 0.008 + 0.008; 
-
-        const friction = 0.96; // Segura mais a partícula no ar
-        const gravity = 0.08;  // Gravidade bem leve (flutuar)
-
-        // Delay aleatório minúsculo para a explosão não ser um círculo perfeito instantâneo
-        setTimeout(() => {
-             particle.style.opacity = '1';
-             requestAnimationFrame(animate);
-        }, Math.random() * 50);
-
-        function animate() {
-          vx *= friction;
-          vy *= friction;
-          vy += gravity; // Cai bem devagar
-          
-          x += vx;
-          y += vy;
-          
-          life -= decay;
-
-          if (life > 0) {
-            // Movimento suave via GPU
-            particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${life})`;
-            particle.style.opacity = life;
-            requestAnimationFrame(animate);
-          } else {
-            particle.remove();
-          }
+// Sistema de gerenciamento de fogos
+const FireworkManager = {
+  activeFireworks: new Map(),
+  intervals: [],
+  
+  spawn(container) {
+    if (!container || document.hidden) return;
+    
+    const firework = new Firework(container);
+    const id = Date.now() + Math.random();
+    this.activeFireworks.set(id, firework);
+    
+    // Auto-cleanup após animação
+    setTimeout(() => {
+      this.activeFireworks.delete(id);
+    }, 5000);
+  },
+  
+  startForElement(element) {
+    if (!element || document.hidden) return;
+    
+    // Primeiro disparo imediato
+    this.spawn(element);
+    
+    // Disparos subsequentes em intervalos variados
+    const baseInterval = 2000;
+    const randomVariation = 2500;
+    
+    const scheduleNext = () => {
+      const delay = baseInterval + Math.random() * randomVariation;
+      const timeoutId = setTimeout(() => {
+        if (!document.hidden && element.closest('.destaque-hoje')) {
+          this.spawn(element);
+          scheduleNext();
         }
-      }
-    }
-
-    let fireworkIntervals = [];
-
-    function clearAllFireworkIntervals() {
-      fireworkIntervals.forEach(clearInterval);
-      fireworkIntervals = [];
-    }
-
-    function startFireworkForElement(element) {
-      if (!document.hidden) {
-        // Dispara fogos em intervalos variados e mais espaçados para não poluir
-        const intervalId = setInterval(() => {
-          if (!document.hidden && element.closest('.destaque-hoje')) {
-            spawnFirework(element);
-          }
-        }, 1500 + Math.random() * 2000); // Entre 1.5s e 3.5s
-        
-        fireworkIntervals.push(intervalId);
-        // Primeiro disparo imediato
-        spawnFirework(element);
-      }
-    }
-
+      }, delay);
+      
+      this.intervals.push(timeoutId);
+    };
+    
+    scheduleNext();
+  },
+  
+  clearAll() {
+    // Limpar intervalos
+    this.intervals.forEach(clearTimeout);
+    this.intervals = [];
+    
+    // Destruir fogos ativos
+    this.activeFireworks.forEach(firework => firework.destroy());
+    this.activeFireworks.clear();
+  },
+  
+  init() {
+    // Gerenciar visibilidade da página
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        clearAllFireworkIntervals();
+        this.clearAll();
       } else {
         const destaques = document.querySelectorAll('.destaque-hoje .twinkle-lights');
-        if(destaques.length > 0){
-             destaques.forEach(tw => startFireworkForElement(tw));
-        }
+        destaques.forEach(element => this.startForElement(element));
       }
     });
+    
+    // Iniciar fogos para elementos existentes
+    const destaques = document.querySelectorAll('.destaque-hoje .twinkle-lights');
+    destaques.forEach(element => this.startForElement(element));
+  }
+};
 
     // --- 3. MENU/FOOTER ---
     ['menu','footer'].forEach(file => {
@@ -1034,6 +1186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
