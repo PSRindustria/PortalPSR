@@ -455,66 +455,86 @@
       }
     });
 
-    // --- 2. SCRIPT DE FOGOS ---
+// --- 2. SCRIPT DE FOGOS (OTIMIZADO) ---
     function spawnFirework(container) {
       if (!container) return;
+      
+      // Cores elegantes (Dourado, Prata, Azul Noite)
+      const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#FFD700', '#F0E68C'];
+      const particleCount = 50; // Aumentado levemente para volume
+      
+      // Pega o centro do container para explodir do meio
       const rect = container.getBoundingClientRect();
-      const centerX = Math.random() * rect.width;
-      const centerY = Math.random() * rect.height;
-
-      const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#001f3f', '#FFD700'];
-      const particleCount = 40; 
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
 
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
-        const size = Math.random() * 4 + 2; 
+        
+        // Tamanho variado para profundidade
+        const size = Math.random() * 3 + 2; 
+        const color = colors[Math.floor(Math.random() * colors.length)];
 
+        // Estilo inicial
         Object.assign(particle.style, {
           position: 'absolute',
+          top: '0',
+          left: '0',
           width: `${size}px`,
           height: `${size}px`,
-          backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+          backgroundColor: color,
           borderRadius: '50%',
-          left: `${centerX}px`,
-          top: `${centerY}px`,
           opacity: '1',
           pointerEvents: 'none',
-          boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`,
-          transform: 'translate(-50%, -50%) scale(1)',
+          // O translate3d garante que a GPU processe a animação (Zero travamento)
+          transform: `translate3d(${centerX}px, ${centerY}px, 0) scale(1)`,
+          boxShadow: `0 0 ${size * 4}px ${color}`, // Glow mais intenso
           zIndex: '10'
         });
 
         container.appendChild(particle);
 
+        // Física da explosão
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5 + 2;
+        // Velocidade inicial alta (explosão)
+        const velocity = Math.random() * 6 + 3; 
         
-        let vx = Math.cos(angle) * speed;
-        let vy = Math.sin(angle) * speed;
-        const friction = 0.94;
-        const gravity = 0.15;
+        let vx = Math.cos(angle) * velocity;
+        let vy = Math.sin(angle) * velocity;
+        
+        // Posição atual relativa ao 0,0 do container
+        let x = centerX;
+        let y = centerY;
+        
+        let life = 1.0; // Vida da partícula
+        let decay = Math.random() * 0.015 + 0.015; // Velocidade de sumiço variável
 
-        (function animate() {
+        const friction = 0.95; // Resistência do ar (desacelera suavemente)
+        const gravity = 0.2;   // Gravidade leve
+
+        function animate() {
+          // Física
           vx *= friction;
           vy *= friction;
           vy += gravity;
+          
+          x += vx;
+          y += vy;
+          
+          life -= decay;
 
-          const currentLeft = parseFloat(particle.style.left);
-          const currentTop = parseFloat(particle.style.top);
-
-          particle.style.left = `${currentLeft + vx}px`;
-          particle.style.top  = `${currentTop + vy}px`;
-
-          particle.style.opacity = parseFloat(particle.style.opacity) - (0.01 + Math.random() * 0.015);
-          const currentScale = parseFloat(particle.style.transform.replace(/[^0-9.]/g, '')) || 1;
-          particle.style.transform = `translate(-50%, -50%) scale(${currentScale * 0.96})`;
-
-          if (particle.style.opacity > 0) {
+          if (life > 0) {
+            // A mágica da fluidez: Transformar em vez de mover Top/Left
+            particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${life})`;
+            particle.style.opacity = life;
+            
             requestAnimationFrame(animate);
           } else {
             particle.remove();
           }
-        })();
+        }
+        
+        requestAnimationFrame(animate);
       }
     }
 
@@ -527,12 +547,16 @@
 
     function startFireworkForElement(element) {
       if (!document.hidden) {
+        // Dispara uma nova explosão a cada 1.2 a 2.5 segundos (menos frenético, mais elegante)
         const intervalId = setInterval(() => {
           if (!document.hidden && element.closest('.destaque-hoje')) {
             spawnFirework(element);
           }
-        }, 800 + Math.random() * 500); 
+        }, 1200 + Math.random() * 1300); 
         fireworkIntervals.push(intervalId);
+        
+        // Dispara um imediatamente ao carregar
+        spawnFirework(element);
       }
     }
 
@@ -540,9 +564,11 @@
       if (document.hidden) {
         clearAllFireworkIntervals();
       } else {
-        document.querySelectorAll('.destaque-hoje .twinkle-lights').forEach(tw => {
-          startFireworkForElement(tw);
-        });
+        // Reinicia apenas nos elementos de destaque
+        const destaques = document.querySelectorAll('.destaque-hoje .twinkle-lights');
+        if(destaques.length > 0){
+             destaques.forEach(tw => startFireworkForElement(tw));
+        }
       }
     });
 
@@ -1007,6 +1033,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
