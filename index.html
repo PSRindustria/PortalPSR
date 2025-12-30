@@ -357,12 +357,9 @@
       </div>
     </section>
 
-    <section id="ferias" class="section">
+<section id="ferias" class="section">
       <h2 class="section-title">Colaboradores em Férias</h2>
       <div class="ferias-container">
-        <div id="ferias-grid-container" class="ferias-grid">
-          <div class="loading"><div class="loading-spinner"></div></div>
-        </div>
         <table class="ferias-table">
           <thead>
             <tr>
@@ -704,12 +701,13 @@
       });
     }
 
-    // Férias
+// Férias (Versão Somente Tabela)
     async function renderFerias() {
        const data = await fetchData("ferias.json");
-       const grid = document.getElementById("ferias-grid-container");
-       const tb   = document.getElementById("ferias-tbody");
-       if (!grid || !tb) return;
+       // Removida a referência ao grid
+       const tb = document.getElementById("ferias-tbody");
+       
+       if (!tb) return;
 
        const hoje = new Date();
        hoje.setHours(0, 0, 0, 0);
@@ -736,42 +734,27 @@
           } catch (e) { return false; }
        });
 
-       grid.innerHTML = "";
-       tb.innerHTML   = "";
+       tb.innerHTML = "";
 
        if (data === null) {
          const errorMsg = "<p>Erro ao carregar férias.</p>";
-         grid.innerHTML = errorMsg;
+         // Removido erro do grid
          tb.innerHTML = `<tr><td colspan="4">${errorMsg}</td></tr>`;
          return;
        }
 
        if (dataFiltrada.length === 0) {
-         const noDataMsg = "<p>Nenhum colaborador em férias retornando hoje ou futuramente.</p>";
-         grid.innerHTML = noDataMsg;
+         // Removida mensagem do grid
          tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`;
          return;
        }
 
        dataFiltrada.forEach(f => {
          const retornaHoje = isSameDate(f.retorno, hoje);
-         const cardDiv = document.createElement("div");
-         cardDiv.className = "ferias-card";
-         if (retornaHoje) cardDiv.classList.add("retorno-hoje-piscar");
          
-         cardDiv.innerHTML = `
-           <div class="ferias-card-header">
-             <i class="fas fa-plane-departure ferias-card-icon"></i>
-             <span class="ferias-card-colaborador">${f.colaborador}</span>
-           </div>
-           <div class="ferias-dates">
-             <span class="ferias-card-inicio">Início: ${f.inicio}</span>
-             <span class="ferias-card-retorno">Retorno: ${f.retorno}</span>
-           </div>
-           <p class="ferias-card-departamento">${f.departamento}</p>
-         `;
-         grid.appendChild(cardDiv);
+         // LÓGICA DE CRIAÇÃO DOS CARDS FOI REMOVIDA DAQUI
 
+         // Mantém apenas a lógica da tabela
          const tr = document.createElement("tr");
          if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
          tr.innerHTML = `
@@ -1007,5 +990,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
