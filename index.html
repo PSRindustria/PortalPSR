@@ -455,29 +455,30 @@
       }
     });
 
-// --- 2. SCRIPT DE FOGOS (EXPANSIVO, COLORIDO & RÁPIDO) ---
+// --- 2. SCRIPT DE FOGOS (CHARME, COLORIDO & SLOW MOTION) ---
     function spawnFirework(container) {
       if (!container) return;
       
       const rect = container.getBoundingClientRect();
       
-      // Posição aleatória dentro do card
+      // Posição aleatória
       const startX = (Math.random() * (rect.width - 40)) + 20; 
       const startY = (Math.random() * (rect.height - 40)) + 20;
 
-      // 1. MAIS COLORIDO: Mistura de metálicos com cores vivas de festa
+      // MANTIDO: Cores Vibrantes + Metálicos (O pedido anterior)
       const colors = [
-        '#FFD700', '#C0C0C0', '#FFFFFF', // Clássicos (Ouro, Prata, Branco)
-        '#FF4500', '#00BFFF', '#32CD32', '#FF1493', '#9400D3', '#00FFFF' // Laranja, Azul, Verde, Pink, Roxo, Ciano
+        '#FFD700', '#C0C0C0', '#FFFFFF', // Ouro, Prata, Branco
+        '#FF4500', '#00BFFF', '#32CD32', '#FF1493', '#9400D3', '#00FFFF' // Cores de festa
       ];
       
-      // Volume alto de partículas
-      const particleCount = 80; 
+      // Volume alto para ficar bonito
+      const particleCount = 90; 
 
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         
-        const size = Math.random() * 3 + 1; 
+        // Partículas levemente menores para dar delicadeza
+        const size = Math.random() * 2.5 + 1; 
         const color = colors[Math.floor(Math.random() * colors.length)];
 
         Object.assign(particle.style, {
@@ -491,7 +492,6 @@
           opacity: '0', 
           pointerEvents: 'none',
           transform: `translate3d(${startX}px, ${startY}px, 0) scale(1)`,
-          // Glow intenso da cor da partícula
           boxShadow: `0 0 ${size * 4}px ${color}`, 
           zIndex: '10'
         });
@@ -500,8 +500,9 @@
 
         const angle = Math.random() * Math.PI * 2;
         
-        // 2. EXPANSÃO MAIOR: Aumentei a velocidade inicial (explode para longe)
-        const velocity = Math.random() * 7 + 3; // Antes era menor
+        // VELOCIDADE EQUILIBRADA:
+        // Forte o suficiente para abrir a roda, mas suave.
+        const velocity = Math.random() * 4 + 2; 
         
         let vx = Math.cos(angle) * velocity;
         let vy = Math.sin(angle) * velocity;
@@ -510,21 +511,23 @@
         let y = startY;
         
         let life = 1.0;
-        const decay = Math.random() * 0.01 + 0.005; 
+        // DECAIMENTO LENTO: Elas ficam vivas por bastante tempo na tela
+        const decay = Math.random() * 0.007 + 0.003; 
 
-        // Física ajustada para permitir expansão
-        const friction = 0.92; // Menos atrito para viajar mais longe
-        const gravity = 0.12;  // Um pouco mais de gravidade para fazer o arco bonito
+        // O SEGREDO DO CHARME (Física):
+        const friction = 0.96; // Alta resistência (freia a explosão suavemente)
+        const gravity = 0.04;  // Gravidade baixíssima (efeito de pluma)
 
+        // Delay aleatório para não parecer um desenho estático
         setTimeout(() => {
              particle.style.opacity = '1';
              requestAnimationFrame(animate);
-        }, Math.random() * 20);
+        }, Math.random() * 80);
 
         function animate() {
-          vx *= friction;
+          vx *= friction; // Desacelera a cada frame
           vy *= friction;
-          vy += gravity; 
+          vy += gravity;  // Cai devagarinho
           
           x += vx;
           y += vy;
@@ -532,7 +535,9 @@
           life -= decay;
 
           if (life > 0) {
-            particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${life})`;
+            // O scale ajuda a dar a sensação de que está sumindo ao longe
+            const currentScale = 0.6 + (life * 0.4);
+            particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${currentScale})`;
             particle.style.opacity = life;
             requestAnimationFrame(animate);
           } else {
@@ -551,12 +556,12 @@
 
     function startFireworkForElement(element) {
       if (!document.hidden) {
-        // 3. INTERVALO CURTO: Explosões frenéticas (0.4s a 1.2s)
+        // Intervalo curto, mas não frenético, para dar tempo de ver a beleza da animação anterior
         const intervalId = setInterval(() => {
           if (!document.hidden && element.closest('.destaque-hoje')) {
             spawnFirework(element);
           }
-        }, 400 + Math.random() * 800); 
+        }, 800 + Math.random() * 1000); // Dispara a cada ~1.3 segundos
         
         fireworkIntervals.push(intervalId);
         spawnFirework(element);
@@ -1035,6 +1040,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
