@@ -455,26 +455,29 @@
       }
     });
 
-// --- 2. SCRIPT DE FOGOS (VOLUME ALTO & CÂMERA LENTA) ---
+// --- 2. SCRIPT DE FOGOS (EXPANSIVO, COLORIDO & RÁPIDO) ---
     function spawnFirework(container) {
       if (!container) return;
       
       const rect = container.getBoundingClientRect();
+      
       // Posição aleatória dentro do card
       const startX = (Math.random() * (rect.width - 40)) + 20; 
       const startY = (Math.random() * (rect.height - 40)) + 20;
 
-      // Cores (Adicionado um tom mais branco para brilho)
-      const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#FFFACD', '#DAA520'];
+      // 1. MAIS COLORIDO: Mistura de metálicos com cores vivas de festa
+      const colors = [
+        '#FFD700', '#C0C0C0', '#FFFFFF', // Clássicos (Ouro, Prata, Branco)
+        '#FF4500', '#00BFFF', '#32CD32', '#FF1493', '#9400D3', '#00FFFF' // Laranja, Azul, Verde, Pink, Roxo, Ciano
+      ];
       
-      // AUMENTO DE VOLUME: 100 partículas por explosão
-      const particleCount = 100; 
+      // Volume alto de partículas
+      const particleCount = 80; 
 
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         
-        // Tamanho variado (alguns bem pequenos para dar textura)
-        const size = Math.random() * 2.5 + 1; 
+        const size = Math.random() * 3 + 1; 
         const color = colors[Math.floor(Math.random() * colors.length)];
 
         Object.assign(particle.style, {
@@ -488,7 +491,7 @@
           opacity: '0', 
           pointerEvents: 'none',
           transform: `translate3d(${startX}px, ${startY}px, 0) scale(1)`,
-          // Glow mais suave e espalhado
+          // Glow intenso da cor da partícula
           boxShadow: `0 0 ${size * 4}px ${color}`, 
           zIndex: '10'
         });
@@ -496,8 +499,9 @@
         container.appendChild(particle);
 
         const angle = Math.random() * Math.PI * 2;
-        // VELOCIDADE SUAVE: Expansão mais lenta (não é um estouro rápido)
-        const velocity = Math.random() * 3 + 0.5; 
+        
+        // 2. EXPANSÃO MAIOR: Aumentei a velocidade inicial (explode para longe)
+        const velocity = Math.random() * 7 + 3; // Antes era menor
         
         let vx = Math.cos(angle) * velocity;
         let vy = Math.sin(angle) * velocity;
@@ -506,18 +510,16 @@
         let y = startY;
         
         let life = 1.0;
-        // VIDA LONGA: Demora mais para sumir (efeito suave)
-        const decay = Math.random() * 0.005 + 0.004; 
+        const decay = Math.random() * 0.01 + 0.005; 
 
-        // FÍSICA DE FLUTUAÇÃO
-        const friction = 0.93; // Freia o movimento lateral rápido
-        const gravity = 0.03;  // Gravidade quase zero (efeito pluma)
+        // Física ajustada para permitir expansão
+        const friction = 0.92; // Menos atrito para viajar mais longe
+        const gravity = 0.12;  // Um pouco mais de gravidade para fazer o arco bonito
 
-        // Pequeno delay para não aparecerem todas no exato mesmo milissegundo
         setTimeout(() => {
              particle.style.opacity = '1';
              requestAnimationFrame(animate);
-        }, Math.random() * 30);
+        }, Math.random() * 20);
 
         function animate() {
           vx *= friction;
@@ -530,9 +532,7 @@
           life -= decay;
 
           if (life > 0) {
-            // scale mantém o volume visual por mais tempo
-            const currentScale = 0.5 + (life * 0.5); 
-            particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${currentScale})`;
+            particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${life})`;
             particle.style.opacity = life;
             requestAnimationFrame(animate);
           } else {
@@ -551,12 +551,12 @@
 
     function startFireworkForElement(element) {
       if (!document.hidden) {
-        // Intervalo bem espaçado (2s a 4s) para apreciar a lentidão da animação
+        // 3. INTERVALO CURTO: Explosões frenéticas (0.4s a 1.2s)
         const intervalId = setInterval(() => {
           if (!document.hidden && element.closest('.destaque-hoje')) {
             spawnFirework(element);
           }
-        }, 2000 + Math.random() * 2000); 
+        }, 400 + Math.random() * 800); 
         
         fireworkIntervals.push(intervalId);
         spawnFirework(element);
@@ -1035,6 +1035,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
 
 
