@@ -258,6 +258,12 @@
         color: #fff;
     }
     
+    .ferias-table th, .ferias-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
     /* Aniversariante Destaque */
     .destaque-hoje {
         border: none !important; 
@@ -275,17 +281,6 @@
         justify-content: flex-start; 
       }
       
-      /* AJUSTE PARA EXIBIR FÉRIAS NO MOBILE */
-      .ferias-container {
-        display: block !important; /* Garante que o container não suma */
-        overflow-x: auto !important; /* Permite rolagem lateral */
-        width: 100%;
-      }
-      .ferias-table {
-        display: table !important; /* Força a tabela a aparecer */
-        min-width: 600px; /* Largura mínima para manter a formatação */
-      }
-
       .aniversariante-card,
       .cipa-card {
         width: 100% !important;        
@@ -301,6 +296,66 @@
       .reflexao-instrucao {
           padding: 8px 40px; 
       }
+      
+      /* --- MELHORIA DE VISUALIZAÇÃO DE FÉRIAS NO MOBILE (Estilo Card) --- */
+      .ferias-container {
+        display: block;
+        width: 100%;
+      }
+
+      /* Esconde o cabeçalho da tabela no mobile */
+      .ferias-table thead {
+        display: none;
+      }
+
+      /* Transforma a tabela em blocos */
+      .ferias-table, .ferias-table tbody, .ferias-table tr, .ferias-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Estiliza cada linha (colaborador) como um cartão */
+      .ferias-table tr {
+        background-color: #fff;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        padding: 15px;
+        border: 1px solid #eee;
+      }
+
+      /* Estiliza as células para ficarem flexíveis (Label na esquerda, valor na direita) */
+      .ferias-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        padding: 10px 0;
+        border-bottom: 1px solid #f9f9f9;
+        font-size: 0.95rem;
+      }
+      
+      .ferias-table td:last-child {
+        border-bottom: none;
+      }
+
+      /* Adiciona os rótulos (Labels) via CSS */
+      .ferias-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--primary-color);
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        margin-right: 15px;
+        text-align: left;
+      }
+
+      /* Mapeia as colunas para os textos corretos */
+      .ferias-table td:nth-of-type(1)::before { content: "Colaborador"; }
+      .ferias-table td:nth-of-type(2)::before { content: "Departamento"; }
+      .ferias-table td:nth-of-type(3)::before { content: "Início"; }
+      .ferias-table td:nth-of-type(4)::before { content: "Retorno"; }
     }
 
     #aniversariantes-container {
@@ -416,7 +471,6 @@
 // --- 2. SCRIPT DE FOGOS (OTIMIZADO) ---
     function spawnFirework(container) {
       if (!container) return;
-      // VERIFICAÇÃO EXTRA: Se a aba estiver oculta, não cria nada.
       if (document.hidden) return;
       
       const rect = container.getBoundingClientRect();
@@ -466,7 +520,6 @@
         const gravity = 0.04; 
 
         setTimeout(() => {
-             // Só inicia animação se ainda estiver visível e existir
              if(document.body.contains(particle)){
                  particle.style.opacity = '1';
                  requestAnimationFrame(animate);
@@ -474,7 +527,6 @@
         }, Math.random() * 80);
 
         function animate() {
-          // Se minimizou no meio da animação, para e remove
           if(document.hidden) {
               particle.remove();
               return;
@@ -503,12 +555,9 @@
 
     let fireworkIntervals = [];
 
-    // Função para LIMPAR INTERVALOS E REMOVER PARTÍCULAS
     function clearAllFireworkIntervals() {
       fireworkIntervals.forEach(clearInterval);
       fireworkIntervals = [];
-      
-      // 2. REMOVE FISICAMENTE AS PARTÍCULAS EXISTENTES DO DOM
       const existingParticles = document.querySelectorAll('.twinkle-lights div');
       existingParticles.forEach(p => p.remove());
     }
@@ -516,7 +565,6 @@
     function startFireworkForElement(element) {
       if (!document.hidden) {
         const intervalId = setInterval(() => {
-          // Só chama a função se estiver visível
           if (!document.hidden && element.closest('.destaque-hoje')) {
             spawnFirework(element);
           }
@@ -527,13 +575,10 @@
       }
     }
 
-    // LISTENER DE VISIBILIDADE ATUALIZADO
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        // Aba oculta: Para tudo e limpa a tela
         clearAllFireworkIntervals();
       } else {
-        // Aba ativa: Reinicia os fogos do zero
         const destaques = document.querySelectorAll('.destaque-hoje .twinkle-lights');
         if(destaques.length > 0){
              destaques.forEach(tw => startFireworkForElement(tw));
@@ -675,7 +720,6 @@
           const tw = document.createElement('div');
           tw.className = 'twinkle-lights';
           card.appendChild(tw);
-          // O startFireworkForElement será chamado pelo listener de visibility se a página estiver ativa
           if(!document.hidden) {
             startFireworkForElement(tw);
           }
@@ -719,7 +763,6 @@
 // Férias (Versão Somente Tabela)
     async function renderFerias() {
        const data = await fetchData("ferias.json");
-       // Removida a referência ao grid
        const tb = document.getElementById("ferias-tbody");
        
        if (!tb) return;
@@ -753,13 +796,11 @@
 
        if (data === null) {
          const errorMsg = "<p>Erro ao carregar férias.</p>";
-         // Removido erro do grid
          tb.innerHTML = `<tr><td colspan="4">${errorMsg}</td></tr>`;
          return;
        }
 
        if (dataFiltrada.length === 0) {
-         // Removida mensagem do grid
          tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`;
          return;
        }
@@ -767,9 +808,6 @@
        dataFiltrada.forEach(f => {
          const retornaHoje = isSameDate(f.retorno, hoje);
          
-         // LÓGICA DE CRIAÇÃO DOS CARDS FOI REMOVIDA DAQUI
-
-         // Mantém apenas a lógica da tabela
          const tr = document.createElement("tr");
          if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
          tr.innerHTML = `
