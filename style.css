@@ -93,21 +93,51 @@ nav ul li a:hover {
 /* ==================================================
    BANNER PRINCIPAL
    ================================================== */
+/* ==================================================
+   BANNER PRINCIPAL
+   ================================================== */
 .banner {
   margin-top: 35px; 
   height: 400px;
-  /* Imagem mantida conforme solicitado */
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
+  
+  /* MÁSCARA SUTIL: Gradiente de Branco Transparente para Branco Sólido */
+  /* Isso faz a imagem "desaparecer" suavemente no fundo do site */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.75), rgba(249, 249, 249, 1)), url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
+  
   background-size: cover;
   background-position: center;
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
-  text-align: center; color: #fff; /* Texto branco para contraste com o banner escuro */
+  text-align: center; 
   padding: 0 30px;
   border-bottom: none;
 }
-.banner h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 700; color: #fff; }
-.banner p { font-size: 1.3rem; max-width: 700px; margin-bottom: 20px; margin-top: 0px; color: #f0f0f0; }
+
+/* Ajuste de Texto para Fundo Claro */
+.banner h1 { 
+  font-size: 2.2rem; 
+  margin-bottom: 10px; 
+  font-weight: 800; 
+  color: var(--azul-aco); /* Texto Azul para contraste */
+  text-shadow: none;      /* Remove sombra escura */
+}
+
+.banner p { 
+  font-size: 1.3rem; 
+  max-width: 700px; 
+  margin-bottom: 20px; 
+  margin-top: 0px; 
+  color: var(--cinza-escuro); /* Texto Cinza Escuro */
+  font-weight: 500;
+  text-shadow: none;
+}
+
+/* Opcional: Ajustar a cor do ícone de coração/emoji se estiver usando */
+.banner div {
+  text-shadow: none !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+}
 
 .banner-btn {
   background-color: var(--azul-aco);
@@ -118,12 +148,15 @@ nav ul li a:hover {
   transition: transform 0.3s, box-shadow 0.3s;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
 }
+
 .banner-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
   background-color: #fff;
   color: var(--azul-aco);
+  border-color: var(--azul-aco);
 }
 
 /* ==================================================
@@ -501,3 +534,4 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
  }
+
