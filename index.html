@@ -274,6 +274,18 @@
         padding: 40px 15px;      
         justify-content: flex-start; 
       }
+      
+      /* AJUSTE PARA EXIBIR FÉRIAS NO MOBILE */
+      .ferias-container {
+        display: block !important; /* Garante que o container não suma */
+        overflow-x: auto !important; /* Permite rolagem lateral */
+        width: 100%;
+      }
+      .ferias-table {
+        display: table !important; /* Força a tabela a aparecer */
+        min-width: 600px; /* Largura mínima para manter a formatação */
+      }
+
       .aniversariante-card,
       .cipa-card {
         width: 100% !important;        
@@ -993,5 +1005,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
-
-
