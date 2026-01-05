@@ -115,58 +115,60 @@
       scroll-margin-block-start: 20px; 
     }
 
-/* BANNER COM DEGRADÊ BONITO (AZUL/TEAL) */
+/* BANNER TEMA JANEIRO BRANCO (Filtro Claro) */
     section.banner {
       min-height: 400px;
-      /* Aqui está o degradê que mistura Azul Sereno com Verde Água */
+      
+      /* AQUI ESTÁ O FILTRO: Branco quase sólido na esquerda -> Cinza transparente na direita */
       background: 
-        linear-gradient(135deg, rgba(74, 144, 226, 0.9) 0%, rgba(0, 206, 201, 0.6) 100%), 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 220, 0.6) 100%), 
         url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
       
       background-size: cover;
       background-position: center;
-      color: #fff;
+      
+      /* MUDANÇA IMPORTANTE: Cor do texto vira escura para dar contraste no fundo branco */
+      color: #555555; 
+      
       position: relative;
       overflow: hidden;
       border: none !important; 
       margin-top: 35px;
-      
-      /* Sombra interna sutil */
-      box-shadow: inset 0 -10px 20px -10px rgba(0,0,0,0.1);
     }
     
     section.banner h1 {
-        text-shadow: 0 2px 15px rgba(74, 144, 226, 0.4);
+        /* Título em Azul Sereno ou Cinza Escuro */
+        color: var(--primary-color); 
+        text-shadow: none; /* Removemos a sombra pois o fundo agora é claro */
         font-weight: 800;
         letter-spacing: 1px;
-        color: #fff;
     }
     
     section.banner p {
-        color: #f1fcfc;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        font-weight: 500;
+        color: #666666; /* Cinza médio para o subtítulo */
+        text-shadow: none;
+        font-weight: 600;
     }
 
-    /* Botão do Banner */
+    /* Botão com cor Sólida (Azul) para destacar no mar de branco */
     .banner-btn {
-        background-color: #fff;
-        color: var(--primary-color) !important;
+        background-color: var(--primary-color);
+        color: #fff !important;
         padding: 12px 35px;
         border-radius: 50px;
         text-decoration: none;
         font-weight: bold;
-        border: 2px solid #fff !important; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: none !important; 
+        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
         transition: all 0.3s;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
     .banner-btn:hover {
-        background-color: transparent;
+        background-color: #357abd; /* Um azul um pouco mais escuro no hover */
         color: #fff !important;
         transform: scale(1.05);
-        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+        box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
     }
 
     /* Títulos das Seções - SEM ESTRELAS */
@@ -259,7 +261,7 @@
     /* Aniversariante Destaque */
     .destaque-hoje {
         border: none !important; 
-        box-shadow: 0 0 25px rgba(74, 144, 226, 0.3) !important;
+        box-shadow: 0 0 25px rgba(74, 144, 226, 0.6) !important;
         position: relative;
         overflow: visible !important;
         z-index: 1;
@@ -991,4 +993,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   </script>
 </body>
 </html>
+
 
