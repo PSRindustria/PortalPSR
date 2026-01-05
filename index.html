@@ -13,25 +13,25 @@
   <meta property="og:image" content="https://i.postimg.cc/6QTrrhr6/thumbnail.jpg">
   <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
   <meta property="og:type" content="website">
-  <title>PortalPSR - Feliz Ano Novo</title>
+  <title>PortalPSR - Janeiro Branco</title>
   
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
-    /* 1. TEMA DE ANO NOVO (CLEAN - SEM BORDAS) */
+    /* 1. TEMA JANEIRO BRANCO (CLEAN - SAÚDE MENTAL) */
     :root {
       color-scheme: light;
-      --bg-body: #f9f9f9; 
+      --bg-body: #f7f9fc; 
       --bg-card: #ffffff;
-      --text-primary: #333333;
+      --text-primary: #555555;
       
-      /* Cores de Ano Novo */
-      --primary-color: #001f3f; /* Azul Noite */
-      --secondary-color: #C0C0C0; /* Prata */
-      --gold-color: #D4AF37;    /* Dourado */
-      --shadow: rgba(0, 0, 0, 0.1); /* Sombra neutra e suave */
-      --shadow-hover: rgba(212, 175, 55, 0.3); /* Sombra dourada apenas no hover */
+      /* Cores de Janeiro Branco */
+      --primary-color: #4a90e2; /* Azul Sereno */
+      --secondary-color: #dfe6e9; /* Cinza claro */
+      --gold-color: #00cec9;    /* Verde Água/Teal (Acento) */
+      --shadow: rgba(0, 0, 0, 0.05); 
+      --shadow-hover: rgba(74, 144, 226, 0.2); 
     }
 
     body {
@@ -49,9 +49,9 @@
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         pointer-events: none;
-        background-image: radial-gradient(circle, #D4AF37 0.5px, transparent 0.5px);
+        background-image: radial-gradient(circle, #b2bec3 0.5px, transparent 0.5px);
         background-size: 50px 50px;
-        opacity: 0.1;
+        opacity: 0.2;
         z-index: -1;
     }
     
@@ -65,7 +65,7 @@
       /* Apenas sombra, sem border-top */
       box-shadow: 0 4px 15px var(--shadow) !important; 
       border-radius: 12px;
-      border: none !important; /* Garante remoção de bordas */
+      border: none !important; 
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -78,7 +78,7 @@
     .reflexao-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important; 
-      border: none !important; /* Removido contorno */
+      border: none !important; 
       border-radius: 12px;
       width: 100%; 
       padding: 30px;
@@ -87,9 +87,9 @@
       position: relative;
     }
     
-    /* Ícone decorativo (Estrela) */
+    /* Ícone decorativo (Coração/Mente) */
     .reflexao-card::after {
-        content: '\f005'; 
+        content: '\f004'; /* Coração */
         font-family: "Font Awesome 6 Free";
         font-weight: 900;
         position: absolute;
@@ -97,7 +97,7 @@
         right: 10px;
         font-size: 1.5rem;
         color: var(--gold-color);
-        opacity: 0.5;
+        opacity: 0.3;
         transform: rotate(25deg);
     }
 
@@ -129,44 +129,47 @@
       scroll-margin-block-start: 20px; 
     }
 
-    /* BANNER (SEM BORDA INFERIOR) */
+    /* BANNER JANEIRO BRANCO (CLEAN) */
     section.banner {
       min-height: 400px;
-      background: 
-        linear-gradient(135deg, rgba(0, 31, 63, 0.85) 0%, rgba(17, 17, 17, 0.9) 100%),
-        url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg') center/cover no-repeat;
-      color: white;
+      background: linear-gradient(135deg, #ffffff 0%, #dfe9f3 100%);
+      color: #2d3436;
       position: relative;
       overflow: hidden;
-      border: none !important; /* Removido contorno */
+      border: none !important; 
       margin-top: 35px;
     }
     
     section.banner h1 {
-        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        text-shadow: none;
         font-weight: 800;
         letter-spacing: 1px;
+        color: var(--primary-color);
+    }
+    
+    section.banner p {
+        color: #636e72;
     }
 
-    /* Botão do Banner (Sem borda) */
+    /* Botão do Banner */
     .banner-btn {
-        background-color: var(--gold-color);
-        color: #001f3f !important;
+        background-color: var(--primary-color);
+        color: #fff !important;
         padding: 12px 35px;
         border-radius: 50px;
         text-decoration: none;
         font-weight: bold;
-        border: none !important; /* Removido contorno */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: none !important; 
+        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
         transition: all 0.3s;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
     .banner-btn:hover {
         background-color: #fff;
-        color: var(--gold-color) !important;
+        color: var(--primary-color) !important;
         transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
     }
 
     .section-title {
@@ -187,7 +190,7 @@
         margin: 0 15px;
         font-size: 1.2rem;
         vertical-align: middle;
-        opacity: 0.7;
+        opacity: 0.5;
     }
 
     /* Containers */
@@ -207,14 +210,14 @@
     }
     
     .novidade-img i {
-        color: var(--gold-color);
+        color: var(--primary-color);
         font-size: 2rem;
     }
 
-    /* 4. BOTÃO REFLEXÃO (SEM BORDA) */
+    /* 4. BOTÃO REFLEXÃO */
     .reflexao-instrucao {
       background-color: var(--primary-color);
-      color: var(--gold-color) !important;
+      color: #fff !important;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -225,24 +228,24 @@
       text-transform: uppercase;
       font-size: 0.9rem;
       letter-spacing: 1px;
-      border: none !important; /* Removido contorno */
+      border: none !important;
       margin: 20px auto; 
       white-space: nowrap; 
       transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      animation: pulse-gold 2s infinite;
+      box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+      animation: pulse-blue 2s infinite;
     }
 
     .reflexao-instrucao:hover {
-      background-color: #003366;
+      background-color: var(--gold-color);
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 15px rgba(0, 206, 201, 0.4);
     }
 
-    @keyframes pulse-gold {
-      0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+    @keyframes pulse-blue {
+      0% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(74, 144, 226, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0); }
     }
 
     .ferias-table {
@@ -255,19 +258,19 @@
     
     .ferias-table thead tr {
         background-color: var(--primary-color);
-        color: var(--gold-color);
+        color: #fff;
     }
     
     /* Aniversariante Destaque (SEM BORDA, APENAS GLOW) */
     .destaque-hoje {
-        border: none !important; /* Removido contorno */
-        box-shadow: 0 0 25px rgba(212, 175, 55, 0.6) !important;
+        border: none !important; 
+        box-shadow: 0 0 25px rgba(74, 144, 226, 0.4) !important;
         position: relative;
         overflow: visible !important;
         z-index: 1;
     }
     
-    /* CONFETES */
+    /* CONFETES - AGORA EM TONS BRANCOS/AZUIS */
     #confetti-container {
         position: fixed;
         top: 0;
@@ -283,7 +286,7 @@
         position: absolute;
         width: 10px;
         height: 10px;
-        background-color: var(--gold-color);
+        background-color: var(--primary-color);
         opacity: 0.8;
         animation: fall linear infinite;
     }
@@ -317,22 +320,19 @@
           padding: 8px 40px; 
       }
     }
-/* CORREÇÃO DE ALINHAMENTO - ANIVERSARIANTES */
+
     #aniversariantes-container {
-      display: grid !important; /* Muda de Flex para Grid */
-      /* Cria colunas automáticas de no mínimo 240px. 
-         Isso garante 4 cards em telas grandes e alinha a última linha à esquerda */
+      display: grid !important; 
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 20px;
       justify-content: center;
       width: 100%;
     }
 
-    /* Ajuste para o card preencher a célula do grid */
     #aniversariantes-container .aniversariante-card {
       width: 100% !important;
       max-width: none !important;
-      margin: 0 !important; /* Remove margens extras se houver */
+      margin: 0 !important; 
     }
   </style>
 </head>
@@ -342,9 +342,9 @@
   <div id="menu-placeholder"></div>
 
   <section class="banner" id="inicio">
-    <div style="font-size: 4rem; margin-bottom: 10px; opacity: 0.9; text-shadow: 0 0 20px rgba(255,215,0,0.8);">🥂</div>
+    <div style="font-size: 4rem; margin-bottom: 10px; opacity: 0.9; text-shadow: none;">🤍</div>
     <h1>Bem-vindo ao PortalPSR</h1>
-    <p>Celebrando conquistas e novos começos. Feliz Ano Novo!</p>
+    <p>Janeiro Branco: Quem cuida da mente, cuida da vida.</p>
     <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
   </section>
 
@@ -411,7 +411,8 @@
         const container = document.getElementById('confetti-container');
         if(!container) return;
         
-        const colors = ['#D4AF37', '#C0C0C0', '#FFFFFF', '#DAA520'];
+        // Cores Janeiro Branco
+        const colors = ['#ffffff', '#dfe6e9', '#74b9ff', '#81ecec'];
         const numberOfConfetti = 30; 
         
         for (let i = 0; i < numberOfConfetti; i++) {
@@ -455,29 +456,25 @@
       }
     });
 
-// --- 2. SCRIPT DE FOGOS (CHARME, COLORIDO & SLOW MOTION) ---
+// --- 2. SCRIPT DE FOGOS (OTIMIZADO PARA NÃO TRAVAR) ---
     function spawnFirework(container) {
       if (!container) return;
+      // VERIFICAÇÃO EXTRA: Se a aba estiver oculta, não cria nada.
+      if (document.hidden) return;
       
       const rect = container.getBoundingClientRect();
-      
-      // Posição aleatória
       const startX = (Math.random() * (rect.width - 40)) + 20; 
       const startY = (Math.random() * (rect.height - 40)) + 20;
 
-      // MANTIDO: Cores Vibrantes + Metálicos (O pedido anterior)
       const colors = [
-        '#FFD700', '#C0C0C0', '#FFFFFF', // Ouro, Prata, Branco
-        '#FF4500', '#00BFFF', '#32CD32', '#FF1493', '#9400D3', '#00FFFF' // Cores de festa
+        '#74b9ff', '#ffffff', '#81ecec', 
+        '#0984e3', '#b2bec3', '#dfe6e9'
       ];
       
-      // Volume alto para ficar bonito
       const particleCount = 90; 
 
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
-        
-        // Partículas levemente menores para dar delicadeza
         const size = Math.random() * 2.5 + 1; 
         const color = colors[Math.floor(Math.random() * colors.length)];
 
@@ -499,35 +496,36 @@
         container.appendChild(particle);
 
         const angle = Math.random() * Math.PI * 2;
-        
-        // VELOCIDADE EQUILIBRADA:
-        // Forte o suficiente para abrir a roda, mas suave.
         const velocity = Math.random() * 4 + 2; 
         
         let vx = Math.cos(angle) * velocity;
         let vy = Math.sin(angle) * velocity;
-        
         let x = startX;
         let y = startY;
-        
         let life = 1.0;
-        // DECAIMENTO LENTO: Elas ficam vivas por bastante tempo na tela
         const decay = Math.random() * 0.007 + 0.003; 
 
-        // O SEGREDO DO CHARME (Física):
-        const friction = 0.96; // Alta resistência (freia a explosão suavemente)
-        const gravity = 0.04;  // Gravidade baixíssima (efeito de pluma)
+        const friction = 0.96; 
+        const gravity = 0.04; 
 
-        // Delay aleatório para não parecer um desenho estático
         setTimeout(() => {
-             particle.style.opacity = '1';
-             requestAnimationFrame(animate);
+             // Só inicia animação se ainda estiver visível e existir
+             if(document.body.contains(particle)){
+                 particle.style.opacity = '1';
+                 requestAnimationFrame(animate);
+             }
         }, Math.random() * 80);
 
         function animate() {
-          vx *= friction; // Desacelera a cada frame
+          // Se minimizou no meio da animação, para e remove
+          if(document.hidden) {
+              particle.remove();
+              return;
+          }
+
+          vx *= friction; 
           vy *= friction;
-          vy += gravity;  // Cai devagarinho
+          vy += gravity;  
           
           x += vx;
           y += vy;
@@ -535,7 +533,6 @@
           life -= decay;
 
           if (life > 0) {
-            // O scale ajuda a dar a sensação de que está sumindo ao longe
             const currentScale = 0.6 + (life * 0.4);
             particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${currentScale})`;
             particle.style.opacity = life;
@@ -549,29 +546,39 @@
 
     let fireworkIntervals = [];
 
+    // Função para LIMPAR INTERVALOS E REMOVER PARTÍCULAS
     function clearAllFireworkIntervals() {
+      // 1. Para os temporizadores de criação
       fireworkIntervals.forEach(clearInterval);
       fireworkIntervals = [];
+      
+      // 2. REMOVE FISICAMENTE AS PARTÍCULAS EXISTENTES DO DOM
+      // Isso evita o acúmulo visual e travamento ao voltar
+      const existingParticles = document.querySelectorAll('.twinkle-lights div');
+      existingParticles.forEach(p => p.remove());
     }
 
     function startFireworkForElement(element) {
       if (!document.hidden) {
-        // Intervalo curto, mas não frenético, para dar tempo de ver a beleza da animação anterior
         const intervalId = setInterval(() => {
+          // Só chama a função se estiver visível
           if (!document.hidden && element.closest('.destaque-hoje')) {
             spawnFirework(element);
           }
-        }, 800 + Math.random() * 1000); // Dispara a cada ~1.3 segundos
+        }, 800 + Math.random() * 1000); 
         
         fireworkIntervals.push(intervalId);
         spawnFirework(element);
       }
     }
 
+    // LISTENER DE VISIBILIDADE ATUALIZADO
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
+        // Aba oculta: Para tudo e limpa a tela
         clearAllFireworkIntervals();
       } else {
+        // Aba ativa: Reinicia os fogos do zero
         const destaques = document.querySelectorAll('.destaque-hoje .twinkle-lights');
         if(destaques.length > 0){
              destaques.forEach(tw => startFireworkForElement(tw));
@@ -713,7 +720,10 @@
           const tw = document.createElement('div');
           tw.className = 'twinkle-lights';
           card.appendChild(tw);
-          startFireworkForElement(tw);
+          // O startFireworkForElement será chamado pelo listener de visibility se a página estiver ativa
+          if(!document.hidden) {
+            startFireworkForElement(tw);
+          }
         }
 
         const dataFmt = (dStr && mStr && nomesMes[Number(mStr)-1]) ? `${dStr} de ${nomesMes[Number(mStr)-1]}` : 'Data inválida';
@@ -1033,21 +1043,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Feliz Ano Novo!";
+  let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Janeiro Branco: Saúde Mental.";
   const bannerP = document.querySelector('.banner > p');
   if (bannerP) bannerP.innerHTML = mensagemFinal;
 });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
