@@ -22,16 +22,15 @@
     /* 1. TEMA JANEIRO BRANCO (CLEAN - SAÚDE MENTAL) */
     :root {
       color-scheme: light;
-      --bg-body: #f7f9fc; 
+      --bg-body: #f4f4f4; /* Cinza muito claro */
       --bg-card: #ffffff;
       --text-primary: #555555;
       
       /* Cores de Janeiro Branco */
       --primary-color: #4a90e2; /* Azul Sereno */
-      --secondary-color: #dfe6e9; /* Cinza claro */
-      --gold-color: #00cec9;    /* Verde Água/Teal (Acento) */
+      --secondary-color: #e0e0e0; /* Cinza claro */
       --shadow: rgba(0, 0, 0, 0.05); 
-      --shadow-hover: rgba(74, 144, 226, 0.2); 
+      --shadow-hover: rgba(74, 144, 226, 0.15); 
     }
 
     body {
@@ -43,26 +42,13 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Fundo sutil */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        pointer-events: none;
-        background-image: radial-gradient(circle, #b2bec3 0.5px, transparent 0.5px);
-        background-size: 50px 50px;
-        opacity: 0.2;
-        z-index: -1;
-    }
-    
-    /* 2. CONFIGURAÇÃO GERAL DOS CARDS (SEM BORDAS) */
+    /* 2. CONFIGURAÇÃO GERAL DOS CARDS */
     .novidade-card, 
     .aniversariante-card, 
     .ferias-card, 
     .cipa-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
-      /* Apenas sombra, sem border-top */
       box-shadow: 0 4px 15px var(--shadow) !important; 
       border-radius: 12px;
       border: none !important; 
@@ -71,10 +57,10 @@
 
     .novidade-card:hover, .aniversariante-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 25px var(--shadow-hover) !important;
+        box-shadow: 0 8px 25px var(--shadow-hover) !important;
     }
 
-    /* CARD REFLEXÃO (SEM CONTORNO) */
+    /* CARD REFLEXÃO */
     .reflexao-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important; 
@@ -87,7 +73,7 @@
       position: relative;
     }
     
-    /* Ícone decorativo (Coração/Mente) */
+    /* Ícone decorativo Clean */
     .reflexao-card::after {
         content: '\f004'; /* Coração */
         font-family: "Font Awesome 6 Free";
@@ -96,8 +82,8 @@
         top: -10px;
         right: 10px;
         font-size: 1.5rem;
-        color: var(--gold-color);
-        opacity: 0.3;
+        color: var(--primary-color);
+        opacity: 0.15;
         transform: rotate(25deg);
     }
 
@@ -129,11 +115,14 @@
       scroll-margin-block-start: 20px; 
     }
 
-    /* BANNER JANEIRO BRANCO (CLEAN) */
+    /* BANNER COM IMAGEM RESTAURADA */
     section.banner {
       min-height: 400px;
-      background: linear-gradient(135deg, #ffffff 0%, #dfe9f3 100%);
-      color: #2d3436;
+      /* Imagem de fundo solicitada com overlay escuro suave para leitura do texto branco */
+      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
       position: relative;
       overflow: hidden;
       border: none !important; 
@@ -141,14 +130,15 @@
     }
     
     section.banner h1 {
-        text-shadow: none;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         font-weight: 800;
         letter-spacing: 1px;
-        color: var(--primary-color);
+        color: #fff;
     }
     
     section.banner p {
-        color: #636e72;
+        color: #f1f1f1;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     /* Botão do Banner */
@@ -160,7 +150,7 @@
         text-decoration: none;
         font-weight: bold;
         border: none !important; 
-        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         transition: all 0.3s;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -169,9 +159,9 @@
         background-color: #fff;
         color: var(--primary-color) !important;
         transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
     }
 
+    /* Títulos das Seções - SEM ESTRELAS */
     .section-title {
       text-align: center;
       margin-bottom: 30px;
@@ -184,13 +174,10 @@
       display: inline-block;
     }
     
+    /* Remoção forçada das estrelas */
     .section-title::before, .section-title::after {
-        content: "✦";
-        color: var(--gold-color);
-        margin: 0 15px;
-        font-size: 1.2rem;
-        vertical-align: middle;
-        opacity: 0.5;
+        content: none !important;
+        display: none !important;
     }
 
     /* Containers */
@@ -237,9 +224,8 @@
     }
 
     .reflexao-instrucao:hover {
-      background-color: var(--gold-color);
+      background-color: #357abd;
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 15px rgba(0, 206, 201, 0.4);
     }
 
     @keyframes pulse-blue {
@@ -254,6 +240,7 @@
       width: 100%;
       border-collapse: collapse;
       border: none !important;
+      background-color: #fff;
     }
     
     .ferias-table thead tr {
@@ -261,40 +248,13 @@
         color: #fff;
     }
     
-    /* Aniversariante Destaque (SEM BORDA, APENAS GLOW) */
+    /* Aniversariante Destaque */
     .destaque-hoje {
         border: none !important; 
-        box-shadow: 0 0 25px rgba(74, 144, 226, 0.4) !important;
+        box-shadow: 0 0 25px rgba(74, 144, 226, 0.3) !important;
         position: relative;
         overflow: visible !important;
         z-index: 1;
-    }
-    
-    /* CONFETES - AGORA EM TONS BRANCOS/AZUIS */
-    #confetti-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 9999;
-        overflow: hidden;
-    }
-    
-    .confetti {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background-color: var(--primary-color);
-        opacity: 0.8;
-        animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-        to {
-            transform: translateY(105vh) rotate(720deg);
-        }
     }
 
     /* Mobile */
@@ -337,12 +297,11 @@
   </style>
 </head>
 <body>
-  <div id="confetti-container"></div>
   
   <div id="menu-placeholder"></div>
 
   <section class="banner" id="inicio">
-    <div style="font-size: 4rem; margin-bottom: 10px; opacity: 0.9; text-shadow: none;">🤍</div>
+    <div style="font-size: 4rem; margin-bottom: 10px; opacity: 0.9; text-shadow: 0 0 10px rgba(0,0,0,0.5);">🤍</div>
     <h1>Bem-vindo ao PortalPSR</h1>
     <p>Janeiro Branco: Quem cuida da mente, cuida da vida.</p>
     <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
@@ -406,31 +365,7 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 0. SCRIPT DE CONFETES ---
-    function createConfetti() {
-        const container = document.getElementById('confetti-container');
-        if(!container) return;
-        
-        // Cores Janeiro Branco
-        const colors = ['#ffffff', '#dfe6e9', '#74b9ff', '#81ecec'];
-        const numberOfConfetti = 30; 
-        
-        for (let i = 0; i < numberOfConfetti; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.left = Math.random() * 100 + 'vw';
-            const w = Math.random() * 8 + 5 + 'px';
-            const h = Math.random() * 8 + 5 + 'px';
-            confetti.style.width = w;
-            confetti.style.height = h;
-            const duration = Math.random() * 3 + 4 + 's';
-            confetti.style.animationDuration = duration;
-            confetti.style.animationDelay = Math.random() * 5 + 's';
-            container.appendChild(confetti);
-        }
-    }
-    createConfetti();
+    // --- CONFETES REMOVIDOS ---
 
     // --- 1. INTERCEPTADOR ---
     document.addEventListener('click', (e) => {
@@ -456,7 +391,7 @@
       }
     });
 
-// --- 2. SCRIPT DE FOGOS (OTIMIZADO PARA NÃO TRAVAR) ---
+// --- 2. SCRIPT DE FOGOS (OTIMIZADO) ---
     function spawnFirework(container) {
       if (!container) return;
       // VERIFICAÇÃO EXTRA: Se a aba estiver oculta, não cria nada.
@@ -548,12 +483,10 @@
 
     // Função para LIMPAR INTERVALOS E REMOVER PARTÍCULAS
     function clearAllFireworkIntervals() {
-      // 1. Para os temporizadores de criação
       fireworkIntervals.forEach(clearInterval);
       fireworkIntervals = [];
       
       // 2. REMOVE FISICAMENTE AS PARTÍCULAS EXISTENTES DO DOM
-      // Isso evita o acúmulo visual e travamento ao voltar
       const existingParticles = document.querySelectorAll('.twinkle-lights div');
       existingParticles.forEach(p => p.remove());
     }
