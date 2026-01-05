@@ -91,32 +91,38 @@ nav ul li a:hover {
 }
 
 /* ==================================================
-   BANNER PRINCIPAL
+   BANNER PRINCIPAL (Com Filtro Azul Sereno)
    ================================================== */
 .banner {
   margin-top: 35px; 
   height: 400px;
   
-  /* MÁSCARA SUTIL: Gradiente de Branco Transparente para Branco Sólido */
-  /* Isso faz a imagem "desaparecer" suavemente no fundo do site */
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.75), rgba(249, 249, 249, 1)), url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
-  
+  /* FILTRO MAIS VISÍVEL E BONITO:
+     Gradiente do Azul da marca (mais forte na esquerda) para um azul mais transparente.
+     Isso "tinge" a foto elegantemente e melhora a leitura do texto. */
+  background: 
+    linear-gradient(135deg, rgba(74, 144, 226, 0.9) 0%, rgba(74, 144, 226, 0.5) 100%), 
+    url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
+    
   background-size: cover;
   background-position: center;
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   text-align: center; 
+  
+  /* Texto Branco volta a ser o ideal com fundo azulado */
+  color: #ffffff; 
   padding: 0 30px;
   border-bottom: none;
 }
 
-/* Ajuste de Texto para Fundo Claro */
 .banner h1 { 
   font-size: 2.2rem; 
   margin-bottom: 10px; 
   font-weight: 800; 
-  color: var(--azul-aco); /* Texto Azul para contraste */
-  text-shadow: none;      /* Remove sombra escura */
+  color: #ffffff;          /* Branco puro */
+  text-shadow: 0 2px 10px rgba(0,0,0,0.15); /* Sombra suave para destacar do fundo */
+  letter-spacing: 1px;
 }
 
 .banner p { 
@@ -124,36 +130,30 @@ nav ul li a:hover {
   max-width: 700px; 
   margin-bottom: 20px; 
   margin-top: 0px; 
-  color: var(--cinza-escuro); /* Texto Cinza Escuro */
+  color: #f0f8ff;          /* Branco levemente azulado (AliceBlue) */
   font-weight: 500;
-  text-shadow: none;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Opcional: Ajustar a cor do ícone de coração/emoji se estiver usando */
-.banner div {
-  text-shadow: none !important;
-  opacity: 1 !important;
-  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
-}
-
+/* Botão: Invertemos as cores para destacar no fundo azul */
 .banner-btn {
-  background-color: var(--azul-aco);
-  color: #fff;
-  padding: 12px 24px; border-radius: 50px;
+  background-color: #ffffff;  /* Botão Branco */
+  color: var(--azul-aco);     /* Texto Azul */
+  padding: 12px 30px; 
+  border-radius: 50px;
   font-weight: 700;
-  border: 1px solid transparent;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border: 2px solid #ffffff;
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .banner-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
-  background-color: #fff;
-  color: var(--azul-aco);
-  border-color: var(--azul-aco);
+  background-color: transparent; /* Fica transparente com borda branca */
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
 }
 
 /* ==================================================
@@ -531,5 +531,6 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
  }
+
 
 
