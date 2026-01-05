@@ -8,170 +8,97 @@
   <meta http-equiv="Expires" content="0" />
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="favicon.png" type="image/png">
-  <meta property="og:title" content="Portal PSR">
-  <meta property="og:description" content="Jornal PSR">
-  <meta property="og:image" content="https://i.postimg.cc/y602YBCK/0-CAPA.jpg">
-  <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
-  <meta property="og:type" content="website">
-  <title>PSR Indústria - Jornal PSR</title>
+  <title>PSR Indústria - Em Manutenção</title>
   
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <style>
     /* Reset e Base */
-    html, body { margin: 0; padding: 0; height: 100%; background: #e0e0e0; font-family: sans-serif; }
+    html, body { 
+        margin: 0; 
+        padding: 0; 
+        height: 100%; 
+        background: #f4f4f4; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
     
     /* ==================================================
-       FIX PARA O MENU HEADER (CONFORMIDADE PORTAL)
+       FIX PARA O MENU HEADER
        ================================================== */
     #menu-placeholder { 
       position: fixed; 
       top: 0; 
       left: 0; 
       width: 100%; 
-      z-index: 1001; /* Maior que os controles do viewer */
+      z-index: 1001;
     }
 
-    #menu-placeholder header {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    }
-
-    #menu-placeholder nav ul li a {
-      white-space: nowrap !important;
-    }
-
-    /* Ajuste de padding no body para o header fixo */
-    body { padding-top: 70px; }
+    body { padding-top: 70px; /* Espaço para o menu fixo */ }
 
     /* ==================================================
-       ESTILOS DO JORNAL
+       ESTILO DA TELA DE MANUTENÇÃO
        ================================================== */
     main {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      text-align: center;
-      position: relative;
-      padding-top: 10px;
-      min-height: calc(100vh - 150px); 
-    }
-
-    /* Controles flutuantes */
-    .viewer-controls {
-      position: fixed;
-      top: 50%;
-      right: 20px;
-      transform: translateY(-50%);
+      flex: 1; /* Ocupa o espaço restante entre menu e footer */
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      z-index: 1000;
-      transition: all 0.3s ease;
-      opacity: 0.6;
-      scale: 0.85;
-    }
-    .viewer-controls:hover { opacity: 1; scale: 1; background: rgba(0, 0, 0, 0.85); }
-
-    .viewer-controls.book-mode-controls {
-      position: fixed;
-      top: 85px; /* Ajustado para não colar no header novo */
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-      flex-direction: row;
-      gap: 15px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      opacity: 0.9;
-      scale: 1;
-      border: 1px solid #ccc;
-    }
-
-    .control-btn {
-      background: rgba(255, 255, 255, 0.9);
-      color: #333;
-      border: none;
-      padding: 8px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-    .control-btn:hover { background: rgba(255, 255, 255, 1); transform: translateY(-1px); }
-    .control-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .book-mode-controls .control-btn { background: #333; color: #fff; padding: 10px 15px; }
-    .mode-toggle { background: #007bff !important; color: #fff !important; font-size: 12px; }
-
-    .page-counter {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 12px;
-    }
-
-    .journal-container { width: 100%; max-width: 800px; margin: 0 auto; position: relative; }
-
-    .native-mode { display: block; padding-bottom: 50px; }
-    .native-mode .page-image {
-      width: 100%;
-      height: auto;
-      display: block;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-
-    /* MODO REVISTA */
-    .book-mode {
-      display: none;
-      position: relative;
-      height: 80vh;
-      width: 100%;
       align-items: center;
       justify-content: center;
-      perspective: 2500px;
-      overflow: hidden;
+      text-align: center;
+      padding: 20px;
     }
 
-    .book-spread {
+    .maintenance-container {
+      background: white;
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .bonequinho-wrapper {
+      font-size: 80px;
+      color: #333;
+      margin-bottom: 20px;
       position: relative;
-      width: 90vw;
-      max-width: 1100px;
-      aspect-ratio: 1.5 / 1;
-      transform-style: preserve-3d;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.4); 
+      display: inline-block;
     }
 
-    .book-page {
-      position: absolute;
-      width: 50%;
-      height: 100%;
-      top: 0;
-      background: #fdfdfd;
-      backface-visibility: hidden;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Animação do ícone */
+    .bonequinho-wrapper i {
+      animation: float 3s ease-in-out infinite;
     }
 
-    .book-page img { width: 100%; height: 100%; object-fit: fill; }
-    .book-page.left-page { left: 0; transform-origin: right center; border-radius: 4px 0 0 4px; }
-    .book-page.right-page { right: 0; transform-origin: left center; border-radius: 0 4px 4px 0; }
-
-    .turn-to-left { transform: rotateY(-180deg); z-index: 20; }
-    .turn-to-right { transform: rotateY(180deg); z-index: 20; }
-
-    .zoomed { cursor: grab; transform-origin: top left; position: absolute; z-index: 50; }
-
-    @media (max-width: 768px) {
-      .viewer-controls { display: none; }
-      .book-mode { display: none !important; }
-      .native-mode { display: block !important; }
+    .maintenance-text {
+      font-size: 2rem;
+      color: #333;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin: 0;
+      text-transform: uppercase;
     }
+
+    .sub-text {
+      margin-top: 10px;
+      color: #666;
+      font-size: 1rem;
+    }
+
+    /* Animações CSS */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 </head>
 <body>
@@ -179,73 +106,20 @@
   <div id="menu-placeholder"></div>
 
   <main>
-    <div class="viewer-controls" id="viewerControls">
-      <button class="control-btn" id="prevBtn" onclick="previousPage()" title="Página Anterior">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-
-      <div class="page-counter">
-        <span id="currentPageNum">1</span>/<span id="totalPages">17</span>
+    <div class="maintenance-container">
+      <div class="bonequinho-wrapper">
+        <i class="fas fa-user-gear"></i>
       </div>
-
-      <button class="control-btn" id="nextBtn" onclick="nextPage()" title="Próxima Página">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-
-      <div class="zoom-controls">
-        <button class="control-btn" onclick="zoomOut()"><i class="fas fa-search-minus"></i></button>
-        <button class="control-btn" onclick="zoomIn()"><i class="fas fa-search-plus"></i></button>
-        <button class="control-btn" onclick="resetZoom()"><i class="fas fa-expand"></i></button>
-      </div>
-
-      <button class="control-btn mode-toggle" id="modeToggle" onclick="toggleMode()">
-        Revista
-      </button>
-    </div>
-
-    <div class="journal-container" id="journalContainer">
-      <div class="native-mode" id="nativeMode"></div>
-
-      <div class="book-mode" id="bookMode">
-        <div class="book-spread">
-          <div class="book-page left-page" id="leftPage"><img src="" alt="Página Esquerda"></div>
-          <div class="book-page right-page" id="rightPage"><img src="" alt="Página Direita"></div>
-        </div>
-      </div>
+      <h1 class="maintenance-text">Em manutenção:</h1>
+      <p class="sub-text">Estamos atualizando o Jornal PSR.</p>
     </div>
   </main>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    const pages = [
-      'https://i.postimg.cc/y602YBCK/0-CAPA.jpg',
-      'https://i.postimg.cc/pVK3XxMX/01-Sumario.jpg',
-      'https://i.postimg.cc/NGRZfYv9/02-Missao-e-Valores.jpg',
-      'https://i.postimg.cc/Fsm8YqhK/03-Tema-do-Mes.jpg',
-      'https://i.postimg.cc/KctCvFhT/04-Tema-do-Mes.jpg',
-      'https://i.postimg.cc/8PD973Tf/05-Vale-a-Leitura.jpg',
-      'https://i.postimg.cc/dtvphXJT/06-Series-e-Filmes.jpg',
-      'https://i.postimg.cc/15P28Ty6/07-Reflexao.jpg',
-      'https://i.postimg.cc/Qxsw-FPj1/08-Reflexao.jpg',
-      'https://i.postimg.cc/TYGFKSTJ/09-Reflexao.jpg',
-      'https://i.postimg.cc/KvFw1Vmr/10-Bem-Estar.jpg',
-      'https://i.postimg.cc/GhrV4NbX/11-Meio-Ambiente.jpg',
-      'https://i.postimg.cc/vHMk4jGP/12-Curiosidades.jpg',
-      'https://i.postimg.cc/RVR8KR0P/13-Curiosidades.jpg',
-      'https://i.postimg.cc/28wJhw59/14-Aniversariantes.jpg',
-      'https://i.postimg.cc/L6T7LTsw-/15-Desligamento.jpg',
-      'https://i.postimg.cc/X78hd8J6/16-Novos-Clientes.jpg'
-    ];
-
-    let currentPage = 0;
-    const totalPages = pages.length;
-    let isBookMode = false;
-    let zoomLevel = 1;
-    let isAnimating = false;
-
     document.addEventListener('DOMContentLoaded', () => {
-      // 1) CARREGAMENTO DE MENU/FOOTER PADRONIZADO
+      // CARREGAMENTO DE MENU/FOOTER PADRONIZADO
       ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html?t=${Date.now()}`)
           .then(r => r.text())
@@ -253,6 +127,8 @@
             const placeholder = document.getElementById(`${file}-placeholder`);
             if (placeholder) {
               placeholder.innerHTML = html;
+              
+              // Lógica para ativar o menu mobile se necessário
               if (file === 'menu') {
                 const toggle = document.getElementById('menu-toggle');
                 const menuEl = document.getElementById('menu');
@@ -266,129 +142,6 @@
             }
           });
       });
-
-      // Popula o modo nativo
-      const nativeContainer = document.getElementById('nativeMode');
-      pages.forEach((src, index) => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.className = 'page-image';
-        img.alt = `Página ${index + 1}`;
-        nativeContainer.appendChild(img);
-      });
-
-      document.getElementById('totalPages').textContent = totalPages;
-      updateBookImages(0);
-    });
-
-    // Navegação e Lógica Revista
-    function nextPage() {
-      if (isAnimating) return;
-      if (isBookMode) {
-        if (currentPage < totalPages - 1) animateBookTurn('next');
-      } else {
-        if (currentPage < totalPages - 1) { currentPage++; scrollToCurrentPage(); updatePageCounter(); }
-      }
-    }
-
-    function previousPage() {
-      if (isAnimating) return;
-      if (isBookMode) {
-        if (currentPage >= 2) animateBookTurn('prev');
-      } else {
-        if (currentPage > 0) { currentPage--; scrollToCurrentPage(); updatePageCounter(); }
-      }
-    }
-
-    function animateBookTurn(direction) {
-      isAnimating = true;
-      const leftPage = document.getElementById('leftPage');
-      const rightPage = document.getElementById('rightPage');
-      const duration = 800;
-
-      if (direction === 'next') {
-        rightPage.classList.add('turn-to-left');
-        setTimeout(() => {
-          currentPage += 2;
-          updateBookImages(currentPage);
-          updatePageCounter();
-          rightPage.classList.remove('turn-to-left');
-        }, duration / 2);
-      } else {
-        leftPage.classList.add('turn-to-right');
-        setTimeout(() => {
-          currentPage -= 2;
-          updateBookImages(currentPage);
-          updatePageCounter();
-          leftPage.classList.remove('turn-to-right');
-        }, duration / 2);
-      }
-      setTimeout(() => { isAnimating = false; }, duration);
-    }
-
-    function updateBookImages(pageIndex) {
-      const leftImg = document.querySelector('#leftPage img');
-      const rightImg = document.querySelector('#rightPage img');
-      if (pageIndex % 2 !== 0) pageIndex--;
-      leftImg.src = pages[pageIndex] || '';
-      rightImg.src = pages[pageIndex + 1] || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
-      resetZoom();
-    }
-
-    function toggleMode() {
-      isBookMode = !isBookMode;
-      const nativeMode = document.getElementById('nativeMode');
-      const bookMode = document.getElementById('bookMode');
-      const controls = document.getElementById('viewerControls');
-      const modeToggle = document.getElementById('modeToggle');
-
-      if (isBookMode) {
-        nativeMode.style.display = 'none';
-        bookMode.style.display = 'flex';
-        modeToggle.textContent = 'Nativo';
-        controls.classList.add('book-mode-controls');
-        if (currentPage % 2 !== 0) currentPage--;
-        updateBookImages(currentPage);
-      } else {
-        nativeMode.style.display = 'block';
-        bookMode.style.display = 'none';
-        modeToggle.textContent = 'Revista';
-        controls.classList.remove('book-mode-controls');
-        scrollToCurrentPage();
-      }
-      updatePageCounter();
-    }
-
-    function scrollToCurrentPage() {
-      const images = document.querySelectorAll('#nativeMode .page-image');
-      if (images[currentPage]) images[currentPage].scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function updatePageCounter() {
-      document.getElementById('currentPageNum').textContent = currentPage + 1;
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      if (isBookMode) {
-        prevBtn.disabled = currentPage < 2;
-        nextBtn.disabled = currentPage >= totalPages - 2;
-      } else {
-        prevBtn.disabled = currentPage === 0;
-        nextBtn.disabled = currentPage === totalPages - 1;
-      }
-    }
-
-    // Zoom
-    function applyZoom() {
-      const targets = isBookMode ? document.querySelectorAll('.book-page img') : document.querySelectorAll('.native-mode .page-image');
-      targets.forEach(img => { img.style.transform = `scale(${zoomLevel})`; });
-    }
-    function zoomIn() { if(zoomLevel < 3) zoomLevel += 0.5; applyZoom(); }
-    function zoomOut() { if(zoomLevel > 1) zoomLevel -= 0.5; applyZoom(); }
-    function resetZoom() { zoomLevel = 1; applyZoom(); }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') nextPage();
-      if (e.key === 'ArrowLeft') previousPage();
     });
   </script>
 </body>
