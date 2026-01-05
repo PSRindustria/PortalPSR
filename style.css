@@ -1,24 +1,25 @@
 /******/
 /* ==================================================
-   VARIÁVEIS DE COR - TEMA ANO NOVO (RÉVEILLON)
+   VARIÁVEIS DE COR - TEMA JANEIRO BRANCO (SAÚDE MENTAL)
    ================================================== */
 :root {
-  /* Paleta Elegante: Azul Noite, Dourado e Prata */
-  --azul-marinho: #001f3f; /* Azul Noite (Fundo Header/Footer) */
-  --azul-aco: #D4AF37;     /* Dourado Metálico (Ícones, Detalhes) */
-  --azul-claro: #E5E4E2;   /* Platina/Prata (Fundos suaves, hovers) */
+  /* Paleta Janeiro Branco: Paz, Clareza e Serenidade */
+  --azul-marinho: #ffffff; /* Fundo Header agora é Branco (Clean) */
+  --azul-aco: #4a90e2;     /* Azul Sereno (Ícones, Detalhes) */
+  --azul-claro: #f0f8ff;   /* AliceBlue (Fundos suaves, hovers) */
   
-  --cinza-escuro: #333333; /* Texto Principal */
+  --cinza-escuro: #555555; /* Texto Principal Suave */
   --branco: #FFFFFF;
-  --dourado: #FFD700;      /* Dourado Vibrante (Brilhos) */
-  --prata-fundo: #f4f4f4;  /* Fundo da página */
+  --dourado: #00b894;      /* Verde Água/Teal (Destaques de Saúde) - Substitui o Dourado */
+  --prata-fundo: #fdfdfd;  /* Fundo da página quase branco */
   
   --cinza-claro-ferias-bg: #ffffff;
-  --dourado-claro: #F0E68C; /* Khaki para degradês suaves */
+  --dourado-claro: #81ecec; /* Ciano suave para degradês */
   --transicao: 0.3s ease;
   
-  /* Sombra com brilho dourado */
-  --sombra-card: 0 5px 15px rgba(212, 175, 55, 0.15);
+  /* Sombra suave e limpa */
+  --sombra-card: 0 5px 20px rgba(0, 0, 0, 0.05);
+  --cor-texto-header: #4a90e2; /* Cor do texto no header branco */
 }
 
 /* ==================================================
@@ -32,9 +33,9 @@ body {
   background-color: var(--prata-fundo);
   color: var(--cinza-escuro);
   line-height: 1.5;
-  /* Textura sutil de fundo (pontos) */
-  background-image: radial-gradient(#dcdcdc 1px, transparent 1px);
-  background-size: 30px 30px;
+  /* Textura sutil clean */
+  background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -44,13 +45,13 @@ img { max-width: 100%; display: block; }
    HEADER E NAVEGAÇÃO
    ================================================== */
 header {
-  background-color: var(--azul-marinho); /* Azul Noite */
-  color: var(--branco);
+  background-color: var(--azul-marinho); /* Branco */
+  color: var(--cor-texto-header);
   padding: 15px 0;
   position: fixed;
   width: 100%; top: 0; z-index: 1000;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border-bottom: 2px solid var(--dourado); /* Linha dourada fina */
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+  border-bottom: 2px solid var(--azul-aco); /* Linha azul suave */
 }
 .header-container {
   width: 90%; max-width: 1080px;
@@ -60,11 +61,11 @@ header {
 }
 .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; }
 .logo img { height: 40px; margin-right: 10px; }
-.logo span { color: #fff; letter-spacing: 1px; }
+.logo span { color: var(--cor-texto-header); letter-spacing: 1px; }
 
 .menu-toggle {
   display: none; background: none;
-  border: none; color: var(--branco);
+  border: none; color: var(--cor-texto-header);
   font-size: 1.5rem; cursor: pointer;
 }
 
@@ -73,12 +74,12 @@ nav ul li { margin-left: 20px; }
 nav ul li a {
   padding: 8px 12px; border-radius: 4px;
   font-weight: 500; transition: all 0.3s;
-  color: #ddd;
+  color: #777;
 }
 nav ul li a:hover {
-  background-color: rgba(255, 215, 0, 0.15);
-  color: var(--dourado);
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  background-color: var(--azul-claro);
+  color: var(--azul-aco);
+  text-shadow: none;
 }
 
 @media (max-width: 768px) {
@@ -87,7 +88,7 @@ nav ul li a:hover {
     display: none; flex-direction: column;
     position: absolute; top: 60px; left: 0;
     width: 100%; background-color: var(--azul-marinho);
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid #eee;
   }
   nav ul.active { display: flex; }
   nav ul li { margin: 10px 0; text-align: center; }
@@ -95,36 +96,34 @@ nav ul li a:hover {
 
 /* ==================================================
    BANNER PRINCIPAL (ESTILO BASE)
-   Nota: O index.html possui estilos inline para garantir
-   a foto com o degradê específico. Aqui definimos o fallback.
    ================================================== */
 .banner {
   margin-top: 35px; 
   height: 400px;
-  background-color: var(--azul-marinho);
+  background-color: #f5f7fa;
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
-  text-align: center; color: var(--branco);
+  text-align: center; color: var(--cinza-escuro);
   padding: 0 30px;
-  border-bottom: 5px solid var(--dourado);
+  border-bottom: 5px solid var(--azul-aco);
 }
-.banner h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 700; }
+.banner h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 700; color: var(--azul-aco); }
 .banner p { font-size: 1.3rem; max-width: 700px; margin-bottom: 20px; margin-top: 0px; }
 .banner-btn {
-  background-color: var(--dourado);
-  color: var(--azul-marinho);
+  background-color: var(--azul-aco);
+  color: #fff;
   padding: 12px 24px; border-radius: 50px;
   font-weight: 700;
-  border: 1px solid #fff;
+  border: 1px solid var(--azul-aco);
   transition: transform 0.3s, box-shadow 0.3s;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 .banner-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
   background-color: #fff;
-  color: var(--dourado);
+  color: var(--azul-aco);
 }
 
 /* ==================================================
@@ -136,16 +135,16 @@ main { padding-bottom: 40px; }
 .section-title {
   text-align: center; font-size: 2rem;
   margin-bottom: 30px; position: relative; margin-top: 15px;
-  color: var(--azul-marinho);
+  color: var(--azul-aco);
   text-transform: uppercase;
   letter-spacing: 2px;
 }
-/* Detalhe Dourado abaixo do título */
+/* Detalhe Azul abaixo do título */
 .section-title::after {
   content: '';
   display: block;
   width: 100px; height: 3px; border-radius: 15px;
-  background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+  background: linear-gradient(90deg, transparent, var(--azul-aco), transparent);
   margin: 10px auto 0;
 }
 
@@ -157,8 +156,8 @@ main { padding-bottom: 40px; }
   align-items: center; padding: 20px;
 }
 .loading-spinner {
-  border: 4px solid rgba(212, 175, 55, 0.2);
-  border-top: 4px solid var(--dourado);
+  border: 4px solid rgba(74, 144, 226, 0.2);
+  border-top: 4px solid var(--azul-aco);
   border-radius: 50%; width: 40px; height: 40px;
   animation: spin 1s linear infinite;
 }
@@ -170,7 +169,7 @@ main { padding-bottom: 40px; }
 .novidades-header {
   display: flex; align-items: center;
   justify-content: center;
-  font-size: .95rem; color: var(--azul-aco); /* Dourado */
+  font-size: .95rem; color: #888;
   margin-bottom: 10px;
   font-weight: 600;
   text-transform: uppercase;
@@ -186,19 +185,19 @@ main { padding-bottom: 40px; }
   border-radius: 12px;
   box-shadow: var(--sombra-card);
   flex: 1 1 280px; transition: transform .3s, box-shadow .3s;
-  border-bottom: 3px solid var(--azul-aco); /* Borda Dourada embaixo */
+  border-bottom: 3px solid var(--azul-aco);
 }
 .novidade-card:hover { 
   transform: translateY(-5px); 
-  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 10px 25px rgba(74, 144, 226, 0.15);
 }
 .novidade-img {
-  background: var(--azul-marinho);
-  color: #fff; padding: 15px; text-align: center;
+  background: var(--azul-claro);
+  color: var(--azul-aco); padding: 15px; text-align: center;
   border-radius: 12px 12px 0px 0px;
 }
 .novidade-img i {
-  color: var(--dourado); /* Ícone Dourado sobre fundo azul */
+  color: var(--azul-aco);
 }
 .novidade-content { padding: 15px 30px; text-align: center; }
 
@@ -209,20 +208,19 @@ main { padding-bottom: 40px; }
   background: var(--branco);
   padding: 5px 40px 20px 40px;
   border-radius: 15px;
-  /* Borda dourada dupla estilo moldura */
   text-align: center;
   margin: auto;
   max-width: 1080px;
-  /* Glow dourado suave */
-  animation: gold-pulse 3s infinite alternate ease-in-out;
+  /* Glow azul suave */
+  animation: blue-pulse 3s infinite alternate ease-in-out;
 }
-@keyframes gold-pulse {
-  from { box-shadow: 0 0 5px rgba(212, 175, 55, 0.1); }
-  to   { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+@keyframes blue-pulse {
+  from { box-shadow: 0 0 5px rgba(74, 144, 226, 0.1); }
+  to   { box-shadow: 0 0 20px rgba(74, 144, 226, 0.2); }
 }
 
 .reflexao-frase {
-  font-style: italic; color: var(--azul-marinho);
+  font-style: italic; color: #666;
   font-size: 1.4rem; padding: 0 10px;
 }
 .reflexao-autor {
@@ -235,7 +233,7 @@ main { padding-bottom: 40px; }
   cursor: pointer;
   font-weight: 600;
   padding: 8px 30px; 
-  background-color: var(--azul-marinho);
+  background-color: var(--azul-aco);
   display: inline-block;
   margin: 0 auto 8px;
   text-align: center;
@@ -243,7 +241,7 @@ main { padding-bottom: 40px; }
 }
 .reflexao-instrucao:hover {
   background-color: var(--dourado);
-  color: var(--azul-marinho);
+  color: #fff;
 }
 .reflexao-extra {
   text-align: justify;
@@ -257,7 +255,7 @@ main { padding-bottom: 40px; }
 .aniversariantes-container {
   display: grid; 
   gap: 20px;
-  grid-template-columns: 1fr; /* Mobile */
+  grid-template-columns: 1fr;
 }
 .aniversariante-card {
   background: var(--branco);
@@ -267,14 +265,14 @@ main { padding-bottom: 40px; }
   text-align: center;
   transition: transform .3s;
   position: relative;
-  /* Topo Dourado */
-  border-top: 4px solid var(--dourado);
+  /* Topo Azul */
+  border-top: 4px solid var(--azul-aco);
 }
 .aniversariante-card:hover { transform: translateY(-5px); }
 
 .aniversariante-card .aniversariante-info h3 {
   margin-top: 0; margin-bottom: 5px; 
-  font-size: 1.5rem; color: var(--azul-marinho);
+  font-size: 1.5rem; color: var(--azul-aco);
 }
 .aniversariante-card .aniversariante-info p {
   margin: 5px 0 10px; font-size: 1rem; color: #555;
@@ -284,34 +282,34 @@ main { padding-bottom: 40px; }
   width: 150px; height: 150px;
   border-radius: 50%; overflow: hidden;
   margin: 0 auto 10px;
+  border: 3px solid var(--azul-claro);
 }
 .aniversariante-img img {
   width: 100%; height: 100%; object-fit: cover;
   border-radius: 50%;
 }
 .aniversariante-data {
-  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-  color: var(--azul-marinho);
+  background: var(--azul-claro);
+  color: var(--azul-aco);
   padding: 5px 20px;
   border-radius: 20px;
   font-size: 1.1rem;
   display: inline-block;
   margin-top: 10px;
   font-weight: bold;
-  border: 1px solid #ddd;
 }
 
 /* Destaque do dia (Aniversariante) */
 .destaque-hoje {
   position: relative;
-  border: 2px solid var(--dourado) !important;
-  /* Animação de brilho dourado intenso */
-  animation: shine-gold 2s infinite ease-in-out;
+  border: 2px solid var(--azul-aco) !important;
+  /* Animação de brilho azul */
+  animation: shine-blue 2s infinite ease-in-out;
 }
-@keyframes shine-gold {
-  0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
-  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
-  100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
+@keyframes shine-blue {
+  0% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.5); }
+  100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
 }
 
 .destaque-hoje .twinkle-lights {
@@ -336,7 +334,6 @@ main { padding-bottom: 40px; }
   text-align: center;
   flex: 1 1 100%; max-width: 350px; 
   margin: 0 auto 20px; font-size: 1.2rem;
-  /* Lateral Prateada/Dourada */
   border-left: 5px solid var(--azul-aco); 
 }
 .ferias-card:hover { transform: translateY(-5px); }
@@ -345,7 +342,7 @@ main { padding-bottom: 40px; }
   display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
 }
 .ferias-card-icon {
-  font-size: 1.2rem; color: var(--azul-marinho); margin-right: 10px;
+  font-size: 1.2rem; color: var(--azul-aco); margin-right: 10px;
 }
 .ferias-dates {
   display: flex; gap: 10px; justify-content: center; margin: 12px 0;
@@ -353,8 +350,8 @@ main { padding-bottom: 40px; }
 .ferias-card-inicio, .ferias-card-retorno {
   display: inline-block; border-radius: 20px;
   padding: 6px 14px; font-size: 0.9rem; font-weight: 500;
-  color: var(--azul-marinho); background-color: #f9f9f9;
-  border: 1px solid #ccc;
+  color: var(--cinza-escuro); background-color: var(--azul-claro);
+  border: 1px solid #dae1e7;
 }
 
 .ferias-table { 
@@ -365,7 +362,7 @@ main { padding-bottom: 40px; }
   padding: 12px; text-align: center; border-bottom: 1px solid #eee; 
 }
 .ferias-table thead {
-  background: var(--azul-marinho); color: var(--dourado);
+  background: var(--azul-aco); color: #fff;
 }
 .ferias-table th { font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
 .ferias-table tbody tr:hover { background-color: #fcfcfc; }
@@ -386,31 +383,31 @@ main { padding-bottom: 40px; }
 }
 .cipa-card:hover { 
   transform: translateY(-5px); 
-  border-color: var(--dourado); 
+  border-color: var(--azul-aco); 
 }
 .cipa-icon {
   width: 50px; height: 50px;
-  background: linear-gradient(135deg, var(--azul-aco), #b8860b); /* Gradiente Dourado */
+  background: linear-gradient(135deg, var(--azul-aco), #81ecec);
   color: #fff;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 10px;
-  box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4);
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
 }
 
 /* ==================================================
    RODAPÉ
    ================================================== */
 footer .footer-accent {
-  background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+  background: linear-gradient(90deg, transparent, var(--azul-aco), transparent);
   height: 4px; width: 100%;
 }
 
 footer {
-  background: var(--azul-marinho);
-  color: #ccc;
+  background: #fcfcfc;
+  color: #777;
   font-family: 'Segoe UI', sans-serif;
-  border-top: none;
+  border-top: 1px solid #eee;
 }
 
 footer .footer-content {
@@ -421,7 +418,7 @@ footer .footer-content {
 
 .footer-brand h2 {
   font-size: 1.8rem; margin: 0 0 0.25em; font-weight: 700;
-  color: var(--dourado); letter-spacing: 1px;
+  color: var(--azul-aco); letter-spacing: 1px;
 }
 .footer-brand .tagline { font-size: 1rem; opacity: 0.8; font-weight: 300; }
 
@@ -431,37 +428,36 @@ footer .footer-content {
 .footer-social a {
   display: inline-flex; align-items: center; justify-content: center;
   width: 40px; height: 40px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: #fff;
+  border: 1px solid var(--azul-aco);
   border-radius: 50%; font-size: 1.2rem;
-  transition: all var(--transicao); color: var(--branco);
+  transition: all var(--transicao); color: var(--azul-aco);
 }
 .footer-social a:hover {
   transform: translateY(-3px);
-  background: var(--dourado); color: var(--azul-marinho);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-  border-color: var(--dourado);
+  background: var(--azul-aco); color: #fff;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.4);
 }
 
 .recursos-humanos {
   display: inline-block; margin: 10px 0 15px; padding: 10px 25px;
-  background: linear-gradient(to right, #D4AF37, #F0E68C); /* Botão Dourado */
-  color: var(--azul-marinho);
+  background: linear-gradient(to right, #4a90e2, #81ecec);
+  color: #fff;
   text-decoration: none; font-weight: 700; border-radius: 25px;
   transition: all var(--transicao);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
   text-transform: uppercase; font-size: 0.9rem;
 }
 .recursos-humanos:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
-  box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
 }
 
 .copyright { margin: 15px 0 0; font-size: 0.85rem; opacity: 0.6; }
 .developer-credit {
   margin: 0; font-size: 0.75rem; opacity: 0.5; padding: 10px 0;
-  background-color: #001225; text-align: center !important; width: 100%;
+  background-color: #f1f1f1; text-align: center !important; width: 100%;
 }
 
 /* ==================================================
@@ -488,11 +484,11 @@ footer .footer-content {
 }
 
 /* ==================================================
-    ANIMAÇÃO PISCAR SUAVE (DOURADA) - FÉRIAS
+    ANIMAÇÃO PISCAR SUAVE (AZUL) - FÉRIAS
    ================================================== */
- @keyframes piscar-gold-suave {
-   0%, 100% { background-color: rgba(255, 215, 0, 0.05); }
-   50% { background-color: rgba(255, 215, 0, 0.25); }
+ @keyframes piscar-blue-suave {
+   0%, 100% { background-color: rgba(74, 144, 226, 0.05); }
+   50% { background-color: rgba(74, 144, 226, 0.15); }
  }
 
  .retorno-hoje-piscar { /* Classe base */ }
@@ -500,22 +496,20 @@ footer .footer-content {
  /* Desktop */
  @media (min-width: 769px) {
    .ferias-table tbody tr.retorno-hoje-piscar {
-     animation: piscar-gold-suave 2.5s infinite ease-in-out;
-     border-left: 3px solid var(--dourado);
+     animation: piscar-blue-suave 2.5s infinite ease-in-out;
+     border-left: 3px solid var(--azul-aco);
    }
  }
 
  /* Mobile */
  @media (max-width: 768px) {
    .ferias-card.retorno-hoje-piscar {
-     animation: piscar-gold-shadow 2s infinite ease-in-out;
-     border-color: var(--dourado);
+     animation: piscar-blue-shadow 2s infinite ease-in-out;
+     border-color: var(--azul-aco);
    }
  }
 
- @keyframes piscar-gold-shadow {
-   0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); }
-   50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
+ @keyframes piscar-blue-shadow {
+   0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
+   50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
  }
-
-
