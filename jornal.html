@@ -452,17 +452,23 @@
     flex-direction: column;
     align-items: center;
 }
+/* ==================================================
+       FIX: IMPEDIR QUEBRA DE LINHA NO MENU
+       ================================================== */
+    #menu a, #menu li, #menu span {
+        white-space: nowrap !important; /* Obriga o texto a ficar em uma linha só */
+    }
+
+    #menu, #menu ul {
+        flex-wrap: nowrap !important; /* Se usar flexbox, impede que os itens caiam */
+    }  
   </style>
 </head>
 <body>
 
   
   /* DELETAR ESSA PARTE */
-<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #f4f7f9; z-index: 9999999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-family: sans-serif;">
-    <h1 style="color: #003366; margin-bottom: 10px; font-size: 2.5rem;">🚧 Em Construção</h1>
-    <p style="color: #666; font-size: 1.2rem;">Estamos preparando o conteúdo. Volte em breve!</p>
-</div>
-<style>
+
   /* DELETAR A PARTE DE CIMA */
   
     /* Trava a rolagem da página */
