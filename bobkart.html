@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BobinaKart - Chaos Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+        --azul-marinho: #003366;
+        --azul-ceu-claro: #a0d9ff;
+        --dourado: #DAA520;
+        --verde-sucesso: #28a745;
+        --branco: #FFFFFF;
+        --cinza-asfalto: #333333;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background-color: #222;
+      touch-action: none;
+      user-select: none;
+    }
+
+    canvas { display: block; width: 100%; height: 100%; }
+
+    /* UI LAYER */
+    #ui-layer {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+    }
+
+    .hud-score {
+      position: absolute; top: 20px; left: 20px;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--branco);
+      background: rgba(0, 51, 102, 0.8);
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--dourado);
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Controles Visuais para Mobile */
+    .touch-controls {
+        position: absolute; bottom: 30px; width: 100%;
+        display: flex; justify-content: space-between;
+        padding: 0 40px; box-sizing: border-box;
+        pointer-events: none;
+        z-index: 5;
+    }
+    .arrow-indicator {
+        font-size: 3rem; color: rgba(255,255,255,0.3);
+        background: rgba(0,0,0,0.1);
+        width: 70px; height: 70px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-start {
+      pointer-events: auto;
+      background-color: var(--dourado);
+      color: var(--azul-marinho);
+      font-size: 1.5rem; font-weight: 700;
+      padding: 15px 40px; border: none; border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 10px;
+      animation: pulse 2s infinite;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .btn-start:active { transform: scale(0.96); }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 51, 102, 0.9);
+      backdrop-filter: blur(5px); z-index: 100;
+      display: none; justify-content: center; align-items: center;
+      padding: 20px; box-sizing: border-box;
+    }
+
+    .modal-content {
+      background: var(--branco); width: 100%; max-width: 380px;
+      border-radius: 20px; padding: 25px; text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      border-top: 6px solid var(--dourado);
+      animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-height: 90vh; overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+
+    @keyframes slideIn {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title { color: var(--azul-marinho); font-size: 1.4rem; margin: 0 0 10px 0; font-weight: 800; }
+    .final-score { font-size: 3rem; color: var(--dourado); font-weight: 800; line-height: 1; margin-bottom: 20px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+
+    .input-group { text-align: left; margin-bottom: 15px; }
+    .input-group label { display: block; color: #555; font-size: 0.9rem; margin-bottom: 5px; font-weight: 700; }
+    .input-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; box-sizing: border-box; }
+    .input-group input:focus { border-color: var(--dourado); }
+
+    .btn-action { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
+    .btn-primary { background: var(--azul-marinho); color: white; }
+    .btn-primary:hover { background: #002244; transform: translateY(-2px); }
+    .btn-secondary { background: #f0f0f0; color: #666; }
+    .btn-secondary:hover { background: #e0e0e0; }
+    
+    .btn-tertiary { background: transparent; color: #999; font-size: 0.85rem; margin-top: 5px; font-weight: 500; padding: 10px; border: none; cursor: pointer; }
+    .btn-tertiary:hover { color: var(--azul-marinho); text-decoration: underline; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="ui-layer">
+    <div id="score-display" class="hud-score hidden">0 km</div>
+    
+    <div id="controls-hint" class="touch-controls hidden">
+        <div class="arrow-indicator"><i class="fas fa-chevron-left"></i></div>
+        <div class="arrow-indicator"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+    <button id="start-btn" class="btn-start hidden"><i class="fas fa-play"></i> INICIAR CORRIDA</button>
+    <div id="loading-msg" style="font-weight: bold; color: var(--branco); font-size: 1.2rem;">Carregando Van...</div>
+  </div>
+
+  <div id="modal-gameover" class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="modal-title">Fim de Corrida!</h2>
+      <p style="color: #777; margin: 0 0 10px 0; font-size: 0.9rem;">Distância percorrida:</p>
+      <div id="final-score-val" class="final-score">0 km</div>
+
+      <div id="save-score-area">
+          <div class="input-group">
+              <label>Seu Nome (Rank):</label>
+              <input type="text" id="player-name" placeholder="Ex: Carlos (Logística)" maxlength="20">
+          </div>
+          <button id="btn-save" class="btn-action btn-primary">Salvar Recorde</button>
+      </div>
+      
+      <div id="msg-success" style="display:none; color: var(--verde-sucesso); margin-bottom: 20px; font-weight: 700; font-size: 1.1rem;">
+          <i class="fas fa-check-circle"></i> Salvo com sucesso!
+      </div>
+
+      <button id="btn-restart" class="btn-action btn-secondary"><i class="fas fa-redo"></i> Correr Novamente</button>
+      <button id="btn-back" class="btn-tertiary">Voltar ao Portal</button>
+    </div>
+  </div>
+
+  <script>
+    const FIREBASE_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/games/BobinaKart/scores.json";
+    const PORTAL_URL = "https://psrindustria.github.io/PortalPSR/AreaInterna.html";
+    
+    const PLAYER_IMG_URL = "https://i.postimg.cc/d38dYLFv/van-(1).png";
+    const CAR_IMAGES_URLS = [
+       "https://i.postimg.cc/JhK524ym/car-6.png",
+       "https://i.postimg.cc/CKKcYqpd/car-2.png",
+       "https://i.postimg.cc/Hxc381xg/car-3.png",
+       "https://i.postimg.cc/6Q1YQpBc/car-4.png",
+       "https://i.postimg.cc/kgsTkyZk/car-5.png",
+       "https://i.postimg.cc/Pq6F8MQm/image.png"
+    ];
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // === CONSTANTES DE 60HZ ===
+    const TIME_STEP = 1000 / 60; 
+    let accumulatedTime = 0;
+    let lastTime = 0;
+
+    // === UI ===
+    const uiStartBtn = document.getElementById('start-btn');
+    const loadingMsg = document.getElementById('loading-msg');
+    const uiScore = document.getElementById('score-display');
+    const controlsHint = document.getElementById('controls-hint');
+    const modalGameOver = document.getElementById('modal-gameover');
+    const finalScoreEl = document.getElementById('final-score-val');
+    const btnSave = document.getElementById('btn-save');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnBack = document.getElementById('btn-back');
+    const inputName = document.getElementById('player-name');
+    const msgSuccess = document.getElementById('msg-success');
+    const saveArea = document.getElementById('save-score-area');
+
+    // === ASSETS ===
+    const playerImage = new Image();
+    playerImage.src = PLAYER_IMG_URL;
+    
+    const obstacleImages = [];
+    let assetsLoaded = 0;
+    const totalAssets = 1 + CAR_IMAGES_URLS.length;
+
+    function checkAssets() {
+        assetsLoaded++;
+        if(assetsLoaded >= totalAssets) {
+            loadingMsg.classList.add('hidden');
+            uiStartBtn.classList.remove('hidden');
+            resizeCanvas();
+        }
+    }
+
+    playerImage.onload = checkAssets;
+    playerImage.onerror = checkAssets;
+
+    CAR_IMAGES_URLS.forEach(url => {
+        const img = new Image();
+        img.src = url;
+        img.onload = checkAssets;
+        img.onerror = checkAssets;
+        obstacleImages.push(img);
+    });
+
+    // === ESTADO DO JOGO ===
+    let gameRunning = false;
+    let score = 0;
+    let roadSpeed = 0;
+    let backgroundOffset = 0;
+    
+    const LANE_COUNT = 5; 
+    let ROAD_WIDTH, ROAD_LEFT, LANE_WIDTH;
+    const BASE_SPEED = 8;
+    
+    let player = { lane: 2, x: 0, y: 0, width: 0, height: 0, turnAngle: 0 };
+    let obstacles = [];
+    let gasItems = [];
+    let bonuses = [];
+
+    let spawnTimer = 0;
+    let nextGasScore = 100;
+    
+    let currentSafeLane = 2; 
+
+    function updateDimensions() {
+        ROAD_WIDTH = Math.min(canvas.width * 0.95, 600);
+        ROAD_LEFT = (canvas.width - ROAD_WIDTH) / 2;
+        LANE_WIDTH = ROAD_WIDTH / LANE_COUNT;
+        
+        player.width = LANE_WIDTH * 0.7;
+        player.height = player.width * 1.6; 
+        player.y = canvas.height - player.height - 50;
+        updatePlayerX();
+    }
+
+    function updatePlayerX() {
+        player.x = ROAD_LEFT + (player.lane * LANE_WIDTH) + (LANE_WIDTH - player.width) / 2;
+    }
+
+    // === LÓGICA DE GERAÇÃO ULTRA ALEATÓRIA E DESUNIFORME ===
+    function spawnObstacleRow() {
+        // 1. Garante um caminho (Safe Lane) adjacente ao anterior
+        const moveOptions = [0]; 
+        if (currentSafeLane > 0) moveOptions.push(-1); 
+        if (currentSafeLane < LANE_COUNT - 1) moveOptions.push(1); 
+        
+        const move = moveOptions[Math.floor(Math.random() * moveOptions.length)];
+        currentSafeLane += move;
+
+        // 2. Prepara as faixas restantes para sorteio
+        const lanes = [0, 1, 2, 3, 4];
+        
+        // Embaralha as faixas para não ter vício de lado
+        for (let i = lanes.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [lanes[i], lanes[j]] = [lanes[j], lanes[i]];
+        }
+
+        // 3. Define quantos carros vão nascer nessa leva (Variedade!)
+        // Pode ser 1, 2 ou 3 carros. Nunca 4 (para deixar respiro) e nunca 0 (para ter desafio).
+        const maxObstaclesInRow = Math.floor(Math.random() * 3) + 1; 
+        let obstacleCount = 0;
+
+        lanes.forEach(lane => {
+            if (lane === currentSafeLane) return; // Pula a faixa segura
+
+            // Se ainda não atingiu o limite de carros para essa onda...
+            if (obstacleCount < maxObstaclesInRow) {
+                // 50% de chance de spawnar nesta faixa específica
+                if (Math.random() < 0.5) {
+                    const img = obstacleImages[Math.floor(Math.random() * obstacleImages.length)];
+                    
+                    // === AQUI ESTÁ O TRUQUE DA DESUNIFORMIDADE ===
+                    // Adiciona um atraso vertical aleatório (Y Offset)
+                    // Os carros não nascem alinhados em -150, mas variam entre -150 e -300
+                    const randomYOffset = Math.random() * 150; 
+
+                    obstacles.push({
+                        lane: lane,
+                        x: ROAD_LEFT + (lane * LANE_WIDTH) + (LANE_WIDTH - (LANE_WIDTH * 0.6)) / 2,
+                        y: -150 - randomYOffset, // Posição Y desuniforme
+                        width: LANE_WIDTH * 0.6,
+                        height: LANE_WIDTH * 0.6 * 1.8, 
+                        img: img
+                    });
+                    obstacleCount++;
+                }
+            }
+        });
+    }
+
+    function spawnGas() {
+        const lane = currentSafeLane; 
+        gasItems.push({
+            lane: lane,
+            x: ROAD_LEFT + (lane * LANE_WIDTH) + (LANE_WIDTH - (LANE_WIDTH * 0.5)) / 2,
+            y: -200, 
+            width: LANE_WIDTH * 0.5,
+            height: LANE_WIDTH * 0.5
+        });
+    }
+
+    function updatePhysics() {
+        roadSpeed = BASE_SPEED + (score / 300); 
+        if(roadSpeed > 22) roadSpeed = 22; 
+
+        backgroundOffset += roadSpeed;
+        score += roadSpeed * 0.05;
+        uiScore.textContent = Math.floor(score) + " km";
+
+        spawnTimer++;
+        // Intervalo de spawn um pouco mais curto para compensar a desuniformidade vertical
+        const spawnInterval = Math.max(30, 85 - (roadSpeed * 2.5)); 
+        
+        if (spawnTimer > spawnInterval) {
+            spawnObstacleRow();
+            spawnTimer = 0;
+        }
+
+        if(score >= nextGasScore) {
+            setTimeout(spawnGas, 300); 
+            nextGasScore += 150 + Math.random() * 100;
+        }
+
+        // Obstáculos
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            let obs = obstacles[i];
+            obs.y += roadSpeed;
+            
+            const padding = 10;
+            if (rectIntersect(
+                player.x + padding, player.y + padding, 
+                player.width - padding*2, player.height - padding*2, 
+                obs.x, obs.y, obs.width, obs.height)) {
+                gameOver();
+            }
+
+            if (obs.y > canvas.height) obstacles.splice(i, 1);
+        }
+
+        // Gasolina
+        for (let i = gasItems.length - 1; i >= 0; i--) {
+            let gas = gasItems[i];
+            gas.y += roadSpeed;
+
+            if (rectIntersect(player.x, player.y, player.width, player.height, gas.x, gas.y, gas.width, gas.height)) {
+                score += 50;
+                bonuses.push({ x: player.x, y: player.y - 50, text: "+50km", life: 1.0 });
+                gasItems.splice(i, 1);
+            } else if (gas.y > canvas.height) {
+                gasItems.splice(i, 1);
+            }
+        }
+
+        // Bônus visual
+        for(let i = bonuses.length - 1; i >= 0; i--) {
+            bonuses[i].y -= 2;
+            bonuses[i].life -= 0.02;
+            if(bonuses[i].life <= 0) bonuses.splice(i, 1);
+        }
+
+        player.turnAngle *= 0.8;
+    }
+
+    function rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
+        return x2 < x1 + w1 && x2 + w2 > x1 && y2 < y1 + h1 && y2 + h2 > y1;
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = "#333";
+        ctx.fillRect(ROAD_LEFT, 0, ROAD_WIDTH, canvas.height);
+        
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.lineWidth = 4;
+        ctx.setLineDash([40, 40]);
+        ctx.lineDashOffset = -backgroundOffset;
+        
+        for (let i = 1; i < LANE_COUNT; i++) {
+            let x = ROAD_LEFT + (i * LANE_WIDTH);
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+        ctx.setLineDash([]);
+
+        gasItems.forEach(g => {
+            ctx.fillStyle = "#DAA520";
+            ctx.beginPath();
+            ctx.arc(g.x + g.width/2, g.y + g.height/2, g.width/2, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "#FFF";
+            ctx.font = "bold 20px Poppins";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("G", g.x + g.width/2, g.y + g.height/2);
+        });
+
+        obstacles.forEach(obs => {
+            if(obs.img.complete) {
+                ctx.drawImage(obs.img, obs.x, obs.y, obs.width, obs.height);
+            } else {
+                ctx.fillStyle = "red";
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            }
+        });
+
+        ctx.save();
+        ctx.translate(player.x + player.width/2, player.y + player.height/2);
+        ctx.rotate(player.turnAngle);
+        if(playerImage.complete) {
+            ctx.drawImage(playerImage, -player.width/2, -player.height/2, player.width, player.height);
+        } else {
+            ctx.fillStyle = "blue";
+            ctx.fillRect(-player.width/2, -player.height/2, player.width, player.height);
+        }
+        ctx.restore();
+
+        bonuses.forEach(b => {
+            ctx.fillStyle = `rgba(218, 165, 32, ${b.life})`;
+            ctx.font = "bold 24px Poppins";
+            ctx.fillText(b.text, b.x, b.y);
+        });
+    }
+
+    function loop(timestamp) {
+        if (!gameRunning) return;
+        requestAnimationFrame(loop);
+
+        let deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+        if (deltaTime > 100) deltaTime = 100;
+
+        accumulatedTime += deltaTime;
+        while (accumulatedTime >= TIME_STEP) {
+            updatePhysics();
+            accumulatedTime -= TIME_STEP;
+        }
+        draw();
+    }
+
+    function movePlayer(dir) {
+        if (dir === 'left' && player.lane > 0) {
+            player.lane--;
+            player.turnAngle = -0.2;
+        } else if (dir === 'right' && player.lane < LANE_COUNT - 1) {
+            player.lane++;
+            player.turnAngle = 0.2;
+        }
+        updatePlayerX();
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (!gameRunning) return;
+        if (e.key === 'ArrowLeft') movePlayer('left');
+        if (e.key === 'ArrowRight') movePlayer('right');
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+        if (!gameRunning) return;
+        e.preventDefault();
+        const touchX = e.touches[0].clientX;
+        if (touchX < window.innerWidth / 2) movePlayer('left');
+        else movePlayer('right');
+    }, {passive: false});
+
+    function startGame() {
+        if (gameRunning) return;
+        
+        score = 0;
+        roadSpeed = BASE_SPEED;
+        obstacles = [];
+        gasItems = [];
+        bonuses = [];
+        player.lane = 2;
+        currentSafeLane = 2; 
+        updateDimensions();
+        
+        gameRunning = true;
+        uiStartBtn.classList.add('hidden');
+        uiScore.classList.remove('hidden');
+        controlsHint.classList.remove('hidden');
+        uiScore.textContent = "0 km";
+
+        lastTime = performance.now();
+        accumulatedTime = 0;
+        requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+        gameRunning = false;
+        controlsHint.classList.add('hidden');
+        uiScore.classList.add('hidden');
+        finalScoreEl.textContent = Math.floor(score) + " km";
+        modalGameOver.style.display = 'flex';
+        
+        saveArea.style.display = 'block';
+        msgSuccess.style.display = 'none';
+        btnSave.disabled = false;
+        btnSave.innerText = "Salvar Recorde";
+
+        if(localStorage.getItem('psr_player_name_kart')) {
+            inputName.value = localStorage.getItem('psr_player_name_kart');
+        }
+    }
+
+    uiStartBtn.addEventListener('click', startGame);
+    
+    btnRestart.addEventListener('click', () => {
+        modalGameOver.style.display = 'none';
+        startGame();
+    });
+
+    btnBack.addEventListener('click', () => {
+        window.location.href = PORTAL_URL;
+    });
+
+    btnSave.addEventListener('click', async () => {
+        const name = inputName.value.trim();
+        if(!name || name.length < 2) { alert("Digite um nome válido."); return; }
+        localStorage.setItem('psr_player_name_kart', name);
+
+        const payload = { nome: name, pontos: Math.floor(score) + " km", data: new Date().toLocaleString('pt-BR') };
+        btnSave.disabled = true; btnSave.innerText = "Enviando...";
+
+        try {
+            await fetch(FIREBASE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            saveArea.style.display = 'none';
+            msgSuccess.style.display = 'block';
+        } catch (error) {
+            console.error(error);
+            alert("Erro de conexão.");
+            btnSave.disabled = false;
+            btnSave.innerText = "Tentar Novamente";
+        }
+    });
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        updateDimensions();
+        if(!gameRunning) {
+            draw();
+            ctx.fillStyle = "#333";
+            ctx.fillRect(ROAD_LEFT, 0, ROAD_WIDTH, canvas.height);
+        }
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+  </script>
+</body>
+</html>

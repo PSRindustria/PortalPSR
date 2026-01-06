@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BobinaWorld - CMYK Rush</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+        --azul-marinho: #003366;
+        --azul-ceu-claro: #87CEEB;
+        --dourado: #DAA520;
+        --verde-sucesso: #28a745;
+        --branco: #FFFFFF;
+        --marrom-tubete: #8B4513;
+        --chao-grama: #228B22;
+        --chao-terra: #5D4037;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--azul-ceu-claro);
+      touch-action: none;
+      user-select: none;
+    }
+
+    canvas { display: block; width: 100%; height: 100%; }
+
+    /* UI LAYER */
+    #ui-layer {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+    }
+
+    .hud-score {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 2.5rem; font-weight: 800;
+      color: var(--branco);
+      text-shadow: 3px 3px 0px #000;
+      z-index: 10;
+      background: rgba(0,0,0,0.2);
+      padding: 5px 20px;
+      border-radius: 15px;
+      border: 3px solid var(--branco);
+    }
+
+    .btn-start {
+      pointer-events: auto;
+      background-color: var(--dourado);
+      color: var(--azul-marinho);
+      font-size: 1.5rem; font-weight: 700;
+      padding: 15px 40px; border: none; border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 0px #b8860b, 0 15px 20px rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 10px;
+      animation: pulse 2s infinite;
+      text-transform: uppercase; letter-spacing: 1px;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .btn-start:active { transform: translateY(8px); box-shadow: 0 0 0 #b8860b, inset 0 2px 5px rgba(0,0,0,0.2); }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 51, 102, 0.9);
+      backdrop-filter: blur(8px); z-index: 100;
+      display: none; justify-content: center; align-items: center;
+      padding: 20px; box-sizing: border-box;
+    }
+
+    .modal-content {
+      background: var(--branco); width: 100%; max-width: 380px;
+      border-radius: 20px; padding: 25px; text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border-top: 8px solid var(--dourado);
+      animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex; flex-direction: column;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(50px) scale(0.8); opacity: 0; }
+        to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-title { color: var(--azul-marinho); font-size: 1.8rem; margin: 0 0 10px 0; font-weight: 800; }
+    .final-score { font-size: 4rem; color: var(--dourado); font-weight: 800; line-height: 1; margin-bottom: 20px; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+
+    .input-group { text-align: left; margin-bottom: 15px; }
+    .input-group label { display: block; color: #555; font-size: 0.9rem; margin-bottom: 5px; font-weight: 700; }
+    .input-group input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 12px; font-family: inherit; font-size: 1.1rem; outline: none; box-sizing: border-box; }
+    .input-group input:focus { border-color: var(--dourado); }
+
+    .btn-action { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+    .btn-primary { background: var(--azul-marinho); color: white; }
+    .btn-primary:hover { background: #002244; transform: translateY(-2px); }
+    .btn-secondary { background: #f0f0f0; color: #666; }
+    .btn-secondary:hover { background: #e0e0e0; }
+    
+    .btn-tertiary { background: transparent; color: #bbb; font-size: 0.9rem; margin-top: 5px; font-weight: 500; padding: 10px; border: none; cursor: pointer; }
+    .btn-tertiary:hover { color: #fff; text-decoration: underline; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="ui-layer">
+    <div id="score-display" class="hud-score hidden">0</div>
+    <button id="start-btn" class="btn-start hidden"><i class="fas fa-play"></i> START GAME</button>
+    <div id="loading-msg" style="font-weight: bold; color: var(--azul-marinho); font-size: 1.2rem;">Carregando...</div>
+  </div>
+
+  <div id="modal-gameover" class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="modal-title">Fim de Jogo!</h2>
+      <p style="color: #777; margin: 0 0 10px 0; font-size: 0.9rem;">Pontuação Final:</p>
+      <div id="final-score-val" class="final-score">0</div>
+
+      <div id="save-score-area">
+          <div class="input-group">
+              <label>Seu Nome (Rank):</label>
+              <input type="text" id="player-name" placeholder="Ex: Julia (Comercial)" maxlength="20">
+          </div>
+          <button id="btn-save" class="btn-action btn-primary">Salvar Recorde</button>
+      </div>
+      
+      <div id="msg-success" style="display:none; color: var(--verde-sucesso); margin-bottom: 20px; font-weight: 700; font-size: 1.1rem;">
+          <i class="fas fa-check-circle"></i> Salvo com sucesso!
+      </div>
+
+      <button id="btn-restart" class="btn-action btn-secondary"><i class="fas fa-redo"></i> Tentar Novamente</button>
+      <button id="btn-back" class="btn-tertiary" style="color: #666;">Voltar ao Portal</button>
+    </div>
+  </div>
+
+  <script>
+    const FIREBASE_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/games/BobinaWorld/scores.json";
+    const PORTAL_URL = "https://psrindustria.github.io/PortalPSR/AreaInterna.html";
+    const PLAYER_IMG_URL = "https://i.postimg.cc/k5gYjdCG/Bobinasv2-(1).png"; 
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const TIME_STEP = 1000 / 60; 
+    let accumulatedTime = 0;
+    let lastTime = 0;
+
+    const uiStartBtn = document.getElementById('start-btn');
+    const loadingMsg = document.getElementById('loading-msg');
+    const uiScore = document.getElementById('score-display');
+    const modalGameOver = document.getElementById('modal-gameover');
+    const finalScoreEl = document.getElementById('final-score-val');
+    const btnSave = document.getElementById('btn-save');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnBack = document.getElementById('btn-back');
+    const inputName = document.getElementById('player-name');
+    const msgSuccess = document.getElementById('msg-success');
+    const saveArea = document.getElementById('save-score-area');
+
+    const bobinaImg = new Image();
+    bobinaImg.src = PLAYER_IMG_URL;
+    bobinaImg.onload = () => {
+        loadingMsg.classList.add('hidden');
+        uiStartBtn.classList.remove('hidden');
+        resizeCanvas();
+    };
+
+    // === VARIÁVEIS DE JOGO ===
+    let gameRunning = false;
+    let frames = 0;
+    let score = 0;
+    let gameSpeed = 6;
+    
+    // Configuração de Dificuldade
+    const START_SPEED = 6;
+    const MAX_SPEED = 22; 
+    
+    let groundHeight = 100;
+    let groundY = 0;
+    
+    let nextSpawnDistance = 0;
+    let nextShortcutFrame = 0; // Timer para o atalho
+
+    // CMYK CORES
+    const CMYK_COLORS = ['#00FFFF', '#FF00FF', '#FFFF00', '#111111']; // Ciano, Magenta, Amarelo, Preto
+    let currentInkIndex = 0; // Para controlar o ciclo
+
+    const player = {
+        x: 100,
+        y: 0,
+        width: 50,
+        height: 60,
+        legHeight: 20,
+        vy: 0,
+        gravity: 0.7, 
+        jumpForce: -17, // 1º PULO FORTE
+        doubleJumpForce: -12, // 2º PULO FRACO
+        jumpCount: 0, 
+        grounded: true,
+        runFrame: 0,
+        bobOffset: 0
+    };
+
+    let obstacles = [];
+    let clouds = [];
+    let platforms = []; 
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        groundY = canvas.height - groundHeight;
+        if(!gameRunning) {
+            player.y = groundY - player.height - player.legHeight;
+            draw();
+        }
+    }
+
+    function spawnJumpSmoke(x, y, big = false) {
+        const count = big ? 10 : 5;
+        for(let i=0; i<count; i++) {
+            particles.push({
+                x: x + (Math.random() * 20 - 10),
+                y: y,
+                vx: (Math.random() - 0.5) * 4,
+                vy: (Math.random() * 2) + 1,
+                size: Math.random() * 6 + 4,
+                life: 1.0,
+                color: `rgba(255,255,255,`
+            });
+        }
+    }
+
+    function jump() {
+        if (player.grounded) {
+            player.vy = player.jumpForce;
+            player.grounded = false;
+            player.jumpCount = 1;
+            spawnJumpSmoke(player.x + player.width/2, player.y + player.height + player.legHeight);
+        } else if (player.jumpCount === 1) {
+            player.vy = player.doubleJumpForce; 
+            player.jumpCount = 2; 
+            spawnJumpSmoke(player.x + player.width/2, player.y + player.height + player.legHeight, true);
+        }
+    }
+
+    // === GERAÇÃO ===
+    function spawnObstacle() {
+        const type = Math.random() < 0.35 ? 'INK' : 'TUBETE';
+        let width, height, yPos, color = null;
+
+        if (type === 'INK') {
+            width = 75;
+            height = 25; 
+            yPos = groundY - height + 10;
+            
+            // Atribui a cor da ordem CMYK
+            color = CMYK_COLORS[currentInkIndex];
+            // Avança para a próxima cor (0->1->2->3->0...)
+            currentInkIndex = (currentInkIndex + 1) % CMYK_COLORS.length;
+
+        } else {
+            width = 50;
+            height = Math.floor(Math.random() * 80) + 50; 
+            yPos = groundY - height;
+        }
+
+        obstacles.push({
+            type: type,
+            x: canvas.width,
+            y: yPos,
+            width: width,
+            height: height,
+            color: color, // Salva a cor específica desse obstáculo
+            passed: false
+        });
+        
+        const minSafe = 300 + (gameSpeed * 5);
+        const randomness = Math.random() * 500; 
+        nextSpawnDistance = minSafe + randomness;
+    }
+
+    function spawnSkyShortcut() {
+        const platWidth = 70;
+        const skyHeight = groundY - 200; 
+        platforms.push({ x: canvas.width, y: groundY - 70, width: platWidth, height: 20 });
+        platforms.push({ x: canvas.width + 140, y: groundY - 140, width: platWidth, height: 20 });
+        const longPlatWidth = gameSpeed * 150; 
+        platforms.push({ x: canvas.width + 280, y: skyHeight, width: longPlatWidth, height: 20 });
+    }
+
+    function spawnCloud() {
+        clouds.push({
+            x: canvas.width,
+            y: Math.random() * (canvas.height / 2),
+            width: Math.random() * 60 + 40,
+            speed: Math.random() * 1 + 0.5
+        });
+    }
+
+    function update() {
+        gameSpeed = START_SPEED + (score * 0.18);
+        if(gameSpeed > MAX_SPEED) gameSpeed = MAX_SPEED;
+
+        // Física
+        player.vy += player.gravity;
+        player.y += player.vy;
+
+        // Colisões (Plataforma/Chão)
+        let onPlatform = false;
+        if (player.vy >= 0) { 
+            for (let p of platforms) {
+                const feetY = player.y + player.height + player.legHeight;
+                if (feetY >= p.y && feetY <= p.y + 25 && 
+                    player.x + player.width > p.x && player.x < p.x + p.width) {
+                    player.y = p.y - player.height - player.legHeight;
+                    player.vy = 0;
+                    player.grounded = true;
+                    player.jumpCount = 0; 
+                    onPlatform = true;
+                    break;
+                }
+            }
+        }
+
+        if (!onPlatform) {
+            if (player.y + player.height + player.legHeight >= groundY) {
+                player.y = groundY - player.height - player.legHeight;
+                player.vy = 0;
+                player.grounded = true;
+                player.jumpCount = 0; 
+            } else {
+                player.grounded = false;
+            }
+        }
+
+        // Animação
+        player.runFrame += 0.25 + (gameSpeed * 0.03);
+        if(player.grounded) {
+            player.bobOffset = Math.sin(player.runFrame * 2) * 4; 
+        } else {
+            player.bobOffset = 0;
+        }
+
+        // Objetos
+        for(let i = platforms.length - 1; i >= 0; i--) {
+            platforms[i].x -= gameSpeed;
+            if(platforms[i].x + platforms[i].width < 0) platforms.splice(i, 1);
+        }
+
+        for(let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x -= gameSpeed * 0.5;
+            p.y += p.vy * 0.2;
+            p.size *= 0.9;
+            p.life -= 0.05;
+            if(p.life <= 0) particles.splice(i, 1);
+        }
+
+        // === SPAWN ATALHO DINÂMICO (4 a 8s) ===
+        if (frames >= nextShortcutFrame) {
+            spawnSkyShortcut();
+            obstacles.push({x: canvas.width + 400, y: 0, width: 0, height: 0, passed: true}); 
+            
+            // Calcula próximo spawn: entre 4s (240f) e 8s (480f) a partir de agora
+            const randomDelay = Math.floor(Math.random() * (480 - 240 + 1)) + 240;
+            nextShortcutFrame = frames + randomDelay;
+        }
+
+        // Spawn Obstáculos
+        const lastObs = obstacles[obstacles.length - 1];
+        if (!lastObs || (canvas.width - lastObs.x > nextSpawnDistance)) {
+            const incomingPlatform = platforms.some(p => p.x > canvas.width - 200 && p.x < canvas.width + 100);
+            if (!incomingPlatform) {
+                spawnObstacle();
+            }
+        }
+
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            let obs = obstacles[i];
+            obs.x -= gameSpeed;
+
+            const hitX = player.x + 10;
+            const hitY = player.y + player.bobOffset + 5; 
+            const hitW = player.width - 20;
+            const hitH = player.height + player.legHeight - 10;
+
+            if (hitX < obs.x + obs.width && hitX + hitW > obs.x &&
+                hitY < obs.y + obs.height && hitY + hitH > obs.y) {
+                gameOver();
+            }
+
+            if (!obs.passed && obs.x + obs.width < player.x) {
+                score++;
+                uiScore.innerText = score;
+                obs.passed = true;
+            }
+
+            if (obs.x + obs.width < 0) obstacles.splice(i, 1);
+        }
+
+        if(Math.random() < 0.02) spawnCloud();
+        for(let i=clouds.length-1; i>=0; i--) {
+            clouds[i].x -= clouds[i].speed;
+            if(clouds[i].x + clouds[i].width < 0) clouds.splice(i,1);
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        clouds.forEach(c => {
+            ctx.beginPath(); ctx.arc(c.x, c.y, c.width/2, 0, Math.PI*2);
+            ctx.arc(c.x + c.width*0.5, c.y-10, c.width/3, 0, Math.PI*2); ctx.fill();
+        });
+
+        ctx.fillStyle = "#5D4037"; ctx.strokeStyle = "#3E2723"; ctx.lineWidth = 3;
+        platforms.forEach(p => {
+            ctx.fillRect(p.x, p.y, p.width, p.height); ctx.strokeRect(p.x, p.y, p.width, p.height);
+            ctx.fillStyle = "#AA8800"; ctx.beginPath(); ctx.arc(p.x+5, p.y+5, 3, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(p.x+p.width-5, p.y+5, 3, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = "#5D4037"; 
+        });
+
+        ctx.fillStyle = "#228B22"; ctx.fillRect(0, groundY, canvas.width, 20);
+        ctx.fillStyle = "#D2691E"; ctx.fillRect(0, groundY + 20, canvas.width, canvas.height - groundY - 20);
+        ctx.fillStyle = "#8B4500";
+        let offset = (frames * gameSpeed) % 200;
+        for(let i=0; i<canvas.width + 200; i+=200) {
+            ctx.fillRect(i - offset, groundY + 30, 20, 10);
+            ctx.fillRect((i - offset) + 80, groundY + 60, 15, 8);
+        }
+
+        obstacles.forEach(obs => {
+            if (obs.type === 'INK') {
+                // TINTA CMYK
+                ctx.fillStyle = obs.color || "#000"; // Usa a cor salva ou preto fallback
+                ctx.beginPath();
+                ctx.ellipse(obs.x + obs.width/2, obs.y + obs.height - 2, obs.width/2, obs.height/1.5, 0, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(obs.x + 15, obs.y + obs.height - 2, 15, 8, 0, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(obs.x + obs.width - 15, obs.y + obs.height - 5, 12, 10, 0, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(obs.x - 5, obs.y + obs.height, 3, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(obs.x + obs.width + 5, obs.y + obs.height - 5, 4, 0, Math.PI*2); ctx.fill();
+
+                ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+                ctx.beginPath(); ctx.ellipse(obs.x + obs.width/2 - 5, obs.y + obs.height - 8, obs.width/3, 4, 0, 0, Math.PI*2); ctx.fill();
+            } else {
+                const grad = ctx.createLinearGradient(obs.x, 0, obs.x + obs.width, 0);
+                grad.addColorStop(0, "#5D4037"); grad.addColorStop(0.5, "#A1887F"); grad.addColorStop(1, "#5D4037");
+                ctx.fillStyle = grad; ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+                ctx.fillStyle = "#3E2723"; ctx.fillRect(obs.x - 2, obs.y, obs.width + 4, 15); 
+                ctx.fillStyle = "rgba(255,255,255,0.1)";
+                ctx.beginPath(); ctx.moveTo(obs.x, obs.y + 20); ctx.lineTo(obs.x + obs.width, obs.y + obs.height - 10);
+                ctx.lineTo(obs.x + obs.width, obs.y + obs.height); ctx.lineTo(obs.x, obs.y + 30); ctx.fill();
+            }
+        });
+
+        particles.forEach(p => {
+            ctx.fillStyle = `${p.color}${p.life})`; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+        });
+
+        drawPlayer();
+    }
+
+    function drawPlayer() {
+        ctx.save();
+        let bobY = player.bobOffset;
+        ctx.translate(player.x, player.y + bobY);
+
+        const cx = player.width / 2;
+        const bodyBottom = player.height;
+        const stride = 20; const lift = 12;   
+        
+        const legSpeed = player.runFrame; 
+        const lLegX = cx + Math.sin(legSpeed) * stride;
+        const lLegY = bodyBottom + player.legHeight - Math.abs(Math.sin(legSpeed)) * lift;
+        const rLegX = cx + Math.sin(legSpeed + Math.PI) * stride;
+        const rLegY = bodyBottom + player.legHeight - Math.abs(Math.sin(legSpeed + Math.PI)) * lift;
+
+        ctx.strokeStyle = "#000"; ctx.lineWidth = 5; ctx.lineCap = "round";
+
+        // Perna Trás
+        ctx.beginPath(); ctx.moveTo(cx - 5, bodyBottom - 5); ctx.lineTo(lLegX, lLegY); ctx.stroke();
+        ctx.fillStyle = "#0055FF"; ctx.beginPath(); ctx.ellipse(lLegX+2, lLegY, 7, 4, 0, 0, Math.PI*2); ctx.fill();
+
+        // Perna Frente
+        ctx.beginPath(); ctx.moveTo(cx + 5, bodyBottom - 5); ctx.lineTo(rLegX, rLegY); ctx.stroke();
+        ctx.fillStyle = "#0055FF"; ctx.beginPath(); ctx.ellipse(rLegX+2, rLegY, 7, 4, 0, 0, Math.PI*2); ctx.fill();
+
+        // Braços
+        let lArmAngle, rArmAngle;
+        let shoulderY = player.height * 0.4;
+        let armLen = 25;
+
+        if (player.grounded) {
+            lArmAngle = Math.sin(legSpeed + Math.PI) * 1.5; 
+            rArmAngle = Math.sin(legSpeed) * 1.5;
+        } else {
+            lArmAngle = -2.5 + Math.sin(frames * 0.5) * 0.2; 
+            rArmAngle = -2.8 + Math.cos(frames * 0.5) * 0.2; 
+        }
+
+        ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(cx - 10, shoulderY);
+        let lHandX = (cx - 10) + Math.cos(lArmAngle + 1.5) * armLen; 
+        let lHandY = shoulderY + Math.sin(lArmAngle + 1.5) * armLen;
+        ctx.lineTo(lHandX, lHandY); ctx.stroke();
+        ctx.fillStyle = "#FFD700"; ctx.beginPath(); ctx.arc(lHandX, lHandY, 5, 0, Math.PI*2); ctx.fill();
+
+        if(bobinaImg.complete) {
+            ctx.drawImage(bobinaImg, 0, 0, player.width, player.height);
+        } else {
+            ctx.fillStyle = "gold"; ctx.fillRect(0, 0, player.width, player.height);
+        }
+
+        ctx.beginPath(); ctx.moveTo(cx + 10, shoulderY);
+        let rHandX = (cx + 10) + Math.cos(rArmAngle + 1.5) * armLen;
+        let rHandY = shoulderY + Math.sin(rArmAngle + 1.5) * armLen;
+        ctx.lineTo(rHandX, rHandY); ctx.stroke();
+        ctx.fillStyle = "#FFD700"; ctx.beginPath(); ctx.arc(rHandX, rHandY, 5, 0, Math.PI*2); ctx.fill();
+
+        ctx.restore();
+    }
+
+    function loop(timestamp) {
+        if (!gameRunning) return;
+        requestAnimationFrame(loop);
+        let deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+        if (deltaTime > 100) deltaTime = 100;
+        accumulatedTime += deltaTime;
+        while (accumulatedTime >= TIME_STEP) {
+            update();
+            frames++;
+            accumulatedTime -= TIME_STEP;
+        }
+        draw();
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'ArrowUp') {
+            if(gameRunning) jump();
+            else if(modalGameOver.style.display === 'none') startGame();
+        }
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault(); 
+        if(gameRunning) jump();
+        else if(modalGameOver.style.display === 'none') startGame();
+    }, {passive: false});
+    
+    canvas.addEventListener('mousedown', (e) => {
+        if(gameRunning) jump();
+    });
+
+    function startGame() {
+        if (gameRunning) return;
+        score = 0; frames = 0; obstacles = []; clouds = []; platforms = []; particles = [];
+        player.y = groundY - player.height; player.vy = 0;
+        gameSpeed = START_SPEED;
+        player.jumpCount = 0;
+        nextSpawnDistance = 300; 
+        currentInkIndex = 0; // Reset CMYK cycle
+        
+        // Define o primeiro tempo do atalho (entre 4 e 8s)
+        nextShortcutFrame = Math.floor(Math.random() * (680 - 240 + 1)) + 440;
+
+        for(let i=0; i<5; i++) spawnCloud();
+        gameRunning = true;
+        uiStartBtn.classList.add('hidden'); uiScore.classList.remove('hidden'); uiScore.innerText = "0";
+        
+        lastTime = performance.now(); accumulatedTime = 0;
+        requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+        gameRunning = false;
+        uiScore.classList.add('hidden');
+        finalScoreEl.innerText = score;
+        modalGameOver.style.display = 'flex';
+        saveArea.style.display = 'block';
+        msgSuccess.style.display = 'none';
+        btnSave.disabled = false;
+        btnSave.innerText = "Salvar Recorde";
+        if(localStorage.getItem('psr_player_name_world')) {
+            inputName.value = localStorage.getItem('psr_player_name_world');
+        }
+    }
+
+    uiStartBtn.addEventListener('click', (e) => { e.stopPropagation(); startGame(); });
+    btnRestart.addEventListener('click', () => { modalGameOver.style.display = 'none'; startGame(); });
+    btnBack.addEventListener('click', () => { window.location.href = PORTAL_URL; });
+
+    btnSave.addEventListener('click', async () => {
+        const name = inputName.value.trim();
+        if(!name || name.length < 2) { alert("Digite um nome válido."); return; }
+        localStorage.setItem('psr_player_name_world', name);
+        const payload = { nome: name, pontos: score, data: new Date().toLocaleString('pt-BR') };
+        btnSave.disabled = true; btnSave.innerText = "Enviando...";
+        try {
+            await fetch(FIREBASE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            saveArea.style.display = 'none'; msgSuccess.style.display = 'block';
+        } catch (error) {
+            console.error(error); alert("Erro de conexão."); btnSave.disabled = false; btnSave.innerText = "Tentar Novamente";
+        }
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); 
+  </script>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FlapBobina - Mobile Fix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+        --azul-marinho: #003366;
+        --azul-ceu-claro: #a0d9ff;
+        --dourado: #DAA520;
+        --verde-sucesso: #28a745;
+        --branco: #FFFFFF;
+        --papelao-escuro: #5d4037;
+        --papelao-claro: #d7ccc8;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--azul-ceu-claro);
+      touch-action: none;
+      user-select: none;
+    }
+
+    canvas { display: block; width: 100%; height: 100%; }
+
+    /* UI LAYER */
+    #ui-layer {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+    }
+
+    .hud-score {
+      position: absolute; top: 10%;
+      font-size: 4rem; font-weight: 700;
+      color: var(--branco);
+      text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
+    .btn-start {
+      pointer-events: auto;
+      background-color: var(--dourado);
+      color: var(--azul-marinho);
+      font-size: 1.5rem; font-weight: 700;
+      padding: 15px 40px; border: none; border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 10px;
+      animation: pulse 2s infinite;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .btn-start:active { transform: scale(0.96); }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* === MODAL CORRIGIDO PARA MOBILE === */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 51, 102, 0.9);
+      backdrop-filter: blur(5px); z-index: 100;
+      display: none; 
+      justify-content: center; 
+      align-items: center; /* Centraliza verticalmente */
+      pointer-events: auto; 
+      padding: 20px; /* Margem de segurança nas bordas */
+      box-sizing: border-box;
+    }
+
+    .modal-content {
+      background: var(--branco); 
+      width: 100%; 
+      max-width: 360px; /* Largura ideal para celular */
+      border-radius: 20px; 
+      padding: 25px 20px; 
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      border-top: 6px solid var(--dourado);
+      animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      
+      /* FIX CRÍTICO MOBILE */
+      max-height: 90vh; /* Nunca ultrapassa 90% da altura da tela */
+      overflow-y: auto; /* Cria rolagem se o conteúdo for muito grande */
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes slideIn {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title { color: var(--azul-marinho); font-size: 1.4rem; margin: 0 0 5px 0; font-weight: 800; }
+    
+    /* Reduzi um pouco a fonte da pontuação para economizar espaço vertical */
+    .final-score { font-size: 3.5rem; color: var(--dourado); font-weight: 800; line-height: 1; margin-bottom: 20px; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+
+    .input-group { text-align: left; margin-bottom: 15px; }
+    .input-group label { display: block; color: #555; font-size: 0.85rem; margin-bottom: 5px; font-weight: 700; }
+    .input-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; box-sizing: border-box; transition: 0.3s; }
+    .input-group input:focus { border-color: var(--dourado); }
+
+    .btn-action { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 10px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    
+    .btn-primary { background: var(--azul-marinho); color: white; }
+    .btn-primary:hover { background: #002244; transform: translateY(-2px); }
+    
+    .btn-secondary { background: #f0f0f0; color: #666; }
+    .btn-secondary:hover { background: #e0e0e0; }
+
+    /* Botão Voltar */
+    .btn-tertiary {
+        background: transparent;
+        color: #999;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        font-weight: 500;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="ui-layer">
+    <div id="score-display" class="hud-score hidden">0</div>
+    <button id="start-btn" class="btn-start hidden"><i class="fas fa-play"></i> JOGAR</button>
+    <div id="loading-msg" style="font-weight: bold; color: var(--azul-marinho);">Carregando Bobina...</div>
+  </div>
+
+  <div id="modal-gameover" class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="modal-title">Fim de Jogo!</h2>
+      <p style="color: #777; margin: 0 0 10px 0; font-size: 0.9rem;">Sua pontuação final:</p>
+      <div id="final-score-val" class="final-score">0</div>
+
+      <div id="save-score-area">
+          <div class="input-group">
+              <label>Seu Nome (Rank):</label>
+              <input type="text" id="player-name" placeholder="Ex: Ana (RH)" maxlength="20">
+          </div>
+          <button id="btn-save" class="btn-action btn-primary">Salvar Pontuação</button>
+      </div>
+      
+      <div id="msg-success" style="display:none; color: var(--verde-sucesso); margin-bottom: 20px; font-weight: 700; font-size: 1.1rem;">
+          <i class="fas fa-check-circle"></i> Salvo com sucesso!
+      </div>
+
+      <button id="btn-restart" class="btn-action btn-secondary"><i class="fas fa-redo"></i> Tentar Novamente</button>
+      
+      <button id="btn-back" class="btn-tertiary">Voltar ao Portal</button>
+    </div>
+  </div>
+
+  <script>
+    const FIREBASE_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/games/FlapBobina/scores.json";
+    const CHARACTER_IMG_URL = "https://i.postimg.cc/k5gYjdCG/Bobinasv2-(1).png";
+    const PORTAL_URL = "https://psrindustria.github.io/PortalPSR/AreaInterna.html";
+    
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const TIME_STEP = 1000 / 60; 
+    let accumulatedTime = 0;
+    let lastTime = 0;
+
+    let frames = 0; 
+    let score = 0;
+    let gameRunning = false;
+    
+    const START_SPEED = 3.0; 
+    const MAX_SPEED = 9.0;  
+    const IMPOSSIBLE_AT_SCORE = 125; 
+    const SPEED_INCREMENT = (MAX_SPEED - START_SPEED) / IMPOSSIBLE_AT_SCORE;
+    
+    let currentSpeed = START_SPEED;
+
+    const uiStartBtn = document.getElementById('start-btn');
+    const loadingMsg = document.getElementById('loading-msg');
+    const uiScore = document.getElementById('score-display');
+    const modalGameOver = document.getElementById('modal-gameover');
+    const finalScoreEl = document.getElementById('final-score-val');
+    const btnSave = document.getElementById('btn-save');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnBack = document.getElementById('btn-back');
+    const inputName = document.getElementById('player-name');
+    const msgSuccess = document.getElementById('msg-success');
+    const saveArea = document.getElementById('save-score-area');
+
+    const birdImage = new Image();
+    birdImage.src = CHARACTER_IMG_URL;
+    birdImage.onload = function() {
+        loadingMsg.classList.add('hidden');
+        uiStartBtn.classList.remove('hidden');
+        resizeCanvas();
+    };
+
+    const particles = [];
+
+    class Particle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 10 + 5; 
+            this.speedX = -Math.random() * 2 - 2; 
+            this.speedY = Math.random() * 2 + 1; 
+            this.life = 1.0; 
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.size *= 0.85; 
+            this.life -= 0.05; 
+        }
+        draw() {
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.life})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function spawnSmoke(x, y) {
+        for (let i = 0; i < 4; i++) {
+            particles.push(new Particle(x, y));
+        }
+    }
+
+    const bird = {
+        x: 50, y: 150, width: 40, height: 50,
+        velocity: 0,
+        gravity: 0.23, 
+        lift: -5.2,    
+        rotation: 0,
+
+        draw() {
+            ctx.save();
+            ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+            ctx.rotate(this.rotation);
+            ctx.drawImage(birdImage, -this.width / 2, -this.height / 2, this.width, this.height);
+            ctx.restore();
+        },
+
+        update() {
+            this.velocity += this.gravity;
+            this.y += this.velocity;
+
+            if (this.velocity < 0) {
+                this.rotation = -0.25; 
+            } else {
+                this.rotation += 0.04; 
+                if(this.rotation > 0.4) this.rotation = 0.4;
+            }
+
+            if (this.y + this.height >= canvas.height - fg.h) {
+                this.y = canvas.height - fg.h - this.height;
+                gameOver();
+            }
+            if(this.y < 0) {
+                this.y = 0;
+                this.velocity = 0;
+            }
+        },
+
+        flap() {
+            this.velocity = this.lift;
+            spawnSmoke(this.x, this.y + this.height - 10);
+        },
+        
+        reset() {
+            this.x = canvas.width * 0.2;
+            if(this.x > 150) this.x = 150; 
+            this.y = canvas.height / 2;
+            this.velocity = 0;
+            this.rotation = 0;
+        }
+    };
+
+    const bg = {
+        draw() {
+            ctx.fillStyle = "#a0d9ff"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+            ctx.beginPath(); ctx.arc(100, 100, 30, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(canvas.width-80, 140, 40, 0, Math.PI*2); ctx.fill();
+        }
+    };
+
+    const fg = {
+        h: 80,
+        draw() {
+            ctx.fillStyle = "#003366"; 
+            ctx.fillRect(0, canvas.height - this.h, canvas.width, this.h);
+            ctx.fillStyle = "#DAA520";
+            ctx.fillRect(0, canvas.height - this.h, canvas.width, 6);
+        }
+    };
+
+    const pipes = {
+        position: [],
+        w: 70, 
+        gap: 170, 
+        spawnTimer: 0, 
+
+        drawTubete(x, y, width, height, isTop) {
+            ctx.save();
+            let gradient = ctx.createLinearGradient(x, 0, x + width, 0);
+            gradient.addColorStop(0, "#5d4037");
+            gradient.addColorStop(0.2, "#8d6e63");
+            gradient.addColorStop(0.5, "#d7ccc8");
+            gradient.addColorStop(0.8, "#8d6e63");
+            gradient.addColorStop(1, "#5d4037");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x, y, width, height);
+            
+            ctx.fillStyle = "#3e2723";
+            let rimHeight = 15;
+            if(isTop) ctx.fillRect(x - 2, y + height - rimHeight, width + 4, rimHeight);
+            else ctx.fillRect(x - 2, y, width + 4, rimHeight);
+            ctx.restore();
+        },
+
+        draw() {
+            for(let i = 0; i < this.position.length; i++){
+                let p = this.position[i];
+                let topY = p.y;
+                let bottomY = p.y + this.gap;
+                this.drawTubete(p.x, 0, this.w, topY, true);
+                this.drawTubete(p.x, bottomY, this.w, canvas.height - bottomY - fg.h, false);
+            }
+        },
+
+        spawnPipe(xOverride) {
+            const padding = 60; 
+            const maxYGlobal = canvas.height - fg.h - this.gap - padding; 
+            const minYGlobal = padding; 
+
+            let y;
+            if (this.position.length === 0) {
+                y = Math.floor(maxYGlobal / 2); 
+            } else {
+                const lastY = this.position[this.position.length - 1].y;
+                const maxStep = 200; 
+                let minSafe = Math.max(minYGlobal, lastY - maxStep);
+                let maxSafe = Math.min(maxYGlobal, lastY + maxStep);
+                y = Math.floor(Math.random() * (maxSafe - minSafe + 1) + minSafe);
+            }
+
+            const x = xOverride !== undefined ? xOverride : canvas.width;
+            this.position.push({ x: x, y: y, passed: false });
+        },
+
+        update() {
+            currentSpeed = START_SPEED + (score * SPEED_INCREMENT);
+            if(currentSpeed > MAX_SPEED) currentSpeed = MAX_SPEED;
+
+            const maxFramesGap = 110; 
+            const minFramesGap = 70;  
+            let targetFrames = maxFramesGap - ((maxFramesGap - minFramesGap) * (score / IMPOSSIBLE_AT_SCORE));
+            if(targetFrames < minFramesGap) targetFrames = minFramesGap;
+
+            this.spawnTimer++;
+            if(this.spawnTimer >= targetFrames) {
+                this.spawnTimer = 0;
+                this.spawnPipe();
+            }
+
+            for(let i = 0; i < this.position.length; i++){
+                let p = this.position[i];
+                p.x -= currentSpeed; 
+
+                const tolerance = 10; 
+                if (bird.x + bird.width - tolerance > p.x && bird.x + tolerance < p.x + this.w) {
+                    if (bird.y + tolerance < p.y || bird.y + bird.height - tolerance > p.y + this.gap) {
+                        gameOver();
+                    }
+                }
+
+                if(p.x + this.w < bird.x && !p.passed) {
+                    score++;
+                    uiScore.innerText = score;
+                    p.passed = true;
+                }
+
+                if(p.x + this.w <= 0) {
+                    this.position.shift();
+                    i--;
+                }
+            }
+        },
+        reset() { 
+            this.position = []; 
+            this.spawnTimer = 0;
+            this.spawnPipe(canvas.width + 100); 
+        }
+    };
+
+    function loop(timestamp) {
+        if (!gameRunning) return;
+        requestAnimationFrame(loop);
+        let deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+        if (deltaTime > 100) deltaTime = 100;
+        accumulatedTime += deltaTime;
+        while (accumulatedTime >= TIME_STEP) {
+            updatePhysics();
+            accumulatedTime -= TIME_STEP;
+        }
+        draw();
+    }
+
+    function updatePhysics() {
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            if (particles[i].life <= 0) {
+                particles.splice(i, 1);
+                i--;
+            }
+        }
+        pipes.update();
+        bird.update();
+        frames++; 
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        bg.draw();
+        pipes.draw();
+        fg.draw();
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].draw();
+        }
+        bird.draw();
+    }
+
+    function drawReadyState() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        bg.draw();
+        fg.draw();
+        if(birdImage.complete) bird.draw();
+        
+        ctx.fillStyle = "#003366";
+        ctx.font = "600 20px Poppins";
+        ctx.textAlign = "center";
+        ctx.shadowColor = "white"; ctx.shadowBlur = 5;
+        ctx.fillText("Toque ou Espaço para voar", canvas.width/2, canvas.height/2 + 80);
+        ctx.shadowBlur = 0;
+    }
+
+    function startGame() {
+        if (gameRunning) return;
+        uiStartBtn.classList.add('hidden');
+        uiScore.classList.remove('hidden');
+        uiScore.innerText = "0";
+        bird.reset();
+        pipes.reset();
+        particles.length = 0;
+        score = 0;
+        frames = 0;
+        currentSpeed = START_SPEED; 
+        gameRunning = true;
+        lastTime = performance.now();
+        accumulatedTime = 0;
+        requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+        gameRunning = false;
+        uiScore.classList.add('hidden');
+        finalScoreEl.innerText = score;
+        modalGameOver.style.display = 'flex';
+        msgSuccess.style.display = 'none';
+        saveArea.style.display = 'block';
+        btnSave.disabled = false;
+        btnSave.innerText = "Salvar Pontuação";
+        
+        if(localStorage.getItem('psr_player_name_flap')) {
+            inputName.value = localStorage.getItem('psr_player_name_flap');
+        }
+    }
+
+    function handleInput(e) {
+        if (e.type !== 'mousedown') e.preventDefault();
+        if (gameRunning) {
+            bird.flap();
+        } else if (modalGameOver.style.display === 'none' && !uiStartBtn.classList.contains('hidden') && e.target !== uiStartBtn) {
+            startGame();
+        }
+    }
+
+    window.addEventListener('mousedown', (e) => {
+        if(modalGameOver.style.display === 'flex') return;
+        handleInput(e);
+    });
+    
+    window.addEventListener('touchstart', (e) => {
+        if(modalGameOver.style.display === 'flex') return;
+        handleInput(e);
+    }, {passive: false});
+    
+    window.addEventListener('keydown', (e) => {
+        if(e.code === 'Space') {
+            if(gameRunning) bird.flap();
+            else if(modalGameOver.style.display === 'none') startGame();
+        }
+    });
+
+    uiStartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        startGame();
+    });
+
+    btnRestart.addEventListener('click', () => {
+        modalGameOver.style.display = 'none';
+        bird.reset();
+        pipes.reset();
+        drawReadyState();
+        uiStartBtn.classList.remove('hidden');
+    });
+
+    btnBack.addEventListener('click', () => {
+        window.location.href = PORTAL_URL;
+    });
+
+    btnSave.addEventListener('click', async () => {
+        const name = inputName.value.trim();
+        if(!name || name.length < 2) { alert("Digite um nome válido."); return; }
+        localStorage.setItem('psr_player_name_flap', name);
+
+        const payload = { nome: name, pontos: score, data: new Date().toLocaleString('pt-BR') };
+        btnSave.disabled = true; btnSave.innerText = "Enviando...";
+
+        try {
+            await fetch(FIREBASE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            saveArea.style.display = 'none';
+            msgSuccess.style.display = 'block';
+        } catch (error) {
+            console.error(error);
+            alert("Erro de conexão.");
+            btnSave.disabled = false;
+            btnSave.innerText = "Tentar Novamente";
+        }
+    });
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        if(!gameRunning) {
+            bird.reset();
+            drawReadyState();
+        }
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+  </script>
+</body>
+</html>
