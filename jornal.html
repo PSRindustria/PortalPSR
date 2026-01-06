@@ -28,7 +28,9 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ADICIONADO: Configuração do Menu Fixo */
+    /* ==================================================
+       CONFIGURAÇÃO DO MENU FIXO (ANTI-QUEBRA)
+       ================================================== */
     #menu-placeholder { 
       position: fixed; 
       top: 0; 
@@ -37,15 +39,38 @@
       z-index: 1001;
     }
 
+    /* Força fonte Segoe UI no header para ocupar menos espaço lateral */
+    #menu-placeholder header {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    }
+
+    /* IMPEDE QUEBRA DE LINHA (Crucial para "Reflexão do Dia") */
+    #menu-placeholder nav ul li a {
+      white-space: nowrap !important;
+    }
+
+    /* Ajuste fino para telas médias */
+    @media (min-width: 769px) and (max-width: 1100px) {
+      #menu-placeholder nav ul li { margin-left: 10px !important; }
+      #menu-placeholder nav ul li a { font-size: 0.9rem; padding: 8px 5px !important; }
+    }
+
     body {
         font-family: 'Poppins', sans-serif;
         background-color: var(--cinza-claro-bg);
         color: var(--cinza-escuro);
         line-height: 1.6;
-        /* ALTERADO: Aumentado para compensar o menu fixo (70px + 20px original) */
+        /* Padding aumentado para compensar o menu fixo */
         padding-top: 90px;
+        margin: 0;
     }
 
+    /* Footer adjustment */
+    #footer-placeholder { margin-top: 0px; }
+
+    /* ==================================================
+       ESTILOS DO JORNAL
+       ================================================== */
     .jornal-main { max-width: 1200px; margin: 0 auto; padding: 20px; }
     .jornal-section-title { font-size: 2em; font-weight: 700; color: var(--azul-marinho); margin-bottom: 20px; margin-top: 0; text-align: center; }
     
@@ -61,24 +86,10 @@
     .jornal-subtitle { font-size: 1.5em; font-weight: 600; color: var(--azul-marinho); margin: 30px 0 20px; text-align: center; }
     .section-description { text-align: center; font-size: 0.95em; color: #666; max-width: 800px; margin: 0 auto 40px; font-style: italic; }
 
-    /* DESTAQUES - ATUALIZADO PARA MOSTRAR IMAGENS */
+    /* DESTAQUES */
     .destaque-container { border-radius: 15px; padding: 60px 40px; margin-bottom: 40px; text-align: center; box-shadow: var(--sombra-card-jornal); color: var(--azul-marinho); border: 1px solid rgba(0,0,0,0.05); transition: all 0.5s ease; position: relative; overflow: hidden; }
     
     .tema-mes-bg { background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('https://i.postimg.cc/pWWZhcwT/wallpaper-janery-branco.jpg?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
-    
-    /* MODIFICAÇÃO: Reduzida a opacidade do branco para mostrar a imagem */
-    .bem-estar-bg { 
-        background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.65)), url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop'); 
-        background-size: cover; 
-        background-position: center; 
-    }
-    
-    /* MODIFICAÇÃO: Reduzida a opacidade do branco para mostrar a imagem */
-    .saude-fisica-bg { 
-        background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.65)), url('https://images.unsplash.com/photo-1574680096141-1fddc9bbb5be?q=80&w=2070&auto=format&fit=crop'); 
-        background-size: cover; 
-        background-position: center; 
-    }
     
     .destaque-container h2 { font-size: 2.2em; margin-bottom: 10px; font-weight: 700; color: var(--azul-marinho); }
     .destaque-container p { font-size: 1.1em; margin-bottom: 20px; color: #444; }
@@ -108,23 +119,16 @@
     .jornal-card-content h3 { font-size: 1.4em; color: var(--azul-marinho); margin-bottom: 10px; font-weight: 600; }
     .jornal-card-content p { color: #555; margin-bottom: 15px; line-height: 1.6; }
 
-    /* ESTILOS DE RECEITAS - ATUALIZADO */
+    /* ESTILOS DE RECEITAS */
     .receita-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
     .receita-card:hover { transform: translateY(-5px); }
     
-    /* MODIFICAÇÃO: Fundo com Imagem + Filtro Verde */
     .receita-imagem { 
-        width: 100%; 
-        height: 180px; 
+        width: 100%; height: 180px; 
         background: linear-gradient(135deg, rgba(0, 100, 0, 0.85), rgba(34, 139, 34, 0.85)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        font-size: 3.5em; 
-        color: white; 
-        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        background-size: cover; background-position: center;
+        display: flex; align-items: center; justify-content: center; 
+        font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     
     .receita-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
@@ -138,19 +142,12 @@
     .btn-ver-receita { background-color: var(--verde-escuro); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; margin-top: auto; transition: 0.3s; width: 100%; }
     .btn-ver-receita:hover { background-color: var(--dourado); color: var(--azul-marinho); }
 
-    /* ESTILOS DE DESAFIOS (Ajuste Border Top) */
+    /* ESTILOS DE DESAFIOS */
     .desafio-saude-card { 
-        background-color: var(--branco); 
-        border-radius: 15px; 
-        padding: 25px; 
+        background-color: var(--branco); border-radius: 15px; padding: 25px; 
         box-shadow: var(--sombra-card-jornal); 
-        border-top: 5px solid var(--verde-escuro); 
-        transition: transform 0.3s; 
-        border: 1px solid #eee; 
-        border-top-width: 5px; 
-        border-top-style: solid; 
-        border-top-color: var(--verde-escuro);
-        display: flex; flex-direction: column; 
+        border: 1px solid #eee; border-top: 5px solid var(--verde-escuro); 
+        transition: transform 0.3s; display: flex; flex-direction: column; 
     }
     .desafio-saude-card:hover { transform: translateX(5px); }
     .desafio-saude-card h4 { font-size: 1.2em; color: var(--azul-marinho); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
@@ -170,11 +167,8 @@
     .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; text-align: left; }
     
     .testimonial-card { 
-        background: var(--cinza-claro-bg); 
-        padding: 20px; 
-        border-radius: 10px; 
-        border-top: 4px solid var(--dourado);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+        background: var(--cinza-claro-bg); padding: 20px; border-radius: 10px; 
+        border-top: 4px solid var(--dourado); box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
         display: flex; flex-direction: column; 
     }
     
@@ -197,14 +191,7 @@
     .comment-item strong { color: var(--azul-marinho); }
 
     /* ESTILOS HOBBY */
-    .hobby-container { 
-        background-color: var(--branco); 
-        border-radius: 15px; 
-        box-shadow: var(--sombra-card-jornal); 
-        overflow: hidden; 
-        margin-bottom: 40px; 
-        border: 1px solid #eee; 
-    }
+    .hobby-container { background-color: var(--branco); border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; margin-bottom: 40px; border: 1px solid #eee; }
     .hobby-content { display: grid; grid-template-columns: 40% 60%; min-height: 350px; }
     .hobby-foto { position: relative; height: 100%; background-color: var(--cinza-claro-bg); }
     .hobby-foto img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
@@ -340,37 +327,20 @@
     .tab-btn.active { color: var(--azul-marinho) !important; border-bottom: 3px solid var(--dourado) !important; }
 
     .quiz-container { 
-        background: #fff; 
-        padding: 20px; 
-        border-radius: 15px; 
-        box-shadow: var(--sombra-card-jornal); 
-        margin-top: 40px; 
+        background: #fff; padding: 20px; border-radius: 15px; 
+        box-shadow: var(--sombra-card-jornal); margin-top: 40px; 
         border-top: 5px solid var(--azul-marinho); 
     }
     
     .btn-toggle-quiz { 
-        width: 100%; 
-        background-color: var(--azul-marinho); 
-        color: var(--branco); 
-        border: none; 
-        padding: 15px; 
-        border-radius: 50px; 
-        font-size: 1.1em; 
-        font-weight: 600; 
-        cursor: pointer; 
-        transition: all 0.3s ease; 
-        margin-bottom: 20px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        gap: 10px; 
+        width: 100%; background-color: var(--azul-marinho); color: var(--branco); 
+        border: none; padding: 15px; border-radius: 50px; 
+        font-size: 1.1em; font-weight: 600; cursor: pointer; 
+        transition: all 0.3s ease; margin-bottom: 20px; 
+        display: flex; align-items: center; justify-content: center; gap: 10px; 
         box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); 
     }
-    .btn-toggle-quiz:hover { 
-        background-color: var(--dourado); 
-        color: var(--azul-marinho); 
-        transform: translateY(-2px); 
-    }
+    .btn-toggle-quiz:hover { background-color: var(--dourado); color: var(--azul-marinho); transform: translateY(-2px); }
     
     #quiz-content { display: none; /* Começa oculto */ animation: fadeIn 0.5s ease; }
 
@@ -391,82 +361,34 @@
     @media (max-width: 768px) {
         .jornal-section-title { font-size: 1.5em; }
         .destaque-container { padding: 30px 20px; }
-        
-        /* Ajuste Mobile Hobby */
-        .hobby-content { 
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto;
-        }
-        .hobby-foto { 
-            height: 300px;
-            width: 100%;
-        }
-        .hobby-texto { 
-            padding: 30px 20px; 
-            text-align: center;
-        }
+        .hobby-content { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+        .hobby-foto { height: 300px; width: 100%; }
+        .hobby-texto { padding: 30px 20px; text-align: center; }
         .hobby-quote-box { text-align: left; }
         .hobby-tag { margin-bottom: 10px; }
     }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-/* ==================================================
-   NOVOS ESTILOS: BANNERS "PELA METADE" (Igual Receitas)
-   ================================================== */
 
-/* Classe base para o banner de imagem */
-.banner-metade {
-    width: 100%;
-    height: 180px; /* Altura igual ao da Receita */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3.5em;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Sombra mais forte para contraste */
-    background-size: cover;
-    background-position: center;
-}
-
-/* ATUALIZADO: Bem-estar - Imagem de Yoga/Natureza + Filtro Azul */
-.banner-bem-estar {
-    /* O gradiente vem PRIMEIRO para ficar por cima da imagem */
-    background: linear-gradient(135deg, rgba(0, 51, 102, 0.80), rgba(70, 130, 180, 0.75)), 
-                url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1920&auto=format&fit=crop');
-    background-size: cover; 
-    background-position: center center;
-}
-
-/* ATUALIZADO: Saúde Física - Imagem de Corrida + Filtro Verde/Azul */
-.banner-saude-fisica {
-    /* O gradiente vem PRIMEIRO para ficar por cima da imagem */
-    background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), 
-                url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop');
-    background-size: cover; 
-    background-position: center center;
-}
-
-/* Ajuste para centralizar o texto dentro do card */
-.card-texto-centralizado {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-/* ==================================================
-       FIX: IMPEDIR QUEBRA DE LINHA NO MENU
-       ================================================== */
-    #menu a, #menu li, #menu span {
-        white-space: nowrap !important; /* Obriga o texto a ficar em uma linha só */
+    /* NOVOS ESTILOS: BANNERS "PELA METADE" */
+    .banner-metade {
+        width: 100%; height: 180px; display: flex; align-items: center; justify-content: center;
+        font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        background-size: cover; background-position: center;
     }
-
-    #menu, #menu ul {
-        flex-wrap: nowrap !important; /* Se usar flexbox, impede que os itens caiam */
-    }  
+    .banner-bem-estar {
+        background: linear-gradient(135deg, rgba(0, 51, 102, 0.80), rgba(70, 130, 180, 0.75)), 
+                    url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1920&auto=format&fit=crop');
+        background-size: cover; background-position: center center;
+    }
+    .banner-saude-fisica {
+        background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), 
+                    url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover; background-position: center center;
+    }
+    .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
   </style>
 </head>
 <body>
-    body { overflow: hidden !important; }
-</style>
   
   <div id="menu-placeholder"></div>
 
@@ -477,7 +399,6 @@
     <section id="hobbies">
         <h2 class="jornal-section-title">✨ Além do Crachá</h2>
         <div id="hobby-container" class="hobby-container"></div>
-        
         <div class="suggestion-section">
             <button id="btn-toggle-hobby-suggestion" class="btn-suggestion">
                 <i class="fas fa-user-plus"></i>&nbsp; Indique o próximo entrevistado
@@ -504,7 +425,6 @@
     <section id="receitas">
         <h2 class="jornal-section-title">🍎 Receitas Saudáveis</h2>
         <div id="receitas-container" class="cards-grid"></div>
-
         <div class="suggestion-section">
             <button id="btn-toggle-recipe" class="btn-suggestion">
                 Indique a próxima receita do mês 🥗
@@ -524,7 +444,6 @@
         <h2 class="jornal-section-title">💪 Desafios de Saúde</h2>
         <p class="section-description">🎯 Você conseguiu alcançar a meta? Vote se bateu ou não o desafio.</p>
         <div id="desafios-container" class="cards-grid"></div>
-
         <div class="testimonials-section">
             <h3>Compartilhe sua experiência para inspirar o time.</h3>
             <button id="btn-toggle-testimonial" class="btn-suggestion">Deixar depoimento</button>
@@ -541,7 +460,6 @@
     <section id="cultura">
         <h2 class="jornal-section-title">Indica aí 🎬</h2>
         <div id="cultura-container" class="cards-grid"></div>
-
         <div class="suggestion-section">
             <button id="btn-toggle-suggestion" class="btn-suggestion">
                 Indique o próximo filme do mês <i class="fas fa-bullhorn"></i>
@@ -559,10 +477,8 @@
         <h2 class="jornal-section-title">🌟 Elogie o seu Amigo</h2>
         <div class="praise-header">
             <p class="section-description">Todo início de mês as mensagens são renovadas, mas podem ser consultadas no registro abaixo. Espalhe gratidão!</p>
-            <div id="praise-archive-links" class="praise-archive-links">
-                </div>
+            <div id="praise-archive-links" class="praise-archive-links"></div>
         </div>
-
         <div class="suggestion-section">
             <button id="btn-toggle-praise" class="btn-suggestion">
                 <i class="fas fa-heart"></i>&nbsp; Enviar um Elogio
@@ -575,40 +491,30 @@
                 <button id="btn-submit-praise" class="btn-submit-suggestion">Publicar Elogio</button>
             </div>
         </div>
-
         <div id="praise-container" class="cards-grid" style="margin-top: 40px;"></div>
     </section>
 
     <section id="jogos">
         <h2 class="jornal-section-title">🎮 Jogos</h2>
-        
         <div class="hiscore-menu">
             <button class="hiscore-btn" onclick="openHiScore('BobinaWorld')"><i class="fas fa-trophy"></i> Rank BobinaWorld</button>
             <button class="hiscore-btn" onclick="openHiScore('FlapBobina')"><i class="fas fa-trophy"></i> Rank FlapBobina</button>
             <button class="hiscore-btn" onclick="openHiScore('BobinaKart')"><i class="fas fa-trophy"></i> Rank BobinaKart</button>
         </div>
-
         <div class="cards-grid">
             <a href="https://psrindustria.github.io/PortalPSR/marioworld.html" class="game-card">
                 <img src="https://i.postimg.cc/dQgvVxWL/bobworld.jpg" class="game-banner" alt="BobinaWorld">
-                <div class="game-info">
-                    <h3>BobinaWorld</h3>
-                </div>
+                <div class="game-info"><h3>BobinaWorld</h3></div>
             </a>
             <a href="https://psrindustria.github.io/PortalPSR/flappybird.html" class="game-card">
                 <img src="https://i.postimg.cc/C1nt3vHR/bobfly.jpg" class="game-banner" alt="FlapBobina">
-                <div class="game-info">
-                    <h3>FlapBobina</h3>
-                </div>
+                <div class="game-info"><h3>FlapBobina</h3></div>
             </a>
             <a href="https://psrindustria.github.io/PortalPSR/bobkart.html" class="game-card">
                 <img src="https://i.postimg.cc/prN7RDqp/bobcar.jpg" class="game-banner" alt="BobinaKart">
-                <div class="game-info">
-                    <h3>BobinaKart</h3>
-                </div>
+                <div class="game-info"><h3>BobinaKart</h3></div>
             </a>
         </div>
-
         <div class="suggestion-section">
             <button id="btn-toggle-game-suggestion" class="btn-suggestion">
                 <i class="fas fa-lightbulb"></i>&nbsp; Envie sua sugestão de melhoria
@@ -626,8 +532,7 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeHiScore()">&times;</button>
             <h3 id="modal-game-title" style="color: var(--azul-marinho); text-align: center; margin-bottom: 20px;">Ranking</h3>
-            <div id="modal-score-list" class="hiscore-list">
-                </div>
+            <div id="modal-score-list" class="hiscore-list"></div>
         </div>
     </div>
 
@@ -641,27 +546,21 @@
                 <i class="fas fa-shield-alt"></i> Segurança do Trabalho
             </button>
         </div>
-
         <div id="meio-ambiente" class="tab-content" style="display: block;">
             <h3 style="color: var(--azul-marinho); margin-bottom: 1.5rem; font-size: 1.5rem; text-align: center;">Nosso Compromisso com o Meio Ambiente</h3>
             <p style="margin-bottom: 2rem; font-size: 1rem; line-height: 1.8; text-align: center;">Na PSR, acreditamos que a sustentabilidade não é apenas uma responsabilidade, mas uma oportunidade de criar um futuro melhor.</p>
             <div id="cards-meio-ambiente" class="cards-grid"></div>
         </div>
-
         <div id="seguranca" class="tab-content" style="display: none;">
             <h3 style="color: var(--azul-marinho); margin-bottom: 1.5rem; font-size: 1.5rem; text-align: center;">Segurança em Primeiro Lugar</h3>
-            
             <div id="cards-seguranca" class="cards-grid"></div>
-            
             <div class="quiz-container">
                 <button id="btn-open-quiz" class="btn-toggle-quiz">
                     <i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança
                 </button>
-                
                 <div id="quiz-content">
                     <h3 style="text-align: center; color: var(--azul-marinho); margin-bottom: 10px;">Quiz da Segurança</h3>
                     <p style="text-align: center; margin-bottom: 30px; color: #666;">Teste seus conhecimentos sobre as Regras de Ouro e Procedimentos.</p>
-                    
                     <form id="safety-quiz-form">
                         <div id="quiz-questions-container"></div>
                         <button type="submit" id="btn-submit-quiz" class="btn-submit-suggestion btn-quiz-action">Enviar Respostas</button>
@@ -795,12 +694,10 @@
     // 🔴 FIM DA ÁREA DE EDIÇÃO
     // =========================================================================
 
-function renderJornal() {
-        // --- TEMA DO MÊS (Mantido igual) ---
+    function renderJornal() {
         const tm = CONTEUDO_JORNAL.temaMes; 
         document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo}</h2><p><strong>${tm.subtitulo}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto}<p class="fonte-materia"><small>Fonte: <a href="${tm.fonte.link}" target="_blank">${tm.fonte.texto}</a></small></p></div></div>`;
         
-        // --- HOBBY (Mantido igual) ---
         const h = CONTEUDO_JORNAL.hobby;
         const hData = globalHobbyData || {};
         const hLikes = hData.likes || {};
@@ -829,7 +726,6 @@ function renderJornal() {
                 </div>
             </div>`;
 
-        // --- ATUALIZAÇÃO: BEM-ESTAR (NOVO ESTILO METADE) ---
         const be = CONTEUDO_JORNAL.bemEstar; 
         document.getElementById('bem-estar').innerHTML = `
             <div class="jornal-section-title">Cuidar de quem faz</div>
@@ -843,7 +739,6 @@ function renderJornal() {
                 </div>
             </div>`;
 
-        // --- ATUALIZAÇÃO: SAÚDE FÍSICA (NOVO ESTILO METADE) ---
         const sf = CONTEUDO_JORNAL.saudeFisica; 
         document.getElementById('saude-fisica-hero').innerHTML = `
             <div class="jornal-card">
@@ -856,15 +751,12 @@ function renderJornal() {
                 </div>
             </div>`;
         
-        // --- RECEITAS (NOVO ESTILO JÁ APLICADO NO CSS) ---
         const recContainer = document.getElementById('receitas-container'); recContainer.innerHTML = ''; 
         CONTEUDO_JORNAL.receitas.forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${r.ingredientes.map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${r.preparo.map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
         
-        // --- RESTANTE DAS SEÇÕES (Desafios, Cultura, Sustentabilidade...) ---
         const desContainer = document.getElementById('desafios-container'); desContainer.innerHTML = ''; CONTEUDO_JORNAL.desafios.forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span class="desafio-emoji">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div class="challenge-actions"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; });
         const cultContainer = document.getElementById('cultura-container'); cultContainer.innerHTML = ''; CONTEUDO_JORNAL.cultura.forEach(c => { const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; cultContainer.innerHTML += `<article class="jornal-card" id="card_${c.id}"><a href="${c.link}" target="_blank" class="video-thumbnail-container"><img src="${c.img}"><i class="fas ${ic} play-button"></i></a><div class="jornal-card-content cultura-card-content"><h3>${c.titulo}</h3><p>${c.desc}</p><p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p><span class="tag-cultura">${c.tag}</span><div class="rating-container" data-id="${c.id}"><div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div><div class="rating-score">Média dos Colaboradores:<br><span class="score-value">0.0</span></div></div></div></article>`; });
 
-        // Sustentabilidade e Segurança
         const maContainer = document.getElementById('cards-meio-ambiente'); maContainer.innerHTML = '';
         CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
 
@@ -876,7 +768,6 @@ function renderJornal() {
         setupQuizToggle();
     }
 
-    // --- RENDERIZAR ESTRUTURA DO QUIZ ---
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
         container.innerHTML = '';
@@ -900,11 +791,10 @@ function renderJornal() {
         });
     }
 
-function setupQuizToggle() {
+    function setupQuizToggle() {
         const btn = document.getElementById('btn-open-quiz');
         const content = document.getElementById('quiz-content');
         if (btn && content) {
-            // Usar .onclick substitui qualquer evento anterior, evitando o bug de abrir/fechar instantaneamente
             btn.onclick = () => {
                 if(content.style.display === 'block') {
                     content.style.display = 'none';
@@ -922,16 +812,14 @@ function setupQuizToggle() {
     function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
     const MY_DEVICE_ID = getDeviceId();
     
-    // Globais
     let globalChallengesData = {};
     let globalQuizData = {};
     let globalHobbyData = {}; 
-    let globalPraiseData = {}; // Para os elogios
-    let currentPraiseMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+    let globalPraiseData = {}; 
+    let currentPraiseMonth = new Date().toISOString().slice(0, 7); 
 
     document.addEventListener("DOMContentLoaded", () => {
-        // --- ADICIONADO: Lógica de Carregamento do Menu/Footer ---
-        // CARREGAMENTO DE MENU/FOOTER PADRONIZADO
+        // CARREGAMENTO DE MENU/FOOTER PADRONIZADO E OTIMIZADO
         ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html?t=${Date.now()}`)
           .then(r => r.text())
@@ -940,7 +828,6 @@ function setupQuizToggle() {
             if (placeholder) {
               placeholder.innerHTML = html;
               
-              // Lógica para ativar o menu mobile se necessário
               if (file === 'menu') {
                 const toggle = document.getElementById('menu-toggle');
                 const menuEl = document.getElementById('menu');
@@ -952,18 +839,18 @@ function setupQuizToggle() {
                 }
               }
             }
-          });
+          })
+          .catch(e => console.error(`Erro ao carregar ${file}:`, e));
         });
-        // ---------------------------------------------------------
 
-        renderJornal(); // Render inicial (sem dados dinâmicos)
+        renderJornal(); 
         initFirebaseData();
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
         setupToggle('btn-toggle-recipe', 'recipe-form-container');
         setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
-        setupToggle('btn-toggle-praise', 'praise-form-container'); // Toggle novo
-        setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container'); // Indicação Hobby
-        setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container'); // Sugestão Jogos
+        setupToggle('btn-toggle-praise', 'praise-form-container');
+        setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
+        setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
     });
 
     async function initFirebaseData() {
@@ -974,29 +861,24 @@ function setupQuizToggle() {
         } catch (e) { console.error("Firebase error", e); }
 
         const currentMonth = new Date().toISOString().slice(0, 7);
-        // Reset mensal - Mantendo dados de Elogios (praise_messages) intactos
         if (remoteData.monthControl !== currentMonth) {
             console.log("Reset mensal...");
-            // Nota: NÃO incluímos praise_messages no reset
             const resetPayload = { monthControl: currentMonth, ratings_v2: {}, suggestions: {}, recipe_suggestions: {}, challenges_v2: {}, testimonials: {}, safety_quiz: {}, hobby_interactions: {}, hobby_suggestions: {}, game_suggestions: {} };
             await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(resetPayload) });
-            remoteData = resetPayload; // Atualiza local para continuar sem reload
+            remoteData = resetPayload;
         }
 
-        // Carrega dados globais
         globalHobbyData = remoteData.hobby_interactions || {};
-        globalPraiseData = remoteData.praise_messages || {}; // Carrega elogios (todos)
+        globalPraiseData = remoteData.praise_messages || {}; 
         globalChallengesData = remoteData.challenges_v2 || {};
         globalQuizData = remoteData.safety_quiz || {};
         
-        // Renderizações Específicas
-        renderPraiseSection(currentPraiseMonth); // Renderiza elogios
+        renderPraiseSection(currentPraiseMonth);
         renderChallenges(globalChallengesData);
         renderTestimonials(remoteData.testimonials || {});
         checkIfQuizTaken();
         calculateQuizStats();
         
-        // Ratings
         const allRatings = remoteData.ratings_v2 || {};
         document.querySelectorAll('.rating-container').forEach(container => {
             const itemId = container.dataset.id;
@@ -1027,10 +909,9 @@ function setupQuizToggle() {
         });
 
         setupForms(); 
-        renderJornal(); // Re-render para dados de hobby
+        renderJornal(); 
     }
 
-    // --- LÓGICA DE ELOGIOS (INTELIGENTE) ---
     function renderPraiseSection(selectedMonth) {
         currentPraiseMonth = selectedMonth;
         const container = document.getElementById('praise-container');
@@ -1038,25 +919,19 @@ function setupQuizToggle() {
         container.innerHTML = '';
         linksContainer.innerHTML = '';
 
-        // 1. Identificar quais meses TEM dados (Do banco + Mês atual)
         const dataMonths = new Set();
         const now = new Date();
-        const currentRealMonth = now.toISOString().slice(0, 7); // Ex: 2026-01
+        const currentRealMonth = now.toISOString().slice(0, 7); 
         
-        // Sempre incluir o mês atual real (para poder postar)
         dataMonths.add(currentRealMonth);
 
-        // Adicionar meses que têm mensagens no banco
         Object.values(globalPraiseData).forEach(msg => {
             if(msg.date) dataMonths.add(msg.date.slice(0, 7));
         });
 
-        // Converter para array e ordenar (Mais recente primeiro)
         const sortedMonths = Array.from(dataMonths).sort().reverse();
 
-        // 2. Gerar Links Apenas para esses meses
         sortedMonths.forEach(mStr => {
-            // Formatar Label (Ex: JAN 2026)
             const [y, m] = mStr.split('-');
             const d = new Date(y, m - 1, 1);
             const label = d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
@@ -1068,7 +943,6 @@ function setupQuizToggle() {
             linksContainer.appendChild(link);
         });
 
-        // 3. Filtrar e Mostrar Mensagens do Mês Selecionado
         let messages = [];
         Object.entries(globalPraiseData).forEach(([id, data]) => {
             if (data.date && data.date.startsWith(selectedMonth)) {
@@ -1076,7 +950,6 @@ function setupQuizToggle() {
             }
         });
 
-        // Ordenar: mais recentes primeiro e limitar a 50
         messages.sort((a, b) => new Date(b.date) - new Date(a.date));
         messages = messages.slice(0, 50);
 
@@ -1124,14 +997,13 @@ function setupQuizToggle() {
         try {
             await fetch(`${BASE_DB_URL}praise_messages.json`, { method: 'POST', body: JSON.stringify(payload) });
             alert("Elogio enviado com sucesso!");
-            location.reload(); // Recarrega para buscar tudo atualizado
+            location.reload(); 
         } catch(e) { console.error(e); }
     }
 
     async function likePraise(id) {
         const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
         try {
-            // Verificar like local
             const msgData = globalPraiseData[id] || {};
             const likes = msgData.likes || {};
             const isLiked = !!likes[MY_DEVICE_ID];
@@ -1144,12 +1016,10 @@ function setupQuizToggle() {
                 if(!globalPraiseData[id].likes) globalPraiseData[id].likes = {};
                 globalPraiseData[id].likes[MY_DEVICE_ID] = true;
             }
-            renderPraiseSection(currentPraiseMonth); // Re-renderiza a seção
+            renderPraiseSection(currentPraiseMonth); 
         } catch(e) { console.error(e); }
     }
 
-
-    // --- LÓGICA DO HOBBY (CURTIR E COMENTAR) ---
     async function likeHobby() {
         const url = `${BASE_DB_URL}hobby_interactions/likes/${MY_DEVICE_ID}.json`;
         try {
@@ -1191,13 +1061,10 @@ function setupQuizToggle() {
                 method: 'POST', body: JSON.stringify(commentData) 
             });
             input.value = '';
-            initFirebaseData(); // Recarrega
+            initFirebaseData(); 
         } catch(e) { console.error(e); }
     }
 
-    // --- LÓGICA DE JOGOS & HISCORE ---
-    
-    // Função para abrir o Modal de Hi-Score
     async function openHiScore(gameKey) {
         const modal = document.getElementById('hiscore-modal');
         const title = document.getElementById('modal-game-title');
@@ -1208,7 +1075,6 @@ function setupQuizToggle() {
         list.innerHTML = '<p style="text-align:center; color:#666;">Carregando pontuações...</p>';
         
         try {
-            // FIX: Adicionado /scores.json ao final para ler a subpasta correta
             const resp = await fetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
             const data = await resp.json();
 
@@ -1217,27 +1083,19 @@ function setupQuizToggle() {
                 return;
             }
 
-            // Converter Objeto Firebase em Array
             let scoresArray = Object.values(data);
 
-            // Ordenação
             scoresArray.sort((a, b) => {
-                // Remove caracteres não numéricos para garantir a ordenação correta (ex: "130 km" vira 130)
-                let scoreA = parseInt(String(a.pontos).replace(/\D/g, '')) || 0; // FIX: Usando 'pontos'
-                let scoreB = parseInt(String(b.pontos).replace(/\D/g, '')) || 0; // FIX: Usando 'pontos'
+                let scoreA = parseInt(String(a.pontos).replace(/\D/g, '')) || 0; 
+                let scoreB = parseInt(String(b.pontos).replace(/\D/g, '')) || 0; 
 
                 if (gameKey === 'BobinaKart') {
-                    // Ordenação Crescente (Tempo/Distância inversa?) - Ajuste conforme lógica do jogo
-                    // Se for tempo "1:45", menor é melhor. Se for "130km", maior é melhor.
-                    // Assumindo maior é melhor para simplificar a demo, ou inverta se for tempo.
                     return scoreB - scoreA; 
                 } else {
-                    // Ordenação Decrescente (Pontos numéricos)
                     return scoreB - scoreA;
                 }
             });
 
-            // Top 10
             const topScores = scoresArray.slice(0, 10);
 
             list.innerHTML = topScores.map((s, index) => `
@@ -1256,7 +1114,6 @@ function setupQuizToggle() {
         document.getElementById('hiscore-modal').style.display = 'none';
     }
 
-    // --- QUIZ LOGIC ---
     function checkIfQuizTaken() {
         let hasTaken = false;
         for (const qId in globalQuizData) {
@@ -1333,7 +1190,6 @@ function setupQuizToggle() {
         try { await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) }); location.reload(); } catch(err) { console.error(err); }
     });
 
-    // --- FUNÇÕES AUXILIARES ---
     async function voteChallenge(cId, type) {
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
         globalChallengesData[cId][MY_DEVICE_ID] = type;
@@ -1354,12 +1210,10 @@ function setupQuizToggle() {
         });
     }
 
-    // RENDERIZAR DEPOIMENTOS COM LIKE E COMENTÁRIOS
     function renderTestimonials(testimonialsObj) {
         const container = document.getElementById('testimonials-display');
         container.innerHTML = '';
         
-        // Transformar em array com ID, likes e comments
         const sorted = Object.entries(testimonialsObj)
             .map(([id, t]) => ({ ...t, id }))
             .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -1372,13 +1226,11 @@ function setupQuizToggle() {
 
         sorted.forEach(t => {
             const dateStr = new Date(t.date).toLocaleDateString('pt-BR');
-            // Lógica Likes
             const likes = t.likes || {};
             const likeCount = Object.keys(likes).length;
             const userLiked = likes[MY_DEVICE_ID] ? 'liked' : '';
             const heartIcon = userLiked ? 'fas' : 'far';
 
-            // Lógica Comentários
             const comments = t.comments ? Object.values(t.comments) : [];
             const commentCount = comments.length;
 
@@ -1387,7 +1239,6 @@ function setupQuizToggle() {
             card.innerHTML = `
                 <span class="testimonial-author">${t.name}</span>
                 <p class="testimonial-text">"${t.text}"</p>
-                
                 <div class="testimonial-actions">
                     <button class="testim-action-btn ${userLiked}" onclick="likeTestimonial('${t.id}')">
                         <i class="${heartIcon} fa-heart"></i> ${likeCount}
@@ -1396,7 +1247,6 @@ function setupQuizToggle() {
                         <i class="far fa-comment"></i> ${commentCount}
                     </button>
                 </div>
-
                 <div id="comment-box-${t.id}" class="testimonial-comments-area">
                     <div class="comment-input-group">
                         <input type="text" id="input-comment-${t.id}" placeholder="Escreva um comentário...">
@@ -1410,27 +1260,25 @@ function setupQuizToggle() {
                         `).join('')}
                     </div>
                 </div>
-
                 <span class="testimonial-date">${dateStr}</span>
             `;
             container.appendChild(card);
         });
     }
 
-    // LÓGICA DE LIKE EM DEPOIMENTO
     window.likeTestimonial = async function(id) {
         const url = `${BASE_DB_URL}testimonials/${id}/likes/${MY_DEVICE_ID}.json`;
         try {
             const resp = await fetch(url);
             const current = await resp.json();
-            const newValue = current ? null : true; // Toggle
+            const newValue = current ? null : true; 
             
             if(newValue === null) {
                 await fetch(url, { method: 'DELETE' });
             } else {
                 await fetch(url, { method: 'PUT', body: JSON.stringify(true) });
             }
-            initFirebaseData(); // Refresh UI
+            initFirebaseData(); 
         } catch(e) { console.error(e); }
     }
 
@@ -1456,32 +1304,27 @@ function setupQuizToggle() {
     }
 
     function setupForms() {
-        // Sugestão de Filme
         const btnS = document.getElementById('btn-submit-suggestion');
         if(btnS) btnS.addEventListener('click', async()=>{ 
             const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value;
             if(n&&m) { await fetch(`${BASE_DB_URL}suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,deviceId:MY_DEVICE_ID,date:new Date()})}); alert('Enviado!'); location.reload(); }
         });
         
-        // Receita
         const btnR = document.getElementById('btn-submit-recipe');
         if(btnR) btnR.addEventListener('click', async()=>{
             const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value;
             if(a&&d) { await fetch(`${BASE_DB_URL}recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,deviceId:MY_DEVICE_ID,date:new Date()})}); alert('Receita enviada!'); location.reload(); }
         });
 
-        // Depoimento
         const btnT = document.getElementById('btn-submit-testimonial');
         if(btnT) btnT.addEventListener('click', async()=>{
             const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value;
             if(n&&t) { await fetch(`${BASE_DB_URL}testimonials.json`,{method:'POST',body:JSON.stringify({name:n,text:t,deviceId:MY_DEVICE_ID,date:new Date()})}); alert('Depoimento enviado!'); initFirebaseData(); document.getElementById('testimonial-form-container').style.display='none'; }
         });
 
-        // Elogio (Novo)
         const btnP = document.getElementById('btn-submit-praise');
         if(btnP) btnP.addEventListener('click', submitPraise);
 
-        // Indicação de Hobby (Novo)
         const btnHS = document.getElementById('btn-submit-hobby-suggestion');
         if(btnHS) btnHS.addEventListener('click', async () => {
             const from = document.getElementById('hobby-suggest-from').value;
@@ -1503,7 +1346,6 @@ function setupQuizToggle() {
             } catch(e) { console.error(e); }
         });
 
-        // Sugestão de Jogo (Novo)
         const btnGS = document.getElementById('btn-submit-game-suggestion');
         if(btnGS) btnGS.addEventListener('click', async () => {
             const n = document.getElementById('game-suggest-name').value;
@@ -1518,7 +1360,6 @@ function setupQuizToggle() {
         });
     }
 
-    // Toggles Genéricos
     function toggleGeneric(c, b, o, f) { const el=document.getElementById(c), btn=document.getElementById(b); if(el.style.display==='block'){el.style.display='none';btn.innerText=o;btn.style.background='var(--azul-marinho)';btn.style.color='white';}else{el.style.display='block';btn.innerText=f;btn.style.background='white';btn.style.color='var(--azul-marinho)';btn.style.border='2px solid var(--azul-marinho)';}}
     function toggleMateria() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
     function toggleBemEstar() { toggleGeneric('materiaBemEstar', 'btnLerMaisBemEstar', 'Ler dicas', 'Fechar'); }
@@ -1529,21 +1370,14 @@ function setupQuizToggle() {
     function createDynamicInput(cid, ph, ord) { const c=document.getElementById(cid), d=document.createElement('div'); d.className='dynamic-item'; d.innerHTML = `${ord?'<span class="prefix"></span>':'<span class="prefix">•</span>'}<input type="text" placeholder="${ph}"><button type="button" class="btn-remove-item" onclick="this.parentElement.remove(); renumberSteps()">X</button>`; c.appendChild(d); if(ord) renumberSteps(); }
     function renumberSteps() { document.querySelectorAll('#prep-list .prefix').forEach((s,i)=>s.textContent=`${i+1}.`); }
     function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
-function mostrarAba(id, btn) {
-        // 1. Esconde todos os conteúdos
+    function mostrarAba(id, btn) {
         document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-        
-        // 2. Remove a classe 'active' e limpa estilos manuais de todos os botões
         document.querySelectorAll('.tab-btn').forEach(b => {
             b.classList.remove('active');
-            b.style.color = '';       // Limpa estilo inline se houver
-            b.style.borderBottom = ''; // Limpa estilo inline se houver
+            b.style.color = '';       
+            b.style.borderBottom = ''; 
         });
-
-        // 3. Mostra o conteúdo selecionado
         document.getElementById(id).style.display = 'block';
-        
-        // 4. Adiciona a classe active no botão clicado (O CSS cuida do dourado)
         btn.classList.add('active'); 
     }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
