@@ -40,26 +40,28 @@ img { max-width: 100%; display: block; }
 /* ==================================================
    HEADER E NAVEGAÇÃO
    ================================================== */
+/* ==================================================
+   HEADER E NAVEGAÇÃO
+   ================================================== */
 header {
   background-color: var(--branco);
   color: var(--cor-texto-header);
-  padding: 10px 0; /* Reduzi levemente para ficar mais compacto */
+  padding: 10px 0;
   position: fixed;
-  width: 100%; 
-  top: 0; 
-  z-index: 1000;
+  width: 100%; top: 0; z-index: 1000;
   box-shadow: 0 2px 10px rgba(0,0,0,0.03);
   border-bottom: 1px solid #e0e0e0;
 }
 
 .header-container {
-  width: 100%; /* Garante que use a largura disponível */
-  max-width: 1080px; /* Limite solicitado */
+  width: 100%;
+  max-width: 1080px; /* Limite total de 1080px */
   margin: 0 auto;
-  display: flex; 
-  justify-content: space-between;
+  display: flex;
+  /* MUDANÇA: flex-start junta a logo e o menu na esquerda */
+  justify-content: flex-start; 
   align-items: center;
-  padding: 0 20px; /* Margem de segurança nas laterais */
+  padding: 0 20px;
 }
 
 .logo { 
@@ -67,25 +69,32 @@ header {
   font-weight: bold; 
   display: flex; 
   align-items: center;
-  /* CRUCIAL: Impede que a logo seja esmagada pelo menu */
-  flex-shrink: 0; 
-  margin-right: 20px; /* Garante distância mínima do menu */
+  flex-shrink: 0; /* Impede que a logo amasse */
+  
+  /* CONTROLE DE DISTÂNCIA:
+     Aqui definimos a distância exata entre a Logo e o botão "Início".
+     Ajuste esse valor se quiser mais perto ou mais longe. */
+  margin-right: 40px; 
 }
 
 .logo img { height: 40px; margin-right: 10px; }
 .logo span { color: var(--cor-texto-header); letter-spacing: 1px; }
 
+/* Botão Hamburguer (padrão oculto) */
 .menu-toggle {
-  display: none; background: none;
-  border: none; color: var(--cor-texto-header);
-  font-size: 1.5rem; cursor: pointer;
+  display: none; 
+  background: none;
+  border: none; 
+  color: var(--cor-texto-header);
+  font-size: 1.5rem; 
+  cursor: pointer;
+  padding: 5px; /* Aumenta a área de toque */
 }
 
+/* Área do Menu */
 nav {
-  /* Garante que o menu ocupe o espaço restante mas não estoure */
+  /* Ocupa o espaço restante, mas respeita o alinhamento */
   flex-grow: 1; 
-  display: flex;
-  justify-content: flex-end; /* Alinha o menu à direita */
 }
 
 nav ul { 
@@ -93,22 +102,24 @@ nav ul {
   display: flex; 
   margin: 0; 
   padding: 0; 
-  gap: 5px; /* Espaçamento inteligente entre os itens */
   align-items: center;
-}
-
-nav ul li { 
-  margin-left: 0; /* Removido margin antigo para usar gap */
+  
+  /* DISTRIBUIÇÃO PROPORCIONAL:
+     Isso cria um espaço igual entre cada item do menu (Início, Cardápio, etc) */
+  gap: 15px; 
+  
+  /* Garante que o menu comece logo após a margem da logo */
+  justify-content: flex-start; 
 }
 
 nav ul li a {
-  padding: 8px 10px; /* Reduzi o padding lateral para caber tudo */
+  padding: 8px 10px;
   border-radius: 4px;
   font-weight: 500; 
   transition: all 0.3s;
   color: #777;
-  font-size: 0.9rem; /* Fonte levemente menor para comportar os 8 itens */
-  white-space: nowrap; /* Garante que o texto não quebre linha */
+  font-size: 0.9rem;
+  white-space: nowrap; /* Não deixa quebrar linha */
   display: block;
 }
 
@@ -117,38 +128,61 @@ nav ul li a:hover {
   color: var(--azul-aco);
 }
 
-/* Ajuste para telas intermediárias (antes de virar mobile) */
-@media (max-width: 1080px) {
-    nav ul {
-        gap: 2px; /* Diminui o espaço se a tela for menor que 1080px */
-    }
-    nav ul li a {
-        padding: 8px 6px;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 900px) {
-  /* Força o menu mobile aparecer antes (900px) pois o menu é muito largo */
-  .menu-toggle { display: block; }
-  nav { display: none; width: 100%; } /* Esconde o container nav */
+/* ==================================================
+   RESPONSIVIDADE (MOBILE - 768px)
+   ================================================== */
+@media (max-width: 768px) {
   
-  nav ul {
-    display: none; 
-    flex-direction: column;
-    position: absolute; top: 60px; left: 0;
-    width: 100%; background-color: var(--branco);
+  /* No celular, precisamos voltar a separar os itens (Logo na esquerda, Menu na direita) */
+  .header-container {
+    justify-content: space-between; 
+  }
+
+  .logo {
+    margin-right: 0; /* Remove a margem fixa no mobile */
+  }
+
+  .menu-toggle { 
+    display: block; /* O menu hamburguer volta a aparecer */
+  }
+
+  /* Esconde o menu desktop e prepara o menu mobile (dropdown) */
+  nav {
+    position: absolute;
+    top: 100%; /* Fica logo abaixo do header */
+    left: 0;
+    width: 100%;
+    background-color: var(--branco);
     border-top: 1px solid #eee;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    padding: 10px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    
+    /* Lógica de esconder/mostrar */
+    display: none; 
   }
   
-  /* Quando ativo via JS */
-  nav.active { display: block; } /* Mostra o nav container */
-  nav ul.active { display: flex; } /* Mostra a lista */
-  
-  nav ul li { margin: 5px 0; text-align: center; width: 100%; }
-  nav ul li a { display: block; padding: 10px; font-size: 1.1rem;}
+  /* Classe que o Javascript adiciona ao clicar no hamburguer */
+  nav.active { 
+    display: block; 
+  }
+
+  nav ul {
+    flex-direction: column; /* Lista vertical */
+    width: 100%;
+    padding: 10px 0;
+    gap: 0; /* Remove o gap horizontal */
+  }
+
+  nav ul li { 
+    width: 100%; 
+    text-align: center;
+    margin: 0;
+  }
+
+  nav ul li a {
+    padding: 15px; /* Área de toque maior no celular */
+    font-size: 1.1rem;
+    border-bottom: 1px solid #f9f9f9;
+  }
 }
 
 /* ==================================================
@@ -597,6 +631,7 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
  }
+
 
 
 
