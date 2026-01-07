@@ -50,7 +50,12 @@
       margin: 0;
       padding: 0;
       overflow-x: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte padrão do site */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* CLASSE PARA QUEBRA DE LINHA SÓ NO MOBILE */
+    .mobile-break {
+        display: none;
     }
 
     /* 2. LAYOUT DAS SEÇÕES GERAIS */
@@ -72,6 +77,30 @@
       box-sizing: border-box;
       scroll-margin-block-start: 20px; 
     }
+
+    /* --- DIVISÓRIA --- */
+    section.section {
+        position: relative;
+        margin-bottom: 20px; 
+        padding-bottom: 80px; 
+    }
+
+    section.section::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 15%;
+        width: 70%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--azul-marinho), var(--dourado), var(--azul-marinho), transparent);
+        opacity: 0.25; 
+        border-radius: 50%;
+    }
+
+    section.section:last-of-type::after {
+        display: none;
+    }
+    /* ------------------ */
 
     /* BANNER */
     section.banner {
@@ -133,7 +162,7 @@
     }
 
     /* ==================================================================
-       ESTILOS ESPECÍFICOS DA SEÇÃO MISSÃO, VISÃO E VALORES (INTEGRADO)
+       ESTILOS MISSÃO, VISÃO E VALORES (AJUSTADO: CENTRALIZADO)
        ================================================================== */
     .mvv-container {
         display: grid;
@@ -142,7 +171,7 @@
         margin-bottom: 40px;
         width: 100%;
         max-width: 1200px;
-        font-family: 'Poppins', sans-serif; /* Fonte específica para esta seção */
+        font-family: 'Poppins', sans-serif;
     }
 
     .mvv-card {
@@ -177,6 +206,9 @@
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        /* CENTRALIZAÇÃO SOLICITADA */
+        text-align: center;
+        align-items: center; 
     }
 
     .mvv-content h3 {
@@ -197,20 +229,22 @@
     }
 
     .mvv-valores-list {
-        list-style: none;
+        list-style: none; /* Remove bolinhas padrão para centralizar bonito */
         padding: 0;
         margin-top: 15px;
         font-family: 'Poppins', sans-serif;
+        width: 100%;
     }
 
     .mvv-valores-list li {
         padding: 6px 0;
         color: var(--cinza-escuro);
         font-size: 0.9em;
-        border-left: 3px solid var(--dourado);
-        padding-left: 10px;
+        /* Estilo centralizado sem borda lateral */
         margin-bottom: 5px;
+        border-bottom: 1px dashed #eee; /* Leve separação visual */
     }
+    .mvv-valores-list li:last-child { border-bottom: none; }
 
     .mvv-descricao {
         background-color: var(--branco);
@@ -218,7 +252,7 @@
         padding: 30px;
         box-shadow: var(--sombra-mvv);
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 20px;
         transition: all 0.3s ease;
         max-width: 1200px;
         width: 100%;
@@ -253,12 +287,9 @@
         background-color: var(--azul-aco);
         color: var(--branco);
     }
-    /* ==================================================================
-       FIM DO ESTILO MISSÃO VISÃO E VALORES
-       ================================================================== */
 
-    /* CARDS GERAIS (Aniversariantes, etc) */
-    .aniversariante-card, .ferias-card, .cipa-card {
+    /* CARDS GERAIS */
+    .aniversariante-card, .cipa-card {
       background-color: var(--bg-card) !important;
       color: var(--text-primary) !important;
       box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
@@ -286,7 +317,7 @@
     }
     
     .reflexao-card::after {
-        content: '\f004'; /* Coração */
+        content: '\f004'; 
         font-family: "Font Awesome 6 Free";
         font-weight: 900;
         position: absolute;
@@ -350,6 +381,7 @@
       margin: 0 auto;
     }
 
+    /* TABELA DE FÉRIAS (DESKTOP) */
     .ferias-table {
       margin: 20px auto;
       max-width: 1000px;
@@ -392,8 +424,12 @@
       margin: 0 !important; 
     }
 
-    /* Mobile Responsive */
+    /* --- MOBILE RESPONSIVE --- */
     @media (max-width: 768px) {
+      /* ATIVA AS QUEBRAS DE LINHA */
+      .mobile-break { display: block; }
+      .section-title br { display: block; }
+
       section.section {
         scroll-margin-top: 80px; 
         padding: 40px 15px;      
@@ -411,28 +447,83 @@
           padding: 8px 40px; 
       }
       
+      /* --- OTIMIZAÇÃO FÉRIAS MOBILE (CARD COMPACTO E OBJETIVO) --- */
       .ferias-container { display: block; width: 100%; }
-      .ferias-table thead { display: none; }
-      .ferias-table, .ferias-table tbody, .ferias-table tr, .ferias-table td {
-        display: block; width: 100%; box-sizing: border-box;
+      
+      .ferias-table thead { display: none; } /* Esconde cabeçalho */
+      
+      .ferias-table, .ferias-table tbody {
+        display: block; width: 100%; 
       }
+
       .ferias-table tr {
-        background-color: #fff; margin-bottom: 15px; border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 15px; border: 1px solid #eee;
+        background-color: #fff;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        padding: 15px;
+        border: 1px solid #f0f0f0;
+        display: flex;
+        flex-wrap: wrap; /* Permite quebrar linha */
+        align-items: center;
+        position: relative;
       }
+
       .ferias-table td {
-        display: flex; justify-content: space-between; align-items: center;
-        text-align: right; padding: 10px 0; border-bottom: 1px solid #f9f9f9; font-size: 0.95rem;
+        display: block;
+        border: none;
+        padding: 0;
       }
-      .ferias-table td:last-child { border-bottom: none; }
-      .ferias-table td::before {
-        content: attr(data-label); font-weight: 700; color: var(--primary-color);
-        text-transform: uppercase; font-size: 0.8rem; margin-right: 15px; text-align: left;
+
+      /* Nome do Colaborador (Destaque) */
+      .ferias-table td:nth-child(1) {
+          width: 100%;
+          font-weight: 700;
+          font-size: 1.05rem;
+          color: var(--azul-marinho);
+          margin-bottom: 2px;
       }
-      .ferias-table td:nth-of-type(1)::before { content: "Colaborador"; }
-      .ferias-table td:nth-of-type(2)::before { content: "Departamento"; }
-      .ferias-table td:nth-of-type(3)::before { content: "Início"; }
-      .ferias-table td:nth-of-type(4)::before { content: "Retorno"; }
+
+      /* Departamento (Menor e cinza) */
+      .ferias-table td:nth-child(2) {
+          width: 100%;
+          font-size: 0.85rem;
+          color: #888;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 12px;
+          font-weight: 600;
+      }
+
+      /* Datas (Inicio e Retorno na mesma linha em bloco único) */
+      .ferias-table td:nth-child(3), 
+      .ferias-table td:nth-child(4) {
+          display: inline-block;
+          font-size: 0.9rem;
+          color: #555;
+          background-color: #f4f8fb;
+          padding: 6px 10px;
+          border-radius: 6px;
+      }
+
+      .ferias-table td:nth-child(3) {
+          margin-right: 5px;
+      }
+      
+      /* Adiciona texto entre as datas via CSS */
+      .ferias-table td:nth-child(3)::before {
+          content: "\f073"; /* Icone Calendario */
+          font-family: "Font Awesome 6 Free";
+          font-weight: 900;
+          margin-right: 5px;
+          color: var(--primary-color);
+      }
+
+      .ferias-table td:nth-child(3)::after {
+          content: " até ";
+          margin-left: 5px;
+          color: #888;
+      }
     }
   </style>
 </head>
@@ -450,7 +541,7 @@
   <main>
     
     <section id="missao-visao-valores" class="section">
-        <h2 class="section-title">💙 Missão, Visão e Valores</h2>
+        <h2 class="section-title">💙 Missão, Visão <br class="mobile-break"> e Valores</h2>
         
         <div class="mvv-container">
             <div class="mvv-card">
@@ -507,14 +598,14 @@
     </section>
 
     <section id="aniversariantes" class="section">
-      <h2 class="section-title">Aniversariantes do Mês</h2>
+      <h2 class="section-title">Aniversariantes <br class="mobile-break"> do Mês</h2>
       <div id="aniversariantes-container" class="aniversariantes-container">
         <div class="loading"><div class="loading-spinner"></div></div>
       </div>
     </section>
 
     <section id="ferias" class="section">
-      <h2 class="section-title">Colaboradores em Férias</h2>
+      <h2 class="section-title">Colaboradores <br class="mobile-break"> em Férias</h2>
       <div class="ferias-container">
         <table class="ferias-table">
           <thead>
