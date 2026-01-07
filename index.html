@@ -43,6 +43,9 @@
       --branco: #FFFFFF;
       --cinza-escuro: #4B4B4B;
       --sombra-mvv: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      /* Variáveis para o Comunicado */
+      --azul-claro: #f4f6f8; 
     }
 
     body {
@@ -55,9 +58,7 @@
     }
 
     /* CLASSE PARA QUEBRA DE LINHA SÓ NO MOBILE */
-    .mobile-break {
-        display: none;
-    }
+    .mobile-break { display: none; }
 
     /* 2. LAYOUT DAS SEÇÕES GERAIS */
     html {
@@ -101,7 +102,6 @@
     section.section:last-of-type::after {
         display: none;
     }
-    /* ------------------ */
 
     /* BANNER */
     section.banner {
@@ -162,9 +162,7 @@
       display: inline-block;
     }
 
-    /* ==================================================================
-       ESTILOS MISSÃO, VISÃO E VALORES (AJUSTADO: CENTRALIZADO)
-       ================================================================== */
+    /* MISSÃO, VISÃO E VALORES */
     .mvv-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -207,7 +205,6 @@
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        /* CENTRALIZAÇÃO SOLICITADA */
         text-align: center;
         align-items: center; 
     }
@@ -230,7 +227,7 @@
     }
 
     .mvv-valores-list {
-        list-style: none; /* Remove bolinhas padrão para centralizar bonito */
+        list-style: none;
         padding: 0;
         margin-top: 15px;
         font-family: 'Poppins', sans-serif;
@@ -241,9 +238,8 @@
         padding: 6px 0;
         color: var(--cinza-escuro);
         font-size: 0.9em;
-        /* Estilo centralizado sem borda lateral */
         margin-bottom: 5px;
-        border-bottom: 1px dashed #eee; /* Leve separação visual */
+        border-bottom: 1px dashed #eee;
     }
     .mvv-valores-list li:last-child { border-bottom: none; }
 
@@ -425,9 +421,269 @@
       margin: 0 !important; 
     }
 
+    /* ==================================================
+       NOVO CSS DO COMUNICADO
+       ================================================== */
+    .comunicado-strip {
+        background-color: #fff;
+        width: 100%;
+        margin-top: 0; 
+        border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        position: relative;
+        z-index: 90;
+        padding: 15px 0;
+        animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .comunicado-content {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .comunicado-icon {
+        background-color: var(--azul-aco);
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .comunicado-text-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    #comunicado-resumo {
+        margin: 0;
+        font-size: 0.95rem;
+        color: var(--cinza-escuro);
+        flex: 1;
+        line-height: 1.4;
+    }
+
+    .comunicado-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-ler-comunicado {
+        background: transparent;
+        border: 1px solid var(--azul-aco);
+        color: var(--azul-aco);
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        white-space: nowrap;
+    }
+
+    .btn-ler-comunicado:hover {
+        background-color: var(--azul-aco);
+        color: #fff;
+    }
+
+    .btn-historico {
+        background: transparent;
+        border: none;
+        color: #999;
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 5px 8px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-historico:hover {
+        color: var(--azul-aco);
+        background-color: rgba(74, 144, 226, 0.1);
+        transform: rotate(-20deg);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(3px);
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-box {
+        background: #fff;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-overlay.active .modal-box {
+        transform: translateY(0);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 10px; right: 15px;
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        color: #aaa;
+        cursor: pointer;
+        z-index: 10;
+    }
+    .modal-close:hover { color: #555; }
+
+    .modal-header {
+        background-color: var(--azul-claro);
+        padding: 30px 20px 20px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .modal-icon-big {
+        font-size: 2rem;
+        color: var(--azul-aco);
+        margin-bottom: 10px;
+    }
+
+    #modal-autor, .modal-header h3 {
+        margin: 0;
+        color: var(--azul-marinho);
+        font-weight: 800;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .modal-date {
+        font-size: 0.85rem;
+        color: #888;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .modal-body {
+        padding: 25px 30px;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #444;
+        max-height: 300px;
+        overflow-y: auto;
+        text-align: justify;
+    }
+
+    .modal-footer {
+        padding: 15px 20px;
+        background-color: #f9f9f9;
+        text-align: center;
+    }
+
+    .btn-fechar-modal {
+        background-color: var(--azul-aco);
+        color: #fff;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn-fechar-modal:hover { background-color: #357abd; }
+
+    /* LISTA HISTÓRICO */
+    .history-list-container {
+        padding: 0; 
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+    }
+
+    .history-item {
+        background: #fff;
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        text-align: left;
+    }
+
+    .history-item:hover {
+        background-color: #f0f7ff;
+    }
+
+    .history-item:last-child { border-bottom: none; }
+
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: var(--azul-aco);
+        font-weight: 600;
+    }
+
+    .history-preview {
+        font-size: 0.9rem;
+        color: #555;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .history-empty {
+        padding: 30px;
+        text-align: center;
+        color: #888;
+        font-style: italic;
+    }
+
     /* --- MOBILE RESPONSIVE --- */
     @media (max-width: 768px) {
-      /* ATIVA AS QUEBRAS DE LINHA */
       .mobile-break { display: block; }
       .section-title br { display: block; }
 
@@ -448,88 +704,62 @@
           padding: 8px 40px; 
       }
       
-      /* --- OTIMIZAÇÃO FÉRIAS MOBILE (CARD COMPACTO E OBJETIVO) --- */
       .ferias-container { display: block; width: 100%; }
-      
-      .ferias-table thead { display: none; } /* Esconde cabeçalho */
-      
-      .ferias-table, .ferias-table tbody {
-        display: block; width: 100%; 
-      }
+      .ferias-table thead { display: none; }
+      .ferias-table, .ferias-table tbody { display: block; width: 100%; }
 
-.ferias-table tr {
+      .ferias-table tr {
         background-color: #fff;
         margin-bottom: 12px;
         border-radius: 10px;
         box-shadow: 0 3px 6px rgba(0,0,0,0.05);
         padding: 15px;
         border: 1px solid #f0f0f0;
-        
-        display: flex;       /* Já existente */
-        flex-wrap: wrap;     /* Já existente */
-        align-items: center; /* Já existente */
-        justify-content: center; /* <--- ADICIONE ESTA LINHA */
-        
-        position: relative;
-        text-align: center;  /* Opcional: Garante que o texto de Nome/Depto também centralize se desejar */
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+        position: relative; text-align: center;
       }
 
-      .ferias-table td {
-        display: block;
-        border: none;
-        padding: 0;
-      }
+      .ferias-table td { display: block; border: none; padding: 0; }
 
-      /* Nome do Colaborador (Destaque) */
       .ferias-table td:nth-child(1) {
-          width: 100%;
-          font-weight: 700;
-          font-size: 1.05rem;
-          color: var(--azul-marinho);
-          margin-bottom: 2px;
+          width: 100%; font-weight: 700; font-size: 1.05rem;
+          color: var(--azul-marinho); margin-bottom: 2px;
       }
 
-      /* Departamento (Menor e cinza) */
       .ferias-table td:nth-child(2) {
-          width: 100%;
-          font-size: 0.85rem;
-          color: #888;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin-bottom: 12px;
-          font-weight: 600;
+          width: 100%; font-size: 0.85rem; color: #888;
+          text-transform: uppercase; letter-spacing: 0.5px;
+          margin-bottom: 12px; font-weight: 600;
       }
 
-      /* Datas (Inicio e Retorno na mesma linha em bloco único) */
-.ferias-table td:nth-child(3), 
+      .ferias-table td:nth-child(3), 
       .ferias-table td:nth-child(4) {
-          display: inline-block;
-          font-size: 0.9rem;
-          color: #555;
-          background-color: #f4f8fb;
-          padding: 6px 10px;
-          border-radius: 6px;
-          margin-top: 5px; /* Adiciona um respiro acima das datas */
+          display: inline-block; font-size: 0.9rem; color: #555;
+          background-color: #f4f8fb; padding: 6px 10px;
+          border-radius: 6px; margin-top: 5px;
       }
 
-      .ferias-table td:nth-child(3) {
-          margin-right: 5px;
-      }
+      .ferias-table td:nth-child(3) { margin-right: 5px; }
       
-      /* Adiciona texto entre as datas via CSS */
       .ferias-table td:nth-child(3)::before {
-          content: "\f073"; /* Icone Calendario */
-          font-family: "Font Awesome 6 Free";
-          font-weight: 900;
-          margin-right: 5px;
-          color: var(--primary-color);
+          content: "\f073"; font-family: "Font Awesome 6 Free"; font-weight: 900;
+          margin-right: 5px; color: var(--primary-color);
       }
 
       .ferias-table td:nth-child(3)::after {
-          content: " até ";
-          margin-left: 5px;
-          color: #888;
+          content: " até "; margin-left: 5px; color: #888;
       }
+      
+      /* Ajuste Mobile Comunicado */
+      .comunicado-text-wrapper {
+          flex-direction: column;
+          align-items: flex-start;
+      }
+      .comunicado-actions {
+          width: 100%;
+          justify-content: space-between;
+      }
+      .btn-ler-comunicado { flex-grow: 1; text-align: center; }
     }
   </style>
 </head>
@@ -543,6 +773,53 @@
     <a href="https://psrindustria.github.io/PortalPSR/cardapio.html" class="banner-btn">Cardápio da Semana</a>
   </section>
 
+  <div id="comunicado-strip" class="comunicado-strip" style="display: none;">
+    <div class="comunicado-content">
+      <div class="comunicado-icon">
+        <i class="fas fa-bullhorn"></i>
+      </div>
+      <div class="comunicado-text-wrapper">
+        <p id="comunicado-resumo">Carregando...</p>
+        <div class="comunicado-actions">
+            <button id="btn-open-comunicado" class="btn-ler-comunicado">Abrir comunicado</button>
+            <button id="btn-open-historico" class="btn-historico" title="Ver comunicados anteriores" style="display: none;">
+                <i class="fas fa-history"></i>
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-comunicado" class="modal-overlay">
+    <div class="modal-box">
+      <button class="modal-close" onclick="fecharModal('modal-comunicado')">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon-big"><i class="fas fa-envelope-open-text"></i></div>
+        <h3 id="modal-autor">Autor</h3>
+        <span id="modal-data" class="modal-date">--/--/----</span>
+      </div>
+      <div class="modal-body">
+        <p id="modal-texto">...</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-fechar-modal" onclick="fecharModal('modal-comunicado')">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-lista-historico" class="modal-overlay">
+    <div class="modal-box">
+      <button class="modal-close" onclick="fecharModal('modal-lista-historico')">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon-big"><i class="fas fa-box-archive"></i></div>
+        <h3>Histórico</h3>
+        <span class="modal-date">Comunicados Anteriores</span>
+      </div>
+      <div id="conteudo-historico" class="modal-body history-list-container">
+        <p>Carregando...</p>
+      </div>
+    </div>
+  </div>
   <main>
     
     <section id="missao-visao-valores" class="section">
@@ -645,12 +922,10 @@
         var btnTexto = document.getElementById("btn-leia-mais");
 
         if (pontos.style.display === "none") {
-            // Se já está expandido, retrai
             pontos.style.display = "inline";
             maisTexto.style.display = "none";
             btnTexto.innerHTML = "Ler mais";
         } else {
-            // Se está retraído, expande
             pontos.style.display = "none";
             maisTexto.style.display = "inline";
             btnTexto.innerHTML = "Ler menos";
@@ -659,9 +934,122 @@
   </script>
 
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  // Funções Globais para o Comunicado
+  function fecharModal(id) {
+      document.getElementById(id).classList.remove('active');
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
     
-    // --- INTERCEPTADOR DE LINKS (Rolagem Suave) ---
+    // --- 1. LÓGICA DO COMUNICADO ---
+    async function carregarComunicado() {
+        const url = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/Comunicado.json";
+        
+        try {
+            const res = await fetch(url + '?t=' + Date.now());
+            if (!res.ok) throw new Error("Erro ao buscar comunicado");
+            
+            const data = await res.json();
+            if (!data) return;
+
+            let lista = [];
+            if (Array.isArray(data)) {
+                lista = data.filter(item => item !== null);
+            } else if (typeof data === 'object') {
+                lista = Object.values(data);
+            }
+
+            if (lista.length === 0) return;
+
+            // Ordenar por data (mais recente primeiro)
+            lista.sort((a, b) => {
+                const dataA = new Date(a['data:']);
+                const dataB = new Date(b['data:']);
+                return dataB - dataA; 
+            });
+
+            const ultimo = lista[0]; // Recente
+            const passados = lista.slice(1); // Histórico
+
+            // Configurar barra
+            const texto = ultimo['comunicado:'] || "";
+            const autor = ultimo['autor:'] || "RH Informa";
+            const palavras = texto.split(" ");
+            let resumo = texto;
+            if (palavras.length > 18) resumo = palavras.slice(0, 18).join(" ") + "..."; 
+
+            const strip = document.getElementById('comunicado-strip');
+            const pResumo = document.getElementById('comunicado-resumo');
+            if (strip && pResumo) {
+                pResumo.innerHTML = `<strong>${autor}</strong> ${resumo}`;
+                strip.style.display = 'block';
+            }
+
+            // Configurar Botões
+            const btnOpen = document.getElementById('btn-open-comunicado');
+            if (btnOpen) btnOpen.onclick = () => abrirLeitura(ultimo);
+
+            const btnHist = document.getElementById('btn-open-historico');
+            if (btnHist) {
+                if (passados.length > 0) {
+                    btnHist.style.display = 'flex'; // Mostra botão
+                    btnHist.onclick = () => abrirHistorico(passados);
+                } else {
+                    btnHist.style.display = 'none';
+                }
+            }
+
+            // Relevância
+            const relev = (ultimo['relevancia:'] || "none").toLowerCase();
+            if (relev.includes('importante')) {
+                setTimeout(() => abrirLeitura(ultimo), 1500);
+            }
+
+        } catch (error) {
+            console.error("Erro comunicados:", error);
+        }
+    }
+
+    function abrirLeitura(item) {
+        fecharModal('modal-lista-historico');
+        const modal = document.getElementById('modal-comunicado');
+        const dataRaw = item['data:'];
+        let dataFmt = "--/--/----";
+        if (dataRaw) dataFmt = new Date(dataRaw).toLocaleDateString('pt-BR');
+
+        document.getElementById('modal-autor').textContent = item['autor:'];
+        document.getElementById('modal-data').textContent = dataFmt;
+        document.getElementById('modal-texto').textContent = item['comunicado:'];
+        modal.classList.add('active');
+    }
+
+    function abrirHistorico(lista) {
+        const modal = document.getElementById('modal-lista-historico');
+        const container = document.getElementById('conteudo-historico');
+        container.innerHTML = "";
+
+        lista.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            const dataRaw = item['data:'];
+            let dataFmt = dataRaw ? new Date(dataRaw).toLocaleDateString('pt-BR') : "";
+            
+            div.innerHTML = `
+                <div class="history-header">
+                    <span>${item['autor:']}</span>
+                    <span>${dataFmt}</span>
+                </div>
+                <div class="history-preview">${item['comunicado:']}</div>
+            `;
+            div.onclick = () => abrirLeitura(item);
+            container.appendChild(div);
+        });
+        modal.classList.add('active');
+    }
+
+    carregarComunicado(); // Inicia
+
+    // --- 2. INTERCEPTADOR DE LINKS (Rolagem Suave) ---
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link) {
@@ -685,7 +1073,7 @@
       }
     });
 
-// --- SCRIPT DE FOGOS (OTIMIZADO) ---
+    // --- 3. SCRIPT DE FOGOS ---
     function spawnFirework(container) {
       if (!container) return;
       if (document.hidden) return;
@@ -693,11 +1081,7 @@
       const rect = container.getBoundingClientRect();
       const startX = (Math.random() * (rect.width - 40)) + 20; 
       const startY = (Math.random() * (rect.height - 40)) + 20;
-
-      const colors = [
-        '#74b9ff', '#ffffff', '#81ecec', 
-        '#0984e3', '#b2bec3', '#dfe6e9'
-      ];
+      const colors = ['#74b9ff', '#ffffff', '#81ecec', '#0984e3', '#b2bec3', '#dfe6e9'];
       
       const particleCount = 90; 
 
@@ -707,18 +1091,10 @@
         const color = colors[Math.floor(Math.random() * colors.length)];
 
         Object.assign(particle.style, {
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          width: `${size}px`,
-          height: `${size}px`,
-          backgroundColor: color,
-          borderRadius: '50%',
-          opacity: '0', 
-          pointerEvents: 'none',
+          position: 'absolute', top: '0', left: '0', width: `${size}px`, height: `${size}px`,
+          backgroundColor: color, borderRadius: '50%', opacity: '0', pointerEvents: 'none',
           transform: `translate3d(${startX}px, ${startY}px, 0) scale(1)`,
-          boxShadow: `0 0 ${size * 4}px ${color}`, 
-          zIndex: '10'
+          boxShadow: `0 0 ${size * 4}px ${color}`, zIndex: '10'
         });
 
         container.appendChild(particle);
@@ -732,7 +1108,6 @@
         let y = startY;
         let life = 1.0;
         const decay = Math.random() * 0.007 + 0.003; 
-
         const friction = 0.96; 
         const gravity = 0.04; 
 
@@ -744,20 +1119,10 @@
         }, Math.random() * 80);
 
         function animate() {
-          if(document.hidden) {
-              particle.remove();
-              return;
-          }
-
-          vx *= friction; 
-          vy *= friction;
-          vy += gravity;  
-          
-          x += vx;
-          y += vy;
-          
+          if(document.hidden) { particle.remove(); return; }
+          vx *= friction; vy *= friction; vy += gravity;  
+          x += vx; y += vy;
           life -= decay;
-
           if (life > 0) {
             const currentScale = 0.6 + (life * 0.4);
             particle.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${currentScale})`;
@@ -786,7 +1151,6 @@
             spawnFirework(element);
           }
         }, 800 + Math.random() * 1000); 
-        
         fireworkIntervals.push(intervalId);
         spawnFirework(element);
       }
@@ -803,7 +1167,7 @@
       }
     });
     
-    // --- CARREGAMENTO DE MENU/FOOTER ---
+    // --- 4. CARREGAMENTO DE MENU/FOOTER ---
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
         .then(r => r.text())
@@ -822,7 +1186,7 @@
         }).catch(e => console.error(`Error loading ${file}.html:`, e));
     });
 
-    // --- FETCH GENÉRICO ---
+    // --- 5. FETCH GENÉRICO ---
     async function fetchData(path) {
       const cacheBuster = Date.now();
       try {
@@ -835,7 +1199,7 @@
       }
     }
     
-    // --- RENDERIZADORES ---
+    // --- 6. RENDERIZADORES ---
     
     // Reflexão
     async function renderReflexao() {
@@ -949,13 +1313,11 @@
       });
     }
 
-    // Férias (Versão Somente Tabela)
+    // Férias
     async function renderFerias() {
        const data = await fetchData("ferias.json");
        const tb = document.getElementById("ferias-tbody");
-       
        if (!tb) return;
-
        const hoje = new Date();
        hoje.setHours(0, 0, 0, 0);
 
@@ -966,9 +1328,7 @@
            const dataObj = new Date(Number(ano), Number(mes) - 1, Number(dia));
            dataObj.setHours(0, 0, 0, 0);
            return dataObj.getTime() === comparisonDate.getTime();
-         } catch (e) {
-           return false;
-         }
+         } catch (e) { return false; }
        }
 
        const dataFiltrada = (data || []).filter(f => {
@@ -982,33 +1342,24 @@
        });
 
        tb.innerHTML = "";
-
        if (data === null) {
-         const errorMsg = "<p>Erro ao carregar férias.</p>";
-         tb.innerHTML = `<tr><td colspan="4">${errorMsg}</td></tr>`;
+         tb.innerHTML = `<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>`;
          return;
        }
-
        if (dataFiltrada.length === 0) {
          tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`;
          return;
        }
-
        dataFiltrada.forEach(f => {
          const retornaHoje = isSameDate(f.retorno, hoje);
-         
          const tr = document.createElement("tr");
          if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
-         tr.innerHTML = `
-           <td>${f.colaborador}</td>
-           <td>${f.departamento}</td>
-           <td>${f.inicio}</td>
-           <td>${f.retorno}</td>`;
+         tr.innerHTML = `<td>${f.colaborador}</td><td>${f.departamento}</td><td>${f.inicio}</td><td>${f.retorno}</td>`;
          tb.appendChild(tr);
        });
      }
 
-    // CIPA / DESTAQUES
+    // CIPA
     async function renderCIPA() {
       const raw = await fetchData('cipa.json');
       const c = document.getElementById('cipa-container');
@@ -1041,198 +1392,99 @@
   </script>
 
   <script>
-const nomesFemininos = [
-    'abigail', 'abriele', 'adriane', 'agnes', 'aitana', 'alana', 'alba', 'alessia',  
-    'alexia', 'aliceia', 'alzira', 'amalia', 'ana paula', 'anais', 'angelica', 'angelina',  
-    'antonia', 'anita', 'antonieta', 'ara', 'ariana', 'ariane', 'arlete', 'arlene',  
-    'arminda', 'audrey', 'aurora', 'ayla', 'azilda', 'barbara', 'beatrice', 'bellamy',  
-    'benedita', 'bernadete', 'bertina', 'bertha', 'betsy', 'biana', 'blendina', 'blenda',  
-    'branda', 'brigitte', 'camille', 'candida', 'carmela', 'carminha', 'caroline', 'catarina',  
-    'cecília', 'celia', 'celina', 'chantal', 'charlene', 'charlotte', 'christiane', 'cielete',  
-    'cilene', 'clarice', 'claudete', 'claudiana', 'claudine', 'claudionora', 'clelia', 'cleusa',  
-    'clotilde', 'clementina', 'cordelia', 'corina', 'cristal', 'cristela', 'crislaine', 'dadá',  
-    'dagmar', 'dalila', 'dalva', 'damiana', 'danila', 'danisa', 'darcília', 'darlene',  
-    'deadina', 'deise', 'dela', 'delia', 'demetria', 'denise', 'derci', 'desirée',  
-    'diana', 'dilma', 'dinorah', 'dionísia', 'dirce', 'divina', 'dominica', 'domingas',  
-    'doroteia', 'edi', 'edilene', 'edite', 'elaine', 'elba', 'elderina', 'eleonora',  
-    'elfrida', 'elisabete', 'elisângela', 'eliza', 'elizabete', 'elma', 'elvira', 'ema',  
-    'emília', 'ena', 'enede', 'ereia', 'erika', 'erise', 'erteca', 'erta',  
-    'esmeralda', 'estela', 'estrela', 'eudoxia', 'eulália', 'eunice', 'eva', 'evangelina',  
-    'everlúcia', 'exilda', 'fabiana', 'fátima', 'felicidade', 'fermina', 'fiama', 'flora',  
-    'florinda', 'fortuna', 'francine', 'francisca', 'frida', 'gabrielle', 'gasparina', 'geneviève',  
-    'genilda', 'geovana', 'geovana', 'geovana', 'gilda', 'gina', 'ginger', 'gislaine',  
-    'gleice', 'glenda', 'glória', 'goretti', 'graciete', 'gracilene', 'guida', 'haidée',  
-    'halina', 'hanae', 'hana', 'hanna', 'helle', 'helma', 'henriqueta', 'herminia',  
-    'heveline', 'hilaria', 'hilda', 'homérica', 'hylda', 'ida', 'ileana', 'ilma',  
-    'ilza', 'imelda', 'inês', 'iraci', 'irene', 'irislene', 'irlanda', 'ismaela',  
-    'itaglêcia', 'ivanete', 'ivone', 'ivoneide', 'ivonilde', 'izabel', 'izabela', 'izildinha',  
-    'jada', 'janete', 'janina', 'janine', 'jaqueline', 'jelena', 'jemima', 'jessiane',  
-    'joana d’arc', 'jocasta', 'joelia', 'joenilda', 'jole', 'jonas', 'jorgeana', 'joselina',  
-    'josiana', 'jovita', 'joyce', 'julia', 'junia', 'justina', 'karine', 'karla',  
-    'karol', 'katia', 'kátia', 'kely', 'keyla', 'kimberly', 'kissia', 'kristina',  
-    'laraine', 'larissa', 'lau', 'lauraine', 'lea', 'lebina', 'leila', 'leina',  
-    'lemara', 'lendite', 'leonor', 'lepida', 'lesbia', 'letícia', 'levina', 'liana',  
-    'lidia', 'lidiane', 'liliane', 'lilisa', 'lilja', 'linda', 'linet', 'lionê',  
-    'liora', 'lisandra', 'lissa', 'lita', 'lizabeth', 'lorena', 'lorene', 'lority',  
-    'lourdes', 'lucia', 'lucinda', 'ludmila', 'luene', 'luise', 'luiza', 'lumena',  
-    'luzia', 'lygia', 'lys', 'madalena', 'mafalda', 'maisa', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina',  
-    'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia',  
-    'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice',  
-    'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury',  
-    'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele',  
-    'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna',  
-    'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa',  
-    'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida',  
-    'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa',  
-    'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina',  
-    'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela',  
-    'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina',  
-    'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina',  
-    'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane',  
-    'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita',  
-    'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete',  
-    'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane',  
-    'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete',  
-    'samara', 'samira', 'samandra', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly',  
-    'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena',  
-    'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara',  
-    'sirlene', 'sônia', 'sonia', 'soraia', 'soraya', 'sueli', 'súellen', 'suely',  
-    'susana', 'susanne', 'sweetie', 'talitha', 'tamara', 'tâmara', 'tamilia', 'tanice',  
-    'tarcila', 'tatiane', 'tchabi', 'tecla', 'teodora', 'teresinha', 'theresa', 'thícia',  
-    'thiffany', 'thina', 'thomazina', 'timóteo', 'tina', 'tresa', 'troiana', 'túlia',  
-    'ulrica', 'unice', 'urânia', 'vanessa', 'vânia', 'vania', 'vanda', 'vangélia',  
-    'vanice', 'vanusa', 'vanuza', 'vânia', 'venice', 'venucia', 'verena', 'verônica',  
-    'viana', 'victoria', 'victória', 'violeta', 'virginia', 'vislane', 'viviane', 'viviana',  
-    'wanda', 'welma', 'luciene', 'anielle', 'yasmin', 'yana', 'yara', 'yasmin',  
-    'yone', 'yvana', 'yvone', 'yvone', 'zaíra', 'zanira', 'zelia', 'zelia',  
-    'zelma', 'zélia', 'ziralda', 'zirene', 'iasmim', 'daniele', 'solanie Paz', 'tayane', 'solanie', 'milene', 'zoe'
-];
+    const nomesFemininos = ['abigail', 'abriele', 'adriane', 'agnes', 'aitana', 'alana', 'alba', 'alessia', 'alexia', 'aliceia', 'alzira', 'amalia', 'ana paula', 'anais', 'angelica', 'angelina', 'antonia', 'anita', 'antonieta', 'ara', 'ariana', 'ariane', 'arlete', 'arlene', 'arminda', 'audrey', 'aurora', 'ayla', 'azilda', 'barbara', 'beatrice', 'bellamy', 'benedita', 'bernadete', 'bertina', 'bertha', 'betsy', 'biana', 'blendina', 'blenda', 'branda', 'brigitte', 'camille', 'candida', 'carmela', 'carminha', 'caroline', 'catarina', 'cecília', 'celia', 'celina', 'chantal', 'charlene', 'charlotte', 'christiane', 'cielete', 'cilene', 'clarice', 'claudete', 'claudiana', 'claudine', 'claudionora', 'clelia', 'cleusa', 'clotilde', 'clementina', 'cordelia', 'corina', 'cristal', 'cristela', 'crislaine', 'dadá', 'dagmar', 'dalila', 'dalva', 'damiana', 'danila', 'danisa', 'darcília', 'darlene', 'deadina', 'deise', 'dela', 'delia', 'demetria', 'denise', 'derci', 'desirée', 'diana', 'dilma', 'dinorah', 'dionísia', 'dirce', 'divina', 'dominica', 'domingas', 'doroteia', 'edi', 'edilene', 'edite', 'elaine', 'elba', 'elderina', 'eleonora', 'elfrida', 'elisabete', 'elisângela', 'eliza', 'elizabete', 'elma', 'elvira', 'ema', 'emília', 'ena', 'enede', 'ereia', 'erika', 'erise', 'erteca', 'erta', 'esmeralda', 'estela', 'estrela', 'eudoxia', 'eulália', 'eunice', 'eva', 'evangelina', 'everlúcia', 'exilda', 'fabiana', 'fátima', 'felicidade', 'fermina', 'fiama', 'flora', 'florinda', 'fortuna', 'francine', 'francisca', 'frida', 'gabrielle', 'gasparina', 'geneviève', 'genilda', 'geovana', 'geovana', 'geovana', 'gilda', 'gina', 'ginger', 'gislaine', 'gleice', 'glenda', 'glória', 'goretti', 'graciete', 'gracilene', 'guida', 'haidée', 'halina', 'hanae', 'hana', 'hanna', 'helle', 'helma', 'henriqueta', 'herminia', 'heveline', 'hilaria', 'hilda', 'homérica', 'hylda', 'ida', 'ileana', 'ilma', 'ilza', 'imelda', 'inês', 'iraci', 'irene', 'irislene', 'irlanda', 'ismaela', 'itaglêcia', 'ivanete', 'ivone', 'ivoneide', 'ivonilde', 'izabel', 'izabela', 'izildinha', 'jada', 'janete', 'janina', 'janine', 'jaqueline', 'jelena', 'jemima', 'jessiane', 'joana d’arc', 'jocasta', 'joelia', 'joenilda', 'jole', 'jonas', 'jorgeana', 'joselina', 'josiana', 'jovita', 'joyce', 'julia', 'junia', 'justina', 'karine', 'karla', 'karol', 'katia', 'kátia', 'kely', 'keyla', 'kimberly', 'kissia', 'kristina', 'laraine', 'larissa', 'lau', 'lauraine', 'lea', 'lebina', 'leila', 'leina', 'lemara', 'lendite', 'leonor', 'lepida', 'lesbia', 'letícia', 'levina', 'liana', 'lidia', 'lidiane', 'liliane', 'lilisa', 'lilja', 'linda', 'linet', 'lionê', 'liora', 'lisandra', 'lissa', 'lita', 'lizabeth', 'lorena', 'lorene', 'lority', 'lourdes', 'lucia', 'lucinda', 'ludmila', 'luene', 'luise', 'luiza', 'lumena', 'luzia', 'lygia', 'lys', 'madalena', 'mafalda', 'maisa', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina', 'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia', 'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice', 'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury', 'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele', 'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna', 'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa', 'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida', 'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa', 'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina', 'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela', 'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina', 'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina', 'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane', 'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita', 'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete', 'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane', 'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete', 'samara', 'samira', 'samandra', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly', 'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena', 'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara', 'sirlene', 'sônia', 'sonia', 'soraia', 'soraya', 'sueli', 'súellen', 'suely', 'susana', 'susanne', 'sweetie', 'talitha', 'tamara', 'tâmara', 'tamilia', 'tanice', 'tarcila', 'tatiane', 'tchabi', 'tecla', 'teodora', 'teresinha', 'theresa', 'thícia', 'thiffany', 'thina', 'thomazina', 'timóteo', 'tina', 'tresa', 'troiana', 'túlia', 'ulrica', 'unice', 'urânia', 'vanessa', 'vânia', 'vania', 'vanda', 'vangélia', 'vanice', 'vanusa', 'vanuza', 'vânia', 'venice', 'venucia', 'verena', 'verônica', 'viana', 'victoria', 'victória', 'violeta', 'virginia', 'vislane', 'viviane', 'viviana', 'wanda', 'welma', 'luciene', 'anielle', 'yasmin', 'yana', 'yara', 'yasmin', 'yone', 'yvana', 'yvone', 'yvone', 'zaíra', 'zanira', 'zelia', 'zelia', 'zelma', 'zélia', 'ziralda', 'zirene', 'iasmim', 'daniele', 'solanie Paz', 'tayane', 'solanie', 'milene', 'zoe'];
 
-function removeAcentos(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-function determinarGenero(nome) {
-  if (!nome) return 'masculino';
-  let primeiroNome = nome.split(" ")[0].toLowerCase();
-  primeiroNome = removeAcentos(primeiroNome);
-  if (primeiroNome.endsWith('a') && primeiroNome !== 'joshua' && primeiroNome !== 'luca') {
-    return 'feminino';
-  }
-  if (nomesFemininos.includes(primeiroNome)) {
-    return 'feminino';
-  }
-  return 'masculino';
-}
-
-async function carregaJSON(arquivo) {
-  try {
-    return await fetch(arquivo + '?t=' + Date.now()).then(r => r.json());
-  } catch (e) {
-    return null;
-  }
-}
-
-function juntarNomes(nomes) {
-  if (nomes.length === 1) return nomes[0];
-  if (nomes.length === 2) return nomes[0] + ' e ' + nomes[1];
-  return nomes.slice(0, -1).join(', ') + ' e ' + nomes[nomes.length - 1];
-}
-
-function getPluralGenero(generos) {
-  const femininoCount = generos.filter(g => g === "feminino").length;
-  if (femininoCount === generos.length) return {pronome: "elas", verboVoltar: "voltam", verboAniv: "fazem"};
-  if (femininoCount === 0) return {pronome: "eles", verboVoltar: "voltam", verboAniv: "fazem"};
-  return {pronome: "eles", verboVoltar: "voltam", verboAniv: "fazem"};
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const hoje = new Date();
-  const dia = String(hoje.getDate()).padStart(2, '0');
-  const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-  const ano = hoje.getFullYear();
-  const dataAtualStr = `${dia}/${mes}`;
-  const dataCompleta = `${dia}/${mes}/${ano}`;
-  let mensagens = [];
-
-  function getArtigoSingular(genero) {
-    return genero === 'feminino' ? 'da' : 'do';
-  }
-
-  function getArtigoPlural(generos) {
-    const todasFeminino = generos.every(g => g === 'feminino');
-    return todasFeminino ? 'da' : 'das';
-  }
-
-  const aniversariantes = await carregaJSON('aniversariantes.json');
-  const nomesAniv = [];
-  const generosAniv = [];
-
-  if (Array.isArray(aniversariantes)) {
-    aniversariantes.forEach(({ nome, data }) => {
-      if (data === dataAtualStr) {
-        nomesAniv.push(nome);
-        generosAniv.push(determinarGenero(nome));
-      }
-    });
-
-    if (nomesAniv.length === 1) {
-      const genero = generosAniv[0];
-      const pronome = genero === 'feminino' ? 'ela' : 'ele';
-      const artigo = getArtigoSingular(genero);
-      mensagens.push(
-        `🥳 Hoje é aniversário ${artigo} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`
-      );
+    function removeAcentos(str) { return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+    function determinarGenero(nome) {
+      if (!nome) return 'masculino';
+      let primeiroNome = nome.split(" ")[0].toLowerCase();
+      primeiroNome = removeAcentos(primeiroNome);
+      if (primeiroNome.endsWith('a') && primeiroNome !== 'joshua' && primeiroNome !== 'luca') return 'feminino';
+      if (nomesFemininos.includes(primeiroNome)) return 'feminino';
+      return 'masculino';
     }
-    else if (nomesAniv.length > 1) {
-      const nomesStr = juntarNomes(nomesAniv);
-      const pronome = generosAniv.every(g => g === 'feminino')
-        ? 'elas'
-        : 'eles';
-      mensagens.push(
-        `🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns a ${pronome}!`
-      );
+    async function carregaJSON(arquivo) {
+      try { return await fetch(arquivo + '?t=' + Date.now()).then(r => r.json()); } catch (e) { return null; }
     }
-  }
-
-  const ferias = await carregaJSON('ferias.json');
-  let nomesFerias = [];
-  let generosFerias = [];
-  if (ferias && Array.isArray(ferias)) {
-    ferias.forEach(f => {
-      if (f.retorno === dataCompleta) {
-        nomesFerias.push(f.colaborador);
-        generosFerias.push(determinarGenero(f.colaborador));
-      }
-    });
-    if (nomesFerias.length === 1) {
-      const pronome = generosFerias[0] === "feminino" ? "ela" : "ele";
-      mensagens.push(`✈️ Hoje, ${nomesFerias[0]} retorna de férias. Dê as boas-vindas a ${pronome}!`);
-    } else if (nomesFerias.length > 1) {
-      const nomesStr = juntarNomes(nomesFerias);
-      const plural = getPluralGenero(generosFerias);
-      mensagens.push(`✈️ Hoje, ${nomesStr} retornam de férias. Dê as boas-vindas a ${plural.pronome}!`);
+    function juntarNomes(nomes) {
+      if (nomes.length === 1) return nomes[0];
+      if (nomes.length === 2) return nomes[0] + ' e ' + nomes[1];
+      return nomes.slice(0, -1).join(', ') + ' e ' + nomes[nomes.length - 1];
     }
-  }
+    function getPluralGenero(generos) {
+      const femininoCount = generos.filter(g => g === "feminino").length;
+      if (femininoCount === generos.length) return {pronome: "elas", verboVoltar: "voltam", verboAniv: "fazem"};
+      return {pronome: "eles", verboVoltar: "voltam", verboAniv: "fazem"};
+    }
+    function getArtigoSingular(genero) { return genero === 'feminino' ? 'da' : 'do'; }
 
-  const feriados = await carregaJSON('feriados.json');
-  if (feriados && Array.isArray(feriados)) {
-    feriados.forEach(f => {
-      if (f.data === dataAtualStr) {
-        mensagens.push(`📅 Hoje é ${f.nome}. Bom feriado!`);
+    document.addEventListener('DOMContentLoaded', async () => {
+      const hoje = new Date();
+      const dia = String(hoje.getDate()).padStart(2, '0');
+      const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+      const ano = hoje.getFullYear();
+      const dataAtualStr = `${dia}/${mes}`;
+      const dataCompleta = `${dia}/${mes}/${ano}`;
+      let mensagens = [];
+
+      // Aniversariantes
+      const aniversariantes = await carregaJSON('aniversariantes.json');
+      const nomesAniv = [];
+      const generosAniv = [];
+      if (Array.isArray(aniversariantes)) {
+        aniversariantes.forEach(({ nome, data }) => {
+          if (data === dataAtualStr) {
+            nomesAniv.push(nome);
+            generosAniv.push(determinarGenero(nome));
+          }
+        });
+        if (nomesAniv.length === 1) {
+          const genero = generosAniv[0];
+          const pronome = genero === 'feminino' ? 'ela' : 'ele';
+          const artigo = getArtigoSingular(genero);
+          mensagens.push(`🥳 Hoje é aniversário ${artigo} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`);
+        } else if (nomesAniv.length > 1) {
+          const nomesStr = juntarNomes(nomesAniv);
+          const pronome = generosAniv.every(g => g === 'feminino') ? 'elas' : 'eles';
+          mensagens.push(`🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns a ${pronome}!`);
+        }
       }
-    });
-  }
 
-  let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Janeiro Branco: Saúde Mental.";
-  const bannerP = document.querySelector('.banner > p');
-  if (bannerP) bannerP.innerHTML = mensagemFinal;
-});
+      // Férias
+      const ferias = await carregaJSON('ferias.json');
+      let nomesFerias = [];
+      let generosFerias = [];
+      if (ferias && Array.isArray(ferias)) {
+        ferias.forEach(f => {
+          if (f.retorno === dataCompleta) {
+            nomesFerias.push(f.colaborador);
+            generosFerias.push(determinarGenero(f.colaborador));
+          }
+        });
+        if (nomesFerias.length === 1) {
+          const pronome = generosFerias[0] === "feminino" ? "ela" : "ele";
+          mensagens.push(`✈️ Hoje, ${nomesFerias[0]} retorna de férias. Dê as boas-vindas a ${pronome}!`);
+        } else if (nomesFerias.length > 1) {
+          const nomesStr = juntarNomes(nomesFerias);
+          const plural = getPluralGenero(generosFerias);
+          mensagens.push(`✈️ Hoje, ${nomesStr} retornam de férias. Dê as boas-vindas a ${plural.pronome}!`);
+        }
+      }
+
+      // Feriados
+      const feriados = await carregaJSON('feriados.json');
+      if (feriados && Array.isArray(feriados)) {
+        feriados.forEach(f => {
+          if (f.data === dataAtualStr) {
+            mensagens.push(`📅 Hoje é ${f.nome}. Bom feriado!`);
+          }
+        });
+      }
+
+      let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Janeiro Branco: Saúde Mental.";
+      const bannerP = document.querySelector('.banner > p');
+      if (bannerP) bannerP.innerHTML = mensagemFinal;
+    });
   </script>
 </body>
 </html>
-
-
-
-
-
