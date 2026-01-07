@@ -385,15 +385,32 @@
   </section>
 
   <main>
-    <section id="novidades" class="section">
-      <h2 class="section-title">Novidades</h2>
-      <div class="novidades-header" style="justify-content: center; display: flex; width: 100%; margin-bottom: 20px; color: var(--primary-color);">
-        <i class="far fa-clock"></i>&nbsp;
-        <span id="data-hoje-novidades"></span>
-      </div>
-      <div id="novidades-container" class="novidades-container">
-        <div class="loading"><div class="loading-spinner"></div></div>
-      </div>
+    
+    <section id="missao-visao-valores" class="section">
+        <h2 class="section-title">💙 Missão, Visão e Valores</h2>
+        
+        <div style="background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 30px; max-width: 800px; margin: 0 auto; border: none;">
+            <p style="text-align: center; color: #555; font-size: 1.1rem; line-height: 1.6;">
+                Nossa <strong>Missão, Visão e Valores</strong> são a base que orienta nossa empresa.
+                <br><br>
+                Nossa <strong>Missão</strong> é oferecer soluções gráficas de qualidade, inovadoras e sustentáveis, valorizando colaboradores e respeitando o meio ambiente.
+            </p>
+
+            <div id="missao-completa" style="display: none; margin-top: 20px; text-align: left; animation: fadeIn 0.5s ease-in-out;">
+                <p style="color: #555; font-size: 1rem; line-height: 1.6;">
+                    Nossa <strong>Visão</strong> é ser uma referência nacional no fornecimento de rótulos, etiquetas e bobinas.
+                </p>
+                <p style="color: #555; font-size: 1rem; line-height: 1.6; margin-top: 15px;">
+                    <strong>Valores</strong> como comprometimento, ética, respeito e honestidade nos guiam em todas as ações.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 25px;">
+                <button onclick="toggleMissao()" id="btn-missao" style="background-color: var(--primary-color); color: white; border: none; padding: 10px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px;">
+                    Ver Mais <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </div>
     </section>
 
     <section id="reflexao-do-dia" class="section">
@@ -410,7 +427,7 @@
       </div>
     </section>
 
-<section id="ferias" class="section">
+    <section id="ferias" class="section">
       <h2 class="section-title">Colaboradores em Férias</h2>
       <div class="ferias-container">
         <table class="ferias-table">
@@ -430,7 +447,7 @@
     </section>
 
     <section id="cipa" class="section">
-      <h2 class="section-title">CIPA</h2>
+      <h2 class="section-title">Destaques</h2>
       <div id="cipa-container" class="cipa-container">
         <div class="loading"><div class="loading-spinner"></div></div>
       </div>
@@ -438,6 +455,25 @@
   </main>
 
   <div id="footer-placeholder"></div>
+
+  <script>
+    function toggleMissao() {
+        var conteudo = document.getElementById("missao-completa");
+        var botao = document.getElementById("btn-missao");
+        
+        if (conteudo.style.display === "none") {
+            conteudo.style.display = "block";
+            botao.innerHTML = 'Ver Menos <i class="fas fa-chevron-up"></i>';
+            botao.style.backgroundColor = "#DAA520"; // Dourado
+            botao.style.color = "#003366"; // Azul
+        } else {
+            conteudo.style.display = "none";
+            botao.innerHTML = 'Ver Mais <i class="fas fa-chevron-down"></i>';
+            botao.style.backgroundColor = "var(--primary-color)"; 
+            botao.style.color = "white";
+        }
+    }
+  </script>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -630,29 +666,6 @@
     
     // --- 6. RENDERIZADORES ---
     
-    // Novidades
-    async function renderNovidades() {
-      const data = await fetchData('novidades.json');
-      const c = document.getElementById('novidades-container');
-      if (!c) return;
-      if (!data) {
-        c.innerHTML = '<p>Erro ao carregar novidades.</p>';
-        return;
-      }
-      c.innerHTML = '';
-      data.forEach(n => {
-        c.innerHTML += `
-          <div class="novidade-card">
-            <div class="novidade-img"><i class="${n.icone}"></i></div>
-            <div class="novidade-content">
-              <h3>${n.titulo}</h3>
-              <div class="novidade-date"><i class="far fa-calendar-alt"></i> ${n.data}</div>
-              <p>${n.conteudo||n.resumo||''}</p>
-            </div>
-          </div>`;
-      });
-    }
-
     // Reflexão
     async function renderReflexao() {
       const data = await fetchData('reflexaododia.json');
@@ -783,7 +796,7 @@
        }
 
        const dataFiltrada = (data || []).filter(f => {
-          try {
+         try {
              const [dia, mes, ano] = f.retorno.split("/");
              if (!dia || !mes || !ano || isNaN(Number(dia)) || isNaN(Number(mes)) || isNaN(Number(ano))) return false;
              const dataRetorno = new Date(Number(ano), Number(mes) - 1, Number(dia));
@@ -825,26 +838,25 @@
       const c = document.getElementById('cipa-container');
       if (!c) return;
       if (!raw) {
-        c.innerHTML = '<p>Erro ao carregar CIPA.</p>';
+        c.innerHTML = '<p>Erro ao carregar Destaques.</p>';
         return;
       }
       c.innerHTML = '';
       const list = Array.isArray(raw) ? raw : (typeof raw === 'object' && raw !== null ? Object.values(raw) : []);
       if (list.length === 0) {
-        c.innerHTML = '<p>Nenhuma informação da CIPA disponível.</p>';
+        c.innerHTML = '<p>Nenhuma informação de Destaque disponível.</p>';
         return;
       }
       list.forEach(i => {
         c.innerHTML += `
           <div class="cipa-card">
-            <div class="cipa-icon"><i class="${i.icone || 'fas fa-shield-alt'}"></i></div>
-            <h3>${i.titulo||i.nome||'Item CIPA'}</h3>
+            <div class="cipa-icon"><i class="${i.icone || 'fas fa-star'}"></i></div>
+            <h3>${i.titulo||i.nome||'Item Destaque'}</h3>
             <p>${i.conteudo||i.cargo_cipa||''}</p>
           </div>`;
       });
     }
 
-    renderNovidades();
     renderReflexao();
     renderAniversariantes();
     renderFerias();
