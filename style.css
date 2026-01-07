@@ -579,6 +579,96 @@ footer .footer-content {
   margin: 0; font-size: 0.75rem; opacity: 0.5; padding: 10px 0;
   background-color: #f0f0f0; text-align: center !important; width: 100%;
 }
+/* ... código anterior do rodapé ... */
+
+.developer-credit {
+  margin: 0; font-size: 0.75rem; opacity: 0.5; padding: 10px 0;
+  background-color: #f0f0f0; text-align: center !important; width: 100%;
+}
+
+/* ==================================================
+   ESTILOS DO COMUNICADO E HISTÓRICO (COLE AQUI)
+   ================================================== */
+
+/* Ajuste no wrapper para alinhar os botões */
+.comunicado-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Botão Discreto de Histórico */
+.btn-historico {
+    background: transparent;
+    border: none;
+    color: #999; /* Cor cinza discreta */
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-historico:hover {
+    color: var(--azul-aco);
+    background-color: rgba(74, 144, 226, 0.1);
+    transform: rotate(-20deg); /* Efeito sutil ao passar o mouse */
+}
+
+/* Estilo da Lista dentro do Modal de Histórico */
+.history-list-container {
+    padding: 0; /* Remove padding padrão do body modal para a lista encostar */
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+.history-item {
+    background: #fff;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.history-item:hover {
+    background-color: #f0f7ff; /* Azulzinho bem claro no hover */
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--azul-aco);
+    font-weight: 600;
+}
+
+.history-preview {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limita a 2 linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.history-empty {
+    padding: 30px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
 
 /* ==================================================
    MEDIA QUERIES
@@ -631,6 +721,7 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
  }
+
 
 
 
