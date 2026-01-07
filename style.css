@@ -43,19 +43,35 @@ img { max-width: 100%; display: block; }
 header {
   background-color: var(--branco);
   color: var(--cor-texto-header);
-  padding: 15px 0;
+  padding: 10px 0; /* Reduzi levemente para ficar mais compacto */
   position: fixed;
-  width: 100%; top: 0; z-index: 1000;
+  width: 100%; 
+  top: 0; 
+  z-index: 1000;
   box-shadow: 0 2px 10px rgba(0,0,0,0.03);
   border-bottom: 1px solid #e0e0e0;
 }
+
 .header-container {
-  width: 90%; max-width: 1080px;
+  width: 100%; /* Garante que use a largura disponível */
+  max-width: 1080px; /* Limite solicitado */
   margin: 0 auto;
-  display: flex; justify-content: space-between;
+  display: flex; 
+  justify-content: space-between;
   align-items: center;
+  padding: 0 20px; /* Margem de segurança nas laterais */
 }
-.logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; }
+
+.logo { 
+  font-size: 1.8rem; 
+  font-weight: bold; 
+  display: flex; 
+  align-items: center;
+  /* CRUCIAL: Impede que a logo seja esmagada pelo menu */
+  flex-shrink: 0; 
+  margin-right: 20px; /* Garante distância mínima do menu */
+}
+
 .logo img { height: 40px; margin-right: 10px; }
 .logo span { color: var(--cor-texto-header); letter-spacing: 1px; }
 
@@ -65,29 +81,74 @@ header {
   font-size: 1.5rem; cursor: pointer;
 }
 
-nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
-nav ul li { margin-left: 20px; }
-nav ul li a {
-  padding: 8px 12px; border-radius: 4px;
-  font-weight: 500; transition: all 0.3s;
-  color: #777;
+nav {
+  /* Garante que o menu ocupe o espaço restante mas não estoure */
+  flex-grow: 1; 
+  display: flex;
+  justify-content: flex-end; /* Alinha o menu à direita */
 }
+
+nav ul { 
+  list-style: none; 
+  display: flex; 
+  margin: 0; 
+  padding: 0; 
+  gap: 5px; /* Espaçamento inteligente entre os itens */
+  align-items: center;
+}
+
+nav ul li { 
+  margin-left: 0; /* Removido margin antigo para usar gap */
+}
+
+nav ul li a {
+  padding: 8px 10px; /* Reduzi o padding lateral para caber tudo */
+  border-radius: 4px;
+  font-weight: 500; 
+  transition: all 0.3s;
+  color: #777;
+  font-size: 0.9rem; /* Fonte levemente menor para comportar os 8 itens */
+  white-space: nowrap; /* Garante que o texto não quebre linha */
+  display: block;
+}
+
 nav ul li a:hover {
   background-color: var(--azul-claro);
   color: var(--azul-aco);
 }
 
-@media (max-width: 768px) {
+/* Ajuste para telas intermediárias (antes de virar mobile) */
+@media (max-width: 1080px) {
+    nav ul {
+        gap: 2px; /* Diminui o espaço se a tela for menor que 1080px */
+    }
+    nav ul li a {
+        padding: 8px 6px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 900px) {
+  /* Força o menu mobile aparecer antes (900px) pois o menu é muito largo */
   .menu-toggle { display: block; }
+  nav { display: none; width: 100%; } /* Esconde o container nav */
+  
   nav ul {
-    display: none; flex-direction: column;
+    display: none; 
+    flex-direction: column;
     position: absolute; top: 60px; left: 0;
     width: 100%; background-color: var(--branco);
     border-top: 1px solid #eee;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    padding: 10px 0;
   }
-  nav ul.active { display: flex; }
-  nav ul li { margin: 10px 0; text-align: center; }
+  
+  /* Quando ativo via JS */
+  nav.active { display: block; } /* Mostra o nav container */
+  nav ul.active { display: flex; } /* Mostra a lista */
+  
+  nav ul li { margin: 5px 0; text-align: center; width: 100%; }
+  nav ul li a { display: block; padding: 10px; font-size: 1.1rem;}
 }
 
 /* ==================================================
@@ -536,6 +597,7 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
  }
+
 
 
 
