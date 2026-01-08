@@ -1,27 +1,30 @@
 [
   {
     "tipo": "valor",
-    "colaborador": "Ana Souza",
-    "cargo": "Analista de Qualidade",
-    "valor": "Honestidade",
-    "foto": "https://randomuser.me/api/portraits/women/65.jpg",
-    "mensagem": "Sempre transparente nas auditorias, garantindo a confiança dos nossos clientes."
+    "nome": "Ana Souza",
+    "foto": "https://randomuser.me/api/portraits/women/44.jpg",
+    "titulo": "Comprometimento",
+    "conteudo": "A Ana demonstrou um comprometimento exemplar no projeto de inventário, ficando até mais tarde para garantir a precisão dos dados."
   },
   {
-    "tipo": "mes",
-    "colaborador": "Carlos Mendes",
-    "cargo": "Operador de Máquina",
-    "referencia": "Janeiro/2026",
+    "tipo": "destaque",
+    "nome": "João Ferreira",
     "foto": "https://randomuser.me/api/portraits/men/32.jpg",
-    "mensagem": "Bateu o recorde de produtividade com zero desperdício na linha 3."
+    "titulo": "Colaborador do Mês",
+    "conteudo": "Pela proatividade na resolução de problemas na linha de produção e pelo espírito de equipe contagiante em Janeiro."
   },
   {
     "tipo": "tempo",
-    "colaborador": "Roberto Almeida",
-    "cargo": "Líder de Logística",
-    "anos": "10",
+    "nome": "Ricardo Oliveira",
     "foto": "https://randomuser.me/api/portraits/men/85.jpg",
-    "mensagem_parabens": "Parabenize o Roberto pelos 10 anos de dedicação!",
-    "trajetoria": "Iniciou como Auxiliar em 2016, passou pela Expedição e hoje lidera a Logística com excelência."
+    "anos": 10,
+    "titulo": "10 Anos de História!",
+    "conteudo": "Parabéns, Ricardo! Agradecemos imensamente por essa década de dedicação e evolução conjunta.",
+    "trajetoria": [
+      "2014: Auxiliar de Produção",
+      "2017: Operador de Máquina",
+      "2021: Líder de Turno",
+      "Atual: Supervisor de Produção"
+    ]
   }
 ]
