@@ -1331,6 +1331,55 @@ footer .footer-content {
 }
 
 /* ==================================================
+   BLINDAGEM TOTAL CONTRA TEMA ESCURO
+   ================================================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: light !important;
+        /* Redefine as variáveis críticas para garantir que não invertam */
+        --bg-body: #f4f4f4 !important;
+        --bg-card: #ffffff !important;
+        --text-primary: #555555 !important;
+        --branco: #ffffff !important;
+        --azul-marinho: #ffffff !important; 
+    }
+    
+    html, body {
+        background-color: #f4f4f4 !important;
+        color: #555555 !important;
+        /* Garante que o navegador não force inversão */
+        color-scheme: light !important;
+    }
+    
+    /* Força fundo branco nos componentes principais */
+    .destaque-card, 
+    .mvv-card, 
+    .reflexao-card, 
+    .aniversariante-card, 
+    .card-tempo, 
+    .modal-box, 
+    header,
+    .ferias-table tr,
+    .maintenance-card {
+        background-color: #ffffff !important;
+        color: #555555 !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; /* Restaura sombras que somem no escuro */
+    }
+    
+    /* Protege textos e títulos de ficarem brancos */
+    h1, h2, h3, h4, h5, h6, p, span, li, a {
+        color: inherit; /* Respeita a cor definida pelo pai, que já forçamos a ser escura */
+    }
+
+    /* Protege inputs e botões */
+    input, textarea, select {
+        background-color: #ffffff !important;
+        color: #333333 !important;
+        border: 1px solid #ddd !important;
+    }
+}
+
+/* ==================================================
    ÁREA DE MANUTENÇÃO / EM BREVE
    ================================================== */
 .maintenance-card {
