@@ -409,22 +409,9 @@ section.section:last-of-type::after { display: none; }
   box-shadow: var(--sombra-card);
 }
 
-.reflexao-card::after {
-    content: '\f004'; 
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    position: absolute;
-    top: -10px;
-    right: 10px;
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    opacity: 0.15;
-    transform: rotate(25deg);
-}
-
 .reflexao-frase {
   font-style: italic; color: #666;
-  font-size: 1.4rem; padding: 0 10px;
+  font-size: 1.4rem; padding: 10px 20px;
 }
 
 .reflexao-autor {
@@ -433,6 +420,7 @@ section.section:last-of-type::after { display: none; }
   margin-top: 10px;
   font-style: italic;
   color: var(--primary-color);
+  padding: 0px 50px;
 }
 
 .reflexao-instrucao {
@@ -464,7 +452,7 @@ section.section:last-of-type::after { display: none; }
 .reflexao-extra {
     text-align: justify;
     margin-top: 10px;
-    padding: 0 12px;
+    padding: 10px 20px;
 }
 
 @keyframes pulse-blue {
@@ -1121,6 +1109,7 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
 
 
 
