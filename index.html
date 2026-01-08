@@ -16,6 +16,8 @@
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
   <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://jornalpsr-1b8c6-default-rtdb.firebaseio.com">
+  <link rel="dns-prefetch" href="https://jornalpsr-1b8c6-default-rtdb.firebaseio.com">
   <meta name="color-scheme" content="light only">
   <title>PortalPSR</title>
   
@@ -238,25 +240,32 @@
     }
 
     // --- 1. LÓGICA DO COMUNICADO (ATUALIZADA) ---
+// --- 1. LÓGICA DO COMUNICADO (OTIMIZADA PARA VELOCIDADE) ---
     async function carregarComunicado() {
-        const url = `${DB_URL}/Comunicado.json`;
+        // MUDANÇA AQUI: Adicionamos limitToLast=5 para baixar apenas os 5 últimos
+        // Isso torna o download minúsculo e muito rápido
+        const url = `${DB_URL}/Comunicado.json?orderBy="$key"&limitToLast=5`;
         
         try {
-            const res = await fetch(url + '?t=' + Date.now());
+            // Mantemos o timestamp para evitar cache do navegador, mas o payload é pequeno agora
+            const res = await fetch(url + '&t=' + Date.now()); 
             if (!res.ok) throw new Error("Erro ao buscar comunicado");
             
             const data = await res.json();
             if (!data) return;
 
             let lista = [];
-            if (Array.isArray(data)) {
-                lista = data.map((item, index) => ({ ...item, id: index })).filter(item => item !== null);
-            } else if (typeof data === 'object') {
+            // O Firebase com filtros sempre retorna um Objeto, não Array
+            if (typeof data === 'object') {
                 lista = Object.keys(data).map(key => ({ ...data[key], id: key }));
+            } else if (Array.isArray(data)) {
+                // Fallback caso o filtro falhe ou estrutura mude
+                lista = data.map((item, index) => ({ ...item, id: index })).filter(item => item !== null);
             }
 
             if (lista.length === 0) return;
 
+            // Ordenar por data (Do mais recente para o mais antigo)
             lista.sort((a, b) => {
                 const dataA = new Date(a['data:']);
                 const dataB = new Date(b['data:']);
@@ -264,13 +273,18 @@
             });
 
             const ultimo = lista[0];
-            dadosComunicadoGlobal = ultimo; // <--- SALVA DADOS PARA O MENU AQUI
-            const passados = lista.slice(1);
+            dadosComunicadoGlobal = ultimo; 
+            const passados = lista.slice(1); // O histórico agora terá no máximo 4 itens (os mais recentes)
 
             const texto = ultimo['comunicado:'] || "";
             const autor = ultimo['autor:'] || "RH Informa";
-            const palavras = texto.split(" ");
-            let resumo = texto;
+            
+            // Renderização mais rápida do resumo
+            const divTexto = document.createElement("div");
+            divTexto.innerHTML = texto;
+            const textoPuro = divTexto.textContent || divTexto.innerText || "";
+            const palavras = textoPuro.split(" ");
+            let resumo = textoPuro;
             if (palavras.length > 10) resumo = palavras.slice(0, 10).join(" ") + "...";
 
             const strip = document.getElementById('comunicado-strip');
@@ -278,12 +292,13 @@
             
             if (strip && pResumo) {
                 pResumo.innerHTML = `<strong>${autor}</strong> ${resumo}`;
-                strip.style.display = 'block';
+                strip.style.display = 'block'; // Mostra a barra
 
                 const relev = (ultimo['relevancia:'] || "none").toLowerCase();
                 if (relev.includes('importante')) {
                     strip.classList.add('comunicado-importante');
-                    setTimeout(() => abrirLeitura(ultimo), 1500);
+                    // Reduzi o tempo de espera para abrir o modal automático para 800ms (era 1500ms)
+                    setTimeout(() => abrirLeitura(ultimo), 800);
                 } else {
                     strip.classList.remove('comunicado-importante');
                 }
@@ -986,6 +1001,7 @@ async function renderDestaques() {
   </script>
 </body>
 </html>
+
 
 
 
