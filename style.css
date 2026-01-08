@@ -672,7 +672,6 @@ section.section:last-of-type::after { display: none; }
     flex-direction: column; 
     align-items: center; /* Centraliza horizontalmente */
     text-align: center;  /* Garante que o texto fique centralizado */
-    gap: 15px;
 }
 
 .comunicado-icon {
@@ -1146,3 +1145,4 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
