@@ -1,17 +1,24 @@
-{
-  "membros": {
-    "titulo": "Membros da CIPA",
-    "icone": "fas fa-hard-hat",
-    "conteudo": "Em Breve Será Atualizado."
+[
+  {
+    "tipo": "valor",
+    "colaborador": "Ana Souza",
+    "titulo_valor": "Comprometimento",
+    "foto": "https://randomuser.me/api/portraits/women/44.jpg",
+    "texto": "A Ana demonstrou um comprometimento exemplar no projeto de final de ano, garantindo a entrega antes do prazo com qualidade excepcional."
   },
-  "reunioes": {
-    "titulo": "Reuniões",
-    "icone": "fas fa-calendar-alt",
-    "conteudo": "Em Breve Será Atualizado."
+  {
+    "tipo": "mes",
+    "colaborador": "Carlos Silva",
+    "referencia": "Janeiro/2026",
+    "foto": "https://randomuser.me/api/portraits/men/32.jpg",
+    "texto": "Eficiência recorde na linha de produção e proatividade na resolução de problemas da equipe."
   },
-  "campanhas": {
-    "titulo": "Realizações de 2025",
-    "icone": "fas fa-bullhorn",
-    "conteudo": "Em Breve Será Atualizado."
+  {
+    "tipo": "tempo",
+    "colaborador": "Roberto Almeida",
+    "anos": "10",
+    "foto": "https://randomuser.me/api/portraits/men/85.jpg",
+    "trajetoria": "Iniciou como Auxiliar de Produção em 2016, passou pela Expedição e hoje lidera o time de Logística com maestria.",
+    "mensagem_linkedin": "Parabenize o Roberto pelos 10 anos de dedicação!"
   }
-}
+]
