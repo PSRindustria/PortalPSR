@@ -863,8 +863,8 @@ section.section:last-of-type::after { display: none; }
 }
 
 .btn-ler-comunicado:hover {
-    background-color: var(--azul-aco);
-    color: #fff;
+    background-color: var(--azul-aco) !important; /* Adicionado !important */
+    color: #fff !important; /* Adicionado !important */
 }
 
 .btn-historico {
@@ -1445,5 +1445,6 @@ footer .footer-content {
         width: 90%;
     }
 }
+
 
 
