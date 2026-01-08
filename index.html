@@ -63,7 +63,8 @@
         <p id="modal-texto">...</p>
       </div>
       <div class="modal-footer">
-        <button class="btn-fechar-modal" onclick="fecharModal('modal-comunicado')">Entendido</button>
+        <button id="btn-entendido" class="btn-fechar-modal">Entendido</button>
+        <span id="contador-leituras" class="contador-leituras"></span>
       </div>
     </div>
   </div>
@@ -200,8 +201,32 @@
       document.getElementById(id).classList.remove('active');
   }
 
+  // Identidade do Dispositivo (Gera um ID único e salva no navegador)
+  function getDeviceId() {
+      let id = localStorage.getItem('portal_device_id');
+      if (!id) {
+          id = 'dev_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+          localStorage.setItem('portal_device_id', id);
+      }
+      return id;
+  }
+
+  // Variável para saber qual comunicado está aberto
+  let currentComunicadoId = null;
+
   document.addEventListener('DOMContentLoaded', async () => {
     
+    // Configuração do botão Entendido
+    const btnEntendido = document.getElementById('btn-entendido');
+    if (btnEntendido) {
+        btnEntendido.addEventListener('click', async () => {
+            if (currentComunicadoId !== null) {
+                await registrarLeitura(currentComunicadoId);
+            }
+            fecharModal('modal-comunicado');
+        });
+    }
+
     // --- 1. LÓGICA DO COMUNICADO ---
     async function carregarComunicado() {
         const url = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/Comunicado.json";
@@ -214,10 +239,13 @@
             if (!data) return;
 
             let lista = [];
+            // Ajuste para preservar o ID do comunicado
             if (Array.isArray(data)) {
-                lista = data.filter(item => item !== null);
+                // Se for array, o ID é o índice
+                lista = data.map((item, index) => ({ ...item, id: index })).filter(item => item !== null);
             } else if (typeof data === 'object') {
-                lista = Object.values(data);
+                // Se for objeto, o ID é a chave
+                lista = Object.keys(data).map(key => ({ ...data[key], id: key }));
             }
 
             if (lista.length === 0) return;
@@ -241,9 +269,20 @@
 
             const strip = document.getElementById('comunicado-strip');
             const pResumo = document.getElementById('comunicado-resumo');
+            
             if (strip && pResumo) {
                 pResumo.innerHTML = `<strong>${autor}</strong> ${resumo}`;
                 strip.style.display = 'block';
+
+                // Lógica de Cor (Importante)
+                const relev = (ultimo['relevancia:'] || "none").toLowerCase();
+                if (relev.includes('importante')) {
+                    strip.classList.add('comunicado-importante');
+                    // Abre automático se for importante
+                    setTimeout(() => abrirLeitura(ultimo), 1500);
+                } else {
+                    strip.classList.remove('comunicado-importante');
+                }
             }
 
             // Configurar Botões
@@ -253,17 +292,11 @@
             const btnHist = document.getElementById('btn-open-historico');
             if (btnHist) {
                 if (passados.length > 0) {
-                    btnHist.style.display = 'flex'; // Mostra botão
+                    btnHist.style.display = 'flex'; 
                     btnHist.onclick = () => abrirHistorico(passados);
                 } else {
                     btnHist.style.display = 'none';
                 }
-            }
-
-            // Relevância
-            const relev = (ultimo['relevancia:'] || "none").toLowerCase();
-            if (relev.includes('importante')) {
-                setTimeout(() => abrirLeitura(ultimo), 1500);
             }
 
         } catch (error) {
@@ -271,9 +304,54 @@
         }
     }
 
+    // Função para registrar leitura no Firebase
+    async function registrarLeitura(comunicadoId) {
+        const deviceId = getDeviceId();
+        // Caminho: Leituras_Confirmadas / ID_Comunicado / ID_Device
+        const urlBase = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com";
+        const url = `${urlBase}/Leituras_Confirmadas/${comunicadoId}/${deviceId}.json`;
+
+        try {
+            await fetch(url, {
+                method: 'PUT',
+                body: JSON.stringify(true)
+            });
+            console.log("Leitura confirmada para:", comunicadoId);
+        } catch (e) {
+            console.error("Erro ao registrar leitura:", e);
+        }
+    }
+
+    // Função para contar leituras
+    async function contarLeituras(comunicadoId) {
+        const contadorEl = document.getElementById('contador-leituras');
+        if (!contadorEl) return;
+        contadorEl.textContent = "Verificando confirmações...";
+
+        const urlBase = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com";
+        // .json?shallow=true não retorna a contagem direta em todos os casos REST, 
+        // então pegamos o objeto e contamos as chaves.
+        const url = `${urlBase}/Leituras_Confirmadas/${comunicadoId}.json`;
+
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            let total = 0;
+            if (data) {
+                total = Object.keys(data).length;
+            }
+            contadorEl.textContent = `${total} leitura(s) confirmada(s)`;
+        } catch (e) {
+            contadorEl.textContent = "";
+        }
+    }
+
     function abrirLeitura(item) {
         fecharModal('modal-lista-historico');
         const modal = document.getElementById('modal-comunicado');
+        
+        currentComunicadoId = item.id; // Salva o ID atual globalmente
+
         const dataRaw = item['data:'];
         let dataFmt = "--/--/----";
         if (dataRaw) dataFmt = new Date(dataRaw).toLocaleDateString('pt-BR');
@@ -281,6 +359,10 @@
         document.getElementById('modal-autor').textContent = item['autor:'];
         document.getElementById('modal-data').textContent = dataFmt;
         document.getElementById('modal-texto').textContent = item['comunicado:'];
+        
+        // Carrega o contador
+        contarLeituras(currentComunicadoId);
+
         modal.classList.add('active');
     }
 
