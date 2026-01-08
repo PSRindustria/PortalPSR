@@ -265,7 +265,7 @@
             const autor = ultimo['autor:'] || "RH Informa";
             const palavras = texto.split(" ");
             let resumo = texto;
-            if (palavras.length > 13) resumo = palavras.slice(0, 13).join(" ") + "...";
+            if (palavras.length > 10) resumo = palavras.slice(0, 10).join(" ") + "...";
 
             const strip = document.getElementById('comunicado-strip');
             const pResumo = document.getElementById('comunicado-resumo');
@@ -831,4 +831,5 @@
   </script>
 </body>
 </html>
+
 
