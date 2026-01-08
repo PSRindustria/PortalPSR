@@ -203,7 +203,7 @@
   </script>
 
   <script>
-  // --- CONFIGURAÇÃO GLOBAL ---
+// --- CONFIGURAÇÃO GLOBAL ---
   const DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com";
 
   // Funções Globais para o Comunicado
@@ -220,8 +220,9 @@
       return id;
   }
 
-let currentComunicadoId = null;
-  let dadosComunicadoGlobal = null; // NOVA VARIÁVEL GLOBAL
+  // --- VARIÁVEIS GLOBAIS ---
+  let currentComunicadoId = null;
+  let dadosComunicadoGlobal = null; // <--- NOVA VARIÁVEL AQUI
 
   document.addEventListener('DOMContentLoaded', async () => {
     
@@ -236,8 +237,8 @@ let currentComunicadoId = null;
         });
     }
 
-    // --- 1. LÓGICA DO COMUNICADO ---
-async function carregarComunicado() {
+    // --- 1. LÓGICA DO COMUNICADO (ATUALIZADA) ---
+    async function carregarComunicado() {
         const url = `${DB_URL}/Comunicado.json`;
         
         try {
@@ -396,7 +397,7 @@ async function carregarComunicado() {
 
           if (targetSection) {
             e.preventDefault(); 
-            const menuEl = document.getElementById('menu'); // Tenta pegar pelo ID que vem do menu.html
+            const menuEl = document.getElementById('menu'); 
             if (menuEl) menuEl.classList.remove('active');
             
             const isMobile = window.innerWidth < 768;
@@ -497,7 +498,7 @@ async function carregarComunicado() {
       }
     });
     
-    // --- 4. CARREGAMENTO MENU/FOOTER ---
+    // --- 4. CARREGAMENTO MENU/FOOTER (ATUALIZADO COM CLIQUE) ---
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
         .then(r => r.text())
@@ -507,13 +508,27 @@ async function carregarComunicado() {
           
           if (file === 'menu') {
             const toggle = document.getElementById('menu-toggle');
-            // CORREÇÃO: Pegar o NAV, não a UL, pois é o NAV que tem display:none no mobile
             const navEl = document.getElementById('nav-principal'); 
             
             if (toggle && navEl) {
               toggle.addEventListener('click', () => {
                 navEl.classList.toggle('active');
               });
+            }
+
+            // Lógica para o botão Comunicado do Menu
+            const btnMenuComunicado = document.getElementById('link-abrir-comunicado-menu');
+            if (btnMenuComunicado) {
+                btnMenuComunicado.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    if(navEl) navEl.classList.remove('active');
+
+                    if (dadosComunicadoGlobal) {
+                        abrirLeitura(dadosComunicadoGlobal);
+                    } else {
+                        console.log("Aguardando carregamento dos dados...");
+                    }
+                });
             }
           }
         }).catch(e => console.error(`Error loading ${file}.html:`, e));
@@ -971,6 +986,7 @@ async function renderDestaques() {
   </script>
 </body>
 </html>
+
 
 
 
