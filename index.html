@@ -687,106 +687,100 @@
      }
 
     // --- 7. DESTAQUES (Reconhecimento) ---
-async function renderDestaques() {
-    let raw = await fetchData('destaques.json');
-    // Fallback caso ainda use o nome antigo
-    if (!raw) raw = await fetchData('cipa.json');
-
-    const container = document.getElementById('cipa-container'); // Mantenha o ID ou mude para 'destaques-container' no HTML
-    if (!container) return;
-
-    if (!raw || (Array.isArray(raw) && raw.length === 0)) {
-        container.innerHTML = '<p>Nenhum destaque no momento.</p>';
-        return;
-    }
-
-    container.innerHTML = '';
-    const lista = Array.isArray(raw) ? raw : Object.values(raw);
-
-    lista.forEach(item => {
-        let cardHtml = '';
-        const fotoHtml = item.foto 
-            ? `<div class="destaque-foto"><img src="${item.foto}" alt="${item.nome}"></div>` 
-            : `<div class="cipa-icon"><i class="fas fa-star"></i></div>`;
-
-        // 1. CARD VALOR
-        if (item.tipo === 'valor') {
-            cardHtml = `
-                <div class="cipa-card card-valor">
-                    <div class="badge-tipo badge-valor"><i class="fas fa-gem"></i> Nosso Valor</div>
-                    ${fotoHtml}
-                    <h3>${item.nome}</h3>
-                    <h4 class="subtitulo-valor">${item.titulo}</h4>
-                    <p>${item.conteudo}</p>
-                </div>
-            `;
-        } 
-        // 2. CARD DESTAQUE DO MÊS
-        else if (item.tipo === 'destaque') {
-            cardHtml = `
-                <div class="cipa-card card-destaque">
-                    <div class="badge-tipo badge-destaque"><i class="fas fa-trophy"></i> Destaque do Mês</div>
-                    ${fotoHtml}
-                    <h3>${item.nome}</h3>
-                    <div class="star-rating">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p>${item.conteudo}</p>
-                </div>
-            `;
-        } 
-        // 3. CARD TEMPO DE EMPRESA (LinkedIn Style)
-        else if (item.tipo === 'tempo') {
-            // Monta a lista de trajetória se houver
-            let trajetoriaHtml = '';
-            if (item.trajetoria && Array.isArray(item.trajetoria)) {
-                trajetoriaHtml = `<div class="trajetoria-container">
-                    <h5>Trajetória:</h5>
-                    <ul class="timeline-list">
-                        ${item.trajetoria.map(t => `<li>${t}</li>`).join('')}
-                    </ul>
-                </div>`;
-            }
-
-            cardHtml = `
-                <div class="cipa-card card-tempo">
-                    <div class="badge-tipo badge-tempo"><i class="fas fa-calendar-check"></i> ${item.anos} Anos de Casa</div>
-                    ${fotoHtml}
-                    <h3>${item.nome}</h3>
-                    <p class="texto-agradecimento">${item.conteudo}</p>
-                    
-                    ${trajetoriaHtml}
-
-                    <div class="linkedin-actions">
-                        <button class="btn-parabenizar" onclick="alert('Parabéns enviado para ${item.nome}!')">
-                            👏 Parabenizar
-                        </button>
-                        <div class="input-comentario-wrapper">
-                            <img src="https://ui-avatars.com/api/?name=Eu&background=random" class="min-avatar">
-                            <input type="text" placeholder="Deixe uma mensagem..." class="input-linkedin">
-                            <button class="btn-send"><i class="fas fa-paper-plane"></i></button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        } 
-        // FALLBACK (Padrão antigo)
-        else {
-            cardHtml = `
-                <div class="cipa-card">
-                    ${fotoHtml}
-                    <h3>${item.titulo || item.nome}</h3>
-                    <p>${item.conteudo}</p>
-                </div>
-            `;
+    async function renderDestaques() {
+        const raw = await fetchData('destaques.json');
+        const container = document.getElementById('destaques-container');
+        
+        if (!container) return;
+        if (!raw) {
+            container.innerHTML = '<p>Erro ao carregar destaques.</p>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        const lista = Array.isArray(raw) ? raw : (typeof raw === 'object' && raw !== null ? Object.values(raw) : []);
+        
+        if (lista.length === 0) {
+            container.innerHTML = '<p>Nenhum destaque no momento.</p>';
+            return;
         }
 
-        container.innerHTML += cardHtml;
-    });
-}
+        lista.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'destaque-card';
+            
+            // Imagem ou Ícone Genérico
+            let imgHtml = item.foto 
+                ? `<div class="destaque-img"><img src="${item.foto}" alt="${item.colaborador}"></div>` 
+                : `<div class="destaque-icon-generic"><i class="fas fa-user-circle"></i></div>`;
 
-// Chame a nova função ao final do DOMContentLoaded
-// renderDestaques();
+            // --- LÓGICA DOS 3 TIPOS ---
+
+            // 1. CARD VALOR
+            if (item.tipo === 'valor') {
+                div.classList.add('card-valor');
+                div.innerHTML = `
+                    <div class="badge-destaque badge-valor"><i class="fas fa-gem"></i> Guardião do Valor</div>
+                    ${imgHtml}
+                    <h3>${item.colaborador}</h3>
+                    <p class="destaque-cargo">${item.cargo}</p>
+                    <div class="valor-box">
+                        <span class="valor-label">Valor:</span>
+                        <span class="valor-nome">${item.valor}</span>
+                    </div>
+                    <p class="destaque-msg">"${item.mensagem}"</p>
+                `;
+            }
+            // 2. CARD DESTAQUE DO MÊS
+            else if (item.tipo === 'mes') {
+                div.classList.add('card-mes');
+                div.innerHTML = `
+                    <div class="badge-destaque badge-mes"><i class="fas fa-trophy"></i> Destaque do Mês</div>
+                    ${imgHtml}
+                    <h3>${item.colaborador}</h3>
+                    <p class="destaque-cargo">${item.cargo}</p>
+                    <div class="mes-referencia">${item.referencia}</div>
+                    <p class="destaque-msg">"${item.mensagem}"</p>
+                `;
+            }
+            // 3. CARD TEMPO DE EMPRESA
+            else if (item.tipo === 'tempo') {
+                div.classList.add('card-tempo');
+                const idUnico = item.colaborador.replace(/\s+/g, '_').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // ID para o Firebase
+
+                div.innerHTML = `
+                    <div class="header-tempo">
+                        <div class="selo-anos">${item.anos}<span>anos</span></div>
+                        <div class="info-tempo">
+                            <h3>${item.colaborador}</h3>
+                            <p>${item.cargo}</p>
+                        </div>
+                    </div>
+                    <div class="body-tempo">
+                        <p class="linkedin-cta">${item.mensagem_parabens}</p>
+                        <div class="trajetoria-box">
+                            <i class="fas fa-history"></i>
+                            <p>${item.trajetoria}</p>
+                        </div>
+                        
+                        <div class="comentarios-area">
+                            <div class="comentarios-lista" id="lista-${idUnico}">
+                                <small>Carregando comentários...</small>
+                            </div>
+                            <div class="input-area">
+                                <input type="text" id="input-${idUnico}" placeholder="Deixe seu parabéns...">
+                                <button onclick="enviarComentario('${idUnico}')"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Carrega comentários após criar o elemento
+                setTimeout(() => carregarComentarios(idUnico), 500);
+            }
+
+            container.appendChild(div);
+        });
     }
 
     renderReflexao();
@@ -955,4 +949,3 @@ async function renderDestaques() {
   </script>
 </body>
 </html>
-
