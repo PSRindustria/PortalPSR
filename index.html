@@ -685,8 +685,8 @@
      }
 
     // --- 7. DESTAQUES (Reconhecimento) ---
-    async function renderDestaques() {
-        const raw = await fetchData('destaques.json');
+async function renderDestaques() {
+        const raw = await fetchData('destaques.json'); //
         const container = document.getElementById('destaques-container');
         
         if (!container) return;
@@ -707,15 +707,15 @@
             const div = document.createElement('div');
             div.className = 'destaque-card';
             
-            // Lógica de Foto Genérica ou Específica
+            // Define Imagem Principal (usada no Valor e Mês)
             let imgHtml = item.foto 
                 ? `<div class="destaque-img"><img src="${item.foto}" alt="${item.colaborador}"></div>` 
                 : `<div class="destaque-icon-generic"><i class="fas fa-user-circle"></i></div>`;
 
-            // Cria um ID único combinando nome e tipo para o banco de dados de comentários
+            // Gera ID único para os comentários
             const idUnico = (item.colaborador + "_" + item.tipo).replace(/\s+/g, '_').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-            // Template dos Comentários (Reutilizável)
+            // Template da Área de Comentários (Igual para todos)
             const areaComentariosHtml = `
                 <div class="comentarios-area">
                     <div class="comentarios-lista" id="lista-${idUnico}">
@@ -728,40 +728,44 @@
                 </div>
             `;
 
-            // 1. CARD VALOR
+            // --- TIPO 1: VALOR ---
             if (item.tipo === 'valor') {
                 div.classList.add('card-valor');
                 div.innerHTML = `
                     <div class="badge-destaque badge-valor"><i class="fas fa-gem"></i> Guardião do Valor</div>
-                    ${imgHtml}
-                    <h3>${item.colaborador}</h3>
-                    <p class="destaque-cargo">${item.cargo}</p>
-                    <div class="valor-box">
-                        <span class="valor-label">Valor:</span>
-                        <span class="valor-nome">${item.valor}</span>
+                    <div class="destaque-body-padrao">
+                        ${imgHtml}
+                        <h3>${item.colaborador}</h3>
+                        <p class="destaque-cargo">${item.cargo}</p>
+                        <div class="valor-box">
+                            <span class="valor-label">Valor:</span>
+                            <span class="valor-nome">${item.valor}</span>
+                        </div>
+                        <p class="destaque-msg">"${item.mensagem}"</p>
+                        ${areaComentariosHtml}
                     </div>
-                    <p class="destaque-msg">"${item.mensagem}"</p>
-                    ${areaComentariosHtml}
                 `;
             }
-            // 2. CARD DESTAQUE DO MÊS
+            // --- TIPO 2: DESTAQUE DO MÊS ---
             else if (item.tipo === 'mes') {
                 div.classList.add('card-mes');
                 div.innerHTML = `
                     <div class="badge-destaque badge-mes"><i class="fas fa-trophy"></i> Destaque do Mês</div>
-                    ${imgHtml}
-                    <h3>${item.colaborador}</h3>
-                    <p class="destaque-cargo">${item.cargo}</p>
-                    <div class="mes-referencia">${item.referencia}</div>
-                    <p class="destaque-msg">"${item.mensagem}"</p>
-                    ${areaComentariosHtml}
+                    <div class="destaque-body-padrao">
+                        ${imgHtml}
+                        <h3>${item.colaborador}</h3>
+                        <p class="destaque-cargo">${item.cargo}</p>
+                        <div class="mes-referencia">${item.referencia}</div>
+                        <p class="destaque-msg">"${item.mensagem}"</p>
+                        ${areaComentariosHtml}
+                    </div>
                 `;
             }
-            // 3. CARD TEMPO DE EMPRESA (Atualizado com Foto)
+            // --- TIPO 3: TEMPO DE EMPRESA ---
             else if (item.tipo === 'tempo') {
                 div.classList.add('card-tempo');
                 
-                // Foto específica para o card tempo (menor, ao lado do nome)
+                // Foto específica para o layout do card Tempo (menor, ao lado do nome)
                 let fotoTempoHtml = item.foto 
                     ? `<img src="${item.foto}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #fff;">` 
                     : `<i class="fas fa-user-circle" style="font-size:40px;"></i>`;
@@ -777,8 +781,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="body-tempo">
-                        <p class="linkedin-cta">${item.mensagem_parabens}</p>
+                    <div class="body-tempo"> <p class="linkedin-cta">${item.mensagem_parabens}</p>
                         <div class="trajetoria-box">
                             <i class="fas fa-history"></i>
                             <p>${item.trajetoria}</p>
@@ -789,7 +792,7 @@
             }
 
             container.appendChild(div);
-            // Inicia o carregamento dos comentários para este card específico
+            // Carrega comentários
             setTimeout(() => carregarComentarios(idUnico), 500);
         });
     }
@@ -960,4 +963,5 @@
   </script>
 </body>
 </html>
+
 
