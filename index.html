@@ -167,9 +167,9 @@
       </div>
     </section>
 
-    <section id="cipa" class="section">
-      <h2 class="section-title">Destaques</h2>
-      <div id="cipa-container" class="cipa-container">
+<section id="destaques" class="section">
+      <h2 class="section-title">🏆 Mural de <br class="mobile-break"> Reconhecimento</h2>
+      <div id="destaques-container" class="destaques-container">
         <div class="loading"><div class="loading-spinner"></div></div>
       </div>
     </section>
@@ -703,35 +703,113 @@
      }
 
     // CIPA
-    async function renderCIPA() {
-      const raw = await fetchData('cipa.json');
-      const c = document.getElementById('cipa-container');
-      if (!c) return;
+async function renderDestaques() {
+      const raw = await fetchData('destaques.json');
+      const container = document.getElementById('destaques-container');
+      
+      if (!container) return;
+      
       if (!raw) {
-        c.innerHTML = '<p>Erro ao carregar Destaques.</p>';
+        container.innerHTML = '<p>Erro ao carregar destaques.</p>';
         return;
       }
-      c.innerHTML = '';
-      const list = Array.isArray(raw) ? raw : (typeof raw === 'object' && raw !== null ? Object.values(raw) : []);
-      if (list.length === 0) {
-        c.innerHTML = '<p>Nenhuma informação de Destaque disponível.</p>';
+      
+      container.innerHTML = '';
+      
+      // Converte para array se não for
+      const lista = Array.isArray(raw) ? raw : (typeof raw === 'object' && raw !== null ? Object.values(raw) : []);
+      
+      if (lista.length === 0) {
+        container.innerHTML = '<p>Nenhum destaque no momento.</p>';
         return;
       }
-      list.forEach(i => {
-        c.innerHTML += `
-          <div class="cipa-card">
-            <div class="cipa-icon"><i class="${i.icone || 'fas fa-star'}"></i></div>
-            <h3>${i.titulo||i.nome||'Item Destaque'}</h3>
-            <p>${i.conteudo||i.cargo_cipa||''}</p>
-          </div>`;
+
+      lista.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'destaque-card';
+        
+        // Define imagem ou ícone padrão se não tiver foto
+        let imagemHtml = '';
+        if (item.foto) {
+            imagemHtml = `<div class="destaque-img"><img src="${item.foto}" alt="${item.colaborador}"></div>`;
+        } else {
+            imagemHtml = `<div class="destaque-icon-generic"><i class="fas fa-user"></i></div>`;
+        }
+
+        // LÓGICA DE RENDERIZAÇÃO POR TIPO DE CARD
+        
+        // 1. CARD VALOR
+        if (item.tipo === 'valor') {
+            div.classList.add('card-tipo-valor');
+            div.innerHTML = `
+                <div class="destaque-badge"><i class="fas fa-gem"></i> Guardião do Valor</div>
+                ${imagemHtml}
+                <h3>${item.colaborador}</h3>
+                <h4 class="valor-titulo">"${item.titulo_valor}"</h4>
+                <p class="destaque-texto">${item.texto}</p>
+            `;
+        } 
+        
+        // 2. CARD DESTAQUE DO MÊS
+        else if (item.tipo === 'mes') {
+            div.classList.add('card-tipo-mes');
+            div.innerHTML = `
+                <div class="destaque-badge"><i class="fas fa-trophy"></i> Destaque do Mês</div>
+                ${imagemHtml}
+                <h3>${item.colaborador}</h3>
+                <span class="destaque-ref">${item.referencia || 'Este mês'}</span>
+                <p class="destaque-texto">${item.texto}</p>
+            `;
+        } 
+        
+        // 3. CARD TEMPO DE EMPRESA (Estilo LinkedIn)
+        else if (item.tipo === 'tempo') {
+            div.classList.add('card-tipo-tempo');
+            
+            let trajetoriaHtml = '';
+            if (item.trajetoria) {
+                trajetoriaHtml = `
+                    <div class="timeline-box">
+                        <i class="fas fa-route"></i>
+                        <p>${item.trajetoria}</p>
+                    </div>
+                `;
+            }
+
+            div.innerHTML = `
+                <div class="destaque-header-tempo">
+                    <div class="tempo-selo">${item.anos} Anos</div>
+                    <div class="tempo-info">
+                        <h3>${item.colaborador}</h3>
+                        <span>Casa Nova</span>
+                    </div>
+                </div>
+                <div class="destaque-body-tempo">
+                    <p class="linkedin-msg">${item.mensagem_linkedin || `Parabenize ${item.colaborador.split(' ')[0]} por essa conquista!`}</p>
+                    ${trajetoriaHtml}
+                </div>
+                
+                <div class="linkedin-actions">
+                    <button class="btn-like" onclick="this.classList.toggle('liked')">
+                        <i class="far fa-thumbs-up"></i> Gostei
+                    </button>
+                    <a href="https://wa.me/?text=Parabéns%20${item.colaborador}%20pelos%20${item.anos}%20anos%20de%20casa!" target="_blank" class="btn-comment">
+                        <i class="far fa-comment-dots"></i> Parabenizar
+                    </a>
+                </div>
+            `;
+        }
+
+        container.appendChild(div);
       });
     }
 
+    // Chame a nova função ao final
     renderReflexao();
     renderAniversariantes();
     renderFerias();
-    renderCIPA();
-  });
+    renderDestaques(); // <--- Nova chamada
+});
   </script>
 
   <script>
@@ -839,6 +917,7 @@
   </script>
 </body>
 </html>
+
 
 
 
