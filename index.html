@@ -220,7 +220,8 @@
       return id;
   }
 
-  let currentComunicadoId = null;
+let currentComunicadoId = null;
+  let dadosComunicadoGlobal = null; // NOVA VARIÁVEL GLOBAL
 
   document.addEventListener('DOMContentLoaded', async () => {
     
@@ -236,7 +237,7 @@
     }
 
     // --- 1. LÓGICA DO COMUNICADO ---
-    async function carregarComunicado() {
+async function carregarComunicado() {
         const url = `${DB_URL}/Comunicado.json`;
         
         try {
@@ -262,6 +263,7 @@
             });
 
             const ultimo = lista[0];
+            dadosComunicadoGlobal = ultimo; // <--- SALVA DADOS PARA O MENU AQUI
             const passados = lista.slice(1);
 
             const texto = ultimo['comunicado:'] || "";
@@ -969,6 +971,7 @@ async function renderDestaques() {
   </script>
 </body>
 </html>
+
 
 
 
