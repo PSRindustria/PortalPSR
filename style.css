@@ -1,23 +1,34 @@
-/******/
 /* ==================================================
    VARIÁVEIS DE COR - TEMA JANEIRO BRANCO (CLEAN)
    ================================================== */
 :root {
-  /* Paleta: Branco, Cinza Claro e Azul */
+  /* --- PALETA BASE (DO STYLE ORIGINAL) --- */
   --azul-marinho: #ffffff; /* Header Branco */
   --azul-aco: #4a90e2;     /* Azul para detalhes e ícones */
   --azul-claro: #f4f6f8;   /* Cinza azulado muito claro para fundos */
-  
   --cinza-escuro: #555555; /* Texto Principal */
   --branco: #FFFFFF;
   --dourado: #4a90e2;      /* Substituído Dourado por Azul no tema Clean */
   --prata-fundo: #f9f9f9;  /* Fundo da página cinza muito claro */
-  
   --transicao: 0.3s ease;
-  
-  /* Sombra muito suave */
   --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.04);
   --cor-texto-header: #4a90e2; 
+
+  /* --- VARIÁVEIS ADICIONAIS (VINDAS DO HTML) --- */
+  color-scheme: light;
+  --bg-body: #f4f4f4;
+  --bg-card: #ffffff;
+  --text-primary: #555555;
+  
+  /* Cores do Sistema (Janeiro Branco) */
+  --primary-color: #4a90e2; 
+  --secondary-color: #e0e0e0;
+  
+  /* Cores Específicas da Missão e Valores (Identidade PSR) */
+  /* Nota: Redefinições aqui garantem compatibilidade com componentes antigos */
+  --mvv-azul-marinho: #003366; 
+  --mvv-dourado: #DAA520;
+  --sombra-mvv: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* ==================================================
@@ -26,20 +37,27 @@
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 
+html {
+  scroll-behavior: smooth;
+  height: auto; 
+  overflow-y: auto;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--prata-fundo);
-  color: var(--cinza-escuro);
+  background-color: var(--bg-body) !important; /* Mantido !important do HTML original */
+  color: var(--text-primary) !important;
   line-height: 1.5;
-  background-image: none; /* Removida textura para ficar mais limpo */
+  background-image: none;
+  overflow-x: hidden;
 }
 
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
 
-/* ==================================================
-   HEADER E NAVEGAÇÃO
-   ================================================== */
+/* CLASSE PARA QUEBRA DE LINHA SÓ NO MOBILE */
+.mobile-break { display: none; }
+
 /* ==================================================
    HEADER E NAVEGAÇÃO
    ================================================== */
@@ -55,10 +73,9 @@ header {
 
 .header-container {
   width: 100%;
-  max-width: 1080px; /* Limite total de 1080px */
+  max-width: 1080px;
   margin: 0 auto;
   display: flex;
-  /* MUDANÇA: flex-start junta a logo e o menu na esquerda */
   justify-content: flex-start; 
   align-items: center;
   padding: 0 20px;
@@ -69,18 +86,13 @@ header {
   font-weight: bold; 
   display: flex; 
   align-items: center;
-  flex-shrink: 0; /* Impede que a logo amasse */
-  
-  /* CONTROLE DE DISTÂNCIA:
-     Aqui definimos a distância exata entre a Logo e o botão "Início".
-     Ajuste esse valor se quiser mais perto ou mais longe. */
+  flex-shrink: 0; 
   margin-right: 40px; 
 }
 
 .logo img { height: 40px; margin-right: 10px; }
 .logo span { color: var(--cor-texto-header); letter-spacing: 1px; }
 
-/* Botão Hamburguer (padrão oculto) */
 .menu-toggle {
   display: none; 
   background: none;
@@ -88,14 +100,10 @@ header {
   color: var(--cor-texto-header);
   font-size: 1.5rem; 
   cursor: pointer;
-  padding: 5px; /* Aumenta a área de toque */
+  padding: 5px; 
 }
 
-/* Área do Menu */
-nav {
-  /* Ocupa o espaço restante, mas respeita o alinhamento */
-  flex-grow: 1; 
-}
+nav { flex-grow: 1; }
 
 nav ul { 
   list-style: none; 
@@ -103,12 +111,7 @@ nav ul {
   margin: 0; 
   padding: 0; 
   align-items: center;
-  
-  /* DISTRIBUIÇÃO PROPORCIONAL:
-     Isso cria um espaço igual entre cada item do menu (Início, Cardápio, etc) */
   gap: 15px; 
-  
-  /* Garante que o menu comece logo após a margem da logo */
   justify-content: flex-start; 
 }
 
@@ -119,7 +122,7 @@ nav ul li a {
   transition: all 0.3s;
   color: #777;
   font-size: 0.9rem;
-  white-space: nowrap; /* Não deixa quebrar linha */
+  white-space: nowrap; 
   display: block;
 }
 
@@ -129,153 +132,115 @@ nav ul li a:hover {
 }
 
 /* ==================================================
-   RESPONSIVIDADE (MOBILE - 768px)
+   BANNER PRINCIPAL
    ================================================== */
-@media (max-width: 768px) {
-  
-  /* No celular, precisamos voltar a separar os itens (Logo na esquerda, Menu na direita) */
-  .header-container {
-    justify-content: space-between; 
-  }
-
-  .logo {
-    margin-right: 0; /* Remove a margem fixa no mobile */
-  }
-
-  .menu-toggle { 
-    display: block; /* O menu hamburguer volta a aparecer */
-  }
-
-  /* Esconde o menu desktop e prepara o menu mobile (dropdown) */
-  nav {
-    position: absolute;
-    top: 100%; /* Fica logo abaixo do header */
-    left: 0;
-    width: 100%;
-    background-color: var(--branco);
-    border-top: 1px solid #eee;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    
-    /* Lógica de esconder/mostrar */
-    display: none; 
-  }
-  
-  /* Classe que o Javascript adiciona ao clicar no hamburguer */
-  nav.active { 
-    display: block; 
-  }
-
-  nav ul {
-    flex-direction: column; /* Lista vertical */
-    width: 100%;
-    padding: 10px 0;
-    gap: 0; /* Remove o gap horizontal */
-  }
-
-  nav ul li { 
-    width: 100%; 
-    text-align: center;
-    margin: 0;
-  }
-
-  nav ul li a {
-    padding: 15px; /* Área de toque maior no celular */
-    font-size: 1.1rem;
-    border-bottom: 1px solid #f9f9f9;
-  }
-}
-
-/* ==================================================
-   BANNER PRINCIPAL (Com Degradê "Fresh" Azul/Teal)
-   ================================================== */
-.banner {
+section.banner {
   margin-top: 35px; 
-  height: 400px;
-  
-  /* O SEGRED DO DEGRADÊ BONITO:
-     1. Começa com o Azul Sereno sólido (0.9) na esquerda superior.
-     2. Termina com um Verde Água/Ciano mais transparente (0.6) na direita inferior.
-     Isso dá profundidade e deixa a foto aparecer sutilmente no fundo. */
+  min-height: 400px; /* Ajustado para min-height conforme HTML original */
+  height: auto;
   background: 
-    linear-gradient(135deg, rgba(74, 144, 226, 0.9) 0%, rgba(0, 206, 201, 0.6) 100%), 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 220, 0.6) 100%), 
     url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
     
   background-size: cover;
   background-position: center;
-  background-attachment: scroll; /* Dica: Se mudar para 'fixed', cria efeito parallax (opcional) */
-  
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   text-align: center; 
-  color: #fff;
-  padding: 0 30px;
-  border-bottom: none;
-  
-  /* Sombra interna sutil na borda inferior para separar do conteúdo branco */
-  box-shadow: inset 0 -10px 20px -10px rgba(0,0,0,0.1);
+  color: #555555;
+  padding: 60px 20px;
+  border: none !important;
+  box-sizing: border-box;
+  scroll-margin-block-start: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-.banner h1 { 
-  font-size: 2.5rem; /* Aumentei um pouco para impor presença */
+section.banner h1 { 
+  font-size: 2.5rem; 
   margin-bottom: 10px; 
   font-weight: 800; 
-  color: #ffffff;
-  /* Sombra suave para garantir leitura sobre qualquer parte da foto */
-  text-shadow: 0 2px 15px rgba(74, 144, 226, 0.4);
+  color: var(--primary-color);
+  text-shadow: none;
   letter-spacing: 1px;
 }
 
-.banner p { 
+section.banner p { 
   font-size: 1.3rem; 
   max-width: 700px; 
   margin-bottom: 25px; 
   margin-top: 0px; 
-  color: #f1fcfc; /* Branco gelo */
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  color: #666666; 
+  font-weight: 600;
+  text-shadow: none;
 }
 
-/* Botão Clean e Elegante */
 .banner-btn {
-  background-color: #ffffff;
-  color: var(--azul-aco); /* Texto Azul */
+  background-color: var(--primary-color);
+  color: #fff !important; 
   padding: 12px 35px; 
   border-radius: 50px;
-  font-weight: 700;
-  border: 2px solid #ffffff;
-  transition: all 0.3s ease;
+  font-weight: bold;
+  border: none !important;
+  transition: all 0.3s;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+  text-decoration: none;
 }
 
 .banner-btn:hover {
-  transform: translateY(-3px) scale(1.02);
-  background-color: transparent; 
-  color: #ffffff; /* Vira branco ao passar o mouse */
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+  background-color: #357abd; 
+  color: #fff !important; 
+  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
 }
 
 /* ==================================================
-   MAIN & SECTIONS
+   SEÇÕES GERAIS E TÍTULOS
    ================================================== */
 main { padding-bottom: 40px; }
-.section { padding: 30px 20px; }
+
+section.section {
+  height: auto;         
+  min-height: auto;     
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px; 
+  box-sizing: border-box;
+  scroll-margin-block-start: 20px; 
+  position: relative;
+  margin-bottom: 20px; 
+  padding-bottom: 80px; 
+}
+
+/* Divisória Sutil */
+section.section::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    width: 70%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--mvv-azul-marinho), var(--mvv-dourado), var(--mvv-azul-marinho), transparent);
+    opacity: 0.25; 
+    border-radius: 50%;
+}
+
+section.section:last-of-type::after { display: none; }
 
 .section-title {
-  text-align: center; font-size: 2rem;
-  margin-bottom: 30px; position: relative; margin-top: 15px;
-  color: var(--azul-aco);
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+  font-size: 2rem;
+  color: var(--primary-color);
   text-transform: uppercase;
   letter-spacing: 2px;
-}
-/* Estrelinhas removidas no CSS aqui e no HTML style block */
-.section-title::after {
-  content: '';
-  display: block;
-  width: 60px; height: 3px; border-radius: 15px;
-  background-color: var(--azul-aco);
-  margin: 10px auto 0;
+  position: relative;
+  display: inline-block;
 }
 
 /* ==================================================
@@ -294,217 +259,382 @@ main { padding-bottom: 40px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ==================================================
-   NOVIDADES
+   MISSÃO, VISÃO E VALORES
    ================================================== */
-.novidades-header {
-  display: flex; align-items: center;
-  justify-content: center;
-  font-size: .95rem; color: #888;
-  margin-bottom: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
+.mvv-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+    width: 100%;
+    max-width: 1200px;
+    font-family: 'Poppins', sans-serif;
 }
-.novidades-header i { margin-right: 6px; }
 
-.novidades-container {
-  display: flex; flex-wrap: wrap;
-  gap: 20px; justify-content: center;
+.mvv-card {
+    background-color: var(--branco);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--sombra-mvv);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    border: none;
 }
-.novidade-card {
-  background: var(--branco);
-  border-radius: 12px;
-  box-shadow: var(--sombra-card);
-  flex: 1 1 280px; transition: transform .3s, box-shadow .3s;
-  border-bottom: 3px solid var(--azul-aco);
+
+.mvv-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
-.novidade-card:hover { 
-  transform: translateY(-5px); 
-  box-shadow: 0 8px 20px rgba(74, 144, 226, 0.1);
+
+.mvv-header {
+    height: 120px;
+    background: linear-gradient(135deg, var(--mvv-azul-marinho), var(--azul-aco));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--branco);
 }
-.novidade-img {
-  background: var(--azul-claro);
-  color: var(--azul-aco); padding: 15px; text-align: center;
-  border-radius: 12px 12px 0px 0px;
+
+.mvv-icon { font-size: 3em; }
+
+.mvv-content {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center; 
 }
-.novidade-content { padding: 15px 30px; text-align: center; }
+
+.mvv-content h3 {
+    font-size: 1.5em;
+    color: var(--mvv-azul-marinho);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mvv-content p {
+    color: var(--cinza-escuro);
+    font-size: 0.95em;
+    line-height: 1.7;
+    flex-grow: 1;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mvv-valores-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+}
+
+.mvv-valores-list li {
+    padding: 6px 0;
+    color: var(--cinza-escuro);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    border-bottom: 1px dashed #eee;
+}
+.mvv-valores-list li:last-child { border-bottom: none; }
+
+.mvv-descricao {
+    background-color: var(--branco);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: var(--sombra-mvv);
+    text-align: center;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    max-width: 1200px;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mvv-descricao p {
+    color: var(--cinza-escuro);
+    font-size: 1em;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+#mais-texto { display: none; }
+#pontos { display: inline; }
+
+.btn-leia-mais {
+    background-color: transparent;
+    border: 2px solid var(--azul-aco);
+    color: var(--azul-aco);
+    padding: 8px 20px;
+    font-size: 0.9em;
+    font-weight: 700;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-leia-mais:hover {
+    background-color: var(--azul-aco);
+    color: var(--branco);
+}
 
 /* ==================================================
    REFLEXÃO DO DIA
    ================================================== */
 .reflexao-container {
-  background: var(--branco);
-  padding: 5px 40px 20px 40px;
-  border-radius: 15px;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 0 auto;
+}
+
+.reflexao-card {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important; 
+  border: none !important; 
+  border-radius: 12px;
+  width: 100%; 
+  padding: 30px;
   text-align: center;
-  margin: auto;
-  max-width: 1080px;
+  margin: 10px 0;
+  position: relative;
   box-shadow: var(--sombra-card);
+}
+
+.reflexao-card::after {
+    content: '\f004'; 
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    opacity: 0.15;
+    transform: rotate(25deg);
 }
 
 .reflexao-frase {
   font-style: italic; color: #666;
   font-size: 1.4rem; padding: 0 10px;
 }
+
 .reflexao-autor {
-  font-weight: bold; color: var(--azul-aco);
-  margin: -10px 0 20px 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 10px;
+  font-style: italic;
+  color: var(--primary-color);
 }
+
 .reflexao-instrucao {
-  color: #fff;
-  cursor: pointer;
-  font-weight: 600;
-  padding: 8px 30px; 
-  background-color: var(--azul-aco);
-  display: inline-block;
-  margin: 0 auto 8px;
-  text-align: center;
+  background-color: var(--primary-color);
+  color: #fff !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 135px;
   border-radius: 50px;
-  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  border: none !important;
+  margin: 20px auto; 
+  white-space: nowrap; 
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+  animation: pulse-blue 2s infinite;
 }
+
 .reflexao-instrucao:hover {
   background-color: #357abd;
+  transform: translateY(-3px) scale(1.02);
 }
+
 .reflexao-extra {
-  text-align: justify;
-  margin-top: 10px;
-  padding: 0 12px;
+    text-align: justify;
+    margin-top: 10px;
+    padding: 0 12px;
+}
+
+@keyframes pulse-blue {
+  0% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(74, 144, 226, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0); }
 }
 
 /* ==================================================
    ANIVERSARIANTES
    ================================================== */
-.aniversariantes-container {
-  display: grid; 
+#aniversariantes-container {
+  display: grid !important; 
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
-  grid-template-columns: 1fr;
+  justify-content: center;
+  width: 100%;
 }
+
+#aniversariantes-container .aniversariante-card {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important; 
+}
+
 .aniversariante-card {
-  background: var(--branco);
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
+  border-radius: 12px;
+  border: none !important; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   padding: 35px 35px 25px 35px;
-  border-radius: 15px;
-  box-shadow: var(--sombra-card);
   text-align: center;
-  transition: transform .3s;
   position: relative;
-  border-top: 4px solid var(--azul-aco); /* Detalhe azul */
 }
-.aniversariante-card:hover { transform: translateY(-5px); }
+
+.aniversariante-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15) !important;
+}
 
 .aniversariante-card .aniversariante-info h3 {
-  margin-top: 0; margin-bottom: 5px; 
-  font-size: 1.5rem; color: var(--azul-aco);
+    margin-top: 0; margin-bottom: 5px; 
+    font-size: 1.5rem; color: var(--azul-aco);
 }
 .aniversariante-card .aniversariante-info p {
-  margin: 5px 0 10px; font-size: 1rem; color: #555;
+    margin: 5px 0 10px; font-size: 1rem; color: #555;
 }
 
 .aniversariante-img {
-  width: 150px; height: 150px;
-  border-radius: 50%; overflow: hidden;
-  margin: 0 auto 10px;
-  border: 3px solid var(--azul-claro);
-}
-.aniversariante-img img {
-  width: 100%; height: 100%; object-fit: cover;
-}
-.aniversariante-data {
-  background: var(--azul-claro);
-  color: var(--azul-aco);
-  padding: 5px 20px;
-  border-radius: 20px;
-  font-size: 1.1rem;
-  display: inline-block;
-  margin-top: 10px;
-  font-weight: bold;
+    width: 150px; height: 150px;
+    border-radius: 50%; overflow: hidden;
+    margin: 0 auto 10px;
+    border: 3px solid var(--azul-claro);
 }
 
-/* Destaque do dia */
-.destaque-hoje {
-  position: relative;
-  border: 2px solid var(--azul-aco) !important;
-  animation: shine-blue 2s infinite ease-in-out;
+.aniversariante-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.aniversariante-data {
+    background: var(--azul-claro);
+    color: var(--azul-aco);
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
 }
+
+/* Destaque do dia (Aniversariante) */
+.destaque-hoje {
+    border: none !important; 
+    box-shadow: 0 0 25px rgba(74, 144, 226, 0.6) !important;
+    position: relative;
+    overflow: visible !important;
+    z-index: 1;
+    animation: shine-blue 2s infinite ease-in-out;
+}
+
+.destaque-hoje .twinkle-lights {
+    position: absolute; inset: 0; pointer-events: none;
+    overflow: hidden; border-radius: 15px; 
+}
+
 @keyframes shine-blue {
   0% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.1); }
   50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.3); }
   100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.1); }
 }
 
-.destaque-hoje .twinkle-lights {
-  position: absolute; inset: 0; pointer-events: none;
-  overflow: hidden; border-radius: 15px; 
-}
-
 /* ==================================================
    FÉRIAS
    ================================================== */
-.ferias-container { width: 100%; }
-.ferias-grid { 
-  display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+.ferias-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 0 auto;
 }
 
-.ferias-card { 
-  background: #fff;
-  padding: 28px 15px 0px 15px; 
-  border-radius: 15px;
-  box-shadow: var(--sombra-card);
-  transition: transform 0.3s;
-  text-align: center;
-  flex: 1 1 100%; max-width: 350px; 
-  margin: 0 auto 20px; font-size: 1.2rem;
-  border-left: 5px solid var(--azul-aco); 
-}
-.ferias-card:hover { transform: translateY(-5px); }
-
-.ferias-card-header {
-  display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
-}
-.ferias-card-icon {
-  font-size: 1.2rem; color: var(--azul-aco); margin-right: 10px;
-}
-.ferias-dates {
-  display: flex; gap: 10px; justify-content: center; margin: 12px 0;
-}
-.ferias-card-inicio, .ferias-card-retorno {
-  display: inline-block; border-radius: 20px;
-  padding: 6px 14px; font-size: 0.9rem; font-weight: 500;
-  color: var(--cinza-escuro); background-color: var(--azul-claro);
-  border: 1px solid #e1e4e8;
+/* Tabela Desktop */
+.ferias-table {
+  margin: 20px auto;
+  max-width: 1000px;
+  width: 100%;
+  border-collapse: collapse;
+  border: none !important;
+  background-color: #fff;
+  box-shadow: var(--sombra-card); 
+  border-radius: 8px; 
+  overflow: hidden; 
 }
 
-.ferias-table { 
-  width: 100%; border-collapse: collapse; margin-top: 20px; 
-  box-shadow: var(--sombra-card); border-radius: 8px; overflow: hidden; 
-  background: #fff;
+.ferias-table thead tr {
+    background-color: var(--primary-color);
+    color: #fff;
 }
+
 .ferias-table th, .ferias-table td {
-  padding: 12px; text-align: center; border-bottom: 1px solid #eee; 
-}
-.ferias-table thead {
-  background: var(--azul-aco); color: #fff;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
 }
 .ferias-table th { font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
-.ferias-table tbody tr:hover { background-color: #fcfcfc; }
+
+/* Animação de retorno de férias */
+@keyframes piscar-blue-suave {
+   0%, 100% { background-color: rgba(74, 144, 226, 0.05); }
+   50% { background-color: rgba(74, 144, 226, 0.15); }
+}
+
+.ferias-table tbody tr.retorno-hoje-piscar {
+    animation: piscar-blue-suave 2.5s infinite ease-in-out;
+    border-left: 3px solid var(--azul-aco);
+}
 
 /* ==================================================
-   CIPA
+   CIPA / DESTAQUES
    ================================================== */
 .cipa-container {
-  display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 0 auto;
 }
+
 .cipa-card {
-  background: var(--branco); padding: 20px;
-  border-radius: 15px;
-  box-shadow: var(--sombra-card);
-  flex: 1 1 260px; text-align: center;
-  transition: transform .3s;
-  border: 1px solid #eee;
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
+  border-radius: 12px;
+  border: none !important; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 20px;
+  flex: 1 1 260px; 
+  text-align: center;
 }
-.cipa-card:hover { 
-  transform: translateY(-5px); 
-  border-color: var(--azul-aco); 
+
+.cipa-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15) !important;
 }
+
 .cipa-icon {
   width: 50px; height: 50px;
   background: linear-gradient(135deg, var(--azul-aco), #8bc6ec);
@@ -515,18 +645,279 @@ main { padding-bottom: 40px; }
 }
 
 /* ==================================================
-   RODAPÉ
+   COMUNICADO E MODALS (CSS ADICIONAL)
    ================================================== */
-footer .footer-accent {
-  background: var(--azul-aco);
-  height: 2px; width: 100%;
+.comunicado-strip {
+    background-color: #fff;
+    width: 100%;
+    margin-top: 0; 
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    position: relative;
+    z-index: 90;
+    padding: 15px 0;
+    animation: slideDown 0.5s ease-out;
 }
 
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.comunicado-content {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.comunicado-icon {
+    background-color: var(--azul-aco);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.comunicado-text-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#comunicado-resumo {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--cinza-escuro);
+    flex: 1;
+    line-height: 1.4;
+}
+
+.comunicado-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-ler-comunicado {
+    background: transparent;
+    border: 1px solid var(--azul-aco);
+    color: var(--azul-aco);
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-ler-comunicado:hover {
+    background-color: var(--azul-aco);
+    color: #fff;
+}
+
+.btn-historico {
+    background: transparent;
+    border: none;
+    color: #999;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-historico:hover {
+    color: var(--azul-aco);
+    background-color: rgba(74, 144, 226, 0.1);
+    transform: rotate(-20deg);
+}
+
+/* MODAL GERAL */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(3px);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-box {
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-overlay.active .modal-box {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px; right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #aaa;
+    cursor: pointer;
+    z-index: 10;
+}
+.modal-close:hover { color: #555; }
+
+.modal-header {
+    background-color: var(--azul-claro);
+    padding: 30px 20px 20px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-icon-big {
+    font-size: 2rem;
+    color: var(--azul-aco);
+    margin-bottom: 10px;
+}
+
+#modal-autor, .modal-header h3 {
+    margin: 0;
+    color: var(--mvv-azul-marinho);
+    font-weight: 800;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-date {
+    font-size: 0.85rem;
+    color: #888;
+    display: block;
+    margin-top: 5px;
+}
+
+.modal-body {
+    padding: 25px 30px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #444;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: justify;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.btn-fechar-modal {
+    background-color: var(--azul-aco);
+    color: #fff;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-fechar-modal:hover { background-color: #357abd; }
+
+/* LISTA HISTÓRICO */
+.history-list-container {
+    padding: 0; 
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+.history-item {
+    background: #fff;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: left;
+}
+
+.history-item:hover {
+    background-color: #f0f7ff;
+}
+
+.history-item:last-child { border-bottom: none; }
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--azul-aco);
+    font-weight: 600;
+}
+
+.history-preview {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.history-empty {
+    padding: 30px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+/* ==================================================
+   RODAPÉ
+   ================================================== */
 footer {
-  background: #f8f9fa; /* Cinza claro */
+  background: #f8f9fa; 
   color: #777;
   font-family: 'Segoe UI', sans-serif;
   border-top: 1px solid #eee;
+}
+
+footer .footer-accent {
+  background: var(--azul-aco);
+  height: 2px; width: 100%;
 }
 
 footer .footer-content {
@@ -575,11 +966,6 @@ footer .footer-content {
 }
 
 .copyright { margin: 15px 0 0; font-size: 0.85rem; opacity: 0.6; }
-.developer-credit {
-  margin: 0; font-size: 0.75rem; opacity: 0.5; padding: 10px 0;
-  background-color: #f0f0f0; text-align: center !important; width: 100%;
-}
-/* ... código anterior do rodapé ... */
 
 .developer-credit {
   margin: 0; font-size: 0.75rem; opacity: 0.5; padding: 10px 0;
@@ -587,105 +973,136 @@ footer .footer-content {
 }
 
 /* ==================================================
-   ESTILOS DO COMUNICADO E HISTÓRICO (COLE AQUI)
+   RESPONSIVIDADE E MEDIA QUERIES (COMPLETO)
    ================================================== */
 
-/* Ajuste no wrapper para alinhar os botões */
-.comunicado-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Botão Discreto de Histórico */
-.btn-historico {
-    background: transparent;
-    border: none;
-    color: #999; /* Cor cinza discreta */
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 5px 8px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-historico:hover {
-    color: var(--azul-aco);
-    background-color: rgba(74, 144, 226, 0.1);
-    transform: rotate(-20deg); /* Efeito sutil ao passar o mouse */
-}
-
-/* Estilo da Lista dentro do Modal de Histórico */
-.history-list-container {
-    padding: 0; /* Remove padding padrão do body modal para a lista encostar */
-    max-height: 400px;
-    overflow-y: auto;
-    background-color: #f9f9f9;
-}
-
-.history-item {
-    background: #fff;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.history-item:hover {
-    background-color: #f0f7ff; /* Azulzinho bem claro no hover */
-}
-
-.history-item:last-child {
-    border-bottom: none;
-}
-
-.history-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    color: var(--azul-aco);
-    font-weight: 600;
-}
-
-.history-preview {
-    font-size: 0.9rem;
-    color: #555;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* Limita a 2 linhas */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.history-empty {
-    padding: 30px;
-    text-align: center;
-    color: #888;
-    font-style: italic;
-}
-
-/* ==================================================
-   MEDIA QUERIES
-   ================================================== */
+/* Desktop - Ajustes Específicos */
 @media (min-width: 769px) {
   main { max-width: 1080px; margin: 0 auto; }
+  
   #aniversariantes .aniversariantes-container {
     grid-template-columns: repeat(4, 1fr); gap: 20px;
   }
+  
   .ferias-grid { display: none; } 
   .ferias-table { display: table; } 
 }
 
+/* Mobile - Header e Navegação */
 @media (max-width: 768px) {
-  .ferias-grid { display: flex; } 
-  .ferias-table { display: none; } 
-  .ferias-card { max-width: 100%; flex-basis: calc(50% - 10px); }
+  .header-container { justify-content: space-between; }
+  .logo { margin-right: 0; }
+  .menu-toggle { display: block; }
+
+  nav {
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 100%;
+    background-color: var(--branco);
+    border-top: 1px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: none; 
+  }
+  
+  nav.active { display: block; }
+
+  nav ul {
+    flex-direction: column; 
+    width: 100%;
+    padding: 10px 0;
+    gap: 0; 
+  }
+
+  nav ul li { width: 100%; text-align: center; margin: 0; }
+  nav ul li a { padding: 15px; font-size: 1.1rem; border-bottom: 1px solid #f9f9f9; }
+}
+
+/* Mobile - Layout de Conteúdo */
+@media (max-width: 768px) {
+  .mobile-break { display: block; }
+  .section-title br { display: block; }
+
+  section.section {
+    scroll-margin-top: 80px; 
+    padding: 40px 15px;      
+  }
+  
+  .aniversariante-card, .cipa-card {
+    width: 100% !important;        
+    flex: 1 1 100%;                
+  }
+  .reflexao-card {
+    padding: 15px 0px !important; 
+    margin: 0 !important;          
+  }
+  .reflexao-instrucao {
+      padding: 8px 40px; 
+  }
+  
+  /* Férias no Mobile (Card View) */
+  .ferias-container { display: block; width: 100%; }
+  .ferias-table thead { display: none; }
+  .ferias-table, .ferias-table tbody { display: block; width: 100%; }
+
+  .ferias-table tr {
+    background-color: #fff;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    padding: 15px;
+    border: 1px solid #f0f0f0;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    position: relative; text-align: center;
+  }
+
+  .ferias-table td { display: block; border: none; padding: 0; }
+
+  .ferias-table td:nth-child(1) {
+      width: 100%; font-weight: 700; font-size: 1.05rem;
+      color: var(--mvv-azul-marinho); margin-bottom: 2px;
+  }
+
+  .ferias-table td:nth-child(2) {
+      width: 100%; font-size: 0.85rem; color: #888;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 12px; font-weight: 600;
+  }
+
+  .ferias-table td:nth-child(3), 
+  .ferias-table td:nth-child(4) {
+      display: inline-block; font-size: 0.9rem; color: #555;
+      background-color: #f4f8fb; padding: 6px 10px;
+      border-radius: 6px; margin-top: 5px;
+  }
+
+  .ferias-table td:nth-child(3) { margin-right: 5px; }
+  
+  .ferias-table td:nth-child(3)::before {
+      content: "\f073"; font-family: "Font Awesome 6 Free"; font-weight: 900;
+      margin-right: 5px; color: var(--primary-color);
+  }
+
+  .ferias-table td:nth-child(3)::after {
+      content: " até "; margin-left: 5px; color: #888;
+  }
+  
+  /* Ajuste Mobile Comunicado */
+  .comunicado-text-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  .comunicado-actions {
+      width: 100%;
+      justify-content: space-between;
+  }
+  .btn-ler-comunicado { flex-grow: 1; text-align: center; }
+  
+  /* Animação Férias Mobile */
+  .ferias-card.retorno-hoje-piscar {
+     animation: piscar-blue-shadow 2s infinite ease-in-out;
+     border-color: var(--azul-aco);
+  }
 }
 
 @media (max-width: 480px) {
@@ -693,38 +1110,7 @@ footer .footer-content {
   .ferias-card { flex-basis: 100%; }
 }
 
-/* ==================================================
-    ANIMAÇÃO PISCAR SUAVE (AZUL) - FÉRIAS
-   ================================================== */
- @keyframes piscar-blue-suave {
-   0%, 100% { background-color: rgba(74, 144, 226, 0.05); }
-   50% { background-color: rgba(74, 144, 226, 0.15); }
- }
-
- /* Desktop */
- @media (min-width: 769px) {
-   .ferias-table tbody tr.retorno-hoje-piscar {
-     animation: piscar-blue-suave 2.5s infinite ease-in-out;
-     border-left: 3px solid var(--azul-aco);
-   }
- }
-
- /* Mobile */
- @media (max-width: 768px) {
-   .ferias-card.retorno-hoje-piscar {
-     animation: piscar-blue-shadow 2s infinite ease-in-out;
-     border-color: var(--azul-aco);
-   }
- }
-
- @keyframes piscar-blue-shadow {
+@keyframes piscar-blue-shadow {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
- }
-
-
-
-
-
-
-
+}
