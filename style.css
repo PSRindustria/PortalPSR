@@ -2,6 +2,9 @@
    VARIÁVEIS DE COR - TEMA JANEIRO BRANCO (CLEAN)
    ================================================== */
 :root {
+  /* Informa ao navegador que este site SÓ suporta light */
+  color-scheme: light;
+  
   /* --- PALETA BASE --- */
   --azul-marinho: #ffffff; /* Header Branco */
   --azul-aco: #4a90e2;     /* Azul para detalhes e ícones */
@@ -14,8 +17,7 @@
   --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.04);
   --cor-texto-header: #4a90e2; 
 
-  /* --- VARIÁVEIS ADICIONAIS --- */
-  color-scheme: light only;
+  /* --- FORÇAR CORES CLARAS --- */
   --bg-body: #f4f4f4;
   --bg-card: #ffffff;
   --text-primary: #555555;
@@ -37,18 +39,29 @@
 html, body { margin: 0; padding: 0; }
 
 html {
+  /* Força o navegador a renderizar controles nativos em modo claro */
+  color-scheme: light;
   scroll-behavior: smooth;
   height: auto; 
   overflow-y: auto;
+  /* GARANTIA 1: Fundo branco no HTML */
+  background-color: #f4f4f4 !important; 
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* GARANTIA 2: Força o fundo e texto com !important para sobrescrever o sistema */
   background-color: var(--bg-body) !important;
   color: var(--text-primary) !important;
   line-height: 1.5;
   background-image: none;
   overflow-x: hidden;
+}
+
+/* GARANTIA 3: Previne inversão em inputs e botões */
+input, textarea, button, select {
+    background-color: #ffffff !important;
+    color: #333333 !important;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -1383,3 +1396,4 @@ footer .footer-content {
         width: 90%;
     }
 }
+
