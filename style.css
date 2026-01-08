@@ -15,7 +15,7 @@
   --cor-texto-header: #4a90e2; 
 
   /* --- VARIÁVEIS ADICIONAIS --- */
-  color-scheme: light;
+  color-scheme: light only;
   --bg-body: #f4f4f4;
   --bg-card: #ffffff;
   --text-primary: #555555;
@@ -1175,10 +1175,12 @@ footer .footer-content {
   /* Ajuste da linha divisória centralizada */
   section.section::after {
       width: 90%;  
-      left: 5%;    
-      bottom: -11px; 
-      opacity: 0.35; 
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -10px;
+      opacity: 0.4; 
       z-index: 1;
+      display: block;
   }
 
   section.section {
@@ -1299,3 +1301,4 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
