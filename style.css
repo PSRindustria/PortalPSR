@@ -576,7 +576,7 @@ section.section:last-of-type::after { display: none; }
   width: 100%;
   border-collapse: collapse;
   border: none !important;
-  background-color: #fff;
+  background-color: transparent;
   box-shadow: var(--sombra-card); 
   border-radius: 8px; 
   overflow: hidden; 
@@ -1073,7 +1073,7 @@ footer .footer-content {
   .ferias-table td:nth-child(4) {
       display: inline-block; font-size: 0.9rem; color: #555;
       background-color: #f4f8fb; padding: 6px 10px;
-      border-radius: 6px; margin-top: 5px;
+      border-radius: 6px; margin: 0px -10px 0px -10px;
   }
 
   .ferias-table td:nth-child(3) { margin-right: 5px; }
@@ -1114,3 +1114,4 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
