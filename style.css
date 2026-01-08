@@ -217,21 +217,19 @@ section.section::after {
     content: "";
     position: absolute;
     
-    /* MUDANÇA AQUI: Centralização Vertical */
-    top: 50%; 
-    transform: translateY(-50%);
+    /* MUDANÇA AQUI: */
+    /* Empurra a linha para baixo, exatamente para o meio da margem de 20px */
+    bottom: -11px; 
     
-    /* Mantém a centralização horizontal que você já tinha */
     left: 15%;
     width: 70%;
-    
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--mvv-azul-marinho), var(--mvv-dourado), var(--mvv-azul-marinho), transparent);
     opacity: 0.25; 
     border-radius: 50%;
     
-    /* Opcional: Garante que a linha fique atrás do conteúdo se ela cruzar texto */
-    z-index: 0; 
+    /* Garante que a linha fique visível sobre o fundo da próxima seção se necessário */
+    z-index: 1; 
 }
 
 section.section:last-of-type::after { display: none; }
@@ -843,22 +841,30 @@ section.section:last-of-type::after { display: none; }
 .modal-body {
     padding: 25px 30px;
     
-    /* 1. Fonte aumentada conforme seu pedido (de 1rem para 1.35rem) */
-    font-size: 1.35rem; 
-    
+    /* 1. Fonte */
+    font-size: 1.15rem; 
     line-height: 1.6;
     color: #444;
     max-height: 300px;
     overflow-y: auto;
-    text-align: justify;
-
-    /* 2. A MÁGICA: Hifenização para corrigir os espaços */
-    -webkit-hyphens: auto; /* Para Safari e Chrome antigos */
-    -ms-hyphens: auto;     /* Para Microsoft Edge/IE */
-    hyphens: auto;         /* Padrão moderno */
     
-    /* 3. Garantia extra para que palavras gigantes não quebrem o layout */
+    /* 2. Justificativa */
+    text-align: justify;
+    
+    /* AQUI ESTÁ O TRUQUE: */
+    /* Distribui o espaço entre as letras (caracteres) e não só palavras */
+    text-justify: inter-character; 
+    
+    /* Desativa a quebra por hífen que você não quer */
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none; 
+    
+    /* Garante que nada quebre o layout */
     word-wrap: break-word; 
+    
+    /* Dica extra: Um leve ajuste negativo geral para "apertar" o texto visualmente */
+    word-spacing: -0.05em; 
 }
 
 .modal-footer {
@@ -1168,5 +1174,6 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
 
 
