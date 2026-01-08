@@ -668,7 +668,10 @@ section.section:last-of-type::after { display: none; }
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
-    align-items: center;
+    /* ALTERADO: Coluna para ficar um em cima do outro no PC também */
+    flex-direction: column; 
+    align-items: center; /* Centraliza horizontalmente */
+    text-align: center;  /* Garante que o texto fique centralizado */
     gap: 15px;
 }
 
@@ -682,13 +685,14 @@ section.section:last-of-type::after { display: none; }
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    margin-bottom: 5px; /* Espaçamento extra para o texto abaixo */
 }
 
-/* Ajuste do Layout do Comunicado (Botão embaixo do texto) */
+/* Ajuste do Layout do Comunicado */
 .comunicado-text-wrapper {
     display: flex;
-    flex-direction: column; /* Texto em cima, botão embaixo */
-    align-items: flex-start; /* Alinhado a esquerda */
+    flex-direction: column; 
+    align-items: center; /* ALTERADO: Centralizado (antes era flex-start) */
     justify-content: center;
     width: 100%;
     gap: 10px;
@@ -705,7 +709,7 @@ section.section:last-of-type::after { display: none; }
 .comunicado-actions {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center; /* ALTERADO: Centralizado (antes era flex-start) */
     gap: 10px;
     width: 100%;
 }
