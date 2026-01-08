@@ -1054,19 +1054,19 @@ footer .footer-content {
   nav ul li a { padding: 15px; font-size: 1.1rem; border-bottom: 1px solid #f9f9f9; }
 }
 
-/* CORREÇÃO DA LINHA NO CELULAR */
-  section.section::after {
-      width: 90%;  /* Aumenta a largura para preencher melhor a tela pequena */
-      left: 5%;    /* Centraliza novamente (5% esq + 90% larg + 5% dir = 100%) */
-      bottom: -11px; /* Mantém a posição vertical */
-      opacity: 0.35; /* Aumenta um pouco a visibilidade na tela do celular */
-  }
-
-}
-/* Mobile - Layout de Conteúdo */
+/* Mobile - Layout de Conteúdo e Componentes */
 @media (max-width: 768px) {
   .mobile-break { display: block; }
   .section-title br { display: block; }
+
+  /* Ajuste da linha divisória centralizada */
+  section.section::after {
+      width: 90%;  
+      left: 5%;    
+      bottom: -11px; 
+      opacity: 0.35; 
+      z-index: 1;
+  }
 
   section.section {
     scroll-margin-top: 80px; 
@@ -1075,17 +1075,24 @@ footer .footer-content {
   
   .aniversariante-card, .cipa-card {
     width: 100% !important;        
-    flex: 1 1 100%;                
+    flex: 1 1 100%;                 
   }
+
   .reflexao-card {
     padding: 15px 0px !important; 
-    margin: 0 !important;          
+    margin: 0 !important;           
   }
+
+  /* CORREÇÃO DO BUG DO BOTÃO: Reduzimos o padding e garantimos largura máxima */
   .reflexao-instrucao {
-      padding: 8px 40px; 
+      padding: 10px 20px !important; 
+      width: 90%; /* Ocupa 90% do card para não vazar */
+      margin: 20px auto;
+      display: block; /* Garante que respeite as margens */
+      white-space: normal; /* Permite que o texto quebre se for muito longo */
   }
   
-  /* Férias no Mobile (Card View) */
+  /* Férias no Mobile (Card View - Correção) */
   .ferias-container { display: block; width: 100%; }
   .ferias-table thead { display: none; }
   .ferias-table, .ferias-table tbody { display: block; width: 100%; }
@@ -1157,14 +1164,16 @@ footer .footer-content {
      animation: piscar-blue-shadow 2s infinite ease-in-out;
      border-color: var(--azul-aco);
   }
-}
-.modal-body {
+
+  /* Ajuste do Modal no Mobile */
+  .modal-body {
         text-align: center !important; 
         padding: 20px !important;
         font-size: 1.1rem !important;
         hyphens: none !important; 
-    }
+  }
 }
+
 @media (max-width: 480px) {
   #aniversariantes .aniversariantes-container { grid-template-columns: 1fr; }
   .ferias-card { flex-basis: 100%; }
@@ -1174,8 +1183,3 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
-
-
-
-
-
