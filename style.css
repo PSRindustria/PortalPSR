@@ -216,19 +216,13 @@ section.section {
 section.section::after {
     content: "";
     position: absolute;
-    
-    /* MUDANÇA AQUI: */
-    /* Empurra a linha para baixo, exatamente para o meio da margem de 20px */
     bottom: -11px; 
-    
     left: 15%;
     width: 70%;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--mvv-azul-marinho), var(--mvv-dourado), var(--mvv-azul-marinho), transparent);
     opacity: 0.25; 
     border-radius: 50%;
-    
-    /* Garante que a linha fique visível sobre o fundo da próxima seção se necessário */
     z-index: 1; 
 }
 
@@ -601,9 +595,10 @@ section.section:last-of-type::after { display: none; }
 }
 
 /* ==================================================
-   CIPA / DESTAQUES
+   MURAL DE RECONHECIMENTO (DESTAQUES)
    ================================================== */
-display: grid;
+.destaques-container {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
     width: 100%;
@@ -634,6 +629,20 @@ display: grid;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 .destaque-img img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Ícone genérico quando não há foto */
+.destaque-icon-generic {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    margin: 35px auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    color: var(--azul-aco);
+    font-size: 3rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
 
 .destaque-card h3 {
     text-align: center; color: var(--azul-aco);
@@ -694,6 +703,7 @@ display: grid;
     padding: 8px 12px; border-radius: 8px;
     font-size: 1.4rem; font-weight: 800;
     text-align: center; line-height: 1;
+    flex-shrink: 0;
 }
 .selo-anos span { display: block; font-size: 0.6rem; font-weight: 400; text-transform: uppercase; }
 
@@ -712,7 +722,7 @@ display: grid;
 .trajetoria-box i { color: var(--azul-aco); margin-top: 3px; }
 .trajetoria-box p { margin: 0; font-size: 0.85rem; color: #555; text-align: left; }
 
-/* Área de Comentários */
+/* --- ÁREA DE COMENTÁRIOS --- */
 .comentarios-area {
     border-top: 1px solid #eee; padding-top: 15px;
     margin-top: auto;
@@ -725,7 +735,17 @@ display: grid;
 .comentario-item {
     background: #f1f3f5; padding: 8px 12px;
     border-radius: 12px; font-size: 0.85rem; color: #444;
+    display: flex; justify-content: space-between;
+    align-items: center;
 }
+.comentario-texto { flex-grow: 1; }
+.btn-like {
+    background: none; border: none;
+    color: #999; cursor: pointer;
+    font-size: 0.9rem; transition: 0.2s;
+    display: flex; align-items: center; gap: 3px;
+}
+.btn-like:hover, .btn-like.liked { color: #e0245e; }
 .input-area { display: flex; gap: 5px; }
 .input-area input {
     flex: 1; padding: 8px 12px; border-radius: 20px;
@@ -735,12 +755,6 @@ display: grid;
     background: var(--azul-aco); color: #fff;
     border: none; width: 35px; height: 35px; border-radius: 50%;
     cursor: pointer;
-}
-
-/* Responsividade Mobile */
-@media (max-width: 768px) {
-    .destaques-container { grid-template-columns: 1fr; }
-    .destaque-card { margin-bottom: 15px; }
 }
 
 /* ==================================================
@@ -779,10 +793,9 @@ display: grid;
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
-    /* ALTERADO: Coluna para ficar um em cima do outro no PC também */
     flex-direction: column; 
-    align-items: center; /* Centraliza horizontalmente */
-    text-align: center;  /* Garante que o texto fique centralizado */
+    align-items: center;
+    text-align: center;
 }
 
 .comunicado-icon {
@@ -795,14 +808,13 @@ display: grid;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    margin-bottom: 5px; /* Espaçamento extra para o texto abaixo */
+    margin-bottom: 5px;
 }
 
-/* Ajuste do Layout do Comunicado */
 .comunicado-text-wrapper {
     display: flex;
     flex-direction: column; 
-    align-items: center; /* ALTERADO: Centralizado (antes era flex-start) */
+    align-items: center;
     justify-content: center;
     width: 100%;
     gap: 10px;
@@ -819,7 +831,7 @@ display: grid;
 .comunicado-actions {
     display: flex;
     align-items: center;
-    justify-content: center; /* ALTERADO: Centralizado (antes era flex-start) */
+    justify-content: center;
     gap: 10px;
     width: 100%;
 }
@@ -949,13 +961,10 @@ display: grid;
     color: #444;
     max-height: 300px;
     overflow-y: auto;
-    
-    /* No PC, mantém justificado com hífens para ficar elegante */
     text-align: justify;
     -webkit-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto; 
-    
     word-wrap: break-word; 
 }
 
@@ -1177,7 +1186,7 @@ footer .footer-content {
     padding: 20px 15px;      
   }
   
-  .aniversariante-card, .cipa-card {
+  .aniversariante-card, .destaque-card {
     width: 100% !important;        
     flex: 1 1 100%;                 
   }
@@ -1190,10 +1199,10 @@ footer .footer-content {
   /* CORREÇÃO DO BUG DO BOTÃO: Reduzimos o padding e garantimos largura máxima */
   .reflexao-instrucao {
       padding: 10px 20px !important; 
-      width: 90%; /* Ocupa 90% do card para não vazar */
+      width: 90%;
       margin: 20px auto;
-      display: block; /* Garante que respeite as margens */
-      white-space: normal; /* Permite que o texto quebre se for muito longo */
+      display: block;
+      white-space: normal;
   }
   
   /* Férias no Mobile (Card View - Correção) */
@@ -1245,16 +1254,16 @@ footer .footer-content {
 
   /* Ajuste Mobile Comunicado (Ícone no topo, Centralizado) */
   .comunicado-content {
-      flex-direction: column !important; /* Ícone em cima, texto embaixo */
+      flex-direction: column !important;
       text-align: center;
   }
   
   .comunicado-text-wrapper {
-      align-items: center !important; /* Centraliza tudo no mobile */
+      align-items: center !important;
   }
   
   .comunicado-actions {
-      justify-content: center !important; /* Centraliza botões */
+      justify-content: center !important;
   }
 
   .comunicado-icon {
@@ -1276,6 +1285,9 @@ footer .footer-content {
         font-size: 1.1rem !important;
         hyphens: none !important; 
   }
+  
+  /* Destaques Mobile */
+  .destaques-container { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
@@ -1287,121 +1299,3 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
-/* ==================================================
-   ÁREA DE COMENTÁRIOS (Firebase)
-   ================================================== */
-.comentarios-section {
-    background-color: #f8f9fa;
-    border-top: 1px solid #eee;
-    padding: 15px;
-    text-align: left;
-}
-
-.comentarios-lista {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.comentario-item {
-    background: #fff;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border-bottom-left-radius: 2px; /* Estilo balão */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    font-size: 0.9rem;
-    position: relative;
-    border: 1px solid #eef;
-}
-
-.comentario-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-}
-
-.comentario-autor {
-    font-weight: 700;
-    color: var(--azul-aco);
-    font-size: 0.85rem;
-}
-
-.comentario-data {
-    font-size: 0.7rem;
-    color: #aaa;
-}
-
-.comentario-texto {
-    color: #555;
-    line-height: 1.4;
-    word-wrap: break-word;
-}
-
-.comentario-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 5px;
-}
-
-.btn-like-comment {
-    background: none;
-    border: none;
-    font-size: 0.8rem;
-    color: #888;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: 0.2s;
-}
-
-.btn-like-comment:hover, .btn-like-comment.liked {
-    color: #e0245e; /* Cor de like */
-}
-
-/* Input Area */
-.comentario-input-wrapper {
-    display: flex;
-    gap: 8px;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 10px;
-}
-
-.input-comentario {
-    flex-grow: 1;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 8px 15px;
-    font-size: 0.9rem;
-    outline: none;
-    font-family: inherit;
-}
-
-.input-comentario:focus {
-    border-color: var(--azul-aco);
-}
-
-.btn-enviar-comentario {
-    background-color: var(--azul-aco);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.btn-enviar-comentario:hover {
-    transform: scale(1.1);
-    background-color: #357abd;
-}
-
-
