@@ -1317,3 +1317,69 @@ footer .footer-content {
     border-top: 1px solid #eee;
 }
 
+/* ==================================================
+   ÁREA DE MANUTENÇÃO / EM BREVE
+   ================================================== */
+.maintenance-card {
+    background: #fff;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 15px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: var(--sombra-card);
+    border: 1px dashed #e0e0e0; /* Borda tracejada para dar ideia de construção */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ícone animado */
+.maintenance-icon {
+    font-size: 3.5rem;
+    color: var(--azul-aco);
+    margin-bottom: 20px;
+    animation: float-icon 3s ease-in-out infinite;
+}
+
+.maintenance-card h3 {
+    color: var(--mvv-azul-marinho);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.maintenance-card p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+/* Etiqueta "Em Breve" */
+.badge-breve {
+    display: inline-block;
+    background: var(--mvv-dourado); /* Amarelo/Dourado do tema */
+    color: #fff;
+    padding: 8px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(218, 165, 32, 0.3);
+}
+
+/* Animação suave do ícone */
+@keyframes float-icon {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Ajuste Mobile */
+@media (max-width: 768px) {
+    .maintenance-card {
+        padding: 30px 20px;
+        width: 90%;
+    }
+}
