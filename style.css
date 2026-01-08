@@ -1066,6 +1066,15 @@ footer .footer-content {
   nav ul li a { padding: 15px; font-size: 1.1rem; border-bottom: 1px solid #f9f9f9; }
 }
 
+/* CORREÇÃO DA LINHA NO CELULAR */
+  section.section::after {
+      width: 90%;  /* Aumenta a largura para preencher melhor a tela pequena */
+      left: 5%;    /* Centraliza novamente (5% esq + 90% larg + 5% dir = 100%) */
+      bottom: -11px; /* Mantém a posição vertical */
+      opacity: 0.35; /* Aumenta um pouco a visibilidade na tela do celular */
+  }
+
+}
 /* Mobile - Layout de Conteúdo */
 @media (max-width: 768px) {
   .mobile-break { display: block; }
@@ -1174,6 +1183,7 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
 
 
 
