@@ -6,29 +6,29 @@
   color-scheme: light;
   
   /* --- PALETA BASE --- */
-  --azul-marinho: #ffffff; !important;
-  --azul-aco: #4a90e2; !important;
-  --azul-claro: #f4f6f8; !important;
-  --cinza-escuro: #555555; !important;
-  --branco: #FFFFFF; !important;
-  --dourado: #4a90e2; !important;      
-  --prata-fundo: #f9f9f9; !important; 
-  --transicao: 0.3s ease; !important;
+  --azul-marinho: #ffffff !important;
+  --azul-aco: #4a90e2 !important;
+  --azul-claro: #f4f6f8 !important;
+  --cinza-escuro: #555555 !important;
+  --branco: #FFFFFF !important;
+  --dourado: #4a90e2 !important;      
+  --prata-fundo: #f9f9f9 !important; 
+  --transicao: 0.3s ease !important;
   --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.04); !important;
   --cor-texto-header: #4a90e2; !important;
 
   /* --- FORÇAR CORES CLARAS --- */
-  --bg-body: #f4f4f4; !important;
-  --bg-card: #ffffff; !important;
-  --text-primary: #555555; !important;
+  --bg-body: #f4f4f4 !important;
+  --bg-card: #ffffff !important;
+  --text-primary: #555555 !important;
   
   /* Cores do Sistema */
-  --primary-color: #4a90e2; !important;
-  --secondary-color: #e0e0e0; !important;
+  --primary-color: #4a90e2 !important;
+  --secondary-color: #e0e0e0 !important;
   
   /* Cores PSR */
-  --mvv-azul-marinho: #003366; 
-  --mvv-dourado: #DAA520;
+  --mvv-azul-marinho: #003366 !important; 
+  --mvv-dourado: #DAA520 !important;
   --sombra-mvv: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -864,7 +864,7 @@ section.section:last-of-type::after { display: none; }
 
 .btn-ler-comunicado:hover {
     background-color: var(--azul-aco) !important; /* Adicionado !important */
-    color: #fff !important; /* Adicionado !important */
+    color: #fff;
 }
 
 .btn-historico {
@@ -1445,6 +1445,7 @@ footer .footer-content {
         width: 90%;
     }
 }
+
 
 
 
