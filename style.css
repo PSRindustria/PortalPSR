@@ -1302,3 +1302,18 @@ footer .footer-content {
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
 
+/* Classe para padronizar o corpo dos cards Valor e Mês igual ao Tempo */
+.destaque-body-padrao {
+    padding: 20px; /* Mesmo padding do .body-tempo */
+    flex-grow: 1;  /* Ocupa todo o espaço disponível */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Garante que a área de comentários sempre vá para o fundo */
+.comentarios-area {
+    margin-top: auto; 
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
