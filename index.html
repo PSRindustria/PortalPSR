@@ -771,9 +771,11 @@
       let mensagens = [];
 
       // Aniversariantes
+// Aniversariantes
       const aniversariantes = await carregaJSON('aniversariantes.json');
       const nomesAniv = [];
       const generosAniv = [];
+      
       if (Array.isArray(aniversariantes)) {
         aniversariantes.forEach(({ nome, data }) => {
           if (data === dataAtualStr) {
@@ -781,15 +783,21 @@
             generosAniv.push(determinarGenero(nome));
           }
         });
+
         if (nomesAniv.length === 1) {
           const genero = generosAniv[0];
           const pronome = genero === 'feminino' ? 'ela' : 'ele';
           const artigo = getArtigoSingular(genero);
-          mensagens.push(`🥳 Hoje é aniversário ${artigo} ${nomesAniv[0]}, dê os parabéns para ${pronome}!`);
+          
+          // AQUI ESTÁ A ALTERAÇÃO: Adicionamos <br class="mobile-break"> e ajustamos os emojis
+          mensagens.push(`🎂 Hoje é aniversário ${artigo} <br class="mobile-break"> ${nomesAniv[0]}, dê os parabéns <br class="mobile-break"> para ${pronome}! 🥳`);
+          
         } else if (nomesAniv.length > 1) {
           const nomesStr = juntarNomes(nomesAniv);
           const pronome = generosAniv.every(g => g === 'feminino') ? 'elas' : 'eles';
-          mensagens.push(`🥳 Hoje, ${nomesStr} fazem aniversário. Dê os parabéns a ${pronome}!`);
+          
+          // Lógica similar para o plural, caso haja mais de um aniversariante
+          mensagens.push(`🎂 Hoje, <br class="mobile-break"> ${nomesStr} fazem aniversário. <br class="mobile-break"> Dê os parabéns a ${pronome}! 🥳`);
         }
       }
 
@@ -831,6 +839,7 @@
   </script>
 </body>
 </html>
+
 
 
 
