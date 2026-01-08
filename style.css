@@ -576,8 +576,7 @@ section.section:last-of-type::after { display: none; }
   width: 100%;
   border-collapse: collapse;
   border: none !important;
-  background-color: transparent;
-  box-shadow: var(--sombra-card); 
+  background-color: transparent; 
   border-radius: 8px; 
   overflow: hidden; 
 }
@@ -1114,4 +1113,5 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
 
