@@ -1,0 +1,27 @@
+[
+  {
+    "tipo": "valor",
+    "colaborador": "Ana Souza",
+    "cargo": "Auxiliar Administrativo",
+    "foto": "https://randomuser.me/api/portraits/women/44.jpg",
+    "valor": "Comprometimento",
+    "mensagem": "Ana demonstrou um comprometimento exemplar no projeto de inventário, ficando até mais tarde para garantir a precisão dos dados."
+  },
+  {
+    "tipo": "mes",
+    "colaborador": "João Ferreira",
+    "cargo": "Operador de Produção",
+    "foto": "https://randomuser.me/api/portraits/men/32.jpg",
+    "referencia": "Janeiro/2026",
+    "mensagem": "Pela proatividade na resolução de problemas na linha de produção e pelo espírito de equipe contagiante."
+  },
+  {
+    "tipo": "tempo",
+    "colaborador": "Ricardo Oliveira",
+    "cargo": "Supervisor de Produção",
+    "foto": "https://randomuser.me/api/portraits/men/85.jpg",
+    "anos": 10,
+    "mensagem_parabens": "Parabenize Ricardo Oliveira pelo tempo de empresa!",
+    "trajetoria": "De Auxiliar de Produção (2014) a Supervisor de Produção (2024), Ricardo passou por Operador de Máquina e Líder de Turno, sempre demonstrando dedicação e crescimento profissional."
+  }
+]
