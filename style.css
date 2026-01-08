@@ -2,30 +2,29 @@
    VARIÁVEIS DE COR - TEMA JANEIRO BRANCO (CLEAN)
    ================================================== */
 :root {
-  /* --- PALETA BASE (DO STYLE ORIGINAL) --- */
+  /* --- PALETA BASE --- */
   --azul-marinho: #ffffff; /* Header Branco */
   --azul-aco: #4a90e2;     /* Azul para detalhes e ícones */
   --azul-claro: #f4f6f8;   /* Cinza azulado muito claro para fundos */
   --cinza-escuro: #555555; /* Texto Principal */
   --branco: #FFFFFF;
-  --dourado: #4a90e2;      /* Substituído Dourado por Azul no tema Clean */
-  --prata-fundo: #f9f9f9;  /* Fundo da página cinza muito claro */
+  --dourado: #4a90e2;      
+  --prata-fundo: #f9f9f9;  
   --transicao: 0.3s ease;
   --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.04);
   --cor-texto-header: #4a90e2; 
 
-  /* --- VARIÁVEIS ADICIONAIS (VINDAS DO HTML) --- */
+  /* --- VARIÁVEIS ADICIONAIS --- */
   color-scheme: light;
   --bg-body: #f4f4f4;
   --bg-card: #ffffff;
   --text-primary: #555555;
   
-  /* Cores do Sistema (Janeiro Branco) */
+  /* Cores do Sistema */
   --primary-color: #4a90e2; 
   --secondary-color: #e0e0e0;
   
-  /* Cores Específicas da Missão e Valores (Identidade PSR) */
-  /* Nota: Redefinições aqui garantem compatibilidade com componentes antigos */
+  /* Cores PSR */
   --mvv-azul-marinho: #003366; 
   --mvv-dourado: #DAA520;
   --sombra-mvv: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -45,7 +44,7 @@ html {
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-body) !important; /* Mantido !important do HTML original */
+  background-color: var(--bg-body) !important;
   color: var(--text-primary) !important;
   line-height: 1.5;
   background-image: none;
@@ -55,7 +54,6 @@ body {
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
 
-/* CLASSE PARA QUEBRA DE LINHA SÓ NO MOBILE */
 .mobile-break { display: none; }
 
 /* ==================================================
@@ -136,12 +134,11 @@ nav ul li a:hover {
    ================================================== */
 section.banner {
   margin-top: 35px; 
-  min-height: 400px; /* Ajustado para min-height conforme HTML original */
+  min-height: 400px;
   height: auto;
   background: 
     linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 220, 0.6) 100%), 
     url('https://i.postimg.cc/G3XVVmLZ/banner-v2.jpg');
-    
   background-size: cover;
   background-position: center;
   display: flex; flex-direction: column;
@@ -216,7 +213,6 @@ section.section {
   padding-bottom: 80px; 
 }
 
-/* Divisória Sutil */
 section.section::after {
     content: "";
     position: absolute;
@@ -328,7 +324,6 @@ section.section:last-of-type::after { display: none; }
     list-style: none;
     padding: 0;
     margin-top: 15px;
-    font-family: 'Poppins', sans-serif;
     width: 100%;
 }
 
@@ -556,24 +551,22 @@ section.section:last-of-type::after { display: none; }
     margin: 0 auto;
 }
 
-/* Tabela Desktop (Estrutura Geral) */
+/* Tabela Desktop */
 .ferias-table {
   margin: 20px auto;
   max-width: 1000px;
   width: 100%;
   border-collapse: collapse;
   border: none !important;
-  /* background-color removido daqui para não afetar mobile */
   border-radius: 8px; 
   overflow: hidden; 
 }
 
 /* REGRA ESPECÍFICA PARA COMPUTADOR (Desktop) */
-/* Isso garante que o fundo branco só apareça em telas grandes */
 @media (min-width: 769px) {
   .ferias-table {
       background-color: #fff;
-      box-shadow: var(--sombra-card); /* Adiciona a sombra suave apenas no PC */
+      box-shadow: var(--sombra-card); 
   }
 }
 
@@ -640,7 +633,7 @@ section.section:last-of-type::after { display: none; }
 }
 
 /* ==================================================
-   COMUNICADO E MODALS (CSS ADICIONAL)
+   COMUNICADO E MODALS (ATUALIZADO)
    ================================================== */
 .comunicado-strip {
     background-color: #fff;
@@ -657,6 +650,17 @@ section.section:last-of-type::after { display: none; }
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Relevância Importante (Amarelo) */
+.comunicado-importante {
+    background-color: #fff9c4 !important; /* Amarelo suave */
+    border-bottom: 2px solid #fbc02d !important; /* Borda mais escura */
+    color: #333 !important;
+}
+
+.comunicado-importante #comunicado-resumo {
+    color: #222 !important; 
 }
 
 .comunicado-content {
@@ -680,12 +684,13 @@ section.section:last-of-type::after { display: none; }
     flex-shrink: 0;
 }
 
+/* Ajuste do Layout do Comunicado (Botão embaixo do texto) */
 .comunicado-text-wrapper {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column; /* Texto em cima, botão embaixo */
+    align-items: flex-start; /* Alinhado a esquerda */
+    justify-content: center;
     width: 100%;
-    flex-wrap: wrap;
     gap: 10px;
 }
 
@@ -693,14 +698,16 @@ section.section:last-of-type::after { display: none; }
     margin: 0;
     font-size: 0.95rem;
     color: var(--cinza-escuro);
-    flex: 1;
     line-height: 1.4;
+    width: 100%;
 }
 
 .comunicado-actions {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 10px;
+    width: 100%;
 }
 
 .btn-ler-comunicado {
@@ -848,6 +855,23 @@ section.section:last-of-type::after { display: none; }
     transition: 0.3s;
 }
 .btn-fechar-modal:hover { background-color: #357abd; }
+
+/* Contador de Leituras (Sutil) */
+.contador-leituras {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 8px;
+    font-style: italic;
+    display: block;
+    min-height: 15px;
+}
+
+/* Estado desabilitado do botão Entendido */
+.btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #ccc !important;
+}
 
 /* LISTA HISTÓRICO */
 .history-list-container {
@@ -1081,16 +1105,25 @@ footer .footer-content {
   .ferias-table td:nth-child(3)::after {
       content: " até "; margin-left: 5px; color: #888;
   }
+
+  /* Ajuste Mobile Comunicado (Ícone no topo, Centralizado) */
+  .comunicado-content {
+      flex-direction: column !important; /* Ícone em cima, texto embaixo */
+      text-align: center;
+  }
   
-  /* Ajuste Mobile Comunicado */
   .comunicado-text-wrapper {
-      flex-direction: column;
-      align-items: flex-start;
+      align-items: center !important; /* Centraliza tudo no mobile */
   }
+  
   .comunicado-actions {
-      width: 100%;
-      justify-content: space-between;
+      justify-content: center !important; /* Centraliza botões */
   }
+
+  .comunicado-icon {
+      margin-bottom: 10px;
+  }
+  
   .btn-ler-comunicado { flex-grow: 1; text-align: center; }
   
   /* Animação Férias Mobile */
@@ -1109,8 +1142,3 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
-
-
-
-
-
