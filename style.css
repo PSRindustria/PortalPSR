@@ -6,25 +6,25 @@
   color-scheme: light;
   
   /* --- PALETA BASE --- */
-  --azul-marinho: #ffffff; /* Header Branco */
-  --azul-aco: #4a90e2;     /* Azul para detalhes e ícones */
-  --azul-claro: #f4f6f8;   /* Cinza azulado muito claro para fundos */
-  --cinza-escuro: #555555; /* Texto Principal */
-  --branco: #FFFFFF;
-  --dourado: #4a90e2;      
-  --prata-fundo: #f9f9f9;  
-  --transicao: 0.3s ease;
-  --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.04);
-  --cor-texto-header: #4a90e2; 
+  --azul-marinho: #ffffff; !important;
+  --azul-aco: #4a90e2; !important;
+  --azul-claro: #f4f6f8; !important;
+  --cinza-escuro: #555555; !important;
+  --branco: #FFFFFF; !important;
+  --dourado: #4a90e2; !important;      
+  --prata-fundo: #f9f9f9; !important; 
+  --transicao: 0.3s ease; !important;
+  --sombra-card: 0 4px 20px rgba(0, 0, 0, 0.04); !important;
+  --cor-texto-header: #4a90e2; !important;
 
   /* --- FORÇAR CORES CLARAS --- */
-  --bg-body: #f4f4f4;
-  --bg-card: #ffffff;
-  --text-primary: #555555;
+  --bg-body: #f4f4f4; !important;
+  --bg-card: #ffffff; !important;
+  --text-primary: #555555; !important;
   
   /* Cores do Sistema */
-  --primary-color: #4a90e2; 
-  --secondary-color: #e0e0e0;
+  --primary-color: #4a90e2; !important;
+  --secondary-color: #e0e0e0; !important;
   
   /* Cores PSR */
   --mvv-azul-marinho: #003366; 
@@ -1445,4 +1445,5 @@ footer .footer-content {
         width: 90%;
     }
 }
+
 
