@@ -569,16 +569,25 @@ section.section:last-of-type::after { display: none; }
     margin: 0 auto;
 }
 
-/* Tabela Desktop */
+/* Tabela Desktop (Estrutura Geral) */
 .ferias-table {
   margin: 20px auto;
   max-width: 1000px;
   width: 100%;
   border-collapse: collapse;
   border: none !important;
-  background-color: transparent; 
+  /* background-color removido daqui para não afetar mobile */
   border-radius: 8px; 
   overflow: hidden; 
+}
+
+/* REGRA ESPECÍFICA PARA COMPUTADOR (Desktop) */
+/* Isso garante que o fundo branco só apareça em telas grandes */
+@media (min-width: 769px) {
+  .ferias-table {
+      background-color: #fff;
+      box-shadow: var(--sombra-card); /* Adiciona a sombra suave apenas no PC */
+  }
 }
 
 .ferias-table thead tr {
@@ -1113,5 +1122,6 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+
 
 
