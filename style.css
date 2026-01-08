@@ -603,212 +603,144 @@ section.section:last-of-type::after { display: none; }
 /* ==================================================
    CIPA / DESTAQUES
    ================================================== */
-.destaques-container {
+display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
     width: 100%;
     max-width: 1200px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 25px;
     margin: 0 auto;
 }
 
 .destaque-card {
-    background-color: var(--bg-card) !important;
+    background: #fff;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    padding: 25px;
-    flex: 1 1 300px; /* Largura base */
-    max-width: 380px;
-    text-align: center;
     position: relative;
-    transition: transform 0.3s ease;
+    overflow: hidden;
+    transition: transform 0.3s;
     border: 1px solid #f0f0f0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
-.destaque-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(74, 144, 226, 0.15);
-}
+.destaque-card:hover { transform: translateY(-5px); }
 
+/* --- IMAGENS E HEADERS GERAIS --- */
 .destaque-img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 10px auto 15px;
-    overflow: hidden;
+    width: 90px; height: 90px;
+    border-radius: 50%; overflow: hidden;
+    margin: 35px auto 15px;
     border: 3px solid #fff;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+.destaque-img img { width: 100%; height: 100%; object-fit: cover; }
 
-.destaque-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.destaque-card h3 {
+    text-align: center; color: var(--azul-aco);
+    margin: 0; font-size: 1.2rem;
 }
-
-.destaque-icon-generic {
-    font-size: 3rem;
-    color: #ddd;
-    margin-bottom: 15px;
-}
-
-.destaque-badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--azul-aco);
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
-    white-space: nowrap;
-}
-
-/* --- TIPO 1: VALOR (Cor Dourada/Amarela para destacar o valor) --- */
-.card-tipo-valor {
-    border-top: 4px solid var(--mvv-dourado);
-}
-.card-tipo-valor .destaque-badge {
-    background: var(--mvv-dourado);
-}
-.card-tipo-valor h3 {
-    color: var(--mvv-azul-marinho);
-    margin: 5px 0;
-}
-.valor-titulo {
-    color: var(--mvv-dourado);
-    font-size: 1.1rem;
+.destaque-cargo {
+    text-align: center; color: #888; font-size: 0.85rem;
     margin: 5px 0 15px;
-    font-style: italic;
+}
+.destaque-msg {
+    text-align: center; font-style: italic; color: #555;
+    padding: 0 20px 20px; font-size: 0.95rem;
 }
 
-/* --- TIPO 2: DESTAQUE DO MÊS (Azul padrão) --- */
-.card-tipo-mes {
-    border-top: 4px solid var(--azul-aco);
-}
-.destaque-ref {
-    display: block;
-    font-size: 0.8rem;
-    color: #999;
-    text-transform: uppercase;
-    margin-bottom: 10px;
+/* --- BADGES (Etiquetas) --- */
+.badge-destaque {
+    position: absolute; top: 0; left: 0; width: 100%;
+    padding: 5px 0;
+    text-align: center; color: #fff;
+    font-weight: bold; font-size: 0.8rem; text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* --- TIPO 1: VALOR --- */
+.card-valor { border-top: 4px solid var(--mvv-dourado); }
+.badge-valor { background: var(--mvv-dourado); }
+.valor-box {
+    text-align: center; background: #fff9c4;
+    display: inline-block; margin: 0 auto 15px;
+    padding: 5px 15px; border-radius: 20px;
+    align-self: center;
+}
+.valor-label { color: #fbc02d; font-weight: bold; font-size: 0.8rem; margin-right: 5px; }
+.valor-nome { color: #333; font-weight: 700; text-transform: uppercase; }
+
+/* --- TIPO 2: DESTAQUE MÊS --- */
+.card-mes { border-top: 4px solid var(--azul-aco); }
+.badge-mes { background: var(--azul-aco); }
+.mes-referencia {
+    text-align: center; color: var(--azul-aco);
+    font-weight: 800; font-size: 0.9rem;
+    text-transform: uppercase; margin-bottom: 10px;
 }
 
 /* --- TIPO 3: TEMPO DE EMPRESA (Estilo LinkedIn) --- */
-.card-tipo-tempo {
-    border: none;
-    padding: 0; /* Remove padding padrão para criar layout customizado */
-    overflow: hidden;
-    text-align: left;
-}
+.card-tempo { padding: 0; }
 
-.destaque-header-tempo {
+.header-tempo {
     background: linear-gradient(135deg, var(--mvv-azul-marinho), var(--azul-aco));
     padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    display: flex; align-items: center; gap: 15px;
     color: #fff;
 }
 
-.tempo-selo {
+.selo-anos {
     background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.4);
-    padding: 10px;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 1.2rem;
-    text-align: center;
-    line-height: 1;
-    min-width: 60px;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 1.4rem; font-weight: 800;
+    text-align: center; line-height: 1;
 }
+.selo-anos span { display: block; font-size: 0.6rem; font-weight: 400; text-transform: uppercase; }
 
-.tempo-info h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #fff;
-}
-.tempo-info span {
-    font-size: 0.8rem;
-    opacity: 0.8;
-}
+.info-tempo h3 { color: #fff; text-align: left; margin: 0; font-size: 1.1rem; }
+.info-tempo p { color: #eee; text-align: left; margin: 0; font-size: 0.8rem; }
 
-.destaque-body-tempo {
-    padding: 20px;
-}
+.body-tempo { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
 
-.linkedin-msg {
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 500;
-}
+.linkedin-cta { font-weight: 600; color: #333; margin-bottom: 15px; font-size: 0.95rem; }
 
-.timeline-box {
-    background-color: #f9f9f9;
-    border-left: 3px solid var(--azul-aco);
-    padding: 10px 15px;
-    border-radius: 0 8px 8px 0;
-    font-size: 0.9rem;
-    color: #555;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
+.trajetoria-box {
+    background: #f8f9fa; border-left: 3px solid var(--azul-aco);
+    padding: 10px 15px; border-radius: 0 8px 8px 0;
+    margin-bottom: 20px; display: flex; gap: 10px;
 }
-.timeline-box i {
-    color: var(--azul-aco);
-    margin-top: 4px;
-}
+.trajetoria-box i { color: var(--azul-aco); margin-top: 3px; }
+.trajetoria-box p { margin: 0; font-size: 0.85rem; color: #555; text-align: left; }
 
-.linkedin-actions {
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    background-color: #fff;
+/* Área de Comentários */
+.comentarios-area {
+    border-top: 1px solid #eee; padding-top: 15px;
+    margin-top: auto;
 }
-
-.linkedin-actions button, .linkedin-actions a {
-    background: none;
-    border: none;
+.comentarios-lista {
+    max-height: 150px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 10px;
+}
+.comentario-item {
+    background: #f1f3f5; padding: 8px 12px;
+    border-radius: 12px; font-size: 0.85rem; color: #444;
+}
+.input-area { display: flex; gap: 5px; }
+.input-area input {
+    flex: 1; padding: 8px 12px; border-radius: 20px;
+    border: 1px solid #ddd; outline: none; font-size: 0.9rem;
+}
+.input-area button {
+    background: var(--azul-aco); color: #fff;
+    border: none; width: 35px; height: 35px; border-radius: 50%;
     cursor: pointer;
-    font-size: 0.9rem;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 600;
-    padding: 5px 10px;
-    border-radius: 5px;
-    text-decoration: none; /* Para o link parecer botão */
-}
-
-.linkedin-actions button:hover, .linkedin-actions a:hover {
-    background-color: #f2f2f2;
-    color: var(--azul-aco);
-}
-
-.btn-like.liked i {
-    color: var(--azul-aco);
-    font-weight: 900; /* Muda para ícone preenchido */
 }
 
 /* Responsividade Mobile */
 @media (max-width: 768px) {
-    .destaque-card {
-        max-width: 100%;
-        margin-bottom: 15px;
-    }
+    .destaques-container { grid-template-columns: 1fr; }
+    .destaque-card { margin-bottom: 15px; }
 }
 
 /* ==================================================
@@ -1471,4 +1403,5 @@ footer .footer-content {
     transform: scale(1.1);
     background-color: #357abd;
 }
+
 
