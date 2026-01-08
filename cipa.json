@@ -2,23 +2,26 @@
   {
     "tipo": "valor",
     "colaborador": "Ana Souza",
-    "titulo_valor": "Comprometimento",
-    "foto": "https://randomuser.me/api/portraits/women/44.jpg",
-    "texto": "A Ana demonstrou um comprometimento exemplar no projeto de final de ano, garantindo a entrega antes do prazo com qualidade excepcional."
+    "cargo": "Analista de Qualidade",
+    "valor": "Honestidade",
+    "foto": "https://randomuser.me/api/portraits/women/65.jpg",
+    "mensagem": "Sempre transparente nas auditorias, garantindo a confiança dos nossos clientes."
   },
   {
     "tipo": "mes",
-    "colaborador": "Carlos Silva",
+    "colaborador": "Carlos Mendes",
+    "cargo": "Operador de Máquina",
     "referencia": "Janeiro/2026",
     "foto": "https://randomuser.me/api/portraits/men/32.jpg",
-    "texto": "Eficiência recorde na linha de produção e proatividade na resolução de problemas da equipe."
+    "mensagem": "Bateu o recorde de produtividade com zero desperdício na linha 3."
   },
   {
     "tipo": "tempo",
     "colaborador": "Roberto Almeida",
+    "cargo": "Líder de Logística",
     "anos": "10",
     "foto": "https://randomuser.me/api/portraits/men/85.jpg",
-    "trajetoria": "Iniciou como Auxiliar de Produção em 2016, passou pela Expedição e hoje lidera o time de Logística com maestria.",
-    "mensagem_linkedin": "Parabenize o Roberto pelos 10 anos de dedicação!"
+    "mensagem_parabens": "Parabenize o Roberto pelos 10 anos de dedicação!",
+    "trajetoria": "Iniciou como Auxiliar em 2016, passou pela Expedição e hoje lidera a Logística com excelência."
   }
 ]
