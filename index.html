@@ -82,6 +82,7 @@
       </div>
     </div>
   </div>
+
   <main>
     
     <section id="missao-visao-valores" class="section">
@@ -167,12 +168,13 @@
       </div>
     </section>
 
-<section id="destaques" class="section">
+    <section id="destaques" class="section">
       <h2 class="section-title">🏆 Mural de <br class="mobile-break"> Reconhecimento</h2>
       <div id="destaques-container" class="destaques-container">
         <div class="loading"><div class="loading-spinner"></div></div>
       </div>
     </section>
+
   </main>
 
   <div id="footer-placeholder"></div>
@@ -196,12 +198,14 @@
   </script>
 
   <script>
+  // --- CONFIGURAÇÃO GLOBAL ---
+  const DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com";
+
   // Funções Globais para o Comunicado
   function fecharModal(id) {
       document.getElementById(id).classList.remove('active');
   }
 
-  // Identidade do Dispositivo (Gera um ID único e salva no navegador)
   function getDeviceId() {
       let id = localStorage.getItem('portal_device_id');
       if (!id) {
@@ -211,7 +215,6 @@
       return id;
   }
 
-  // Variável para saber qual comunicado está aberto
   let currentComunicadoId = null;
 
   document.addEventListener('DOMContentLoaded', async () => {
@@ -229,7 +232,7 @@
 
     // --- 1. LÓGICA DO COMUNICADO ---
     async function carregarComunicado() {
-        const url = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/Comunicado.json";
+        const url = `${DB_URL}/Comunicado.json`;
         
         try {
             const res = await fetch(url + '?t=' + Date.now());
@@ -239,28 +242,23 @@
             if (!data) return;
 
             let lista = [];
-            // Ajuste para preservar o ID do comunicado
             if (Array.isArray(data)) {
-                // Se for array, o ID é o índice
                 lista = data.map((item, index) => ({ ...item, id: index })).filter(item => item !== null);
             } else if (typeof data === 'object') {
-                // Se for objeto, o ID é a chave
                 lista = Object.keys(data).map(key => ({ ...data[key], id: key }));
             }
 
             if (lista.length === 0) return;
 
-            // Ordenar por data (mais recente primeiro)
             lista.sort((a, b) => {
                 const dataA = new Date(a['data:']);
                 const dataB = new Date(b['data:']);
                 return dataB - dataA; 
             });
 
-            const ultimo = lista[0]; // Recente
-            const passados = lista.slice(1); // Histórico
+            const ultimo = lista[0];
+            const passados = lista.slice(1);
 
-            // Configurar barra
             const texto = ultimo['comunicado:'] || "";
             const autor = ultimo['autor:'] || "RH Informa";
             const palavras = texto.split(" ");
@@ -274,18 +272,15 @@
                 pResumo.innerHTML = `<strong>${autor}</strong> ${resumo}`;
                 strip.style.display = 'block';
 
-                // Lógica de Cor (Importante)
                 const relev = (ultimo['relevancia:'] || "none").toLowerCase();
                 if (relev.includes('importante')) {
                     strip.classList.add('comunicado-importante');
-                    // Abre automático se for importante
                     setTimeout(() => abrirLeitura(ultimo), 1500);
                 } else {
                     strip.classList.remove('comunicado-importante');
                 }
             }
 
-            // Configurar Botões
             const btnOpen = document.getElementById('btn-open-comunicado');
             if (btnOpen) btnOpen.onclick = () => abrirLeitura(ultimo);
 
@@ -304,34 +299,26 @@
         }
     }
 
-    // Função para registrar leitura no Firebase
     async function registrarLeitura(comunicadoId) {
         const deviceId = getDeviceId();
-        // Caminho: Leituras_Confirmadas / ID_Comunicado / ID_Device
-        const urlBase = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com";
-        const url = `${urlBase}/Leituras_Confirmadas/${comunicadoId}/${deviceId}.json`;
+        const url = `${DB_URL}/Leituras_Confirmadas/${comunicadoId}/${deviceId}.json`;
 
         try {
             await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(true)
             });
-            console.log("Leitura confirmada para:", comunicadoId);
         } catch (e) {
             console.error("Erro ao registrar leitura:", e);
         }
     }
 
-    // Função para contar leituras
     async function contarLeituras(comunicadoId) {
         const contadorEl = document.getElementById('contador-leituras');
         if (!contadorEl) return;
         contadorEl.textContent = "Verificando confirmações...";
 
-        const urlBase = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com";
-        // .json?shallow=true não retorna a contagem direta em todos os casos REST, 
-        // então pegamos o objeto e contamos as chaves.
-        const url = `${urlBase}/Leituras_Confirmadas/${comunicadoId}.json`;
+        const url = `${DB_URL}/Leituras_Confirmadas/${comunicadoId}.json`;
 
         try {
             const res = await fetch(url);
@@ -350,7 +337,7 @@
         fecharModal('modal-lista-historico');
         const modal = document.getElementById('modal-comunicado');
         
-        currentComunicadoId = item.id; // Salva o ID atual globalmente
+        currentComunicadoId = item.id; 
 
         const dataRaw = item['data:'];
         let dataFmt = "--/--/----";
@@ -360,9 +347,7 @@
         document.getElementById('modal-data').textContent = dataFmt;
         document.getElementById('modal-texto').textContent = item['comunicado:'];
         
-        // Carrega o contador
         contarLeituras(currentComunicadoId);
-
         modal.classList.add('active');
     }
 
@@ -390,9 +375,9 @@
         modal.classList.add('active');
     }
 
-    carregarComunicado(); // Inicia
+    carregarComunicado();
 
-    // --- 2. INTERCEPTADOR DE LINKS (Rolagem Suave) ---
+    // --- 2. ROLAGEM SUAVE ---
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link) {
@@ -404,8 +389,9 @@
 
           if (targetSection) {
             e.preventDefault(); 
-            const menuEl = document.getElementById('menu');
+            const menuEl = document.getElementById('menu'); // Tenta pegar pelo ID que vem do menu.html
             if (menuEl) menuEl.classList.remove('active');
+            
             const isMobile = window.innerWidth < 768;
             targetSection.scrollIntoView({
               behavior: 'smooth',
@@ -416,16 +402,14 @@
       }
     });
 
-    // --- 3. SCRIPT DE FOGOS ---
+    // --- 3. FOGOS ---
     function spawnFirework(container) {
-      if (!container) return;
-      if (document.hidden) return;
+      if (!container || document.hidden) return;
       
       const rect = container.getBoundingClientRect();
       const startX = (Math.random() * (rect.width - 40)) + 20; 
       const startY = (Math.random() * (rect.height - 40)) + 20;
       const colors = ['#74b9ff', '#ffffff', '#81ecec', '#0984e3', '#b2bec3', '#dfe6e9'];
-      
       const particleCount = 90; 
 
       for (let i = 0; i < particleCount; i++) {
@@ -444,15 +428,12 @@
 
         const angle = Math.random() * Math.PI * 2;
         const velocity = Math.random() * 4 + 2; 
-        
         let vx = Math.cos(angle) * velocity;
         let vy = Math.sin(angle) * velocity;
-        let x = startX;
-        let y = startY;
+        let x = startX; let y = startY;
         let life = 1.0;
         const decay = Math.random() * 0.007 + 0.003; 
-        const friction = 0.96; 
-        const gravity = 0.04; 
+        const friction = 0.96; const gravity = 0.04; 
 
         setTimeout(() => {
              if(document.body.contains(particle)){
@@ -479,7 +460,6 @@
     }
 
     let fireworkIntervals = [];
-
     function clearAllFireworkIntervals() {
       fireworkIntervals.forEach(clearInterval);
       fireworkIntervals = [];
@@ -510,16 +490,20 @@
       }
     });
     
-    // --- 4. CARREGAMENTO DE MENU/FOOTER ---
+    // --- 4. CARREGAMENTO MENU/FOOTER ---
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
         .then(r => r.text())
         .then(html => {
           const placeholder = document.getElementById(`${file}-placeholder`);
           if (placeholder) placeholder.innerHTML = html;
+          
           if (file === 'menu') {
             const toggle = document.getElementById('menu-toggle');
-            const menuEl = document.getElementById('nav-principal');
+            // O menu.html geralmente carrega uma UL com ID 'menu' ou 'nav-principal'. 
+            // Verifique seu menu.html. Assumindo ID 'menu' baseado no contexto anterior.
+            const menuEl = document.getElementById('menu'); 
+            
             if (toggle && menuEl) {
               toggle.addEventListener('click', () => {
                 menuEl.classList.toggle('active');
@@ -702,114 +686,165 @@
        });
      }
 
-    // CIPA
-async function renderDestaques() {
-      const raw = await fetchData('destaques.json');
-      const container = document.getElementById('destaques-container');
-      
-      if (!container) return;
-      
-      if (!raw) {
-        container.innerHTML = '<p>Erro ao carregar destaques.</p>';
-        return;
-      }
-      
-      container.innerHTML = '';
-      
-      // Converte para array se não for
-      const lista = Array.isArray(raw) ? raw : (typeof raw === 'object' && raw !== null ? Object.values(raw) : []);
-      
-      if (lista.length === 0) {
-        container.innerHTML = '<p>Nenhum destaque no momento.</p>';
-        return;
-      }
-
-      lista.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'destaque-card';
+    // --- 7. DESTAQUES (Reconhecimento) ---
+    async function renderDestaques() {
+        const raw = await fetchData('destaques.json');
+        const container = document.getElementById('destaques-container');
         
-        // Define imagem ou ícone padrão se não tiver foto
-        let imagemHtml = '';
-        if (item.foto) {
-            imagemHtml = `<div class="destaque-img"><img src="${item.foto}" alt="${item.colaborador}"></div>`;
-        } else {
-            imagemHtml = `<div class="destaque-icon-generic"><i class="fas fa-user"></i></div>`;
+        if (!container) return;
+        if (!raw) {
+            container.innerHTML = '<p>Erro ao carregar destaques.</p>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        const lista = Array.isArray(raw) ? raw : (typeof raw === 'object' && raw !== null ? Object.values(raw) : []);
+        
+        if (lista.length === 0) {
+            container.innerHTML = '<p>Nenhum destaque no momento.</p>';
+            return;
         }
 
-        // LÓGICA DE RENDERIZAÇÃO POR TIPO DE CARD
-        
-        // 1. CARD VALOR
-        if (item.tipo === 'valor') {
-            div.classList.add('card-tipo-valor');
-            div.innerHTML = `
-                <div class="destaque-badge"><i class="fas fa-gem"></i> Guardião do Valor</div>
-                ${imagemHtml}
-                <h3>${item.colaborador}</h3>
-                <h4 class="valor-titulo">"${item.titulo_valor}"</h4>
-                <p class="destaque-texto">${item.texto}</p>
-            `;
-        } 
-        
-        // 2. CARD DESTAQUE DO MÊS
-        else if (item.tipo === 'mes') {
-            div.classList.add('card-tipo-mes');
-            div.innerHTML = `
-                <div class="destaque-badge"><i class="fas fa-trophy"></i> Destaque do Mês</div>
-                ${imagemHtml}
-                <h3>${item.colaborador}</h3>
-                <span class="destaque-ref">${item.referencia || 'Este mês'}</span>
-                <p class="destaque-texto">${item.texto}</p>
-            `;
-        } 
-        
-        // 3. CARD TEMPO DE EMPRESA (Estilo LinkedIn)
-        else if (item.tipo === 'tempo') {
-            div.classList.add('card-tipo-tempo');
+        lista.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'destaque-card';
             
-            let trajetoriaHtml = '';
-            if (item.trajetoria) {
-                trajetoriaHtml = `
-                    <div class="timeline-box">
-                        <i class="fas fa-route"></i>
-                        <p>${item.trajetoria}</p>
+            // Imagem ou Ícone Genérico
+            let imgHtml = item.foto 
+                ? `<div class="destaque-img"><img src="${item.foto}" alt="${item.colaborador}"></div>` 
+                : `<div class="destaque-icon-generic"><i class="fas fa-user-circle"></i></div>`;
+
+            // --- LÓGICA DOS 3 TIPOS ---
+
+            // 1. CARD VALOR
+            if (item.tipo === 'valor') {
+                div.classList.add('card-valor');
+                div.innerHTML = `
+                    <div class="badge-destaque badge-valor"><i class="fas fa-gem"></i> Guardião do Valor</div>
+                    ${imgHtml}
+                    <h3>${item.colaborador}</h3>
+                    <p class="destaque-cargo">${item.cargo}</p>
+                    <div class="valor-box">
+                        <span class="valor-label">Valor:</span>
+                        <span class="valor-nome">${item.valor}</span>
                     </div>
+                    <p class="destaque-msg">"${item.mensagem}"</p>
                 `;
             }
+            // 2. CARD DESTAQUE DO MÊS
+            else if (item.tipo === 'mes') {
+                div.classList.add('card-mes');
+                div.innerHTML = `
+                    <div class="badge-destaque badge-mes"><i class="fas fa-trophy"></i> Destaque do Mês</div>
+                    ${imgHtml}
+                    <h3>${item.colaborador}</h3>
+                    <p class="destaque-cargo">${item.cargo}</p>
+                    <div class="mes-referencia">${item.referencia}</div>
+                    <p class="destaque-msg">"${item.mensagem}"</p>
+                `;
+            }
+            // 3. CARD TEMPO DE EMPRESA
+            else if (item.tipo === 'tempo') {
+                div.classList.add('card-tempo');
+                const idUnico = item.colaborador.replace(/\s+/g, '_').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // ID para o Firebase
 
-            div.innerHTML = `
-                <div class="destaque-header-tempo">
-                    <div class="tempo-selo">${item.anos} Anos</div>
-                    <div class="tempo-info">
-                        <h3>${item.colaborador}</h3>
-                        <span>Casa Nova</span>
+                div.innerHTML = `
+                    <div class="header-tempo">
+                        <div class="selo-anos">${item.anos}<span>anos</span></div>
+                        <div class="info-tempo">
+                            <h3>${item.colaborador}</h3>
+                            <p>${item.cargo}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="destaque-body-tempo">
-                    <p class="linkedin-msg">${item.mensagem_linkedin || `Parabenize ${item.colaborador.split(' ')[0]} por essa conquista!`}</p>
-                    ${trajetoriaHtml}
-                </div>
+                    <div class="body-tempo">
+                        <p class="linkedin-cta">${item.mensagem_parabens}</p>
+                        <div class="trajetoria-box">
+                            <i class="fas fa-history"></i>
+                            <p>${item.trajetoria}</p>
+                        </div>
+                        
+                        <div class="comentarios-area">
+                            <div class="comentarios-lista" id="lista-${idUnico}">
+                                <small>Carregando comentários...</small>
+                            </div>
+                            <div class="input-area">
+                                <input type="text" id="input-${idUnico}" placeholder="Deixe seu parabéns...">
+                                <button onclick="enviarComentario('${idUnico}')"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
                 
-                <div class="linkedin-actions">
-                    <button class="btn-like" onclick="this.classList.toggle('liked')">
-                        <i class="far fa-thumbs-up"></i> Gostei
-                    </button>
-                    <a href="https://wa.me/?text=Parabéns%20${item.colaborador}%20pelos%20${item.anos}%20anos%20de%20casa!" target="_blank" class="btn-comment">
-                        <i class="far fa-comment-dots"></i> Parabenizar
-                    </a>
-                </div>
-            `;
-        }
+                // Carrega comentários após criar o elemento
+                setTimeout(() => carregarComentarios(idUnico), 500);
+            }
 
-        container.appendChild(div);
-      });
+            container.appendChild(div);
+        });
     }
 
-    // Chame a nova função ao final
     renderReflexao();
     renderAniversariantes();
     renderFerias();
-    renderDestaques(); // <--- Nova chamada
-});
+    renderDestaques(); 
+  });
+
+  // --- FUNÇÕES DE COMENTÁRIOS (GLOBAIS para o onclick funcionar) ---
+  window.carregarComentarios = async function(id) {
+      const divLista = document.getElementById(`lista-${id}`);
+      if(!divLista) return;
+
+      try {
+          const res = await fetch(`${DB_URL}/Comentarios/${id}.json`);
+          const data = await res.json();
+          
+          divLista.innerHTML = '';
+          if(!data) {
+              divLista.innerHTML = '<small style="color:#aaa">Seja o primeiro a parabenizar!</small>';
+              return;
+          }
+
+          // FILTRO: Mês Vigente
+          const hoje = new Date();
+          const mesAtual = hoje.getMonth();
+          const anoAtual = hoje.getFullYear();
+
+          const comentariosFiltrados = Object.values(data).filter(c => {
+              if(!c.data) return false;
+              const dataComentario = new Date(c.data);
+              return dataComentario.getMonth() === mesAtual && dataComentario.getFullYear() === anoAtual;
+          });
+
+          if(comentariosFiltrados.length === 0) {
+              divLista.innerHTML = '<small style="color:#aaa">Nenhum comentário neste mês.</small>';
+              return;
+          }
+
+          comentariosFiltrados.forEach(c => {
+              divLista.innerHTML += `
+                  <div class="comentario-item">
+                      <strong>Colega PSR:</strong> ${c.texto}
+                  </div>
+              `;
+          });
+          divLista.scrollTop = divLista.scrollHeight; 
+      } catch(e) { console.error(e); }
+  };
+
+  window.enviarComentario = async function(id) {
+      const input = document.getElementById(`input-${id}`);
+      const texto = input.value;
+      if(!texto.trim()) return;
+
+      try {
+          await fetch(`${DB_URL}/Comentarios/${id}.json`, {
+              method: 'POST',
+              body: JSON.stringify({ texto: texto, data: new Date() })
+          });
+          input.value = '';
+          carregarComentarios(id);
+      } catch(e) { alert("Erro ao enviar."); }
+  };
   </script>
 
   <script>
@@ -849,7 +884,6 @@ async function renderDestaques() {
       let mensagens = [];
 
       // Aniversariantes
-// Aniversariantes
       const aniversariantes = await carregaJSON('aniversariantes.json');
       const nomesAniv = [];
       const generosAniv = [];
@@ -867,14 +901,12 @@ async function renderDestaques() {
           const pronome = genero === 'feminino' ? 'ela' : 'ele';
           const artigo = getArtigoSingular(genero);
           
-          // AQUI ESTÁ A ALTERAÇÃO: Adicionamos <br class="mobile-break"> e ajustamos os emojis
           mensagens.push(`🎂 Hoje é aniversário ${artigo} <br class="mobile-break"> ${nomesAniv[0]}, dê os parabéns <br class="mobile-break"> para ${pronome}! 🥳`);
           
         } else if (nomesAniv.length > 1) {
           const nomesStr = juntarNomes(nomesAniv);
           const pronome = generosAniv.every(g => g === 'feminino') ? 'elas' : 'eles';
           
-          // Lógica similar para o plural, caso haja mais de um aniversariante
           mensagens.push(`🎂 Hoje, <br class="mobile-break"> ${nomesStr} fazem aniversário. <br class="mobile-break"> Dê os parabéns a ${pronome}! 🥳`);
         }
       }
@@ -917,8 +949,3 @@ async function renderDestaques() {
   </script>
 </body>
 </html>
-
-
-
-
-
