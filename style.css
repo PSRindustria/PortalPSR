@@ -1355,4 +1355,120 @@ footer .footer-content {
    0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.2); }
    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.4); }
 }
+/* ==================================================
+   ÁREA DE COMENTÁRIOS (Firebase)
+   ================================================== */
+.comentarios-section {
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
+    padding: 15px;
+    text-align: left;
+}
+
+.comentarios-lista {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comentario-item {
+    background: #fff;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border-bottom-left-radius: 2px; /* Estilo balão */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    font-size: 0.9rem;
+    position: relative;
+    border: 1px solid #eef;
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.comentario-autor {
+    font-weight: 700;
+    color: var(--azul-aco);
+    font-size: 0.85rem;
+}
+
+.comentario-data {
+    font-size: 0.7rem;
+    color: #aaa;
+}
+
+.comentario-texto {
+    color: #555;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.comentario-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+}
+
+.btn-like-comment {
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: 0.2s;
+}
+
+.btn-like-comment:hover, .btn-like-comment.liked {
+    color: #e0245e; /* Cor de like */
+}
+
+/* Input Area */
+.comentario-input-wrapper {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+}
+
+.input-comentario {
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    outline: none;
+    font-family: inherit;
+}
+
+.input-comentario:focus {
+    border-color: var(--azul-aco);
+}
+
+.btn-enviar-comentario {
+    background-color: var(--azul-aco);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-enviar-comentario:hover {
+    transform: scale(1.1);
+    background-color: #357abd;
+}
 
