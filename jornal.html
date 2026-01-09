@@ -825,7 +825,7 @@
     }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
-    async function openHiScore(gameKey) {
+    window.openHiScore = async function(gameKey) {
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
         modal.style.display = 'flex';
@@ -844,7 +844,7 @@
             list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${s.pontos}</div></div>`).join('');
         } catch (error) { console.error(error); list.innerHTML = '<p style="color:red;">Erro ao carregar.</p>'; }
     }
-    function closeHiScore() { document.getElementById('hiscore-modal').style.display = 'none'; }
+    window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
 
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
