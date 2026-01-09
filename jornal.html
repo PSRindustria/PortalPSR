@@ -303,7 +303,13 @@
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
     /* MODALS */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 20px; animation: fadeIn 0.3s; }
+    .modal-overlay {
+    z-index: 9999 !important; /* !important força ficar na frente de tudo */
+    /* ... mantenha o resto das propriedades ... */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.5); display: none; 
+    justify-content: center; align-items: center; 
+}
     .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 15px; padding: 25px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.2); }
     .modal-close { position: absolute; top: 15px; right: 15px; font-size: 1.5em; cursor: pointer; color: #999; border: none; background: none; }
     .hiscore-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
@@ -541,16 +547,75 @@
   <div id="footer-placeholder"></div>
 
 <script>
-    // --- CONFIGURAÇÃO ---
-    // Removemos a barra final para evitar URLs duplas e erros de conexão
+    // --- 1. CONFIGURAÇÕES GLOBAIS (Carregam primeiro para evitar erros) ---
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com"; 
 
-    // VARIÁVEL GLOBAL DE CONTEÚDO
-    let CONTEUDO_JORNAL = {
-        temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: null
+    // Garante que a função de Ranking exista para o HTML imediatamente
+    window.openHiScore = async function(gameKey) {
+        // Se não passar nome do jogo, assume o padrão
+        if(!gameKey || typeof gameKey !== 'string') gameKey = 'BobinaWorld';
+
+        const modal = document.getElementById('hiscore-modal');
+        const list = document.getElementById('modal-score-list');
+        const title = document.getElementById('modal-game-title');
+        
+        // 1. Força visualização
+        if(modal) {
+            modal.style.display = 'flex';
+            modal.style.zIndex = '9999'; // Força via JS também
+        } else {
+            alert("Erro: Modal de Ranking não encontrado no HTML!");
+            return;
+        }
+        
+        if(title) title.textContent = `Ranking: ${gameKey}`;
+        if(list) list.innerHTML = '<div style="padding:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+        
+        try {
+            // Remove barra final se existir
+            const baseUrlClean = BASE_DB_URL.endsWith('/') ? BASE_DB_URL.slice(0, -1) : BASE_DB_URL;
+            const resp = await fetch(`${baseUrlClean}/games/${gameKey}/scores.json`);
+            
+            if (!resp.ok) throw new Error('Falha na conexão');
+            
+            const data = await resp.json();
+            
+            if (!data) { 
+                if(list) list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Sem recordes registrados ainda.</p>'; 
+                return; 
+            }
+            
+            let scoresArray = Object.values(data);
+            
+            // Ordenação segura (Maior para menor)
+            scoresArray.sort((a, b) => {
+                let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
+                let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
+                return scoreB - scoreA;
+            });
+            
+            if(list) {
+                list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `
+                    <div class="hiscore-item">
+                        <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
+                        <div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div>
+                        <div class="hiscore-points">${s.pontos}</div>
+                    </div>`).join('');
+            }
+        } catch (error) { 
+            console.error(error); 
+            if(list) list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar. Verifique internet.</p>'; 
+        }
+    };
+    
+    window.closeHiScore = function() { 
+        const modal = document.getElementById('hiscore-modal');
+        if(modal) modal.style.display = 'none'; 
     };
 
-    // Estrutura padrão caso falte no banco
+    // --- 2. VARIÁVEIS E DADOS ---
+    let CONTEUDO_JORNAL = { temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: null };
+
     const SUSTENTABILIDADE_PADRAO = {
         meioAmbiente: [
             { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
@@ -585,18 +650,33 @@
     let globalChallengesData = {};
     let globalQuizData = {};
     
-    // -- NOVAS GLOBAIS COM SUPORTE A HISTÓRICO --
+    // HISTÓRICO (HOBBY, PRAISE, TESTIMONIALS)
     let globalHobbyHistory = {}; 
     let globalPraiseData = {}; 
     let globalTestimonialsHistory = {};
 
-    // Controles de Mês Vigente
     let currentPraiseMonth = new Date().toISOString().slice(0, 7); 
     let currentHobbyMonth = new Date().toISOString().slice(0, 7);
     let currentTestimonialMonth = new Date().toISOString().slice(0, 7);
 
+    // --- 3. INICIALIZAÇÃO ---
     document.addEventListener("DOMContentLoaded", () => {
-        // Carrega Menu e Footer
+        // A. Correção "Na Marra" do Botão de Ranking
+        const btnRank = document.getElementById('hiscore-btn');
+        if(btnRank) {
+            // Remove qualquer evento antigo clonando o botão (opcional, mas garante limpeza)
+            const newBtn = btnRank.cloneNode(true);
+            if(btnRank.parentNode) btnRank.parentNode.replaceChild(newBtn, btnRank);
+            
+            // Adiciona o evento de clique manualmente
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault(); // Evita recarregar página se for um link
+                console.log("Botão de Ranking Clicado!"); // Para debug
+                window.openHiScore('BobinaWorld'); // CHAMA A FUNÇÃO DIRETAMENTE
+            });
+        }
+
+        // B. Carrega Menu e Footer
         ['menu', 'footer'].forEach(file => {
             fetch(`${file}.html?t=${Date.now()}`).then(r => r.text()).then(html => {
                 const el = document.getElementById(`${file}-placeholder`);
@@ -616,51 +696,43 @@
         setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
     });
 
-    // --- CARREGAMENTO OTIMIZADO ---
     async function initFirebaseData() {
         try {
-            // Nota: Buscamos agora as tabelas _history para Hobby e Testimonials
+            // BUSCA DADOS DE HISTÓRICO AGORA
             const [contentResp, clientesResp, hobbyResp, praiseResp, challengesResp, quizResp, ratingsResp, testimonialsResp] = await Promise.all([
                 fetch(`${BASE_DB_URL}/content.json`),
                 fetch(`${BASE_DB_URL}/novos_clientes.json`),
-                fetch(`${BASE_DB_URL}/hobby_interactions_history.json`), // Alterado para _history
+                fetch(`${BASE_DB_URL}/hobby_interactions_history.json`), // Lendo histórico
                 fetch(`${BASE_DB_URL}/praise_messages.json`),
                 fetch(`${BASE_DB_URL}/challenges_v2.json`),
                 fetch(`${BASE_DB_URL}/safety_quiz.json`),
                 fetch(`${BASE_DB_URL}/ratings_v2.json`),
-                fetch(`${BASE_DB_URL}/testimonials_history.json`) // Alterado para _history
+                fetch(`${BASE_DB_URL}/testimonials_history.json`) // Lendo histórico
             ]);
 
-            // 1. Processa Conteúdo
             const contentData = await contentResp.json() || {};
-            if (contentData) {
-                CONTEUDO_JORNAL = contentData;
-                if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-            } else {
-                CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-            }
+            CONTEUDO_JORNAL = contentData || {};
+            if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
 
-            // 2. Processa Dados Auxiliares
             const clientesData = await clientesResp.json() || {};
-            globalHobbyHistory = await hobbyResp.json() || {};         // Carrega histórico completo
+            globalHobbyHistory = await hobbyResp.json() || {}; 
             globalPraiseData = await praiseResp.json() || {};
             globalChallengesData = await challengesResp.json() || {};
             globalQuizData = await quizResp.json() || {};
             const ratingsData = await ratingsResp.json() || {};
-            globalTestimonialsHistory = await testimonialsResp.json() || {}; // Carrega histórico completo
+            globalTestimonialsHistory = await testimonialsResp.json() || {};
 
-            // 3. Renderiza Tudo
             renderJornal(); 
             renderNovosClientes(clientesData);
             renderChallenges(globalChallengesData);
             
-            // Renderizações com filtro de Mês
+            // Renderiza seções com filtro de mês
             renderPraiseSection(currentPraiseMonth);
             renderTestimonialsSection(currentTestimonialMonth);
             
             checkIfQuizTaken();
             
-            // Lógica de Ratings (Cultura)
+            // Ratings (Cultura)
             document.querySelectorAll('.rating-container').forEach(container => {
                 const itemId = container.dataset.id;
                 const stars = container.querySelectorAll('.rating-stars i');
@@ -687,67 +759,59 @@
                     });
                     star.addEventListener('mouseover', () => {
                         const val = parseInt(star.dataset.value);
-                        stars.forEach(s => { 
-                            s.classList.remove('filled'); 
-                            if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); 
-                            else s.classList.remove('hover-active'); 
-                        });
+                        stars.forEach(s => { s.classList.remove('filled'); if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); else s.classList.remove('hover-active'); });
                     });
-                    star.addEventListener('mouseout', () => { 
-                        stars.forEach(s => s.classList.remove('hover-active')); 
-                        updateVisualStars(stars, scoreDisplay.textContent); 
-                    });
+                    star.addEventListener('mouseout', () => { stars.forEach(s => s.classList.remove('hover-active')); updateVisualStars(stars, scoreDisplay.textContent); });
                 });
             });
 
-        } catch (e) { console.error("Erro no carregamento paralelo:", e); }
+        } catch (e) { console.error("Erro no carregamento:", e); }
         
         setupForms(); 
     }
 
-    // Função auxiliar para gerar links de histórico (Visual idêntico ao de Elogios)
+    // --- FUNÇÕES AUXILIARES DE RENDERIZAÇÃO ---
     function generateHistoryLinks(historyData, currentMonth, clickHandler, containerId) {
-        // Encontra onde colocar os links, ou cria se não existir na função de render
         let linksContainer = document.getElementById(containerId);
-        if (!linksContainer) return ''; // Retorna HTML string se não tiver container pronto
-
+        // Se o container ainda não existir no HTML, cria um temporário na memória para pegar a string (mas a função espera injetar)
+        // Aqui retornaremos HTML string para ser injetado
         let html = '';
         const dataMonths = new Set();
-        dataMonths.add(new Date().toISOString().slice(0, 7)); // Garante o mês atual
-        if(historyData) Object.keys(historyData).forEach(k => dataMonths.add(k)); // Adiciona meses do histórico
+        dataMonths.add(new Date().toISOString().slice(0, 7)); 
+        if(historyData) Object.keys(historyData).forEach(k => dataMonths.add(k));
 
         const sortedMonths = Array.from(dataMonths).sort().reverse();
-        
-        // Se só tem o mês atual e nada mais, talvez nem precise mostrar links, mas vamos mostrar para consistência
         sortedMonths.forEach(mStr => {
             const [y, m] = mStr.split('-');
             const label = new Date(y, m - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
             const activeClass = mStr === currentMonth ? 'active' : '';
-            // Construímos o HTML dos links
             html += `<span class="praise-link ${activeClass}" onclick="${clickHandler}('${mStr}')">${label}</span>`;
         });
-        
         return html;
     }
 
     function renderJornal() {
+        // Tema do Mês
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         const elemTema = document.getElementById('tema-mes');
         if(elemTema) elemTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
         
-        // --- HOBBY COM FILTRO DE MÊS ---
+        // RENDERIZA HOBBY (COM FILTRO)
         renderHobbySection(currentHobbyMonth);
 
+        // Saúde Física
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const elemSaude = document.getElementById('saude-fisica-hero');
         if(elemSaude) elemSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
+        // Receitas
         const recContainer = document.getElementById('receitas-container'); 
         if(recContainer) {
             recContainer.innerHTML = ''; 
             (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
         }
         
+        // Desafios
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         const elemTituloDesafio = document.getElementById('titulo-desafio-mes');
         if(elemTituloDesafio) elemTituloDesafio.innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
@@ -758,76 +822,50 @@
             (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; });
         }
         
+        // Cultura
         const cultContainer = document.getElementById('cultura-container'); 
         if(cultContainer) {
             cultContainer.innerHTML = ''; 
             (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
                 const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; 
-                cultContainer.innerHTML += `
-                    <article class="jornal-card" id="card_${c.id}">
-                        <a href="${c.link}" target="_blank" class="video-thumbnail-container">
-                            <img src="${c.img}">
-                            <i class="fas ${ic} play-button"></i>
-                        </a>
-                        <div class="jornal-card-content" style="text-align:center;">
-                            <h3>${c.titulo}</h3>
-                            <p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p>
-                            <button class="btn-ler-sinopse" onclick="openSynopsis('${c.id}')">Ler Sinopse</button>
-                            <span class="tag-discreta">${c.tag||''}</span>
-                            <div class="rating-container" data-id="${c.id}">
-                                <div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div>
-                                <div style="font-size:0.9rem; color:#777; margin-top:10px;">Média:<br><span class="score-value">0.0</span></div>
-                            </div>
-                        </div>
-                    </article>`; 
+                cultContainer.innerHTML += `<article class="jornal-card" id="card_${c.id}"><a href="${c.link}" target="_blank" class="video-thumbnail-container"><img src="${c.img}"><i class="fas ${ic} play-button"></i></a><div class="jornal-card-content" style="text-align:center;"><h3>${c.titulo}</h3><p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p><button class="btn-ler-sinopse" onclick="openSynopsis('${c.id}')">Ler Sinopse</button><span class="tag-discreta">${c.tag||''}</span><div class="rating-container" data-id="${c.id}"><div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div><div style="font-size:0.9rem; color:#777; margin-top:10px;">Média:<br><span class="score-value">0.0</span></div></div></div></article>`; 
             });
         }
 
+        // Sustentabilidade
         const maContainer = document.getElementById('cards-meio-ambiente');
-        if(maContainer) {
-            maContainer.innerHTML = '';
-            if(CONTEUDO_JORNAL.sustentabilidade && CONTEUDO_JORNAL.sustentabilidade.meioAmbiente) {
-                CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
-            }
+        if(maContainer && CONTEUDO_JORNAL.sustentabilidade && CONTEUDO_JORNAL.sustentabilidade.meioAmbiente) {
+            maContainer.innerHTML = ''; CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
         }
-
         const segContainer = document.getElementById('cards-seguranca'); 
-        if(segContainer) {
-            segContainer.innerHTML = '';
-            if(CONTEUDO_JORNAL.sustentabilidade && CONTEUDO_JORNAL.sustentabilidade.seguranca) {
-                CONTEUDO_JORNAL.sustentabilidade.seguranca.forEach(s => { let listaHtml = s.lista.map(item => `<li>${item}</li>`).join(''); segContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${s.cor};"><div class="jornal-card-content"><h3 style="color: ${s.cor}; font-size: 1.2em;"><i class="${s.icon}"></i> ${s.titulo}</h3><ul style="font-size: 0.9rem; margin-left: 15px; color: #555;">${listaHtml}</ul></div></div>`; });
-            }
+        if(segContainer && CONTEUDO_JORNAL.sustentabilidade && CONTEUDO_JORNAL.sustentabilidade.seguranca) {
+            segContainer.innerHTML = ''; CONTEUDO_JORNAL.sustentabilidade.seguranca.forEach(s => { let listaHtml = s.lista.map(item => `<li>${item}</li>`).join(''); segContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${s.cor};"><div class="jornal-card-content"><h3 style="color: ${s.cor}; font-size: 1.2em;"><i class="${s.icon}"></i> ${s.titulo}</h3><ul style="font-size: 0.9rem; margin-left: 15px; color: #555;">${listaHtml}</ul></div></div>`; });
         }
 
         renderQuizHTML();
         setupQuizToggle();
     }
 
-    // --- NOVA FUNÇÃO DE RENDER DO HOBBY (COM HISTÓRICO) ---
+    // --- RENDER HOBBY COM HISTÓRICO ---
     window.renderHobbySection = function(selectedMonth) {
         currentHobbyMonth = selectedMonth;
         const elemHobby = document.getElementById('hobby-container');
         if(!elemHobby) return;
 
-        // Recupera dados do mês selecionado ou objeto vazio
         const monthData = globalHobbyHistory[selectedMonth] || {};
         const hLikes = monthData.likes || {};
         const hComments = monthData.comments ? Object.values(monthData.comments) : [];
         const hUserLiked = hLikes[MY_DEVICE_ID] ? 'liked' : '';
         const hHeartIcon = hUserLiked ? 'fas' : 'far';
-        
-        // Ordena comentários
         hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-        // Dados estáticos (Foto/Nome) continuam vindo do CONTEUDO_JORNAL (content.json)
-        // Pois geralmente a pessoa destaque é uma só por mês vigente no site
         const h = CONTEUDO_JORNAL.hobby || {};
-
-        // Gera HTML dos links de histórico
-        const historyLinksHtml = generateHistoryLinks(globalHobbyHistory, currentHobbyMonth, 'renderHobbySection', 'temp-hobby-id');
+        
+        // Gera links de histórico
+        const historyLinksHtml = generateHistoryLinks(globalHobbyHistory, currentHobbyMonth, 'renderHobbySection', 'hobby-history-nav');
 
         elemHobby.innerHTML = `
-            <div class="praise-archive-links" style="margin-bottom:10px; justify-content:center;">${historyLinksHtml}</div>
+            <div id="hobby-history-nav" class="praise-archive-links" style="margin-bottom:10px; justify-content:center;">${historyLinksHtml}</div>
             <div class="hobby-content">
                 <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
                 <div class="hobby-texto">
@@ -840,8 +878,8 @@
                         <button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> ${hComments.length} Comentários</button>
                     </div>
                     <div id="hobby-comments-box" class="hobby-comments-section">
-                        <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente neste mês..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div>
-                        <div class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar neste mês!</p>'}</div>
+                        <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div>
+                        <div class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar!</p>'}</div>
                     </div>
                 </div>
             </div>`;
@@ -862,8 +900,7 @@
                 dados.lista.forEach(cliente => {
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                    const itemHtml = `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
-                    listaContainer.innerHTML += itemHtml;
+                    listaContainer.innerHTML += `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
                 });
             } else {
                 listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
@@ -876,17 +913,8 @@
         const btn = document.querySelector('.btn-ver-todos');
         if(!lista || !btn) return;
         const estaOculto = window.getComputedStyle(lista).display === 'none';
-        if (estaOculto) {
-            lista.style.display = 'block';
-            btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista';
-            btn.style.backgroundColor = 'var(--azul-marinho)';
-            btn.style.color = 'white';
-        } else {
-            lista.style.display = 'none';
-            btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa';
-            btn.style.backgroundColor = 'white';
-            btn.style.color = 'var(--azul-marinho)';
-        }
+        if (estaOculto) { lista.style.display = 'block'; btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista'; btn.style.backgroundColor = 'var(--azul-marinho)'; btn.style.color = 'white'; } 
+        else { lista.style.display = 'none'; btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa'; btn.style.backgroundColor = 'white'; btn.style.color = 'var(--azul-marinho)'; }
     }
 
     function openSynopsis(id) {
@@ -899,59 +927,7 @@
     }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
-    // --- CORREÇÃO DE ESCOPO GLOBAL E SEGURANÇA NA URL ---
-    // Agora anexadas ao window para serem vistas pelo HTML
-    window.openHiScore = async function(gameKey) {
-        const modal = document.getElementById('hiscore-modal');
-        const list = document.getElementById('modal-score-list');
-        const title = document.getElementById('modal-game-title');
-        
-        if(modal) modal.style.display = 'flex';
-        if(title) title.textContent = `Ranking: ${gameKey}`;
-        if(list) list.innerHTML = '<div style="padding:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
-        
-        try {
-            // Remove barra final da URL se existir para evitar erro de "//"
-            const baseUrlClean = BASE_DB_URL.endsWith('/') ? BASE_DB_URL.slice(0, -1) : BASE_DB_URL;
-            const resp = await fetch(`${baseUrlClean}/games/${gameKey}/scores.json`);
-            
-            if (!resp.ok) throw new Error('Falha na conexão');
-            
-            const data = await resp.json();
-            
-            if (!data) { 
-                if(list) list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Sem recordes registrados ainda.</p>'; 
-                return; 
-            }
-            
-            let scoresArray = Object.values(data);
-            
-            // Ordenação numérica
-            scoresArray.sort((a, b) => {
-                let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
-                let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
-                return scoreB - scoreA;
-            });
-            
-            if(list) {
-                list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `
-                    <div class="hiscore-item">
-                        <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
-                        <div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div>
-                        <div class="hiscore-points">${s.pontos}</div>
-                    </div>`).join('');
-            }
-        } catch (error) { 
-            console.error(error); 
-            if(list) list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar ranking. Verifique a conexão.</p>'; 
-        }
-    };
-    
-    window.closeHiScore = function() { 
-        const modal = document.getElementById('hiscore-modal');
-        if(modal) modal.style.display = 'none'; 
-    };
-
+    // --- QUIZ SEGURANÇA ---
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
         if(!container) return;
@@ -961,7 +937,6 @@
             container.innerHTML += `<div class="quiz-question" id="quiz-block-${q.id}"><h4>${index + 1}. ${q.question}</h4><div style="display:flex; flex-direction:column; gap:5px;">${optionsHtml}</div><div class="quiz-stats"><div class="quiz-bar" id="bar-${q.id}"></div><div class="quiz-bar-text" id="text-${q.id}">0% acertaram</div></div></div>`;
         });
     }
-    
     function setupQuizToggle() {
         const btn = document.getElementById('btn-open-quiz');
         const content = document.getElementById('quiz-content');
@@ -972,50 +947,30 @@
             };
         }
     }
-
     function checkIfQuizTaken() {
         let hasTaken = false;
         for (const qId in globalQuizData) { if (globalQuizData[qId] && globalQuizData[qId][MY_DEVICE_ID] !== undefined) { hasTaken = true; break; } }
         if (hasTaken) lockQuizUI();
     }
-    
     function lockQuizUI() {
-        const form = document.getElementById('safety-quiz-form');
-        if(!form) return;
+        const form = document.getElementById('safety-quiz-form'); if(!form) return;
         form.classList.add('quiz-locked');
-        
-        const btnSub = document.getElementById('btn-submit-quiz');
-        const btnRes = document.getElementById('btn-reset-quiz');
-        if(btnSub) btnSub.style.display = 'none';
-        if(btnRes) btnRes.style.display = 'block';
-        
+        const btnSub = document.getElementById('btn-submit-quiz'); const btnRes = document.getElementById('btn-reset-quiz');
+        if(btnSub) btnSub.style.display = 'none'; if(btnRes) btnRes.style.display = 'block';
         SAFETY_QUIZ.forEach(q => {
             const userAns = globalQuizData[q.id] ? globalQuizData[q.id][MY_DEVICE_ID] : null;
             const block = document.getElementById(`quiz-block-${q.id}`);
             if(block) {
                 block.querySelectorAll('input').forEach(inp => inp.disabled = true);
-                if (userAns !== undefined && userAns !== null) {
-                    const correctLabel = block.querySelectorAll('.quiz-option')[q.correct];
-                    if(correctLabel) correctLabel.classList.add('correct-answer');
-                }
-                const qData = globalQuizData[q.id] || {};
-                const total = Object.keys(qData).length;
-                let correct = 0; Object.values(qData).forEach(v => {if(v) correct++});
-                const pct = total>0 ? Math.round((correct/total)*100) : 0;
-                
-                const stats = block.querySelector('.quiz-stats');
-                if(stats) stats.style.display = 'block';
-                const bar = document.getElementById(`bar-${q.id}`);
-                const text = document.getElementById(`text-${q.id}`);
-                if(bar) {
-                    bar.style.width = `${pct}%`;
-                    bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)';
-                }
+                if (userAns !== undefined && userAns !== null) { const correctLabel = block.querySelectorAll('.quiz-option')[q.correct]; if(correctLabel) correctLabel.classList.add('correct-answer'); }
+                const qData = globalQuizData[q.id] || {}; const total = Object.keys(qData).length; let correct = 0; Object.values(qData).forEach(v => {if(v) correct++}); const pct = total>0 ? Math.round((correct/total)*100) : 0;
+                const stats = block.querySelector('.quiz-stats'); if(stats) stats.style.display = 'block';
+                const bar = document.getElementById(`bar-${q.id}`); const text = document.getElementById(`text-${q.id}`);
+                if(bar) { bar.style.width = `${pct}%`; bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)'; }
                 if(text) text.textContent = `${pct}% acertaram`;
             }
         });
     }
-
     const quizForm = document.getElementById('safety-quiz-form');
     if(quizForm) {
         quizForm.addEventListener('submit', async (e) => {
@@ -1033,7 +988,6 @@
             lockQuizUI();
         });
     }
-    
     const resetBtn = document.getElementById('btn-reset-quiz');
     if(resetBtn) {
         resetBtn.addEventListener('click', async()=>{
@@ -1045,6 +999,7 @@
         });
     }
 
+    // --- CHALLENGES ---
     async function voteChallenge(cId, type) {
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
         globalChallengesData[cId][MY_DEVICE_ID] = type;
@@ -1059,15 +1014,13 @@
             for(const [k,v] of Object.entries(cData)) { if(v==='success') s++; else f++; if(k===MY_DEVICE_ID) my=v; }
             const elS = card.querySelector('.stat-success'); if(elS) elS.textContent = s;
             const elF = card.querySelector('.stat-fail'); if(elF) elF.textContent = f;
-            
-            const btnS = card.querySelector('.btn-challenge.success');
-            const btnF = card.querySelector('.btn-challenge.fail');
-            
+            const btnS = card.querySelector('.btn-challenge.success'); const btnF = card.querySelector('.btn-challenge.fail');
             if(btnS) btnS.classList.toggle('active', my==='success');
             if(btnF) btnF.classList.toggle('active', my==='fail');
         });
     }
 
+    // --- ELOGIOS (Com filtro) ---
     function renderPraiseSection(selectedMonth) {
         currentPraiseMonth = selectedMonth;
         const container = document.getElementById('praise-container');
@@ -1076,7 +1029,6 @@
         
         container.innerHTML = ''; linksContainer.innerHTML = '';
         
-        // Gera links usando a nova função global de elogios
         const dataMonths = new Set();
         dataMonths.add(new Date().toISOString().slice(0, 7));
         Object.values(globalPraiseData).forEach(msg => { if(msg.date) dataMonths.add(msg.date.slice(0, 7)); });
@@ -1096,15 +1048,7 @@
         msgs.forEach(([id, msg]) => {
             const likes = msg.likes || {};
             const userLiked = likes[MY_DEVICE_ID] ? 'liked' : '';
-            container.innerHTML += `
-            <div class="praise-card">
-                <div style="border-bottom:1px solid #eee; padding-bottom:8px; margin-bottom:10px; color:#777; font-size:0.9em;">De: <strong>${msg.from}</strong> <br> Para: <strong>${msg.to}</strong></div>
-                <p style="font-style:italic; color:#444; margin-bottom:15px;">"${msg.message}"</p>
-                <div style="margin-top:auto; display:flex; justify-content:space-between; color:#999; font-size:0.8em;">
-                    <span>${new Date(msg.date).toLocaleDateString('pt-BR')}</span>
-                    <button class="praise-like-btn ${userLiked}" onclick="likePraise('${id}')" style="background:none; border:none; cursor:pointer;"><i class="${userLiked?'fas':'far'} fa-heart"></i> ${Object.keys(likes).length}</button>
-                </div>
-            </div>`;
+            container.innerHTML += `<div class="praise-card"><div style="border-bottom:1px solid #eee; padding-bottom:8px; margin-bottom:10px; color:#777; font-size:0.9em;">De: <strong>${msg.from}</strong> <br> Para: <strong>${msg.to}</strong></div><p style="font-style:italic; color:#444; margin-bottom:15px;">"${msg.message}"</p><div style="margin-top:auto; display:flex; justify-content:space-between; color:#999; font-size:0.8em;"><span>${new Date(msg.date).toLocaleDateString('pt-BR')}</span><button class="praise-like-btn ${userLiked}" onclick="likePraise('${id}')" style="background:none; border:none; cursor:pointer;"><i class="${userLiked?'fas':'far'} fa-heart"></i> ${Object.keys(likes).length}</button></div></div>`;
         });
     }
     
@@ -1115,21 +1059,15 @@
         else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; globalPraiseData[id].likes[MY_DEVICE_ID]=true; }
         renderPraiseSection(currentPraiseMonth);
     }
-
     async function submitPraise() {
         const f=document.getElementById('praise-from').value, t=document.getElementById('praise-to').value, m=document.getElementById('praise-msg').value;
         if(f&&t&&m) { await fetch(`${BASE_DB_URL}/praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
     }
-    
-    // --- FUNÇÕES DE HOBBY ATUALIZADAS (USANDO _history) ---
+
+    // --- INTERAÇÕES DO HOBBY (Histórico) ---
     async function likeHobby() {
-        // Grava no mês atual em _history
-        const monthKey = currentHobbyMonth; // Usa o mês que está sendo visualizado ou o atual? Geralmente curtir é no mês vigente.
-        // Se a pessoa estiver vendo um mês antigo, ela não pode curtir o mês antigo? Vamos assumir que curte o que está vendo.
-        
+        const monthKey = currentHobbyMonth; 
         const url = `${BASE_DB_URL}/hobby_interactions_history/${monthKey}/likes/${MY_DEVICE_ID}.json`;
-        
-        // Verifica no state local
         const monthData = globalHobbyHistory[monthKey] || {};
         const likes = monthData.likes || {};
         const exists = likes[MY_DEVICE_ID];
@@ -1151,73 +1089,54 @@
         if(txt) {
             const author = prompt("Seu nome:") || "Anônimo";
             const monthKey = currentHobbyMonth;
-            
-            // Posta no histórico do mês
             await fetch(`${BASE_DB_URL}/hobby_interactions_history/${monthKey}/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
-            
-            // Recarrega tudo para simplificar
+            // Recarrega
             const resp = await fetch(`${BASE_DB_URL}/hobby_interactions_history.json`);
             globalHobbyHistory = await resp.json() || {};
             renderHobbySection(monthKey);
         }
     }
 
-    // --- RENDERIZAR DEPOIMENTOS COM HISTÓRICO ---
+    // --- DEPOIMENTOS (Histórico) ---
     window.renderTestimonialsSection = function(selectedMonth) {
         currentTestimonialMonth = selectedMonth;
         const container = document.getElementById('testimonials-display');
-        
-        // Precisamos criar um container para os links se não existir, ou injetar antes
         let navContainer = document.getElementById('testimonials-nav');
         if (!navContainer && container) {
             navContainer = document.createElement('div');
             navContainer.id = 'testimonials-nav';
-            navContainer.className = 'praise-archive-links'; // Reusa estilo
+            navContainer.className = 'praise-archive-links';
             navContainer.style.marginBottom = '15px';
             navContainer.style.justifyContent = 'center';
             container.parentNode.insertBefore(navContainer, container);
         }
-
         if(!container) return;
-        
-        // Gera Links
         navContainer.innerHTML = generateHistoryLinks(globalTestimonialsHistory, currentTestimonialMonth, 'renderTestimonialsSection', 'temp-testim-id');
-
         container.innerHTML = '';
         
-        // Pega dados do mês
         const monthData = globalTestimonialsHistory[selectedMonth] || {};
         const sorted = Object.entries(monthData).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date));
         
         if(sorted.length===0) { container.innerHTML='<p style="color:#999;font-style:italic;">Nenhum depoimento neste mês. Seja o primeiro!</p>'; return; }
         
         sorted.forEach(([id, t]) => {
-            container.innerHTML += `
-            <div style="background:#f4f7f9; padding:20px; border-radius:10px; border-top:4px solid var(--dourado); text-align:left; margin-bottom:10px;">
-                <span style="font-weight:700; color:var(--azul-marinho);">${t.name}</span>
-                <p style="font-style:italic; color:#555;">"${t.text}"</p>
-                <div style="font-size:0.7em; color:#999; text-align:right; margin-top:5px;">${new Date(t.date).toLocaleDateString('pt-BR')}</div>
-            </div>`;
+            container.innerHTML += `<div style="background:#f4f7f9; padding:20px; border-radius:10px; border-top:4px solid var(--dourado); text-align:left; margin-bottom:10px;"><span style="font-weight:700; color:var(--azul-marinho);">${t.name}</span><p style="font-style:italic; color:#555;">"${t.text}"</p><div style="font-size:0.7em; color:#999; text-align:right; margin-top:5px;">${new Date(t.date).toLocaleDateString('pt-BR')}</div></div>`;
         });
     }
-
-    // Manteiga compatibilidade antiga se algo chamar renderTestimonials direto
-    function renderTestimonials(data) { renderTestimonialsSection(currentTestimonialMonth); }
 
     function toggleGeneric(c, b, o, f) { const el=document.getElementById(c), btn=document.getElementById(b); if(el.style.display==='block'){el.style.display='none';btn.innerText=o;btn.style.background='var(--azul-marinho)';btn.style.color='white';}else{el.style.display='block';btn.innerText=f;btn.style.background='white';btn.style.color='var(--azul-marinho)';btn.style.border='2px solid var(--azul-marinho)';}}
     function toggleMateria() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
     function toggleSaudeFisica() { toggleGeneric('materiaSaudeFisica', 'btnLerMaisSaudeFisica', 'Ler sobre saúde', 'Fechar'); }
     function toggleReceita(id) { const el=document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; }
     function toggleHobbyComments() { const el=document.getElementById('hobby-comments-box'); el.style.display=el.style.display==='block'?'none':'block'; }
-    function mostrarAba(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
-    function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
-    
+    function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
+
     function setupForms() {
         const btnS=document.getElementById('btn-submit-suggestion'); if(btnS) btnS.onclick=async()=>{const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; if(n&&m){await fetch(`${BASE_DB_URL}/suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnR=document.getElementById('btn-submit-recipe'); if(btnR) btnR.onclick=async()=>{const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; if(a&&d){await fetch(`${BASE_DB_URL}/recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); alert('Enviado!'); location.reload();}};
         
-        // --- DEPOIMENTO AGORA VAI PARA _history/MES ---
+        // DEPOIMENTO: Grava no histórico do Mês
         const btnT=document.getElementById('btn-submit-testimonial'); 
         if(btnT) btnT.onclick=async()=>{
             const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; 
