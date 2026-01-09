@@ -547,24 +547,24 @@
   <div id="footer-placeholder"></div>
 
 <script>
-    // --- 1. CONFIGURAÇÕES GLOBAIS (Carregam primeiro para evitar erros) ---
+    // --- 1. CONFIGURAÇÕES GLOBAIS ---
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com"; 
 
-    // Garante que a função de Ranking exista para o HTML imediatamente
+    // --- FUNÇÕES DE RANKING (GLOBAL) ---
+    // Esta função agora está blindada para ser chamada pelo onclick do HTML
     window.openHiScore = async function(gameKey) {
-        // Se não passar nome do jogo, assume o padrão
-        if(!gameKey || typeof gameKey !== 'string') gameKey = 'BobinaWorld';
+        console.log("Abrindo Ranking para:", gameKey); // Debug no Console
 
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
         
-        // 1. Força visualização
+        // 1. Força o modal a aparecer e ficar no topo
         if(modal) {
             modal.style.display = 'flex';
-            modal.style.zIndex = '9999'; // Força via JS também
+            modal.style.zIndex = '99999'; // Garante que fique na frente de tudo
         } else {
-            alert("Erro: Modal de Ranking não encontrado no HTML!");
+            alert("Erro crítico: Modal 'hiscore-modal' não encontrado no HTML.");
             return;
         }
         
@@ -587,7 +587,7 @@
             
             let scoresArray = Object.values(data);
             
-            // Ordenação segura (Maior para menor)
+            // Ordenação numérica segura (Maior para menor)
             scoresArray.sort((a, b) => {
                 let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
@@ -604,7 +604,7 @@
             }
         } catch (error) { 
             console.error(error); 
-            if(list) list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar. Verifique internet.</p>'; 
+            if(list) list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar. Verifique a internet.</p>'; 
         }
     };
     
@@ -661,22 +661,7 @@
 
     // --- 3. INICIALIZAÇÃO ---
     document.addEventListener("DOMContentLoaded", () => {
-        // A. Correção "Na Marra" do Botão de Ranking
-        const btnRank = document.getElementById('hiscore-btn');
-        if(btnRank) {
-            // Remove qualquer evento antigo clonando o botão (opcional, mas garante limpeza)
-            const newBtn = btnRank.cloneNode(true);
-            if(btnRank.parentNode) btnRank.parentNode.replaceChild(newBtn, btnRank);
-            
-            // Adiciona o evento de clique manualmente
-            newBtn.addEventListener('click', (e) => {
-                e.preventDefault(); // Evita recarregar página se for um link
-                console.log("Botão de Ranking Clicado!"); // Para debug
-                window.openHiScore('BobinaWorld'); // CHAMA A FUNÇÃO DIRETAMENTE
-            });
-        }
-
-        // B. Carrega Menu e Footer
+        // Carrega Menu e Footer
         ['menu', 'footer'].forEach(file => {
             fetch(`${file}.html?t=${Date.now()}`).then(r => r.text()).then(html => {
                 const el = document.getElementById(`${file}-placeholder`);
@@ -773,8 +758,7 @@
     // --- FUNÇÕES AUXILIARES DE RENDERIZAÇÃO ---
     function generateHistoryLinks(historyData, currentMonth, clickHandler, containerId) {
         let linksContainer = document.getElementById(containerId);
-        // Se o container ainda não existir no HTML, cria um temporário na memória para pegar a string (mas a função espera injetar)
-        // Aqui retornaremos HTML string para ser injetado
+        // Se o container ainda não existir no HTML, cria um temporário na memória
         let html = '';
         const dataMonths = new Set();
         dataMonths.add(new Date().toISOString().slice(0, 7)); 
