@@ -48,25 +48,10 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ==================================================
-       CONFIGURAÇÃO DO MENU FIXO (ANTI-QUEBRA)
-       ================================================== */
-    #menu-placeholder { 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      z-index: 1001;
-    }
-
-    #menu-placeholder header {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    }
-
-    #menu-placeholder nav ul li a {
-      white-space: nowrap !important;
-    }
-
+    /* MENU FIXO ANTI-QUEBRA */
+    #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1001; }
+    #menu-placeholder header { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
+    #menu-placeholder nav ul li a { white-space: nowrap !important; }
     @media (min-width: 769px) and (max-width: 1100px) {
       #menu-placeholder nav ul li { margin-left: 10px !important; }
       #menu-placeholder nav ul li a { font-size: 0.9rem; padding: 8px 5px !important; }
@@ -84,13 +69,10 @@
 
     #footer-placeholder { margin-top: 0px; }
 
-    /* ==================================================
-       ESTILOS DO JORNAL
-       ================================================== */
+    /* ESTILOS DO JORNAL */
     .jornal-main { max-width: 1200px; margin: 0 auto; padding: 20px; }
     .jornal-section-title { font-size: 2em; font-weight: 700; color: var(--azul-marinho); margin-bottom: 20px; margin-top: 0; text-align: center; }
     
-    /* DIVISORIAS */
     section { position: relative; margin-bottom: 80px; padding-bottom: 50px; }
     section::after {
         content: ""; position: absolute; bottom: 0; left: 15%; width: 70%; height: 1px;
@@ -99,7 +81,6 @@
     }
     main > section:last-of-type::after { display: none; }
 
-    .jornal-subtitle { font-size: 1.5em; font-weight: 600; color: var(--azul-marinho); margin: 30px 0 20px; text-align: center; }
     .section-description { text-align: center; font-size: 0.95em; color: #666; max-width: 800px; margin: 0 auto 40px; font-style: italic; }
 
     /* DESTAQUES */
@@ -111,9 +92,6 @@
 
     /* BOTÕES & EXPANSÃO */
     .materia-completa { display: none; text-align: left; max-width: 800px; margin: 20px auto 0; border-top: 1px solid rgba(0,35,102, 0.1); padding-top: 20px; animation: fadeIn 0.6s ease-in-out; }
-    .materia-completa h3 { color: var(--dourado); margin-top: 20px; margin-bottom: 10px; }
-    .materia-completa ul { margin-left: 20px; margin-bottom: 20px; }
-    .materia-completa li { margin-bottom: 8px; }
     .fonte-materia { font-size: 0.85em; color: #777; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; text-align: center; }
     .fonte-materia a { color: var(--azul-aco); text-decoration: none; font-weight: 600; }
     .fonte-materia a:hover { text-decoration: underline; }
@@ -122,7 +100,6 @@
 
     /* CARDS GERAIS */
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-    @media (min-width: 769px) { #cards-seguranca { grid-template-columns: 1fr 1fr; } }
     .jornal-card { background-color: #fff; border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; }
     .jornal-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15); }
     .jornal-card-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
@@ -132,149 +109,39 @@
     /* ==================================================
        ESTILOS NOVOS CLIENTES (HEADER & LISTA)
        ================================================== */
-    .clientes-header {
-        background: var(--branco);
-        border-radius: 12px;
-        box-shadow: var(--sombra-suave);
-        padding: 35px 20px 20px 20px;
-        margin-bottom: 30px;
-        position: relative;
-        overflow: hidden;
-        border-top: 4px solid var(--dourado);
-        text-align: center;
-    }
-    .stats-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 25px;
-    }
-    .stat-box {
-        display: flex;
-        align-items: center; /* Centralizado verticalmente */
-        justify-content: center;
-    }
-    /* Estilo Desktop (Padrão) */
-    .stat-box-inner {
-        display: flex;
-        flex-direction: row; /* Horizontal no desktop */
-        align-items: center;
-        gap: 15px;
-    }
-    .stat-num {
-        font-size: 3.5em;
-        font-weight: 600;
-        color: var(--azul-marinho);
-        line-height: 1;
-        letter-spacing: -1px;
-    }
-    .stat-label {
-        font-size: 1.5em; /* Maior no desktop */
-        color: var(--azul-marinho);
-        font-weight: 600;
-        text-transform: none; /* Reset para texto normal */
-    }
+    .clientes-header { background: var(--branco); border-radius: 12px; box-shadow: var(--sombra-suave); padding: 35px 20px 20px 20px; margin-bottom: 30px; position: relative; overflow: hidden; border-top: 4px solid var(--dourado); text-align: center; }
+    .stats-row { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 25px; }
+    .stat-box { display: flex; align-items: center; justify-content: center; }
+    .stat-box-inner { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+    .stat-num { font-size: 3.5em; font-weight: 600; color: var(--azul-marinho); line-height: 1; letter-spacing: -1px; }
+    .stat-label { font-size: 1.5em; color: var(--azul-marinho); font-weight: 600; text-transform: none; }
+    .data-discreta { color: #999; font-size: 0.9em; margin-top: 5px; display: inline-flex; align-items: center; gap: 5px; }
 
     /* LISTA DE CLIENTES */
-    .clientes-compact-list {
-        background: white;
-        border-radius: 15px;
-        box-shadow: var(--sombra-suave);
-        overflow: hidden;
-        border: 1px solid #eee;
-        display: none; 
-        animation: fadeIn 0.5s ease;
-        padding: 10px;
-    }
-    
-    /* Grid de 3 colunas para desktop */
-    #lista-clientes-content {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0; 
-    }
-
-    .cliente-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 15px 20px;
-        border-bottom: 1px solid #f0f0f0;
-        border-right: 1px solid #f0f0f0; /* Borda lateral para separar colunas */
-        transition: all 0.3s ease;
-        background: #fff;
-    }
+    .clientes-compact-list { background: white; border-radius: 15px; box-shadow: var(--sombra-suave); overflow: hidden; border: 1px solid #eee; display: none; animation: fadeIn 0.5s ease; padding: 10px; }
+    #lista-clientes-content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+    .cliente-item { display: flex; align-items: center; gap: 10px; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; transition: all 0.3s ease; background: #fff; }
     .cliente-item:hover { background: #f8f9fa; }
-    
-    .cliente-item.destaque {
-        background: linear-gradient(90deg, rgba(218, 165, 32, 0.05), rgba(255, 255, 255, 0));
-        border-left: 3px solid var(--dourado);
-    }
+    .cliente-item.destaque { background: linear-gradient(90deg, rgba(218, 165, 32, 0.05), rgba(255, 255, 255, 0)); border-left: 3px solid var(--dourado); }
     .cliente-icon-mini { font-size: 1.2em; min-width: 30px; text-align: center; }
     .cliente-info { flex: 1; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .cliente-info span { color: var(--cinza-escuro); font-size: 0.9em; font-weight: 500; }
-    .badge-destaque {
-        background: var(--dourado); color: white;
-        padding: 2px 8px; border-radius: 10px;
-        font-size: 0.7em !important; font-weight: 700 !important;
-    }
-    .btn-ver-todos {
-        background: white;
-        border: 1px solid var(--azul-marinho);
-        color: var(--azul-marinho);
-        padding: 12px 35px;
-        border-radius: 30px;
-        font-size: 0.9em;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 10px;
-        letter-spacing: 0.5px;
-    }
-    .btn-ver-todos:hover {
-        background: var(--azul-marinho);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,51,102,0.2);
-    }
+    .badge-destaque { background: var(--dourado); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7em !important; font-weight: 700 !important; }
+    .btn-ver-todos { background: white; border: 1px solid var(--azul-marinho); color: var(--azul-marinho); padding: 12px 35px; border-radius: 30px; font-size: 0.9em; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; letter-spacing: 0.5px; }
+    .btn-ver-todos:hover { background: var(--azul-marinho); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,51,102,0.2); }
     .loading-container { text-align: center; padding: 20px; color: #999; grid-column: 1 / -1; }
 
-    /* MEDIA QUERY PARA MOBILE - CLIENTES */
     @media (max-width: 768px) {
-        .stat-box-inner {
-            flex-direction: column; /* Vertical no mobile */
-            gap: 5px;
-        }
-        .stat-label {
-            font-size: 0.75em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--cinza-texto);
-        }
-        #lista-clientes-content {
-            grid-template-columns: 1fr; /* Uma coluna no mobile */
-        }
-        .cliente-item {
-            border-right: none;
-        }
+        .stat-box-inner { flex-direction: column; gap: 5px; }
+        .stat-label { font-size: 0.75em; text-transform: uppercase; letter-spacing: 2px; color: var(--cinza-texto); }
+        #lista-clientes-content { grid-template-columns: 1fr; }
+        .cliente-item { border-right: none; }
     }
 
-    /* ==================================================
-       DEMAIS ESTILOS (Receitas, Hobbies, etc)
-       ================================================== */
+    /* RECEITAS */
     .receita-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
     .receita-card:hover { transform: translateY(-5px); }
-    .receita-imagem { 
-        width: 100%; height: 180px; 
-        background: linear-gradient(135deg, rgba(0, 100, 0, 0.85), rgba(34, 139, 34, 0.85)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop');
-        background-size: cover; background-position: center;
-        display: flex; align-items: center; justify-content: center; 
-        font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
+    .receita-imagem { width: 100%; height: 180px; background: linear-gradient(135deg, rgba(0, 100, 0, 0.85), rgba(34, 139, 34, 0.85)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
     .receita-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
     .receita-info h4 { font-size: 1.3em; color: var(--azul-marinho); margin-bottom: 5px; font-weight: 700; }
     .receita-tempo { font-size: 0.9em; color: var(--dourado); font-weight: 600; margin-bottom: 5px; }
@@ -282,21 +149,13 @@
     .receita-detalhes { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; animation: fadeIn 0.4s ease; text-align: left; width: 100%; }
     .receita-detalhes h5 { color: var(--azul-marinho); margin: 10px 0 5px; font-size: 1em; }
     .receita-detalhes ul, .receita-detalhes ol { margin-left: 20px; font-size: 0.9em; color: #555; text-align: left; }
-    .receita-detalhes li { margin-bottom: 5px; }
     .btn-ver-receita { background-color: var(--verde-escuro); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; margin-top: auto; transition: 0.3s; width: 100%; }
     .btn-ver-receita:hover { background-color: var(--dourado); color: var(--azul-marinho); }
 
-    /* ESTILOS DE DESAFIOS */
-    .desafio-saude-card { 
-        background-color: var(--branco); border-radius: 15px; padding: 25px; 
-        box-shadow: var(--sombra-card-jornal); 
-        border: 1px solid #eee; border-top: 5px solid var(--verde-escuro); 
-        transition: transform 0.3s; display: flex; flex-direction: column; 
-    }
+    /* DESAFIOS */
+    .desafio-saude-card { background-color: var(--branco); border-radius: 15px; padding: 25px; box-shadow: var(--sombra-card-jornal); border: 1px solid #eee; border-top: 5px solid var(--verde-escuro); transition: transform 0.3s; display: flex; flex-direction: column; }
     .desafio-saude-card:hover { transform: translateX(5px); }
     .desafio-saude-card h4 { font-size: 1.2em; color: var(--azul-marinho); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
-    .desafio-emoji { font-size: 1.5em; }
-    .challenge-actions { margin-top: auto; padding-top: 15px; border-top: 1px solid #eee; }
     .challenge-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
     .btn-challenge { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: all 0.2s; color: #777; }
     .btn-challenge.success:hover, .btn-challenge.success.active { background-color: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
@@ -305,58 +164,59 @@
     .stat-success { color: var(--verde-sucesso); font-weight: 700; }
     .stat-fail { color: var(--vermelho-erro); font-weight: 700; }
 
-    /* ESTILOS DEPOIMENTOS */
+    /* DEPOIMENTOS */
     .testimonials-section { margin-top: 20px; background: #fff; padding: 40px; border-radius: 15px; box-shadow: var(--sombra-card-jornal); text-align: center; border: 1px solid #eee; }
-    .testimonials-section h3 { color: var(--azul-marinho); margin-bottom: 20px; font-size: 1.5em; }
     .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; text-align: left; }
-    .testimonial-card { 
-        background: var(--cinza-claro-bg); padding: 20px; border-radius: 10px; 
-        border-top: 4px solid var(--dourado); box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-        display: flex; flex-direction: column; 
-    }
+    .testimonial-card { background: var(--cinza-claro-bg); padding: 20px; border-radius: 10px; border-top: 4px solid var(--dourado); box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
     .testimonial-author { font-weight: 700; color: var(--azul-marinho); margin-bottom: 5px; display: block; font-size: 0.95em; }
     .testimonial-text { font-style: italic; color: #555; font-size: 0.9em; line-height: 1.6; margin-bottom: 10px; flex-grow: 1; }
     .testimonial-date { font-size: 0.75em; color: #999; display: block; margin-top: 5px; text-align: right; }
-    .testimonial-actions { display: flex; gap: 15px; margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; }
-    .testim-action-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9em; color: #777; transition: color 0.2s; }
-    .testim-action-btn:hover { color: var(--azul-marinho); }
-    .testim-action-btn.liked { color: #e91e63; }
-    .testim-action-btn i { font-size: 1.1em; }
-    .testimonial-comments-area { display: none; margin-top: 10px; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #eee; }
-    .comment-input-group { display: flex; gap: 5px; margin-bottom: 10px; }
-    .comment-input-group input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 20px; font-size: 0.85em; }
-    .comment-input-group button { background: var(--azul-marinho); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .comments-list { font-size: 0.85em; color: #555; max-height: 150px; overflow-y: auto; }
-    .comment-item { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #eee; }
-    .comment-item strong { color: var(--azul-marinho); }
 
-    /* ESTILOS HOBBY */
+    /* HOBBY */
     .hobby-container { background-color: var(--branco); border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; margin-bottom: 40px; border: 1px solid #eee; }
     .hobby-content { display: grid; grid-template-columns: 40% 60%; min-height: 350px; }
     .hobby-foto { position: relative; height: 100%; background-color: var(--cinza-claro-bg); }
     .hobby-foto img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
     .hobby-texto { padding: 40px; display: flex; flex-direction: column; justify-content: center; text-align: left; }
-    .hobby-texto h3 { font-size: 2em; color: var(--azul-marinho); margin-bottom: 5px; line-height: 1.2; }
-    .hobby-titulo { font-size: 1.1em; color: var(--dourado); font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .hobby-quote-box { background: #f8f9fa; border-left: 4px solid var(--azul-marinho); padding: 15px 20px; margin-bottom: 25px; border-radius: 0 8px 8px 0; position: relative; }
-    .hobby-quote-box i { color: var(--dourado); font-size: 1.2em; margin-right: 10px; }
-    .hobby-quote-box p { font-style: italic; color: #555; font-size: 1em; display: inline; }
-    .hobby-hobbies { margin-top: auto; }
-    .hobby-hobbies h4 { font-size: 0.9em; color: #999; margin-bottom: 10px; text-transform: uppercase; }
-    .hobby-tag { display: inline-block; background-color: var(--verde-escuro); color: var(--branco); padding: 8px 16px; border-radius: 50px; font-size: 0.85em; font-weight: 600; margin-right: 8px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s; }
-    .hobby-tag:hover { transform: translateY(-2px); }
+    .hobby-titulo { font-size: 1.1em; color: var(--dourado); font-weight: 700; margin-bottom: 25px; text-transform: uppercase; }
+    
+    /* CORREÇÃO DO ÍCONE DE ASPAS */
+/* ESTILO DA CAIXA DE CITAÇÃO (Estilo Revista) */
+    .hobby-quote-box { 
+        background: #f8f9fa; 
+        border-left: 4px solid var(--azul-marinho); 
+        padding: 20px 25px; 
+        margin-bottom: 25px; 
+        border-radius: 0 10px 10px 0; 
+        display: block; /* Removemos o flex para permitir o texto fluir */
+    }
+
+    .hobby-quote-box i { 
+        color: var(--dourado); 
+        font-size: 1.5em; 
+        float: left;        /* O segredo: faz o ícone flutuar à esquerda */
+        margin-right: 8px; /* Espaço entre as aspas e a primeira letra */
+        line-height: 1;
+    }
+
+    .hobby-quote-box p {
+        font-style: italic;
+        margin: 0;
+        color: #555;
+        line-height: 1.6;
+        display: inline; /* Garante que o texto se comporte fluidamente */
+    }
+    
+    .hobby-tag { display: inline-block; background-color: var(--verde-escuro); color: var(--branco); padding: 8px 16px; border-radius: 50px; font-size: 0.85em; font-weight: 600; margin-right: 8px; margin-bottom: 8px; }
     .hobby-actions { display: flex; gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
     .hobby-btn-action { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.95em; color: #777; font-weight: 600; transition: all 0.2s; padding: 5px 10px; border-radius: 20px; }
     .hobby-btn-action:hover { background-color: #f0f7ff; color: var(--azul-marinho); }
     .hobby-btn-action.liked { color: #e91e63; }
-    .hobby-btn-action i { font-size: 1.2em; }
     .hobby-comments-section { display: none; margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee; animation: fadeIn 0.3s ease; }
-    .hobby-comments-list { margin-top: 10px; max-height: 200px; overflow-y: auto; padding-right: 5px; }
     .hobby-comment-item { background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; font-size: 0.9em; color: #555; }
-    .hobby-comment-item strong { color: var(--azul-marinho); display: block; margin-bottom: 2px; font-size: 0.95em; }
-    .hobby-date { font-size: 0.75em; color: #aaa; float: right; }
+    .hobby-comment-item strong { color: var(--azul-marinho); display: block; margin-bottom: 2px; }
 
-    /* ESTILOS ELOGIOS */
+    /* ELOGIOS */
     .praise-header { text-align: center; margin-bottom: 30px; }
     .praise-archive-links { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
     .praise-link { color: #888; cursor: pointer; text-decoration: none; padding: 4px 12px; border-radius: 20px; transition: all 0.2s; font-size: 0.85em; border: 1px solid #eee; background: #fff; }
@@ -364,70 +224,17 @@
     .praise-link.active { color: var(--branco); background: var(--azul-marinho); font-weight: 600; border-color: var(--azul-marinho); }
     .praise-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; border-top: 4px solid var(--verde-sucesso); display: flex; flex-direction: column; }
     .praise-from-to { font-size: 0.9em; color: #777; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-    .praise-from-to strong { color: var(--azul-marinho); }
-    .praise-message { font-style: italic; color: #444; margin-bottom: 15px; line-height: 1.5; font-size: 1em; flex-grow: 1; }
-    .praise-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 0.8em; color: #999; }
     .praise-like-btn { cursor: pointer; color: #ccc; transition: color 0.2s; font-size: 1.1em; display: flex; align-items: center; gap: 5px; border: none; background: none; }
-    .praise-like-btn:hover { color: #e91e63; }
     .praise-like-btn.liked { color: #e91e63; }
 
-    /* === ESTILOS JOGOS === */
+    /* JOGOS */
     .hiscore-menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-    .hiscore-btn { 
-        background: #fff; border: 1px solid var(--dourado); color: var(--azul-marinho); 
-        padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9em; 
-        transition: all 0.3s; display: flex; align-items: center; gap: 8px;
-    }
+    .hiscore-btn { background: #fff; border: 1px solid var(--dourado); color: var(--azul-marinho); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9em; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
     .hiscore-btn:hover { background: var(--dourado); color: white; transform: translateY(-2px); }
-    .hiscore-btn i { color: var(--dourado); }
-    .hiscore-btn:hover i { color: white; }
-    .game-card { 
-        background: #fff; border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; 
-        transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; 
-        border: 1px solid #eee; text-decoration: none; color: inherit; height: 100%;
-    }
+    .game-card { background: #fff; border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; text-decoration: none; color: inherit; height: 100%; }
     .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
     .game-banner { width: 100%; height: 160px; object-fit: cover; background: #eee; }
     .game-info { padding: 15px; text-align: center; background: #fff; }
-    .game-info h3 { color: var(--azul-marinho); margin: 0; font-size: 1.2em; }
-
-    /* MODAL HISCORE & SINOPSE */
-    .modal-overlay { 
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-        background: rgba(0,0,0,0.5); z-index: 1000; display: none; 
-        justify-content: center; align-items: center; padding: 20px;
-        animation: fadeIn 0.3s;
-    }
-    .modal-content { 
-        background: white; width: 100%; max-width: 500px; border-radius: 15px; 
-        padding: 25px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.2); 
-    }
-    .modal-close { 
-        position: absolute; top: 15px; right: 15px; font-size: 1.5em; 
-        cursor: pointer; color: #999; border: none; background: none; 
-    }
-    .hiscore-list { margin-top: 20px; }
-    .hiscore-item { 
-        display: flex; justify-content: space-between; padding: 10px; 
-        border-bottom: 1px solid #eee; align-items: center; 
-    }
-    .hiscore-rank { 
-        font-weight: bold; width: 30px; height: 30px; background: var(--azul-marinho); 
-        color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em;
-    }
-    .hiscore-name { flex-grow: 1; margin-left: 10px; font-weight: 600; color: #555; }
-    .hiscore-points { color: var(--dourado); font-weight: 700; }
-
-    /* VOTAÇÃO ESTRELAS */
-    .rating-container { margin-top: auto; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
-    .rating-stars { display: inline-flex; gap: 5px; font-size: 1.5rem; cursor: pointer; color: #d1d1d1; }
-    .rating-stars i { transition: color 0.2s; }
-    .rating-stars i.filled { color: var(--dourado) !important; }
-    .rating-stars:hover i { color: #d1d1d1 !important; } 
-    .rating-stars i:hover, .rating-stars i:hover ~ i { color: var(--dourado) !important; }
-    .rating-stars i.hover-active { color: var(--dourado) !important; }
-    .rating-score { font-size: 0.9rem; color: #777; margin-top: 10px; font-weight: 500; }
-    .score-value { font-weight: 700; font-size: 1.2em; color: var(--azul-marinho); }
 
     /* FORMULÁRIOS & BOTÕES GERAIS */
     .suggestion-section { max-width: 600px; margin: 40px auto 0; text-align: center; }
@@ -437,87 +244,71 @@
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; font-weight: 600; color: var(--azul-marinho); margin-bottom: 5px; }
     .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; font-size: 1rem; }
-    .form-group input:focus, .form-group textarea:focus { border-color: var(--dourado); outline: none; }
     .btn-submit-suggestion { width: 100%; background-color: var(--azul-marinho); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.3s; }
     .btn-submit-suggestion:hover { background-color: var(--dourado); color: var(--azul-marinho); }
 
-    /* CAMPOS DINÂMICOS */
-    .dynamic-list-container { margin-bottom: 15px; }
-    .dynamic-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
-    .dynamic-item input { flex-grow: 1; }
-    .dynamic-item .prefix { font-weight: bold; color: var(--dourado); min-width: 20px; text-align: center; }
-    .btn-remove-item { background: #ffcccc; color: #cc0000; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; }
-    .btn-add-item { background-color: #eee; color: var(--azul-marinho); border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.9em; font-weight: 600; margin-bottom: 15px; }
-    .btn-add-item:hover { background-color: #e0e0e0; }
-
-    /* VÍDEO THUMBNAILS E CULTURA - MODIFICADO */
+    /* CULTURA */
     .video-thumbnail-container { position: relative; width: 100%; padding-bottom: 56.25%; background-color: #000; overflow: hidden; cursor: pointer; }
     .video-thumbnail-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: opacity 0.3s; }
     .video-thumbnail-container:hover img { opacity: 0.7; }
     .play-button { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; color: rgba(255, 255, 255, 0.9); pointer-events: none; transition: transform 0.3s; }
     .video-thumbnail-container:hover .play-button { transform: translate(-50%, -50%) scale(1.1); color: #ff0000; }
-    .cultura-card-content { text-align: center; align-items: center; }
     
-    /* Novo estilo para Ler Sinopse */
-    .btn-ler-sinopse {
-        background-color: transparent;
-        border: 2px solid var(--azul-marinho);
-        color: var(--azul-marinho);
-        padding: 6px 20px;
-        border-radius: 20px;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: auto;
-        margin-bottom: 8px;
-        transition: all 0.3s;
+    /* CORREÇÃO BOTÃO SINOPSE */
+    .btn-ler-sinopse { 
+        background-color: transparent; 
+        border: 2px solid var(--azul-marinho); 
+        color: var(--azul-marinho); 
+        padding: 6px 20px; 
+        border-radius: 20px; 
+        font-weight: 600; 
+        cursor: pointer; 
+        margin-top: auto; 
+        margin-bottom: 8px; 
+        transition: all 0.3s; 
         font-size: 0.9em;
+        align-self: center; /* Centraliza no flex container */
+        width: auto; /* Evita que estique */
+        min-width: 120px;
     }
-    .btn-ler-sinopse:hover {
-        background-color: var(--azul-marinho);
-        color: white;
-    }
-    .tag-discreta {
-        font-size: 0.75em;
-        color: #999;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 15px;
-    }
-
+    .btn-ler-sinopse:hover { background-color: var(--azul-marinho); color: white; }
+    
+    .tag-discreta { font-size: 0.75em; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
     .indicacao-texto { font-size: 0.85em; color: var(--azul-aco); margin-bottom: 10px !important; font-style: italic; }
+    .rating-container { margin-top: auto; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
+    .rating-stars { display: inline-flex; gap: 5px; font-size: 1.5rem; cursor: pointer; color: #d1d1d1; }
+    .rating-stars i.filled { color: var(--dourado) !important; }
+    .rating-stars i:hover, .rating-stars i:hover ~ i { color: var(--dourado) !important; }
+    .score-value { font-weight: 700; font-size: 1.2em; color: var(--azul-marinho); }
 
-    /* SEGURANÇA E QUIZ */
+    /* QUIZ & ABAS */
     .tab-btn { transition: all 0.3s; }
     .tab-btn:hover { color: var(--dourado) !important; }
     .tab-btn.active { color: var(--azul-marinho) !important; border-bottom: 3px solid var(--dourado) !important; }
-    .quiz-container { 
-        background: #fff; padding: 20px; border-radius: 15px; 
-        box-shadow: var(--sombra-card-jornal); margin-top: 40px; 
-        border-top: 5px solid var(--azul-marinho); 
-    }
-    .btn-toggle-quiz { 
-        width: 100%; background-color: var(--azul-marinho); color: var(--branco); 
-        border: none; padding: 15px; border-radius: 50px; 
-        font-size: 1.1em; font-weight: 600; cursor: pointer; 
-        transition: all 0.3s ease; margin-bottom: 20px; 
-        display: flex; align-items: center; justify-content: center; gap: 10px; 
-        box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); 
-    }
+    .quiz-container { background: #fff; padding: 20px; border-radius: 15px; box-shadow: var(--sombra-card-jornal); margin-top: 40px; border-top: 5px solid var(--azul-marinho); }
+    .btn-toggle-quiz { width: 100%; background-color: var(--azul-marinho); color: var(--branco); border: none; padding: 15px; border-radius: 50px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); }
     .btn-toggle-quiz:hover { background-color: var(--dourado); color: var(--azul-marinho); transform: translateY(-2px); }
     #quiz-content { display: none; animation: fadeIn 0.5s ease; }
     .quiz-question { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-    .quiz-question h4 { color: var(--azul-marinho); margin-bottom: 15px; font-size: 1.1em; }
-    .quiz-options { display: flex; flex-direction: column; gap: 10px; }
     .quiz-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; border-radius: 8px; transition: background 0.2s; border: 1px solid transparent; }
     .quiz-option:hover { background: #f0f7ff; }
-    .quiz-option input { accent-color: var(--azul-marinho); width: 18px; height: 18px; }
     .quiz-stats { margin-top: 10px; font-size: 0.85em; color: #666; background: #eee; border-radius: 5px; overflow: hidden; height: 20px; position: relative; display: none; }
     .quiz-bar { background: var(--verde-sucesso); height: 100%; width: 0%; transition: width 1s ease; }
     .quiz-bar-text { position: absolute; top: 0; left: 5px; line-height: 20px; color: #333; font-weight: 600; font-size: 0.8em; z-index: 2; }
-    .btn-quiz-action { margin-top: 20px; width: 100%; padding: 15px; font-size: 1.1em; }
-    .quiz-locked .quiz-option { pointer-events: none; opacity: 0.7; }
     .correct-answer { background-color: rgba(40, 167, 69, 0.2) !important; border: 1px solid var(--verde-sucesso); }
-    .wrong-answer { background-color: rgba(220, 53, 69, 0.2) !important; border: 1px solid var(--vermelho-erro); }
+    
+    /* BANNERS */
+    .banner-metade { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; }
+    .banner-saude-fisica { background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center center; }
+    .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+    /* MODALS */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; animation: fadeIn 0.3s; }
+    .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 15px; padding: 25px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.2); }
+    .modal-close { position: absolute; top: 15px; right: 15px; font-size: 1.5em; cursor: pointer; color: #999; border: none; background: none; }
+    .hiscore-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
+    .hiscore-rank { font-weight: bold; width: 30px; height: 30px; background: var(--azul-marinho); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; }
+    .hiscore-points { color: var(--dourado); font-weight: 700; }
 
     @media (max-width: 768px) {
         .jornal-section-title { font-size: 1.5em; }
@@ -525,28 +316,10 @@
         .hobby-content { grid-template-columns: 1fr; grid-template-rows: auto auto; }
         .hobby-foto { height: 300px; width: 100%; }
         .hobby-texto { padding: 30px 20px; text-align: center; }
-        .hobby-quote-box { text-align: left; }
+        .hobby-quote-box { text-align: left; font-style: italic; }
         .hobby-tag { margin-bottom: 10px; }
     }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* BANNERS "PELA METADE" */
-    .banner-metade {
-        width: 100%; height: 180px; display: flex; align-items: center; justify-content: center;
-        font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        background-size: cover; background-position: center;
-    }
-    .banner-bem-estar {
-        background: linear-gradient(135deg, rgba(0, 51, 102, 0.80), rgba(70, 130, 180, 0.75)), 
-                    url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1920&auto=format&fit=crop');
-        background-size: cover; background-position: center center;
-    }
-    .banner-saude-fisica {
-        background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), 
-                    url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop');
-        background-size: cover; background-position: center center;
-    }
-    .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 </style>
 </head>
 <body>
@@ -606,8 +379,6 @@
                 <h3 style="color: var(--azul-marinho); margin-bottom: 20px; text-align: center;">Compartilhe sua Receita</h3>
                 <div class="form-group"><label>Seu Nome:</label><input type="text" id="recipe-author" placeholder="Ex: João da Silva"></div>
                 <div class="form-group"><label>Nome do Prato:</label><input type="text" id="recipe-name" placeholder="Ex: Salada Colorida"></div>
-                <div class="form-group"><label>Ingredientes:</label><div id="ingredients-list" class="dynamic-list-container"></div><button type="button" class="btn-add-item" onclick="addIngredient()">+ Adicionar Ingrediente</button></div>
-                <div class="form-group"><label>Modo de Preparo:</label><div id="prep-list" class="dynamic-list-container"></div><button type="button" class="btn-add-item" onclick="addPrepStep()">+ Adicionar Passo</button></div>
                 <button id="btn-submit-recipe" class="btn-submit-suggestion">Registrar Receita</button>
             </div>
         </div>
@@ -619,7 +390,7 @@
         <div id="desafios-container" class="cards-grid"></div>
         <div class="testimonials-section">
             <h3>Compartilhe como tem sido a sua experiência com o desafio.</h3>
-            <button id="btn-toggle-testimonial" class="btn-suggestion">Deixar depoimento</button>
+            <button id="btn-toggle-testimonial" class="btn-suggestion" style="margin-top: 15px;">Deixar depoimento</button>
             <div id="testimonial-form-container" class="suggestion-card-form">
                 <h4 style="margin-bottom: 15px; color: var(--azul-marinho);">Seu Depoimento</h4>
                 <div class="form-group"><label>Seu Nome:</label><input type="text" id="testim-name" placeholder="Ex: Maria (RH)"></div>
@@ -674,8 +445,8 @@
                     <p style="text-align: center; margin-bottom: 30px; color: #666;">Teste seus conhecimentos sobre as Regras de Ouro e Procedimentos.</p>
                     <form id="safety-quiz-form">
                         <div id="quiz-questions-container"></div>
-                        <button type="submit" id="btn-submit-quiz" class="btn-submit-suggestion btn-quiz-action">Enviar Respostas</button>
-                        <button type="button" id="btn-reset-quiz" class="btn-suggestion btn-quiz-action" style="background: #ccc; display: none; width: 100%; margin-top: 10px;">Refazer Quiz</button>
+                        <button type="submit" id="btn-submit-quiz" class="btn-submit-suggestion" style="margin-top: 20px;">Enviar Respostas</button>
+                        <button type="button" id="btn-reset-quiz" class="btn-suggestion" style="background: #ccc; display: none; width: 100%; margin-top: 10px;">Refazer Quiz</button>
                     </form>
                 </div>
             </div>
@@ -690,7 +461,6 @@
 
     <section id="novos-clientes">
         <h2 class="jornal-section-title">Conquistas que fortalecem a nossa jornada</h2>
-        
         <div class="clientes-header">
             <div class="stats-row">
                 <div class="stat-box">
@@ -699,19 +469,16 @@
                         <span class="stat-label">Novos Clientes</span>
                     </div>
                 </div>
-                </div>
-
+            </div>
             <div class="data-discreta" id="stat-periodo-container">
                 <i class="far fa-calendar-alt"></i> <span id="stat-periodo">Carregando...</span>
             </div>
         </div>
-
         <div id="lista-clientes" class="clientes-compact-list">
              <div id="lista-clientes-content">
                 <div class="loading-container"><i class="fas fa-spinner fa-spin"></i> Buscando dados...</div>
              </div>
         </div>
-
         <div style="text-align: center; margin-top: 25px;">
             <button class="btn-ver-todos" onclick="toggleTodosClientes()">
                 <i class="fas fa-chevron-down"></i> Ver lista completa
@@ -774,189 +541,213 @@
   <div id="footer-placeholder"></div>
 
   <script>
-    // =========================================================================
-    // 🟢 ÁREA DE EDIÇÃO - CONTEÚDO DO JORNAL
-    // =========================================================================
-    const CONTEUDO_JORNAL = {
-        temaMes: {
-            titulo: "ConexãoPSR: Janeiro Branco",
-            subtitulo: "Quem cuida da mente, cuida da vida!",
-            resumo: "Neste mês, convidamos todos os colaboradores a uma pausa importante. Vamos falar sobre saúde mental, equilíbrio e bem-estar no ambiente de trabalho.",
-            conteudoCompleto: `
-                <h3>Por que Janeiro Branco?</h3>
-                <p>O mês de janeiro foi escolhido estrategicamente. É o início de um novo ciclo, um momento em que culturalmente as pessoas param para refletir sobre suas vidas, suas relações e seus objetivos para o ano que começa. Assim como uma folha em branco pronta para ser escrita, janeiro nos convida a reescrever nossa história com mais equilíbrio.</p>
-                <p>No entanto, essa época também pode trazer ansiedade e frustração pela pressão de "ter que mudar" ou pela melancolia de "o que não foi feito". A campanha serve como um alerta importante: para cumprir metas, cuidar da família e ser produtivo, primeiro é preciso estar bem consigo mesmo. Saúde mental não é apenas ausência de doença, é saber lidar com as emoções, reconhecer seus limites e buscar ajuda profissional quando o fardo estiver pesado demais. Que este mês seja o ponto de partida para uma jornada de autoconhecimento e cuidado contínuo durante todo o ano.</p>
-                <h3>Dicas Práticas:</h3>
-                <ul>
-                    <li><strong>Desconecte-se:</strong> Reserve momentos longe das telas para descansar a mente.</li>
-                    <li><strong>Movimente-se:</strong> Exercícios liberam hormônios do bem-estar e reduzem o estresse.</li>
-                    <li><strong>Converse:</strong> Falar alivia a carga emocional. Não guarde tudo para você.</li>
-                </ul>
-            `,
-            fonte: { texto: "G1 - Campanha saúde mental", link: "#" }
-        },
-        bemEstar: {
-            subtitulo: "A Pausa Necessária em um Mundo Acelerado",
-            resumo: "Na correria do dia a dia, parar parece impossível. Entenda por que fazer uma pausa é um ato de responsabilidade com sua saúde mental.",
-            conteudoCompleto: `
-                <h3>O Direito ao Descanso</h3>
-                <p>Vivemos na "sociedade do cansaço", onde a produtividade é cobrada 24 horas por dia. O artigo do blog "Psicoblog" nos lembra que o excesso de estímulos e a falta de pausas reais podem levar à exaustão mental e emocional (burnout).</p>
-                <p>Fazer uma pausa não é luxo, é manutenção básica do nosso "sistema". Assim como máquinas superaquecem sem parar, nossa mente precisa do silêncio e do "não fazer nada" para processar informações e se regenerar.</p>
-                <h3>Como praticar a pausa consciente?</h3>
-                <ul>
-                    <li><strong>Desligue as notificações:</strong> Permita-se momentos no dia sem checar o celular. A hiperconexão gera ansiedade constante.</li>
-                    <li><strong>Contemple o silêncio:</strong> 5 minutos apenas respirando e observando o ambiente ajudam a regular o sistema nervoso.</li>
-                    <li><strong>Respeite seus limites:</strong> Aprenda a dizer "não" quando necessário. Isso também é autocuidado.</li>
-                </ul>
-            `,
-            fonte: { texto: "G1 - Uma pausa pela nossa saúde mental", link: "https://g1.globo.com/sp/presidente-prudente-regiao/blog/psicoblog/post/2024/06/28/uma-pausa-pela-nossa-saude-mental.ghtml" }
-        },
-        saudeFisica: {
-            subtitulo: "Microssessões: O Fim da Desculpa 'Não Tenho Tempo'",
-            resumo: "Novos estudos revelam que pequenos 'petiscos' de exercício ao longo do dia podem ser tão eficazes quanto longas sessões na academia.",
-            conteudoCompleto: `
-                <h3>O Poder dos Minutos Ativos</h3>
-                <p>Muitas pessoas desistem de se exercitar porque não têm uma hora livre para ir à academia. A boa notícia, segundo pesquisas recentes, é que as "microssessões" de exercício — atividades vigorosas de 1 ou 2 minutos repetidas ao longo do dia — trazem benefícios enormes para a longevidade e saúde cardiovascular.</p>
-                <p>A ideia é aumentar a frequência cardíaca em tarefas cotidianas, transformando o dia a dia em um treino disfarçado.</p>
-                <h3>Exemplos práticos de Microssessões:</h3>
-                <ul>
-                    <li><strong>Escadas:</strong> Em vez do elevador, suba dois ou três lances de escada com energia e velocidade.</li>
-                    <li><strong>Caminhada Rápida:</strong> Acelere o passo ao ir buscar água, café ou ir até o ponto de ônibus. Caminhe como se estivesse atrasado!</li>
-                    <li><strong>Tarefas Domésticas:</strong> Carregar sacolas de compras ou varrer a casa com vigor conta como atividade física moderada a vigorosa.</li>
-                </ul>
-            `,
-            fonte: { texto: "G1 - Microssessões de exercício", link: "https://g1.globo.com/saude/noticia/2025/12/15/como-microssessoes-de-exercicio-podem-ajudar-a-viver-mais.ghtml" }
-        },
-        receitas: [
-            { 
-                emoji: "🥗", titulo: "Salada de Quinoa", tempo: "15 minutos", desc: "Uma receita leve, nutritiva e deliciosa. Perfeita para o almoço.",
-                indicadoPor: "Nutricionista Ana",
-                ingredientes: ["1 xícara de quinoa cozida", "1 tomate picado", "1/2 pepino picado", "Suco de 1 limão", "Azeite e sal a gosto"],
-                preparo: ["Misture a quinoa cozida com os vegetais.", "Tempere com limão, azeite e sal.", "Sirva gelado."]
-            }
+    // VARIAVEL GLOBAL VAZIA - SERÁ PREENCHIDA PELO FIREBASE
+    let CONTEUDO_JORNAL = {
+        temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
+    };
+
+    const SUSTENTABILIDADE_PADRAO = {
+        meioAmbiente: [
+            { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
+            { cor: "#2196f3", icon: "fas fa-lightbulb", titulo: "Energia Renovável", texto: "Transição para energia solar." },
+            { cor: "#ff9800", icon: "fas fa-trash-alt", titulo: "Redução de Resíduos", texto: "Programa de reciclagem de papéis e plásticos." }
         ],
-        desafios: [
-            { id: "hidratacao", emoji: "💧", titulo: "Hidratação", desc: "Beba 2 litros de água por dia." },
-            { id: "passos", emoji: "🚶", titulo: "10 Mil Passos", desc: "Caminhe 10 mil passos diários." },
-            { id: "sono", emoji: "😴", titulo: "Sono de Qualidade", desc: "Tente dormir 8 horas por noite." }
-        ],
-        hobby: {
-            nome: "Iasmim Ferreira",
-            cargo: "Setor Financeiro",
-            foto: "https://i.postimg.cc/RZ0ZbH3D/Whats-App-Image-2026-01-08-at-16-45-52.jpg?w=500&h=500&fit=crop",
-            texto: "\"Fora da PSR, gosto de passear com minha cachorrinha, conhecer novos lugares e tomar café da tarde em locais diferentes. Além dos momentos de diversão, estou me dedicando à pós-graduação e buscando manter o foco nas atividades físicas, pois quero manter a mente e o corpo sempre em bom funcionamento.\"",
-            tags: ["🐶 Animais", "☕ Café", "🗺️ Viajar"]
-        },
-        cultura: [
-            { 
-                id: "dilema_redes", tipo: "video",
-                img: "https://img.youtube.com/vi/7X54fS0SQyw/maxresdefault.jpg", link: "https://www.youtube.com/watch?v=7X54fS0SQyw", 
-                titulo: "O Dilema das Redes", 
-                desc: "Impacto da tecnologia em nossas vidas.", 
-                sinopse: "Especialistas em tecnologia do Vale do Silício soam o alarme sobre o perigoso impacto das redes sociais na democracia e na humanidade.",
-                indicadoPor: "João (TI)", tag: "Categoria: Reflexão" 
-            },
-            { 
-                id: "poder_habito", tipo: "livro",
-                img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&h=280&fit=crop", link: "#", 
-                titulo: "O Poder do Hábito", 
-                desc: "Como os hábitos funcionam.", 
-                sinopse: "O livro explora a ciência por trás da criação e reforma de hábitos. O autor Charles Duhigg apresenta argumentos de que a chave para se exercitar regularmente, perder peso e ser mais produtivo é entender como os hábitos funcionam.",
-                indicadoPor: "Maria (RH)", tag: "Categoria: Autoajuda" 
-            }
-        ],
-        sustentabilidade: {
-            meioAmbiente: [
-                { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
-                { cor: "#2196f3", icon: "fas fa-lightbulb", titulo: "Energia Renovável", texto: "Transição para energia solar." },
-                { cor: "#ff9800", icon: "fas fa-trash-alt", titulo: "Redução de Resíduos", texto: "Programa de reciclagem de papéis e plásticos." }
-            ],
-            // CONTEÚDO BASEADO NAS IMAGENS ENVIADAS (Mantido)
-            seguranca: [
-                { cor: "#f44336", icon: "fas fa-ban", titulo: "Regras de Ouro", lista: ["Proibido fumar no galpão", "Proibido celular na operação", "Proibido uso de adornos (anéis, pulseiras)", "Manter local limpo"] },
-                { cor: "#ff9800", icon: "fas fa-hard-hat", titulo: "Uso de EPI", lista: ["Uso obrigatório de EPIs", "Sapatos de segurança e óculos", "Protetor auricular", "Finalidade adequada e conservação"] },
-                { cor: "#2196f3", icon: "fas fa-comments", titulo: "DDS (Diálogo Diário)", lista: ["Informação previne acidentes", "Interação é fundamental", "Siga normas e procedimentos"] },
-                { cor: "#000000", icon: "fas fa-cogs", titulo: "NR-12 Operacional", lista: ["Nunca retire proteções das máquinas", "Não tome atalhos", "Botões de emergência acionáveis", "Cuidado com engrenagens e corte"] }
-            ]
-        }
+        seguranca: [
+            { cor: "#f44336", icon: "fas fa-ban", titulo: "Regras de Ouro", lista: ["Proibido fumar no galpão", "Proibido celular na operação", "Proibido uso de adornos"] },
+            { cor: "#ff9800", icon: "fas fa-hard-hat", titulo: "Uso de EPI", lista: ["Uso obrigatório de EPIs", "Sapatos de segurança e óculos", "Protetor auricular"] },
+            { cor: "#2196f3", icon: "fas fa-comments", titulo: "DDS", lista: ["Informação previne acidentes", "Interação é fundamental", "Siga normas"] },
+            { cor: "#000000", icon: "fas fa-cogs", titulo: "NR-12", lista: ["Nunca retire proteções das máquinas", "Botões de emergência acionáveis"] }
+        ]
     };
 
     const SAFETY_QUIZ = [
-        { id: "q1", question: "O que deve ser feito caso uma proteção de máquina precise ser removida para manutenção?", options: ["Deixar sem proteção para agilizar", "Recolocar imediatamente após finalizar", "Pedir para o operador tomar cuidado"], correct: 1 },
-        { id: "q2", question: "Sobre o uso de celulares na área operacional, qual a regra de ouro?", options: ["Permitido com fone de ouvido", "Permitido apenas para redes sociais", "Não devem ser utilizados dentro do galpão"], correct: 2 },
-        { id: "q3", question: "O que fazer se identificar um dano ou alteração no seu EPI?", options: ["Informar imediatamente ao empregador", "Consertar com fita adesiva", "Continuar usando até quebrar"], correct: 0 },
-        { id: "q4", question: "Qual a função dos botões de emergência nas máquinas?", options: ["Desligar a máquina no fim do dia", "Acionar em situações de risco imediato", "Aumentar a velocidade da produção"], correct: 1 },
-        { id: "q5", question: "Qual o principal objetivo do DDS (Diálogo Diário de Segurança)?", options: ["Bater papo sobre futebol", "Atrasar o início do trabalho", "Evitar acidentes e comunicar orientações"], correct: 2 },
-        { id: "q6", question: "Onde é proibido fumar segundo as Regras de Ouro?", options: ["Apenas no escritório", "Dentro do galpão e áreas de convivência", "Em qualquer lugar da empresa"], correct: 1 },
-        { id: "q7", question: "As mãos são ferramentas essenciais. Onde há risco de acidentes na NR-12?", options: ["No refeitório", "Em engrenagens, rolos e lâminas cortantes", "No uso do computador"], correct: 1 },
-        { id: "q8", question: "De quem é a responsabilidade pela conservação e limpeza do EPI?", options: ["Apenas do supervisor", "Do colaborador que utiliza", "Da equipe de limpeza"], correct: 1 },
-        { id: "q9", question: "Adornos como anéis, pulseiras e colares são permitidos na operação?", options: ["Sim, se forem discretos", "Não, é proibido o uso", "Sim, se estiverem por baixo da luva"], correct: 1 },
-        { id: "q10", question: "Manter o local de trabalho limpo e organizado é responsabilidade de quem?", options: ["Da equipe da faxina apenas", "Do gerente", "De todos os colaboradores"], correct: 2 }
+        { id: "q1", question: "O que deve ser feito caso uma proteção de máquina precise ser removida?", options: ["Deixar sem proteção", "Recolocar imediatamente após finalizar", "Avisar o colega"], correct: 1 },
+        { id: "q2", question: "Sobre o uso de celulares na área operacional:", options: ["Permitido com fone", "Permitido só redes sociais", "Proibido"], correct: 2 },
+        { id: "q3", question: "Se identificar dano no EPI:", options: ["Informar ao supervisor/trocar", "Usar fita", "Continuar usando"], correct: 0 },
+        { id: "q4", question: "Função do botão de emergência:", options: ["Desligar fim do dia", "Situação de risco imediato", "Produzir mais rápido"], correct: 1 },
+        { id: "q5", question: "Objetivo do DDS:", options: ["Conversa aleatória", "Atrasar serviço", "Prevenir acidentes e orientar"], correct: 2 },
+        { id: "q6", question: "Onde é proibido fumar?", options: ["Apenas escritório", "Dentro do galpão e áreas comuns", "Qualquer lugar"], correct: 1 },
+        { id: "q7", question: "Risco NR-12 (Mãos):", options: ["Refeitório", "Engrenagens e partes móveis", "Computador"], correct: 1 },
+        { id: "q8", question: "Responsável pela limpeza do EPI:", options: ["Supervisor", "Colaborador", "Faxina"], correct: 1 },
+        { id: "q9", question: "Adornos (anéis/pulseiras) na operação:", options: ["Sim, discretos", "Não, proibido", "Sim, debaixo da luva"], correct: 1 },
+        { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
     ];
 
-    // =========================================================================
-    // 🔴 FIM DA ÁREA DE EDIÇÃO
-    // =========================================================================
+    const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
+
+    function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
+    const MY_DEVICE_ID = getDeviceId();
+    
+    let globalChallengesData = {};
+    let globalQuizData = {};
+    let globalHobbyData = {}; 
+    let globalPraiseData = {}; 
+    let currentPraiseMonth = new Date().toISOString().slice(0, 7); 
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Carrega Menu e Footer
+        ['menu', 'footer'].forEach(file => {
+            fetch(`${file}.html?t=${Date.now()}`).then(r => r.text()).then(html => {
+                const el = document.getElementById(`${file}-placeholder`);
+                if(el) el.innerHTML = html;
+                if(file==='menu'){const t=document.getElementById('menu-toggle');const m=document.getElementById('menu');if(t&&m){t.onclick=()=>m.classList.toggle('active');m.querySelectorAll('a').forEach(l=>l.onclick=()=>m.classList.remove('active'));}}
+            }).catch(e => console.log(e));
+        });
+
+        initFirebaseData();
+        setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
+        setupToggle('btn-toggle-recipe', 'recipe-form-container');
+        setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
+        setupToggle('btn-toggle-praise', 'praise-form-container');
+        setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
+        setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
+    });
+
+    // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
+    async function initFirebaseData() {
+        try {
+            // Dispara requisições simultâneas
+            const [
+                contentResp, 
+                clientesResp,
+                hobbyResp, 
+                praiseResp, 
+                challengesResp, 
+                quizResp,
+                ratingsResp,
+                testimonialsResp
+            ] = await Promise.all([
+                fetch(BASE_DB_URL + "content.json"),
+                fetch(BASE_DB_URL + "novos_clientes.json"),
+                fetch(BASE_DB_URL + "hobby_interactions.json"),
+                fetch(BASE_DB_URL + "praise_messages.json"),
+                fetch(BASE_DB_URL + "challenges_v2.json"),
+                fetch(BASE_DB_URL + "safety_quiz.json"),
+                fetch(BASE_DB_URL + "ratings_v2.json"),
+                fetch(BASE_DB_URL + "testimonials.json")
+            ]);
+
+            // 1. Carrega dados de conteúdo
+            const contentData = await contentResp.json() || {};
+            if (contentData) {
+                CONTEUDO_JORNAL = contentData;
+                if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
+                // renderJornal(); // REMOVIDO: Não precisamos renderizar aqui, pois renderizaremos abaixo com tudo pronto
+            }
+
+            // 2. Carrega Clientes
+            const clientesData = await clientesResp.json() || {};
+            renderNovosClientes(clientesData);
+
+            // 3. Carrega Dados Globais
+            globalHobbyData = await hobbyResp.json() || {};
+            globalPraiseData = await praiseResp.json() || {};
+            globalChallengesData = await challengesResp.json() || {}; // Dados dos desafios carregados
+            globalQuizData = await quizResp.json() || {};
+            const ratingsData = await ratingsResp.json() || {};
+            const testimonialsData = await testimonialsResp.json() || {};
+
+            // 4. RENDERIZAÇÃO PRINCIPAL (Apenas uma vez, com todos os dados prontos)
+            renderJornal(); 
+
+            // 5. ATUALIZAÇÃO DA UI (Deve acontecer DEPOIS de renderJornal criar o HTML)
+            renderChallenges(globalChallengesData); // <--- AGORA VAI FUNCIONAR (Preenche os zeros com os dados)
+            renderPraiseSection(currentPraiseMonth);
+            renderTestimonials(testimonialsData);
+            checkIfQuizTaken();
+            
+            // Lógica de Ratings (Estrelas)
+            document.querySelectorAll('.rating-container').forEach(container => {
+                const itemId = container.dataset.id;
+                const stars = container.querySelectorAll('.rating-stars i');
+                const scoreDisplay = container.querySelector('.score-value');
+                const itemVotes = ratingsData[itemId] || {};
+                
+                const calcRender = (votes) => {
+                    const vals = Object.values(votes);
+                    let avg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "0.0";
+                    scoreDisplay.textContent = avg;
+                    updateVisualStars(stars, avg);
+                    if (votes[MY_DEVICE_ID]) container.querySelector('.rating-stars').classList.add('voted');
+                };
+                
+                calcRender(itemVotes);
+                
+                stars.forEach(star => {
+                    star.addEventListener('click', async () => {
+                        const val = parseInt(star.dataset.value);
+                        if(!itemVotes[MY_DEVICE_ID]) {
+                             itemVotes[MY_DEVICE_ID] = val;
+                             calcRender(itemVotes);
+                             await fetch(`${BASE_DB_URL}ratings_v2/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) });
+                        }
+                    });
+                    star.addEventListener('mouseover', () => {
+                        const val = parseInt(star.dataset.value);
+                        stars.forEach(s => { 
+                            s.classList.remove('filled'); 
+                            if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); 
+                            else s.classList.remove('hover-active'); 
+                        });
+                    });
+                    star.addEventListener('mouseout', () => { 
+                        stars.forEach(s => s.classList.remove('hover-active')); 
+                        updateVisualStars(stars, scoreDisplay.textContent); 
+                    });
+                });
+            });
+
+        } catch (e) { console.error("Erro no carregamento paralelo:", e); }
+        
+        setupForms(); 
+    }
 
     function renderJornal() {
-        const tm = CONTEUDO_JORNAL.temaMes; 
-        document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo}</h2><p><strong>${tm.subtitulo}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto}<p class="fonte-materia"><small>Fonte: <a href="${tm.fonte.link}" target="_blank">${tm.fonte.texto}</a></small></p></div></div>`;
+        const tm = CONTEUDO_JORNAL.temaMes || {}; 
+        document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Cliqui para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
         
-        const h = CONTEUDO_JORNAL.hobby;
+        const h = CONTEUDO_JORNAL.hobby || {};
         const hData = globalHobbyData || {};
         const hLikes = hData.likes || {};
         const hComments = hData.comments ? Object.values(hData.comments) : [];
-        const hLikeCount = Object.keys(hLikes).length;
         const hUserLiked = hLikes[MY_DEVICE_ID] ? 'liked' : '';
         const hHeartIcon = hUserLiked ? 'fas' : 'far';
         hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
 
         document.getElementById('hobby-container').innerHTML = `
             <div class="hobby-content">
-                <div class="hobby-foto"><img src="${h.foto}" alt="${h.nome}"></div>
+                <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
                 <div class="hobby-texto">
-                    <h3>${h.nome}</h3>
-                    <div class="hobby-titulo">${h.cargo}</div>
-                    <div class="hobby-quote-box"><i class="fas fa-quote-left"></i><p>${h.texto.replace(/"/g, '')}</p></div>
-                    <div class="hobby-hobbies"><div class="hobby-list">${h.tags.map(t => `<span class="hobby-tag">${t}</span>`).join('')}</div></div>
+                    <h3>${h.nome||'Colega'}</h3>
+                    <div class="hobby-titulo">${h.cargo||''}</div>
+                    <div class="hobby-quote-box"><i class="fas fa-quote-left"></i><p>${(h.texto||'').replace(/"/g, '')}</p></div>
+                    <div class="hobby-hobbies"><div class="hobby-list">${(h.tags||[]).map(t => `<span class="hobby-tag">${t}</span>`).join('')}</div></div>
                     <div class="hobby-actions">
-                        <button class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> ${hLikeCount} Curtidas</button>
+                        <button class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> ${Object.keys(hLikes).length} Curtidas</button>
                         <button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> ${hComments.length} Comentários</button>
                     </div>
                     <div id="hobby-comments-box" class="hobby-comments-section">
-                        <div class="comment-input-group"><input type="text" id="input-hobby-comment" placeholder="Deixe um elogio ou comentário..."><button onclick="sendHobbyComment()"><i class="fas fa-paper-plane"></i></button></div>
-                        <div class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><span class="hobby-date">${new Date(c.date).toLocaleDateString('pt-BR')}</span><strong>${c.author || 'Colega'}:</strong>${c.text}</div>`).join('') : '<p style="color:#999; text-align:center; margin-top:10px; font-style:italic;">Seja o primeiro a comentar!</p>'}</div>
+                        <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div>
+                        <div class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar!</p>'}</div>
                     </div>
                 </div>
             </div>`;
-
-        // SEÇÃO CUIDAR DE QUEM FAZ REMOVIDA
         
-        const sf = CONTEUDO_JORNAL.saudeFisica; 
-        document.getElementById('saude-fisica-hero').innerHTML = `
-            <div class="jornal-card">
-                <div class="banner-metade banner-saude-fisica">🏃</div>
-                <div class="jornal-card-content card-texto-centralizado">
-                    <h3>${sf.subtitulo}</h3>
-                    <p>${sf.resumo}</p>
-                    <button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button>
-                    <div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte.link}" target="_blank">${sf.fonte.texto}</a></small></p></div>
-                </div>
-            </div>`;
+        const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
+        document.getElementById('saude-fisica-hero').innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
         const recContainer = document.getElementById('receitas-container'); recContainer.innerHTML = ''; 
-        CONTEUDO_JORNAL.receitas.forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${r.ingredientes.map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${r.preparo.map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
+        (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
         
-        // ATUALIZAÇÃO DO NOME DO MÊS NO DESAFIO
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        const mesAtual = meses[new Date().getMonth()];
-        document.getElementById('titulo-desafio-mes').innerText = `💪 Desafio do Mês de ${mesAtual}`;
+        document.getElementById('titulo-desafio-mes').innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
 
-        const desContainer = document.getElementById('desafios-container'); desContainer.innerHTML = ''; CONTEUDO_JORNAL.desafios.forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span class="desafio-emoji">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div class="challenge-actions"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; });
+        const desContainer = document.getElementById('desafios-container'); desContainer.innerHTML = ''; 
+        (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; });
         
         const cultContainer = document.getElementById('cultura-container'); 
         cultContainer.innerHTML = ''; 
-        CONTEUDO_JORNAL.cultura.forEach(c => { 
+        (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
             const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; 
             cultContainer.innerHTML += `
                 <article class="jornal-card" id="card_${c.id}">
@@ -964,22 +755,14 @@
                         <img src="${c.img}">
                         <i class="fas ${ic} play-button"></i>
                     </a>
-                    <div class="jornal-card-content cultura-card-content">
+                    <div class="jornal-card-content" style="text-align:center;">
                         <h3>${c.titulo}</h3>
                         <p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p>
-                        
                         <button class="btn-ler-sinopse" onclick="openSynopsis('${c.id}')">Ler Sinopse</button>
-                        <span class="tag-discreta">${c.tag}</span>
-
+                        <span class="tag-discreta">${c.tag||''}</span>
                         <div class="rating-container" data-id="${c.id}">
-                            <div class="rating-stars">
-                                <i class="far fa-star" data-value="1"></i>
-                                <i class="far fa-star" data-value="2"></i>
-                                <i class="far fa-star" data-value="3"></i>
-                                <i class="far fa-star" data-value="4"></i>
-                                <i class="far fa-star" data-value="5"></i>
-                            </div>
-                            <div class="rating-score">Média dos Colaboradores:<br><span class="score-value">0.0</span></div>
+                            <div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div>
+                            <div style="font-size:0.9rem; color:#777; margin-top:10px;">Média:<br><span class="score-value">0.0</span></div>
                         </div>
                     </div>
                 </article>`; 
@@ -992,164 +775,33 @@
         CONTEUDO_JORNAL.sustentabilidade.seguranca.forEach(s => { let listaHtml = s.lista.map(item => `<li>${item}</li>`).join(''); segContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${s.cor};"><div class="jornal-card-content"><h3 style="color: ${s.cor}; font-size: 1.2em;"><i class="${s.icon}"></i> ${s.titulo}</h3><ul style="font-size: 0.9rem; margin-left: 15px; color: #555;">${listaHtml}</ul></div></div>`; });
 
         renderQuizHTML();
-        addIngredient(); addPrepStep();
         setupQuizToggle();
     }
 
-    function openSynopsis(id) {
-        const item = CONTEUDO_JORNAL.cultura.find(c => c.id === id);
-        if (item) {
-            document.getElementById('modal-synopsis-title').textContent = item.titulo;
-            document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível.";
-            document.getElementById('synopsis-modal').style.display = 'flex';
+    function renderNovosClientes(dados) {
+        if (!dados) return;
+        if (dados.resumo) {
+            document.getElementById('stat-qtd').textContent = dados.resumo.quantidade || "0";
+            document.getElementById('stat-periodo').textContent = dados.resumo.periodo || "";
         }
-    }
-
-    function closeSynopsis() {
-        document.getElementById('synopsis-modal').style.display = 'none';
-    }
-
-    function renderQuizHTML() {
-        const container = document.getElementById('quiz-questions-container');
-        container.innerHTML = '';
-        SAFETY_QUIZ.forEach((q, index) => {
-            let optionsHtml = q.options.map((opt, i) => `
-                <label class="quiz-option">
-                    <input type="radio" name="${q.id}" value="${i}"> ${opt}
-                </label>
-            `).join('');
-            
-            container.innerHTML += `
-                <div class="quiz-question" id="quiz-block-${q.id}">
-                    <h4>${index + 1}. ${q.question}</h4>
-                    <div class="quiz-options">${optionsHtml}</div>
-                    <div class="quiz-stats">
-                        <div class="quiz-bar" id="bar-${q.id}"></div>
-                        <div class="quiz-bar-text" id="text-${q.id}">0% acertaram</div>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    function setupQuizToggle() {
-        const btn = document.getElementById('btn-open-quiz');
-        const content = document.getElementById('quiz-content');
-        if (btn && content) {
-            btn.onclick = () => {
-                if(content.style.display === 'block') {
-                    content.style.display = 'none';
-                    btn.innerHTML = '<i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança';
-                } else {
-                    content.style.display = 'block';
-                    btn.innerHTML = '<i class="fas fa-chevron-up"></i> Fechar Quiz';
-                }
-            };
-        }
-    }
-
-    // --- FUNÇÕES DE LÓGICA E FIREBASE ---
-    const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
-    const CLIENTES_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/novos_clientes.json";
-
-    function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
-    const MY_DEVICE_ID = getDeviceId();
-    
-    let globalChallengesData = {};
-    let globalQuizData = {};
-    let globalHobbyData = {}; 
-    let globalPraiseData = {}; 
-    let currentPraiseMonth = new Date().toISOString().slice(0, 7); 
-
-    document.addEventListener("DOMContentLoaded", () => {
-        // CARREGAMENTO DE MENU/FOOTER PADRONIZADO E OTIMIZADO
-        ['menu', 'footer'].forEach(file => {
-        fetch(`${file}.html?t=${Date.now()}`)
-          .then(r => r.text())
-          .then(html => {
-            const placeholder = document.getElementById(`${file}-placeholder`);
-            if (placeholder) {
-              placeholder.innerHTML = html;
-              
-              if (file === 'menu') {
-                const toggle = document.getElementById('menu-toggle');
-                const menuEl = document.getElementById('menu');
-                if (toggle && menuEl) {
-                  toggle.onclick = () => menuEl.classList.toggle('active');
-                  menuEl.querySelectorAll('a').forEach(link => {
-                    link.onclick = () => menuEl.classList.remove('active');
-                  });
-                }
-              }
-            }
-          })
-          .catch(e => console.error(`Erro ao carregar ${file}:`, e));
-        });
-
-        renderJornal(); 
-        initFirebaseData();
-        carregarDadosClientes(); // --- NOVO: Carregar dados de clientes ---
-        setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
-        setupToggle('btn-toggle-recipe', 'recipe-form-container');
-        setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
-        setupToggle('btn-toggle-praise', 'praise-form-container');
-        setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
-        setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
-    });
-
-    // --- NOVA LÓGICA: NOVOS CLIENTES ---
-    async function carregarDadosClientes() {
-        try {
-            const response = await fetch(CLIENTES_DB_URL);
-            const dados = await response.json();
-
-            if (!dados) {
-                console.error("Nenhum dado de cliente encontrado.");
-                return;
-            }
-
-            // 1. Preencher o Header (Resumo)
-            if (dados.resumo) {
-                document.getElementById('stat-qtd').textContent = dados.resumo.quantidade || "0";
-                // Crescimento removido
-                document.getElementById('stat-periodo').textContent = dados.resumo.periodo || "";
-            }
-
-            // 2. Preencher a Lista de Clientes
-            const listaContainer = document.getElementById('lista-clientes-content');
-            listaContainer.innerHTML = ""; // Limpa o loading
-
-            if (dados.lista && dados.lista.length > 0) {
-                dados.lista.forEach(cliente => {
-                    const classeDestaque = cliente.destaque ? 'destaque' : '';
-                    const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                    const itemHtml = `
-                        <div class="cliente-item ${classeDestaque}">
-                            <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
-                            <div class="cliente-info">
-                                <span>${cliente.nome}</span>
-                                ${htmlBadge}
-                            </div>
-                        </div>
-                    `;
-                    listaContainer.innerHTML += itemHtml;
-                });
-            } else {
-                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
-            }
-        } catch (erro) {
-            console.error("Erro ao buscar dados de clientes:", erro);
-            document.getElementById('stat-periodo').textContent = "Erro ao carregar";
-            document.getElementById('lista-clientes-content').innerHTML = '<div style="padding:20px; text-align:center; color:red; grid-column: 1 / -1;">Falha na conexão.</div>';
+        const listaContainer = document.getElementById('lista-clientes-content');
+        listaContainer.innerHTML = ""; 
+        if (dados.lista && dados.lista.length > 0) {
+            dados.lista.forEach(cliente => {
+                const classeDestaque = cliente.destaque ? 'destaque' : '';
+                const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
+                const itemHtml = `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
+                listaContainer.innerHTML += itemHtml;
+            });
+        } else {
+            listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
         }
     }
 
     function toggleTodosClientes() {
         const lista = document.getElementById('lista-clientes');
         const btn = document.querySelector('.btn-ver-todos');
-        const estilo = window.getComputedStyle(lista);
-        const estaOculto = estilo.display === 'none';
-
+        const estaOculto = window.getComputedStyle(lista).display === 'none';
         if (estaOculto) {
             lista.style.display = 'block';
             btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista';
@@ -1162,279 +814,63 @@
             btn.style.color = 'var(--azul-marinho)';
         }
     }
-    // -----------------------------------
 
-    async function initFirebaseData() {
-        let remoteData = {};
-        try {
-            const resp = await fetch(BASE_DB_URL + ".json");
-            if (resp.ok) remoteData = await resp.json() || {};
-        } catch (e) { console.error("Firebase error", e); }
-
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        if (remoteData.monthControl !== currentMonth) {
-            console.log("Reset mensal...");
-            const resetPayload = { monthControl: currentMonth, ratings_v2: {}, suggestions: {}, recipe_suggestions: {}, challenges_v2: {}, testimonials: {}, safety_quiz: {}, hobby_interactions: {}, hobby_suggestions: {}, game_suggestions: {} };
-            await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(resetPayload) });
-            remoteData = resetPayload;
-        }
-
-        globalHobbyData = remoteData.hobby_interactions || {};
-        globalPraiseData = remoteData.praise_messages || {}; 
-        globalChallengesData = remoteData.challenges_v2 || {};
-        globalQuizData = remoteData.safety_quiz || {};
-        
-        renderPraiseSection(currentPraiseMonth);
-        renderChallenges(globalChallengesData);
-        renderTestimonials(remoteData.testimonials || {});
-        checkIfQuizTaken();
-        calculateQuizStats();
-        
-        const allRatings = remoteData.ratings_v2 || {};
-        document.querySelectorAll('.rating-container').forEach(container => {
-            const itemId = container.dataset.id;
-            const stars = container.querySelectorAll('.rating-stars i');
-            const scoreDisplay = container.querySelector('.score-value');
-            const itemVotes = allRatings[itemId] || {};
-            const calcRender = (votes) => {
-                const vals = Object.values(votes);
-                let avg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "0.0";
-                scoreDisplay.textContent = avg;
-                updateVisualStars(stars, avg);
-                if (votes[MY_DEVICE_ID]) container.querySelector('.rating-stars').classList.add('voted');
-            };
-            calcRender(itemVotes);
-            stars.forEach(star => {
-                star.addEventListener('click', async () => {
-                    const val = parseInt(star.dataset.value);
-                    itemVotes[MY_DEVICE_ID] = val;
-                    calcRender(itemVotes);
-                    try { await fetch(`${BASE_DB_URL}ratings_v2/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) }); } catch(e){}
-                });
-                star.addEventListener('mouseover', () => {
-                    const val = parseInt(star.dataset.value);
-                    stars.forEach(s => { s.classList.remove('filled'); if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); else s.classList.remove('hover-active'); });
-                });
-                star.addEventListener('mouseout', () => { stars.forEach(s => s.classList.remove('hover-active')); updateVisualStars(stars, scoreDisplay.textContent); });
-            });
-        });
-
-        setupForms(); 
-        renderJornal(); 
-    }
-
-    function renderPraiseSection(selectedMonth) {
-        currentPraiseMonth = selectedMonth;
-        const container = document.getElementById('praise-container');
-        const linksContainer = document.getElementById('praise-archive-links');
-        container.innerHTML = '';
-        linksContainer.innerHTML = '';
-
-        const dataMonths = new Set();
-        const now = new Date();
-        const currentRealMonth = now.toISOString().slice(0, 7); 
-        
-        dataMonths.add(currentRealMonth);
-
-        Object.values(globalPraiseData).forEach(msg => {
-            if(msg.date) dataMonths.add(msg.date.slice(0, 7));
-        });
-
-        const sortedMonths = Array.from(dataMonths).sort().reverse();
-
-        sortedMonths.forEach(mStr => {
-            const [y, m] = mStr.split('-');
-            const d = new Date(y, m - 1, 1);
-            const label = d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
-
-            const link = document.createElement('span');
-            link.className = `praise-link ${mStr === currentPraiseMonth ? 'active' : ''}`;
-            link.textContent = label;
-            link.onclick = () => { renderPraiseSection(mStr); };
-            linksContainer.appendChild(link);
-        });
-
-        let messages = [];
-        Object.entries(globalPraiseData).forEach(([id, data]) => {
-            if (data.date && data.date.startsWith(selectedMonth)) {
-                messages.push({ id, ...data });
-            }
-        });
-
-        messages.sort((a, b) => new Date(b.date) - new Date(a.date));
-        messages = messages.slice(0, 50);
-
-        if (messages.length === 0) {
-            container.innerHTML = '<p style="text-align:center; color:#999; width:100%;">Nenhum elogio encontrado neste mês. Seja o primeiro!</p>';
-            return;
-        }
-
-        messages.forEach(msg => {
-            const likes = msg.likes || {};
-            const likeCount = Object.keys(likes).length;
-            const isLiked = likes[MY_DEVICE_ID] ? 'liked' : '';
-            const heartIcon = isLiked ? 'fas' : 'far';
-
-            container.innerHTML += `
-                <div class="praise-card">
-                    <div class="praise-from-to">
-                        De: <strong>${msg.from}</strong> <br> Para: <strong>${msg.to}</strong>
-                    </div>
-                    <p class="praise-message">"${msg.message}"</p>
-                    <div class="praise-footer">
-                        <span>${new Date(msg.date).toLocaleDateString('pt-BR')}</span>
-                        <button class="praise-like-btn ${isLiked}" onclick="likePraise('${msg.id}')">
-                            <i class="${heartIcon} fa-heart"></i> ${likeCount}
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    async function submitPraise() {
-        const from = document.getElementById('praise-from').value;
-        const to = document.getElementById('praise-to').value;
-        const message = document.getElementById('praise-msg').value;
-
-        if (!from || !to || !message) { alert("Preencha todos os campos!"); return; }
-
-        const payload = {
-            from, to, message,
-            date: new Date().toISOString(),
-            deviceId: MY_DEVICE_ID
-        };
-
-        try {
-            await fetch(`${BASE_DB_URL}praise_messages.json`, { method: 'POST', body: JSON.stringify(payload) });
-            alert("Elogio enviado com sucesso!");
-            location.reload(); 
-        } catch(e) { console.error(e); }
-    }
-
-    async function likePraise(id) {
-        const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
-        try {
-            const msgData = globalPraiseData[id] || {};
-            const likes = msgData.likes || {};
-            const isLiked = !!likes[MY_DEVICE_ID];
-
-            if (isLiked) {
-                await fetch(url, { method: 'DELETE' });
-                delete globalPraiseData[id].likes[MY_DEVICE_ID];
-            } else {
-                await fetch(url, { method: 'PUT', body: JSON.stringify(true) });
-                if(!globalPraiseData[id].likes) globalPraiseData[id].likes = {};
-                globalPraiseData[id].likes[MY_DEVICE_ID] = true;
-            }
-            renderPraiseSection(currentPraiseMonth); 
-        } catch(e) { console.error(e); }
-    }
-
-    async function likeHobby() {
-        const url = `${BASE_DB_URL}hobby_interactions/likes/${MY_DEVICE_ID}.json`;
-        try {
-            const currentLikes = globalHobbyData.likes || {};
-            const isLiked = !!currentLikes[MY_DEVICE_ID];
-            
-            if(isLiked) {
-                await fetch(url, { method: 'DELETE' });
-                if(globalHobbyData.likes) delete globalHobbyData.likes[MY_DEVICE_ID];
-            } else {
-                await fetch(url, { method: 'PUT', body: JSON.stringify(true) });
-                if(!globalHobbyData.likes) globalHobbyData.likes = {};
-                globalHobbyData.likes[MY_DEVICE_ID] = true;
-            }
-            renderJornal();
-        } catch(e) { console.error(e); }
-    }
-
-    function toggleHobbyComments() {
-        const box = document.getElementById('hobby-comments-box');
-        if(box.style.display === 'block') {
-            box.style.display = 'none';
-        } else {
-            box.style.display = 'block';
-            setTimeout(() => document.getElementById('input-hobby-comment').focus(), 100);
+    function openSynopsis(id) {
+        const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id);
+        if (item) {
+            document.getElementById('modal-synopsis-title').textContent = item.titulo;
+            document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível.";
+            document.getElementById('synopsis-modal').style.display = 'flex';
         }
     }
-
-    async function sendHobbyComment() {
-        const input = document.getElementById('input-hobby-comment');
-        const text = input.value.trim();
-        if(!text) return;
-
-        const author = prompt("Seu nome para o comentário:") || "Colega";
-        const commentData = { text, author, date: new Date().toISOString() };
-
-        try {
-            await fetch(`${BASE_DB_URL}hobby_interactions/comments.json`, { 
-                method: 'POST', body: JSON.stringify(commentData) 
-            });
-            input.value = '';
-            initFirebaseData(); 
-        } catch(e) { console.error(e); }
-    }
+    function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
     async function openHiScore(gameKey) {
         const modal = document.getElementById('hiscore-modal');
-        const title = document.getElementById('modal-game-title');
         const list = document.getElementById('modal-score-list');
-        
         modal.style.display = 'flex';
-        title.textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<p style="text-align:center; color:#666;">Carregando pontuações...</p>';
-        
+        document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
+        list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
         try {
             const resp = await fetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
             const data = await resp.json();
-
-            if (!data) {
-                list.innerHTML = '<p style="text-align:center; color:#999;">Ainda não há registros para este jogo.</p>';
-                return;
-            }
-
+            if (!data) { list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; return; }
             let scoresArray = Object.values(data);
-
             scoresArray.sort((a, b) => {
-                let scoreA = parseInt(String(a.pontos).replace(/\D/g, '')) || 0; 
-                let scoreB = parseInt(String(b.pontos).replace(/\D/g, '')) || 0; 
-
-                if (gameKey === 'BobinaKart') {
-                    return scoreB - scoreA; 
-                } else {
-                    return scoreB - scoreA;
-                }
+                let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
+                let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
+                return scoreB - scoreA;
             });
-
-            const topScores = scoresArray.slice(0, 10);
-
-            list.innerHTML = topScores.map((s, index) => `
-                <div class="hiscore-item">
-                    <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
-                    <div class="hiscore-name">${s.nome || 'Anônimo'}</div> <div class="hiscore-points">${s.pontos}</div> </div>
-            `).join('');
-
-        } catch (error) {
-            console.error(error);
-            list.innerHTML = '<p style="text-align:center; color:red;">Erro ao carregar ranking.</p>';
-        }
+            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${s.pontos}</div></div>`).join('');
+        } catch (error) { console.error(error); list.innerHTML = '<p style="color:red;">Erro ao carregar.</p>'; }
     }
+    function closeHiScore() { document.getElementById('hiscore-modal').style.display = 'none'; }
 
-    function closeHiScore() {
-        document.getElementById('hiscore-modal').style.display = 'none';
+    function renderQuizHTML() {
+        const container = document.getElementById('quiz-questions-container');
+        container.innerHTML = '';
+        SAFETY_QUIZ.forEach((q, index) => {
+            let optionsHtml = q.options.map((opt, i) => `<label class="quiz-option"><input type="radio" name="${q.id}" value="${i}"> ${opt}</label>`).join('');
+            container.innerHTML += `<div class="quiz-question" id="quiz-block-${q.id}"><h4>${index + 1}. ${q.question}</h4><div style="display:flex; flex-direction:column; gap:5px;">${optionsHtml}</div><div class="quiz-stats"><div class="quiz-bar" id="bar-${q.id}"></div><div class="quiz-bar-text" id="text-${q.id}">0% acertaram</div></div></div>`;
+        });
+    }
+    
+    function setupQuizToggle() {
+        const btn = document.getElementById('btn-open-quiz');
+        const content = document.getElementById('quiz-content');
+        if (btn && content) {
+            btn.onclick = () => {
+                if(content.style.display === 'block') { content.style.display = 'none'; btn.innerHTML = '<i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança'; }
+                else { content.style.display = 'block'; btn.innerHTML = '<i class="fas fa-chevron-up"></i> Fechar Quiz'; }
+            };
+        }
     }
 
     function checkIfQuizTaken() {
         let hasTaken = false;
-        for (const qId in globalQuizData) {
-            if (globalQuizData[qId] && globalQuizData[qId][MY_DEVICE_ID] !== undefined) {
-                hasTaken = true; break;
-            }
-        }
-        if (hasTaken) { lockQuizUI(); }
+        for (const qId in globalQuizData) { if (globalQuizData[qId] && globalQuizData[qId][MY_DEVICE_ID] !== undefined) { hasTaken = true; break; } }
+        if (hasTaken) lockQuizUI();
     }
-
     function lockQuizUI() {
         document.getElementById('safety-quiz-form').classList.add('quiz-locked');
         document.getElementById('btn-submit-quiz').style.display = 'none';
@@ -1442,72 +878,52 @@
         SAFETY_QUIZ.forEach(q => {
             const userAns = globalQuizData[q.id] ? globalQuizData[q.id][MY_DEVICE_ID] : null;
             const block = document.getElementById(`quiz-block-${q.id}`);
-            const inputs = block.querySelectorAll('input');
-            inputs.forEach(inp => inp.disabled = true);
+            block.querySelectorAll('input').forEach(inp => inp.disabled = true);
             if (userAns !== undefined && userAns !== null) {
                 const correctLabel = block.querySelectorAll('.quiz-option')[q.correct];
-                correctLabel.classList.add('correct-answer');
+                if(correctLabel) correctLabel.classList.add('correct-answer');
             }
-            block.querySelector('.quiz-stats').style.display = 'block';
-        });
-        calculateQuizStats();
-    }
-
-    function calculateQuizStats() {
-        SAFETY_QUIZ.forEach(q => {
             const qData = globalQuizData[q.id] || {};
-            const totalVotes = Object.keys(qData).length;
-            let correctVotes = 0;
-            Object.values(qData).forEach(val => { if(val === true) correctVotes++; });
-            const percentage = totalVotes > 0 ? Math.round((correctVotes / totalVotes) * 100) : 0;
+            const total = Object.keys(qData).length;
+            let correct = 0; Object.values(qData).forEach(v => {if(v) correct++});
+            const pct = total>0 ? Math.round((correct/total)*100) : 0;
+            block.querySelector('.quiz-stats').style.display = 'block';
             const bar = document.getElementById(`bar-${q.id}`);
-            const text = document.getElementById(`text-${q.id}`);
-            if(bar && text) {
-                bar.style.width = `${percentage}%`;
-                text.textContent = `${percentage}% dos colaboradores acertaram`;
-                if(percentage < 50) bar.style.backgroundColor = 'var(--vermelho-erro)';
-                else bar.style.backgroundColor = 'var(--verde-sucesso)';
-            }
+            bar.style.width = `${pct}%`;
+            document.getElementById(`text-${q.id}`).textContent = `${pct}% acertaram`;
+            bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)';
         });
     }
 
     document.getElementById('safety-quiz-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        let correctCount = 0;
         const updates = {};
         for (const q of SAFETY_QUIZ) {
             const selected = document.querySelector(`input[name="${q.id}"]:checked`);
-            if (!selected) { alert(`Por favor, responda a questão ${q.question}`); return; }
+            if (!selected) { alert(`Responda a questão ${q.id.replace('q','')}`); return; }
             const isCorrect = (parseInt(selected.value) === q.correct);
-            if (isCorrect) correctCount++;
             if (!globalQuizData[q.id]) globalQuizData[q.id] = {};
             globalQuizData[q.id][MY_DEVICE_ID] = isCorrect;
             updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = isCorrect;
         }
-        try {
-            await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
-            alert(`Você acertou ${correctCount} de ${SAFETY_QUIZ.length}!`);
-            lockQuizUI();
-        } catch(err) { console.error(err); alert("Erro ao enviar quiz."); }
+        await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
+        lockQuizUI();
     });
-
-    document.getElementById('btn-reset-quiz').addEventListener('click', async () => {
-        if(!confirm("Deseja apagar suas respostas e tentar novamente?")) return;
+    
+    document.getElementById('btn-reset-quiz').addEventListener('click', async()=>{
+        if(!confirm("Refazer?")) return;
         const updates = {};
-        SAFETY_QUIZ.forEach(q => {
-            if(globalQuizData[q.id]) delete globalQuizData[q.id][MY_DEVICE_ID];
-            updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = null;
-        });
-        try { await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) }); location.reload(); } catch(err) { console.error(err); }
+        SAFETY_QUIZ.forEach(q => updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = null);
+        await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
+        location.reload();
     });
 
     async function voteChallenge(cId, type) {
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
         globalChallengesData[cId][MY_DEVICE_ID] = type;
         renderChallenges(globalChallengesData);
-        try { await fetch(`${BASE_DB_URL}challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) }); } catch(e){}
+        await fetch(`${BASE_DB_URL}challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
     }
-
     function renderChallenges(data) {
         document.querySelectorAll('.desafio-saude-card').forEach(card => {
             const id = card.dataset.challengeId;
@@ -1521,177 +937,103 @@
         });
     }
 
-    function renderTestimonials(testimonialsObj) {
+    function renderPraiseSection(selectedMonth) {
+        currentPraiseMonth = selectedMonth;
+        const container = document.getElementById('praise-container');
+        const linksContainer = document.getElementById('praise-archive-links');
+        container.innerHTML = ''; linksContainer.innerHTML = '';
+        const dataMonths = new Set();
+        dataMonths.add(new Date().toISOString().slice(0, 7));
+        Object.values(globalPraiseData).forEach(msg => { if(msg.date) dataMonths.add(msg.date.slice(0, 7)); });
+        Array.from(dataMonths).sort().reverse().forEach(mStr => {
+            const [y, m] = mStr.split('-');
+            const label = new Date(y, m - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
+            const link = document.createElement('span'); link.className = `praise-link ${mStr === currentPraiseMonth ? 'active' : ''}`;
+            link.textContent = label; link.onclick = () => renderPraiseSection(mStr);
+            linksContainer.appendChild(link);
+        });
+        const msgs = Object.entries(globalPraiseData)
+            .filter(([_, d]) => d.date && d.date.startsWith(selectedMonth))
+            .sort((a,b) => new Date(b[1].date) - new Date(a[1].date));
+        
+        if (msgs.length === 0) container.innerHTML = '<p style="text-align:center; color:#999; width:100%;">Nenhum elogio neste mês.</p>';
+        msgs.forEach(([id, msg]) => {
+            const likes = msg.likes || {};
+            const userLiked = likes[MY_DEVICE_ID] ? 'liked' : '';
+            container.innerHTML += `
+            <div class="praise-card">
+                <div style="border-bottom:1px solid #eee; padding-bottom:8px; margin-bottom:10px; color:#777; font-size:0.9em;">De: <strong>${msg.from}</strong> <br> Para: <strong>${msg.to}</strong></div>
+                <p style="font-style:italic; color:#444; margin-bottom:15px;">"${msg.message}"</p>
+                <div style="margin-top:auto; display:flex; justify-content:space-between; color:#999; font-size:0.8em;">
+                    <span>${new Date(msg.date).toLocaleDateString('pt-BR')}</span>
+                    <button class="praise-like-btn ${userLiked}" onclick="likePraise('${id}')" style="background:none; border:none; cursor:pointer;"><i class="${userLiked?'fas':'far'} fa-heart"></i> ${Object.keys(likes).length}</button>
+                </div>
+            </div>`;
+        });
+    }
+    
+    async function likePraise(id) {
+        const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
+        const exists = globalPraiseData[id].likes && globalPraiseData[id].likes[MY_DEVICE_ID];
+        if(exists) { await fetch(url, {method:'DELETE'}); delete globalPraiseData[id].likes[MY_DEVICE_ID]; }
+        else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; globalPraiseData[id].likes[MY_DEVICE_ID]=true; }
+        renderPraiseSection(currentPraiseMonth);
+    }
+
+    async function submitPraise() {
+        const f=document.getElementById('praise-from').value, t=document.getElementById('praise-to').value, m=document.getElementById('praise-msg').value;
+        if(f&&t&&m) { await fetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
+    }
+    
+    async function likeHobby() {
+        const url = `${BASE_DB_URL}hobby_interactions/likes/${MY_DEVICE_ID}.json`;
+        const exists = globalHobbyData.likes && globalHobbyData.likes[MY_DEVICE_ID];
+        if(exists) { await fetch(url, {method:'DELETE'}); delete globalHobbyData.likes[MY_DEVICE_ID]; }
+        else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalHobbyData.likes) globalHobbyData.likes={}; globalHobbyData.likes[MY_DEVICE_ID]=true; }
+        renderJornal();
+    }
+    async function sendHobbyComment() {
+        const txt = document.getElementById('input-hobby-comment').value;
+        if(txt) {
+            const author = prompt("Seu nome:") || "Anônimo";
+            await fetch(`${BASE_DB_URL}hobby_interactions/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
+            // Recarrega apenas a parte de hobby/comments
+            const resp = await fetch(BASE_DB_URL + "hobby_interactions.json");
+            globalHobbyData = await resp.json() || {};
+            renderJornal();
+        }
+    }
+
+    function renderTestimonials(data) {
         const container = document.getElementById('testimonials-display');
         container.innerHTML = '';
-        
-        const sorted = Object.entries(testimonialsObj)
-            .map(([id, t]) => ({ ...t, id }))
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .slice(0, 3);
-
-        if (sorted.length === 0) {
-            container.innerHTML = '<p style="color:#999;font-style:italic;">Seja o primeiro a compartilhar!</p>';
-            return;
-        }
-
-        sorted.forEach(t => {
-            const dateStr = new Date(t.date).toLocaleDateString('pt-BR');
-            const likes = t.likes || {};
-            const likeCount = Object.keys(likes).length;
-            const userLiked = likes[MY_DEVICE_ID] ? 'liked' : '';
-            const heartIcon = userLiked ? 'fas' : 'far';
-
-            const comments = t.comments ? Object.values(t.comments) : [];
-            const commentCount = comments.length;
-
-            const card = document.createElement('div');
-            card.className = 'testimonial-card';
-            card.innerHTML = `
-                <span class="testimonial-author">${t.name}</span>
-                <p class="testimonial-text">"${t.text}"</p>
-                <div class="testimonial-actions">
-                    <button class="testim-action-btn ${userLiked}" onclick="likeTestimonial('${t.id}')">
-                        <i class="${heartIcon} fa-heart"></i> ${likeCount}
-                    </button>
-                    <button class="testim-action-btn" onclick="toggleCommentBox('${t.id}')">
-                        <i class="far fa-comment"></i> ${commentCount}
-                    </button>
-                </div>
-                <div id="comment-box-${t.id}" class="testimonial-comments-area">
-                    <div class="comment-input-group">
-                        <input type="text" id="input-comment-${t.id}" placeholder="Escreva um comentário...">
-                        <button onclick="sendComment('${t.id}')"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                    <div class="comments-list">
-                        ${comments.map(c => `
-                            <div class="comment-item">
-                                <strong>${c.author || 'Anônimo'}:</strong> ${c.text}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                <span class="testimonial-date">${dateStr}</span>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    window.likeTestimonial = async function(id) {
-        const url = `${BASE_DB_URL}testimonials/${id}/likes/${MY_DEVICE_ID}.json`;
-        try {
-            const resp = await fetch(url);
-            const current = await resp.json();
-            const newValue = current ? null : true; 
-            
-            if(newValue === null) {
-                await fetch(url, { method: 'DELETE' });
-            } else {
-                await fetch(url, { method: 'PUT', body: JSON.stringify(true) });
-            }
-            initFirebaseData(); 
-        } catch(e) { console.error(e); }
-    }
-
-    window.toggleCommentBox = function(id) {
-        const box = document.getElementById(`comment-box-${id}`);
-        box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    }
-
-    window.sendComment = async function(id) {
-        const input = document.getElementById(`input-comment-${id}`);
-        const text = input.value.trim();
-        if(!text) return;
-
-        const author = prompt("Seu nome para o comentário:") || "Colega";
-        const commentData = { text, author, date: new Date().toISOString() };
-        try {
-            await fetch(`${BASE_DB_URL}testimonials/${id}/comments.json`, { 
-                method: 'POST', body: JSON.stringify(commentData) 
-            });
-            input.value = '';
-            initFirebaseData();
-        } catch(e) { console.error(e); }
-    }
-
-    function setupForms() {
-        const btnS = document.getElementById('btn-submit-suggestion');
-        if(btnS) btnS.addEventListener('click', async()=>{ 
-            const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value;
-            if(n&&m) { await fetch(`${BASE_DB_URL}suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,deviceId:MY_DEVICE_ID,date:new Date()})}); alert('Enviado!'); location.reload(); }
-        });
-        
-        const btnR = document.getElementById('btn-submit-recipe');
-        if(btnR) btnR.addEventListener('click', async()=>{
-            const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value;
-            if(a&&d) { await fetch(`${BASE_DB_URL}recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,deviceId:MY_DEVICE_ID,date:new Date()})}); alert('Receita enviada!'); location.reload(); }
-        });
-
-        const btnT = document.getElementById('btn-submit-testimonial');
-        if(btnT) btnT.addEventListener('click', async()=>{
-            const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value;
-            if(n&&t) { await fetch(`${BASE_DB_URL}testimonials.json`,{method:'POST',body:JSON.stringify({name:n,text:t,deviceId:MY_DEVICE_ID,date:new Date()})}); alert('Depoimento enviado!'); initFirebaseData(); document.getElementById('testimonial-form-container').style.display='none'; }
-        });
-
-        const btnP = document.getElementById('btn-submit-praise');
-        if(btnP) btnP.addEventListener('click', submitPraise);
-
-        const btnHS = document.getElementById('btn-submit-hobby-suggestion');
-        if(btnHS) btnHS.addEventListener('click', async () => {
-            const from = document.getElementById('hobby-suggest-from').value;
-            const target = document.getElementById('hobby-suggest-target').value;
-            const reason = document.getElementById('hobby-suggest-reason').value;
-
-            if(!from || !target) { alert('Preencha seu nome e o indicado.'); return; }
-
-            const payload = {
-                from, target, reason,
-                date: new Date().toISOString(),
-                deviceId: MY_DEVICE_ID
-            };
-
-            try {
-                await fetch(`${BASE_DB_URL}hobby_suggestions.json`, { method: 'POST', body: JSON.stringify(payload) });
-                alert('Indicação enviada com sucesso!');
-                document.getElementById('hobby-suggestion-form-container').style.display = 'none';
-            } catch(e) { console.error(e); }
-        });
-
-        const btnGS = document.getElementById('btn-submit-game-suggestion');
-        if(btnGS) btnGS.addEventListener('click', async () => {
-            const n = document.getElementById('game-suggest-name').value;
-            const s = document.getElementById('game-suggest-text').value;
-            if(n && s) {
-                await fetch(`${BASE_DB_URL}game_suggestions.json`, { method: 'POST', body: JSON.stringify({ name: n, text: s, date: new Date().toISOString(), deviceId: MY_DEVICE_ID }) });
-                alert('Sugestão enviada!');
-                document.getElementById('game-suggestion-form-container').style.display = 'none';
-            } else {
-                alert("Preencha os campos!");
-            }
+        const sorted = Object.entries(data).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).slice(0,3);
+        if(sorted.length===0) { container.innerHTML='<p style="color:#999;font-style:italic;">Seja o primeiro a compartilhar!</p>'; return; }
+        sorted.forEach(([id, t]) => {
+            container.innerHTML += `
+            <div style="background:#f4f7f9; padding:20px; border-radius:10px; border-top:4px solid var(--dourado); text-align:left;">
+                <span style="font-weight:700; color:var(--azul-marinho);">${t.name}</span>
+                <p style="font-style:italic; color:#555;">"${t.text}"</p>
+            </div>`;
         });
     }
 
     function toggleGeneric(c, b, o, f) { const el=document.getElementById(c), btn=document.getElementById(b); if(el.style.display==='block'){el.style.display='none';btn.innerText=o;btn.style.background='var(--azul-marinho)';btn.style.color='white';}else{el.style.display='block';btn.innerText=f;btn.style.background='white';btn.style.color='var(--azul-marinho)';btn.style.border='2px solid var(--azul-marinho)';}}
     function toggleMateria() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
-    function toggleBemEstar() { toggleGeneric('materiaBemEstar', 'btnLerMaisBemEstar', 'Ler dicas', 'Fechar'); }
     function toggleSaudeFisica() { toggleGeneric('materiaSaudeFisica', 'btnLerMaisSaudeFisica', 'Ler sobre saúde', 'Fechar'); }
     function toggleReceita(id) { const el=document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; }
-    function addIngredient() { createDynamicInput('ingredients-list', 'Ingrediente...', false); }
-    function addPrepStep() { createDynamicInput('prep-list', 'Passo...', true); renumberSteps(); }
-    function createDynamicInput(cid, ph, ord) { const c=document.getElementById(cid), d=document.createElement('div'); d.className='dynamic-item'; d.innerHTML = `${ord?'<span class="prefix"></span>':'<span class="prefix">•</span>'}<input type="text" placeholder="${ph}"><button type="button" class="btn-remove-item" onclick="this.parentElement.remove(); renumberSteps()">X</button>`; c.appendChild(d); if(ord) renumberSteps(); }
-    function renumberSteps() { document.querySelectorAll('#prep-list .prefix').forEach((s,i)=>s.textContent=`${i+1}.`); }
+    function toggleHobbyComments() { const el=document.getElementById('hobby-comments-box'); el.style.display=el.style.display==='block'?'none':'block'; }
+    function mostrarAba(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
-    function mostrarAba(id, btn) {
-        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-        document.querySelectorAll('.tab-btn').forEach(b => {
-            b.classList.remove('active');
-            b.style.color = '';       
-            b.style.borderBottom = ''; 
-        });
-        document.getElementById(id).style.display = 'block';
-        btn.classList.add('active'); 
-    }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
+    function setupForms() {
+        const btnS=document.getElementById('btn-submit-suggestion'); if(btnS) btnS.onclick=async()=>{const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; if(n&&m){await fetch(`${BASE_DB_URL}suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); alert('Enviado!'); location.reload();}};
+        const btnR=document.getElementById('btn-submit-recipe'); if(btnR) btnR.onclick=async()=>{const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; if(a&&d){await fetch(`${BASE_DB_URL}recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); alert('Enviado!'); location.reload();}};
+        const btnT=document.getElementById('btn-submit-testimonial'); if(btnT) btnT.onclick=async()=>{const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; if(n&&t){await fetch(`${BASE_DB_URL}testimonials.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); initFirebaseData();}};
+        const btnP=document.getElementById('btn-submit-praise'); if(btnP) btnP.onclick=submitPraise;
+        const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
+        const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
+    }
   </script>
 </body>
 </html>
