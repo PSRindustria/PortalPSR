@@ -843,40 +843,42 @@
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
     // --- CORREÇÃO DA FUNÇÃO DE RANKING ---
-    async function openHiScore(gameKey) {
+async function openHiScore(gameKey) {
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
         
-        // Abre o modal IMEDIATAMENTE (Graças ao z-index 2000, agora aparecerá)
-        if(modal) modal.style.display = 'flex';
-        if(title) title.textContent = `Ranking: ${gameKey}`;
-        if(list) list.innerHTML = '<div style="padding:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+        // Exibe o modal imediatamente
+        if (modal) modal.style.display = 'flex';
+        
+        // Define título e mostra carregando
+        if (title) title.textContent = `Ranking: ${gameKey}`;
+        if (list) list.innerHTML = '<div style="padding:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
         
         try {
-            // Fetch com caminho corrigido (usando /games/)
-            const resp = await fetch(`${BASE_DB_URL}/games/${gameKey}/scores.json`);
+            // Remove barra extra da URL se houver para evitar erro
+            const baseUrlClean = BASE_DB_URL.endsWith('/') ? BASE_DB_URL.slice(0, -1) : BASE_DB_URL;
+            const resp = await fetch(`${baseUrlClean}/games/${gameKey}/scores.json`);
             
-            // Tratamento se o banco não responder
-            if (!resp.ok) throw new Error('Falha na conexão');
+            if (!resp.ok) throw new Error('Erro na conexão');
             
             const data = await resp.json();
             
             if (!data) { 
-                if(list) list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Sem recordes registrados ainda.</p>'; 
+                if (list) list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Sem recordes ainda.</p>'; 
                 return; 
             }
             
             let scoresArray = Object.values(data);
             
-            // Ordenação segura
+            // Ordenação numérica segura (maior para menor)
             scoresArray.sort((a, b) => {
                 let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 return scoreB - scoreA;
             });
             
-            if(list) {
+            if (list) {
                 list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `
                     <div class="hiscore-item">
                         <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
@@ -886,7 +888,7 @@
             }
         } catch (error) { 
             console.error(error); 
-            if(list) list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar ranking. Verifique a conexão.</p>'; 
+            if (list) list.innerHTML = '<p style="color:var(--vermelho-erro); text-align:center; padding:20px;">Erro ao carregar ranking.</p>'; 
         }
     }
     
