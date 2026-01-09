@@ -303,7 +303,7 @@
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
     /* MODALS */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; animation: fadeIn 0.3s; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; animation: fadeIn 0.3s; }
     .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 15px; padding: 25px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.2); }
     .modal-close { position: absolute; top: 15px; right: 15px; font-size: 1.5em; cursor: pointer; color: #999; border: none; background: none; }
     .hiscore-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
@@ -540,10 +540,14 @@
 
   <div id="footer-placeholder"></div>
 
-  <script>
-    // VARIAVEL GLOBAL VAZIA - SERÁ PREENCHIDA PELO FIREBASE
+<script>
+    // --- CONFIGURAÇÃO CORRIGIDA ---
+    // Removemos a barra final para evitar URLs duplas (//)
+    const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com"; 
+
+    // VARIAVEL GLOBAL VAZIA
     let CONTEUDO_JORNAL = {
-        temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
+        temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: null
     };
 
     const SUSTENTABILIDADE_PADRAO = {
@@ -573,8 +577,6 @@
         { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
     ];
 
-    const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
-
     function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
     const MY_DEVICE_ID = getDeviceId();
     
@@ -589,9 +591,11 @@
         ['menu', 'footer'].forEach(file => {
             fetch(`${file}.html?t=${Date.now()}`).then(r => r.text()).then(html => {
                 const el = document.getElementById(`${file}-placeholder`);
-                if(el) el.innerHTML = html;
-                if(file==='menu'){const t=document.getElementById('menu-toggle');const m=document.getElementById('menu');if(t&&m){t.onclick=()=>m.classList.toggle('active');m.querySelectorAll('a').forEach(l=>l.onclick=()=>m.classList.remove('active'));}}
-            }).catch(e => console.log(e));
+                if(el) {
+                    el.innerHTML = html;
+                    if(file==='menu'){const t=document.getElementById('menu-toggle');const m=document.getElementById('menu');if(t&&m){t.onclick=()=>m.classList.toggle('active');m.querySelectorAll('a').forEach(l=>l.onclick=()=>m.classList.remove('active'));}}
+                }
+            }).catch(e => console.log(`Erro ao carregar ${file}:`, e));
         });
 
         initFirebaseData();
@@ -603,60 +607,48 @@
         setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
     });
 
-    // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
+    // --- CARREGAMENTO OTIMIZADO ---
     async function initFirebaseData() {
         try {
-            // Dispara requisições simultâneas
-            const [
-                contentResp, 
-                clientesResp,
-                hobbyResp, 
-                praiseResp, 
-                challengesResp, 
-                quizResp,
-                ratingsResp,
-                testimonialsResp
-            ] = await Promise.all([
-                fetch(BASE_DB_URL + "content.json"),
-                fetch(BASE_DB_URL + "novos_clientes.json"),
-                fetch(BASE_DB_URL + "hobby_interactions.json"),
-                fetch(BASE_DB_URL + "praise_messages.json"),
-                fetch(BASE_DB_URL + "challenges_v2.json"),
-                fetch(BASE_DB_URL + "safety_quiz.json"),
-                fetch(BASE_DB_URL + "ratings_v2.json"),
-                fetch(BASE_DB_URL + "testimonials.json")
+            // Nota: Adicionei "/" antes do nome do arquivo para garantir caminho correto
+            const [contentResp, clientesResp, hobbyResp, praiseResp, challengesResp, quizResp, ratingsResp, testimonialsResp] = await Promise.all([
+                fetch(`${BASE_DB_URL}/content.json`),
+                fetch(`${BASE_DB_URL}/novos_clientes.json`),
+                fetch(`${BASE_DB_URL}/hobby_interactions.json`),
+                fetch(`${BASE_DB_URL}/praise_messages.json`),
+                fetch(`${BASE_DB_URL}/challenges_v2.json`),
+                fetch(`${BASE_DB_URL}/safety_quiz.json`),
+                fetch(`${BASE_DB_URL}/ratings_v2.json`),
+                fetch(`${BASE_DB_URL}/testimonials.json`)
             ]);
 
-            // 1. Carrega dados de conteúdo
+            // 1. Processa Conteúdo
             const contentData = await contentResp.json() || {};
             if (contentData) {
                 CONTEUDO_JORNAL = contentData;
                 if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-                // renderJornal(); // REMOVIDO: Não precisamos renderizar aqui, pois renderizaremos abaixo com tudo pronto
+            } else {
+                CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
             }
 
-            // 2. Carrega Clientes
+            // 2. Processa Dados Auxiliares
             const clientesData = await clientesResp.json() || {};
-            renderNovosClientes(clientesData);
-
-            // 3. Carrega Dados Globais
             globalHobbyData = await hobbyResp.json() || {};
             globalPraiseData = await praiseResp.json() || {};
-            globalChallengesData = await challengesResp.json() || {}; // Dados dos desafios carregados
+            globalChallengesData = await challengesResp.json() || {};
             globalQuizData = await quizResp.json() || {};
             const ratingsData = await ratingsResp.json() || {};
             const testimonialsData = await testimonialsResp.json() || {};
 
-            // 4. RENDERIZAÇÃO PRINCIPAL (Apenas uma vez, com todos os dados prontos)
+            // 3. Renderiza Tudo
             renderJornal(); 
-
-            // 5. ATUALIZAÇÃO DA UI (Deve acontecer DEPOIS de renderJornal criar o HTML)
-            renderChallenges(globalChallengesData); // <--- AGORA VAI FUNCIONAR (Preenche os zeros com os dados)
+            renderNovosClientes(clientesData);
+            renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
             renderTestimonials(testimonialsData);
             checkIfQuizTaken();
             
-            // Lógica de Ratings (Estrelas)
+            // Lógica de Ratings
             document.querySelectorAll('.rating-container').forEach(container => {
                 const itemId = container.dataset.id;
                 const stars = container.querySelectorAll('.rating-stars i');
@@ -670,7 +662,6 @@
                     updateVisualStars(stars, avg);
                     if (votes[MY_DEVICE_ID]) container.querySelector('.rating-stars').classList.add('voted');
                 };
-                
                 calcRender(itemVotes);
                 
                 stars.forEach(star => {
@@ -679,7 +670,7 @@
                         if(!itemVotes[MY_DEVICE_ID]) {
                              itemVotes[MY_DEVICE_ID] = val;
                              calcRender(itemVotes);
-                             await fetch(`${BASE_DB_URL}ratings_v2/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) });
+                             await fetch(`${BASE_DB_URL}/ratings_v2/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) });
                         }
                     });
                     star.addEventListener('mouseover', () => {
@@ -704,17 +695,18 @@
 
     function renderJornal() {
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
-        document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Cliqui para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
+        const elemTema = document.getElementById('tema-mes');
+        if(elemTema) elemTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
         
         const h = CONTEUDO_JORNAL.hobby || {};
-        const hData = globalHobbyData || {};
-        const hLikes = hData.likes || {};
-        const hComments = hData.comments ? Object.values(hData.comments) : [];
+        const hLikes = globalHobbyData.likes || {};
+        const hComments = globalHobbyData.comments ? Object.values(globalHobbyData.comments) : [];
         const hUserLiked = hLikes[MY_DEVICE_ID] ? 'liked' : '';
         const hHeartIcon = hUserLiked ? 'fas' : 'far';
         hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-        document.getElementById('hobby-container').innerHTML = `
+        const elemHobby = document.getElementById('hobby-container');
+        if(elemHobby) elemHobby.innerHTML = `
             <div class="hobby-content">
                 <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
                 <div class="hobby-texto">
@@ -734,45 +726,65 @@
             </div>`;
         
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
-        document.getElementById('saude-fisica-hero').innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
+        const elemSaude = document.getElementById('saude-fisica-hero');
+        if(elemSaude) elemSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
-        const recContainer = document.getElementById('receitas-container'); recContainer.innerHTML = ''; 
-        (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
+        const recContainer = document.getElementById('receitas-container'); 
+        if(recContainer) {
+            recContainer.innerHTML = ''; 
+            (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
+        }
         
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        document.getElementById('titulo-desafio-mes').innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
+        const elemTituloDesafio = document.getElementById('titulo-desafio-mes');
+        if(elemTituloDesafio) elemTituloDesafio.innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
 
-        const desContainer = document.getElementById('desafios-container'); desContainer.innerHTML = ''; 
-        (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; });
+        const desContainer = document.getElementById('desafios-container'); 
+        if(desContainer) {
+            desContainer.innerHTML = ''; 
+            (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; });
+        }
         
         const cultContainer = document.getElementById('cultura-container'); 
-        cultContainer.innerHTML = ''; 
-        (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
-            const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; 
-            cultContainer.innerHTML += `
-                <article class="jornal-card" id="card_${c.id}">
-                    <a href="${c.link}" target="_blank" class="video-thumbnail-container">
-                        <img src="${c.img}">
-                        <i class="fas ${ic} play-button"></i>
-                    </a>
-                    <div class="jornal-card-content" style="text-align:center;">
-                        <h3>${c.titulo}</h3>
-                        <p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p>
-                        <button class="btn-ler-sinopse" onclick="openSynopsis('${c.id}')">Ler Sinopse</button>
-                        <span class="tag-discreta">${c.tag||''}</span>
-                        <div class="rating-container" data-id="${c.id}">
-                            <div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div>
-                            <div style="font-size:0.9rem; color:#777; margin-top:10px;">Média:<br><span class="score-value">0.0</span></div>
+        if(cultContainer) {
+            cultContainer.innerHTML = ''; 
+            (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
+                const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; 
+                cultContainer.innerHTML += `
+                    <article class="jornal-card" id="card_${c.id}">
+                        <a href="${c.link}" target="_blank" class="video-thumbnail-container">
+                            <img src="${c.img}">
+                            <i class="fas ${ic} play-button"></i>
+                        </a>
+                        <div class="jornal-card-content" style="text-align:center;">
+                            <h3>${c.titulo}</h3>
+                            <p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p>
+                            <button class="btn-ler-sinopse" onclick="openSynopsis('${c.id}')">Ler Sinopse</button>
+                            <span class="tag-discreta">${c.tag||''}</span>
+                            <div class="rating-container" data-id="${c.id}">
+                                <div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div>
+                                <div style="font-size:0.9rem; color:#777; margin-top:10px;">Média:<br><span class="score-value">0.0</span></div>
+                            </div>
                         </div>
-                    </div>
-                </article>`; 
-        });
+                    </article>`; 
+            });
+        }
 
-        const maContainer = document.getElementById('cards-meio-ambiente'); maContainer.innerHTML = '';
-        CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
+        const maContainer = document.getElementById('cards-meio-ambiente');
+        if(maContainer) {
+            maContainer.innerHTML = '';
+            if(CONTEUDO_JORNAL.sustentabilidade && CONTEUDO_JORNAL.sustentabilidade.meioAmbiente) {
+                CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
+            }
+        }
 
-        const segContainer = document.getElementById('cards-seguranca'); segContainer.innerHTML = '';
-        CONTEUDO_JORNAL.sustentabilidade.seguranca.forEach(s => { let listaHtml = s.lista.map(item => `<li>${item}</li>`).join(''); segContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${s.cor};"><div class="jornal-card-content"><h3 style="color: ${s.cor}; font-size: 1.2em;"><i class="${s.icon}"></i> ${s.titulo}</h3><ul style="font-size: 0.9rem; margin-left: 15px; color: #555;">${listaHtml}</ul></div></div>`; });
+        const segContainer = document.getElementById('cards-seguranca'); 
+        if(segContainer) {
+            segContainer.innerHTML = '';
+            if(CONTEUDO_JORNAL.sustentabilidade && CONTEUDO_JORNAL.sustentabilidade.seguranca) {
+                CONTEUDO_JORNAL.sustentabilidade.seguranca.forEach(s => { let listaHtml = s.lista.map(item => `<li>${item}</li>`).join(''); segContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${s.cor};"><div class="jornal-card-content"><h3 style="color: ${s.cor}; font-size: 1.2em;"><i class="${s.icon}"></i> ${s.titulo}</h3><ul style="font-size: 0.9rem; margin-left: 15px; color: #555;">${listaHtml}</ul></div></div>`; });
+            }
+        }
 
         renderQuizHTML();
         setupQuizToggle();
@@ -781,26 +793,31 @@
     function renderNovosClientes(dados) {
         if (!dados) return;
         if (dados.resumo) {
-            document.getElementById('stat-qtd').textContent = dados.resumo.quantidade || "0";
-            document.getElementById('stat-periodo').textContent = dados.resumo.periodo || "";
+            const qtdEl = document.getElementById('stat-qtd');
+            const perEl = document.getElementById('stat-periodo');
+            if(qtdEl) qtdEl.textContent = dados.resumo.quantidade || "0";
+            if(perEl) perEl.textContent = dados.resumo.periodo || "";
         }
         const listaContainer = document.getElementById('lista-clientes-content');
-        listaContainer.innerHTML = ""; 
-        if (dados.lista && dados.lista.length > 0) {
-            dados.lista.forEach(cliente => {
-                const classeDestaque = cliente.destaque ? 'destaque' : '';
-                const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                const itemHtml = `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
-                listaContainer.innerHTML += itemHtml;
-            });
-        } else {
-            listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
+        if(listaContainer) {
+            listaContainer.innerHTML = ""; 
+            if (dados.lista && dados.lista.length > 0) {
+                dados.lista.forEach(cliente => {
+                    const classeDestaque = cliente.destaque ? 'destaque' : '';
+                    const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
+                    const itemHtml = `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
+                    listaContainer.innerHTML += itemHtml;
+                });
+            } else {
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
+            }
         }
     }
 
     function toggleTodosClientes() {
         const lista = document.getElementById('lista-clientes');
         const btn = document.querySelector('.btn-ver-todos');
+        if(!lista || !btn) return;
         const estaOculto = window.getComputedStyle(lista).display === 'none';
         if (estaOculto) {
             lista.style.display = 'block';
@@ -825,29 +842,62 @@
     }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
-    window.openHiScore = async function(gameKey) {
+    // --- CORREÇÃO DA FUNÇÃO DE RANKING ---
+    async function openHiScore(gameKey) {
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
-        modal.style.display = 'flex';
-        document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
+        const title = document.getElementById('modal-game-title');
+        
+        // Abre o modal IMEDIATAMENTE (Graças ao z-index 2000, agora aparecerá)
+        if(modal) modal.style.display = 'flex';
+        if(title) title.textContent = `Ranking: ${gameKey}`;
+        if(list) list.innerHTML = '<div style="padding:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+        
         try {
-            const resp = await fetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
+            // Fetch com caminho corrigido (usando /games/)
+            const resp = await fetch(`${BASE_DB_URL}/games/${gameKey}/scores.json`);
+            
+            // Tratamento se o banco não responder
+            if (!resp.ok) throw new Error('Falha na conexão');
+            
             const data = await resp.json();
-            if (!data) { list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; return; }
+            
+            if (!data) { 
+                if(list) list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Sem recordes registrados ainda.</p>'; 
+                return; 
+            }
+            
             let scoresArray = Object.values(data);
+            
+            // Ordenação segura
             scoresArray.sort((a, b) => {
                 let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 return scoreB - scoreA;
             });
-            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${s.pontos}</div></div>`).join('');
-        } catch (error) { console.error(error); list.innerHTML = '<p style="color:red;">Erro ao carregar.</p>'; }
+            
+            if(list) {
+                list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `
+                    <div class="hiscore-item">
+                        <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
+                        <div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div>
+                        <div class="hiscore-points">${s.pontos}</div>
+                    </div>`).join('');
+            }
+        } catch (error) { 
+            console.error(error); 
+            if(list) list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar ranking. Verifique a conexão.</p>'; 
+        }
     }
-    window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
+    
+    function closeHiScore() { 
+        const modal = document.getElementById('hiscore-modal');
+        if(modal) modal.style.display = 'none'; 
+    }
 
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
+        if(!container) return;
         container.innerHTML = '';
         SAFETY_QUIZ.forEach((q, index) => {
             let optionsHtml = q.options.map((opt, i) => `<label class="quiz-option"><input type="radio" name="${q.id}" value="${i}"> ${opt}</label>`).join('');
@@ -871,58 +921,78 @@
         for (const qId in globalQuizData) { if (globalQuizData[qId] && globalQuizData[qId][MY_DEVICE_ID] !== undefined) { hasTaken = true; break; } }
         if (hasTaken) lockQuizUI();
     }
+    
     function lockQuizUI() {
-        document.getElementById('safety-quiz-form').classList.add('quiz-locked');
-        document.getElementById('btn-submit-quiz').style.display = 'none';
-        document.getElementById('btn-reset-quiz').style.display = 'block';
+        const form = document.getElementById('safety-quiz-form');
+        if(!form) return;
+        form.classList.add('quiz-locked');
+        
+        const btnSub = document.getElementById('btn-submit-quiz');
+        const btnRes = document.getElementById('btn-reset-quiz');
+        if(btnSub) btnSub.style.display = 'none';
+        if(btnRes) btnRes.style.display = 'block';
+        
         SAFETY_QUIZ.forEach(q => {
             const userAns = globalQuizData[q.id] ? globalQuizData[q.id][MY_DEVICE_ID] : null;
             const block = document.getElementById(`quiz-block-${q.id}`);
-            block.querySelectorAll('input').forEach(inp => inp.disabled = true);
-            if (userAns !== undefined && userAns !== null) {
-                const correctLabel = block.querySelectorAll('.quiz-option')[q.correct];
-                if(correctLabel) correctLabel.classList.add('correct-answer');
+            if(block) {
+                block.querySelectorAll('input').forEach(inp => inp.disabled = true);
+                if (userAns !== undefined && userAns !== null) {
+                    const correctLabel = block.querySelectorAll('.quiz-option')[q.correct];
+                    if(correctLabel) correctLabel.classList.add('correct-answer');
+                }
+                const qData = globalQuizData[q.id] || {};
+                const total = Object.keys(qData).length;
+                let correct = 0; Object.values(qData).forEach(v => {if(v) correct++});
+                const pct = total>0 ? Math.round((correct/total)*100) : 0;
+                
+                const stats = block.querySelector('.quiz-stats');
+                if(stats) stats.style.display = 'block';
+                const bar = document.getElementById(`bar-${q.id}`);
+                const text = document.getElementById(`text-${q.id}`);
+                if(bar) {
+                    bar.style.width = `${pct}%`;
+                    bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)';
+                }
+                if(text) text.textContent = `${pct}% acertaram`;
             }
-            const qData = globalQuizData[q.id] || {};
-            const total = Object.keys(qData).length;
-            let correct = 0; Object.values(qData).forEach(v => {if(v) correct++});
-            const pct = total>0 ? Math.round((correct/total)*100) : 0;
-            block.querySelector('.quiz-stats').style.display = 'block';
-            const bar = document.getElementById(`bar-${q.id}`);
-            bar.style.width = `${pct}%`;
-            document.getElementById(`text-${q.id}`).textContent = `${pct}% acertaram`;
-            bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)';
         });
     }
 
-    document.getElementById('safety-quiz-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const updates = {};
-        for (const q of SAFETY_QUIZ) {
-            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
-            if (!selected) { alert(`Responda a questão ${q.id.replace('q','')}`); return; }
-            const isCorrect = (parseInt(selected.value) === q.correct);
-            if (!globalQuizData[q.id]) globalQuizData[q.id] = {};
-            globalQuizData[q.id][MY_DEVICE_ID] = isCorrect;
-            updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = isCorrect;
-        }
-        await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
-        lockQuizUI();
-    });
+    const quizForm = document.getElementById('safety-quiz-form');
+    if(quizForm) {
+        quizForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const updates = {};
+            for (const q of SAFETY_QUIZ) {
+                const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+                if (!selected) { alert(`Responda a questão ${q.id.replace('q','')}`); return; }
+                const isCorrect = (parseInt(selected.value) === q.correct);
+                if (!globalQuizData[q.id]) globalQuizData[q.id] = {};
+                globalQuizData[q.id][MY_DEVICE_ID] = isCorrect;
+                updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = isCorrect;
+            }
+            await fetch(`${BASE_DB_URL}/.json`, { method: 'PATCH', body: JSON.stringify(updates) });
+            lockQuizUI();
+        });
+    }
     
-    document.getElementById('btn-reset-quiz').addEventListener('click', async()=>{
-        if(!confirm("Refazer?")) return;
-        const updates = {};
-        SAFETY_QUIZ.forEach(q => updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = null);
-        await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
-        location.reload();
-    });
+    const resetBtn = document.getElementById('btn-reset-quiz');
+    if(resetBtn) {
+        resetBtn.addEventListener('click', async()=>{
+            if(!confirm("Refazer?")) return;
+            const updates = {};
+            SAFETY_QUIZ.forEach(q => updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = null);
+            await fetch(`${BASE_DB_URL}/.json`, { method: 'PATCH', body: JSON.stringify(updates) });
+            location.reload();
+        });
+    }
 
     async function voteChallenge(cId, type) {
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
         globalChallengesData[cId][MY_DEVICE_ID] = type;
         renderChallenges(globalChallengesData);
-        await fetch(`${BASE_DB_URL}challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
+        await fetch(`${BASE_DB_URL}/challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
     }
     function renderChallenges(data) {
         document.querySelectorAll('.desafio-saude-card').forEach(card => {
@@ -930,10 +1000,14 @@
             const cData = data[id] || {};
             let s=0, f=0, my=null;
             for(const [k,v] of Object.entries(cData)) { if(v==='success') s++; else f++; if(k===MY_DEVICE_ID) my=v; }
-            card.querySelector('.stat-success').textContent = s;
-            card.querySelector('.stat-fail').textContent = f;
-            card.querySelector('.btn-challenge.success').classList.toggle('active', my==='success');
-            card.querySelector('.btn-challenge.fail').classList.toggle('active', my==='fail');
+            const elS = card.querySelector('.stat-success'); if(elS) elS.textContent = s;
+            const elF = card.querySelector('.stat-fail'); if(elF) elF.textContent = f;
+            
+            const btnS = card.querySelector('.btn-challenge.success');
+            const btnF = card.querySelector('.btn-challenge.fail');
+            
+            if(btnS) btnS.classList.toggle('active', my==='success');
+            if(btnF) btnF.classList.toggle('active', my==='fail');
         });
     }
 
@@ -941,6 +1015,8 @@
         currentPraiseMonth = selectedMonth;
         const container = document.getElementById('praise-container');
         const linksContainer = document.getElementById('praise-archive-links');
+        if(!container || !linksContainer) return;
+        
         container.innerHTML = ''; linksContainer.innerHTML = '';
         const dataMonths = new Set();
         dataMonths.add(new Date().toISOString().slice(0, 7));
@@ -973,7 +1049,7 @@
     }
     
     async function likePraise(id) {
-        const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
+        const url = `${BASE_DB_URL}/praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
         const exists = globalPraiseData[id].likes && globalPraiseData[id].likes[MY_DEVICE_ID];
         if(exists) { await fetch(url, {method:'DELETE'}); delete globalPraiseData[id].likes[MY_DEVICE_ID]; }
         else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; globalPraiseData[id].likes[MY_DEVICE_ID]=true; }
@@ -982,11 +1058,11 @@
 
     async function submitPraise() {
         const f=document.getElementById('praise-from').value, t=document.getElementById('praise-to').value, m=document.getElementById('praise-msg').value;
-        if(f&&t&&m) { await fetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
+        if(f&&t&&m) { await fetch(`${BASE_DB_URL}/praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
     }
     
     async function likeHobby() {
-        const url = `${BASE_DB_URL}hobby_interactions/likes/${MY_DEVICE_ID}.json`;
+        const url = `${BASE_DB_URL}/hobby_interactions/likes/${MY_DEVICE_ID}.json`;
         const exists = globalHobbyData.likes && globalHobbyData.likes[MY_DEVICE_ID];
         if(exists) { await fetch(url, {method:'DELETE'}); delete globalHobbyData.likes[MY_DEVICE_ID]; }
         else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalHobbyData.likes) globalHobbyData.likes={}; globalHobbyData.likes[MY_DEVICE_ID]=true; }
@@ -996,9 +1072,9 @@
         const txt = document.getElementById('input-hobby-comment').value;
         if(txt) {
             const author = prompt("Seu nome:") || "Anônimo";
-            await fetch(`${BASE_DB_URL}hobby_interactions/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
+            await fetch(`${BASE_DB_URL}/hobby_interactions/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
             // Recarrega apenas a parte de hobby/comments
-            const resp = await fetch(BASE_DB_URL + "hobby_interactions.json");
+            const resp = await fetch(`${BASE_DB_URL}/hobby_interactions.json`);
             globalHobbyData = await resp.json() || {};
             renderJornal();
         }
@@ -1006,6 +1082,7 @@
 
     function renderTestimonials(data) {
         const container = document.getElementById('testimonials-display');
+        if(!container) return;
         container.innerHTML = '';
         const sorted = Object.entries(data).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).slice(0,3);
         if(sorted.length===0) { container.innerHTML='<p style="color:#999;font-style:italic;">Seja o primeiro a compartilhar!</p>'; return; }
@@ -1026,13 +1103,14 @@
     function mostrarAba(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
+    
     function setupForms() {
-        const btnS=document.getElementById('btn-submit-suggestion'); if(btnS) btnS.onclick=async()=>{const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; if(n&&m){await fetch(`${BASE_DB_URL}suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); alert('Enviado!'); location.reload();}};
-        const btnR=document.getElementById('btn-submit-recipe'); if(btnR) btnR.onclick=async()=>{const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; if(a&&d){await fetch(`${BASE_DB_URL}recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); alert('Enviado!'); location.reload();}};
-        const btnT=document.getElementById('btn-submit-testimonial'); if(btnT) btnT.onclick=async()=>{const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; if(n&&t){await fetch(`${BASE_DB_URL}testimonials.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); initFirebaseData();}};
+        const btnS=document.getElementById('btn-submit-suggestion'); if(btnS) btnS.onclick=async()=>{const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; if(n&&m){await fetch(`${BASE_DB_URL}/suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); alert('Enviado!'); location.reload();}};
+        const btnR=document.getElementById('btn-submit-recipe'); if(btnR) btnR.onclick=async()=>{const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; if(a&&d){await fetch(`${BASE_DB_URL}/recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); alert('Enviado!'); location.reload();}};
+        const btnT=document.getElementById('btn-submit-testimonial'); if(btnT) btnT.onclick=async()=>{const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; if(n&&t){await fetch(`${BASE_DB_URL}/testimonials.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); initFirebaseData();}};
         const btnP=document.getElementById('btn-submit-praise'); if(btnP) btnP.onclick=submitPraise;
-        const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
-        const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
+        const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}/game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
+        const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}/hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
     }
   </script>
 </body>
