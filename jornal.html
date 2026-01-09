@@ -541,15 +541,16 @@
   <div id="footer-placeholder"></div>
 
 <script>
-    // --- CONFIGURAÇÃO CORRIGIDA ---
-    // Removemos a barra final para evitar URLs duplas (//)
+    // --- CONFIGURAÇÃO ---
+    // Removemos a barra final para evitar URLs duplas e erros de conexão
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com"; 
 
-    // VARIAVEL GLOBAL VAZIA
+    // VARIÁVEL GLOBAL DE CONTEÚDO
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: null
     };
 
+    // Estrutura padrão caso falte no banco
     const SUSTENTABILIDADE_PADRAO = {
         meioAmbiente: [
             { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
@@ -580,11 +581,19 @@
     function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
     const MY_DEVICE_ID = getDeviceId();
     
+    // Globais para dados
     let globalChallengesData = {};
     let globalQuizData = {};
-    let globalHobbyData = {}; 
+    
+    // -- NOVAS GLOBAIS COM SUPORTE A HISTÓRICO --
+    let globalHobbyHistory = {}; 
     let globalPraiseData = {}; 
+    let globalTestimonialsHistory = {};
+
+    // Controles de Mês Vigente
     let currentPraiseMonth = new Date().toISOString().slice(0, 7); 
+    let currentHobbyMonth = new Date().toISOString().slice(0, 7);
+    let currentTestimonialMonth = new Date().toISOString().slice(0, 7);
 
     document.addEventListener("DOMContentLoaded", () => {
         // Carrega Menu e Footer
@@ -610,16 +619,16 @@
     // --- CARREGAMENTO OTIMIZADO ---
     async function initFirebaseData() {
         try {
-            // Nota: Adicionei "/" antes do nome do arquivo para garantir caminho correto
+            // Nota: Buscamos agora as tabelas _history para Hobby e Testimonials
             const [contentResp, clientesResp, hobbyResp, praiseResp, challengesResp, quizResp, ratingsResp, testimonialsResp] = await Promise.all([
                 fetch(`${BASE_DB_URL}/content.json`),
                 fetch(`${BASE_DB_URL}/novos_clientes.json`),
-                fetch(`${BASE_DB_URL}/hobby_interactions.json`),
+                fetch(`${BASE_DB_URL}/hobby_interactions_history.json`), // Alterado para _history
                 fetch(`${BASE_DB_URL}/praise_messages.json`),
                 fetch(`${BASE_DB_URL}/challenges_v2.json`),
                 fetch(`${BASE_DB_URL}/safety_quiz.json`),
                 fetch(`${BASE_DB_URL}/ratings_v2.json`),
-                fetch(`${BASE_DB_URL}/testimonials.json`)
+                fetch(`${BASE_DB_URL}/testimonials_history.json`) // Alterado para _history
             ]);
 
             // 1. Processa Conteúdo
@@ -633,22 +642,25 @@
 
             // 2. Processa Dados Auxiliares
             const clientesData = await clientesResp.json() || {};
-            globalHobbyData = await hobbyResp.json() || {};
+            globalHobbyHistory = await hobbyResp.json() || {};         // Carrega histórico completo
             globalPraiseData = await praiseResp.json() || {};
             globalChallengesData = await challengesResp.json() || {};
             globalQuizData = await quizResp.json() || {};
             const ratingsData = await ratingsResp.json() || {};
-            const testimonialsData = await testimonialsResp.json() || {};
+            globalTestimonialsHistory = await testimonialsResp.json() || {}; // Carrega histórico completo
 
             // 3. Renderiza Tudo
             renderJornal(); 
             renderNovosClientes(clientesData);
             renderChallenges(globalChallengesData);
+            
+            // Renderizações com filtro de Mês
             renderPraiseSection(currentPraiseMonth);
-            renderTestimonials(testimonialsData);
+            renderTestimonialsSection(currentTestimonialMonth);
+            
             checkIfQuizTaken();
             
-            // Lógica de Ratings
+            // Lógica de Ratings (Cultura)
             document.querySelectorAll('.rating-container').forEach(container => {
                 const itemId = container.dataset.id;
                 const stars = container.querySelectorAll('.rating-stars i');
@@ -693,38 +705,39 @@
         setupForms(); 
     }
 
+    // Função auxiliar para gerar links de histórico (Visual idêntico ao de Elogios)
+    function generateHistoryLinks(historyData, currentMonth, clickHandler, containerId) {
+        // Encontra onde colocar os links, ou cria se não existir na função de render
+        let linksContainer = document.getElementById(containerId);
+        if (!linksContainer) return ''; // Retorna HTML string se não tiver container pronto
+
+        let html = '';
+        const dataMonths = new Set();
+        dataMonths.add(new Date().toISOString().slice(0, 7)); // Garante o mês atual
+        if(historyData) Object.keys(historyData).forEach(k => dataMonths.add(k)); // Adiciona meses do histórico
+
+        const sortedMonths = Array.from(dataMonths).sort().reverse();
+        
+        // Se só tem o mês atual e nada mais, talvez nem precise mostrar links, mas vamos mostrar para consistência
+        sortedMonths.forEach(mStr => {
+            const [y, m] = mStr.split('-');
+            const label = new Date(y, m - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
+            const activeClass = mStr === currentMonth ? 'active' : '';
+            // Construímos o HTML dos links
+            html += `<span class="praise-link ${activeClass}" onclick="${clickHandler}('${mStr}')">${label}</span>`;
+        });
+        
+        return html;
+    }
+
     function renderJornal() {
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         const elemTema = document.getElementById('tema-mes');
         if(elemTema) elemTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
         
-        const h = CONTEUDO_JORNAL.hobby || {};
-        const hLikes = globalHobbyData.likes || {};
-        const hComments = globalHobbyData.comments ? Object.values(globalHobbyData.comments) : [];
-        const hUserLiked = hLikes[MY_DEVICE_ID] ? 'liked' : '';
-        const hHeartIcon = hUserLiked ? 'fas' : 'far';
-        hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
+        // --- HOBBY COM FILTRO DE MÊS ---
+        renderHobbySection(currentHobbyMonth);
 
-        const elemHobby = document.getElementById('hobby-container');
-        if(elemHobby) elemHobby.innerHTML = `
-            <div class="hobby-content">
-                <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
-                <div class="hobby-texto">
-                    <h3>${h.nome||'Colega'}</h3>
-                    <div class="hobby-titulo">${h.cargo||''}</div>
-                    <div class="hobby-quote-box"><i class="fas fa-quote-left"></i><p>${(h.texto||'').replace(/"/g, '')}</p></div>
-                    <div class="hobby-hobbies"><div class="hobby-list">${(h.tags||[]).map(t => `<span class="hobby-tag">${t}</span>`).join('')}</div></div>
-                    <div class="hobby-actions">
-                        <button class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> ${Object.keys(hLikes).length} Curtidas</button>
-                        <button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> ${hComments.length} Comentários</button>
-                    </div>
-                    <div id="hobby-comments-box" class="hobby-comments-section">
-                        <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div>
-                        <div class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar!</p>'}</div>
-                    </div>
-                </div>
-            </div>`;
-        
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const elemSaude = document.getElementById('saude-fisica-hero');
         if(elemSaude) elemSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
@@ -790,6 +803,50 @@
         setupQuizToggle();
     }
 
+    // --- NOVA FUNÇÃO DE RENDER DO HOBBY (COM HISTÓRICO) ---
+    window.renderHobbySection = function(selectedMonth) {
+        currentHobbyMonth = selectedMonth;
+        const elemHobby = document.getElementById('hobby-container');
+        if(!elemHobby) return;
+
+        // Recupera dados do mês selecionado ou objeto vazio
+        const monthData = globalHobbyHistory[selectedMonth] || {};
+        const hLikes = monthData.likes || {};
+        const hComments = monthData.comments ? Object.values(monthData.comments) : [];
+        const hUserLiked = hLikes[MY_DEVICE_ID] ? 'liked' : '';
+        const hHeartIcon = hUserLiked ? 'fas' : 'far';
+        
+        // Ordena comentários
+        hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        // Dados estáticos (Foto/Nome) continuam vindo do CONTEUDO_JORNAL (content.json)
+        // Pois geralmente a pessoa destaque é uma só por mês vigente no site
+        const h = CONTEUDO_JORNAL.hobby || {};
+
+        // Gera HTML dos links de histórico
+        const historyLinksHtml = generateHistoryLinks(globalHobbyHistory, currentHobbyMonth, 'renderHobbySection', 'temp-hobby-id');
+
+        elemHobby.innerHTML = `
+            <div class="praise-archive-links" style="margin-bottom:10px; justify-content:center;">${historyLinksHtml}</div>
+            <div class="hobby-content">
+                <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
+                <div class="hobby-texto">
+                    <h3>${h.nome||'Colega'}</h3>
+                    <div class="hobby-titulo">${h.cargo||''}</div>
+                    <div class="hobby-quote-box"><i class="fas fa-quote-left"></i><p>${(h.texto||'').replace(/"/g, '')}</p></div>
+                    <div class="hobby-hobbies"><div class="hobby-list">${(h.tags||[]).map(t => `<span class="hobby-tag">${t}</span>`).join('')}</div></div>
+                    <div class="hobby-actions">
+                        <button class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> ${Object.keys(hLikes).length} Curtidas</button>
+                        <button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> ${hComments.length} Comentários</button>
+                    </div>
+                    <div id="hobby-comments-box" class="hobby-comments-section">
+                        <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente neste mês..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div>
+                        <div class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar neste mês!</p>'}</div>
+                    </div>
+                </div>
+            </div>`;
+    };
+
     function renderNovosClientes(dados) {
         if (!dados) return;
         if (dados.resumo) {
@@ -842,43 +899,41 @@
     }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
-    // --- CORREÇÃO DA FUNÇÃO DE RANKING ---
-async function openHiScore(gameKey) {
+    // --- CORREÇÃO DE ESCOPO GLOBAL E SEGURANÇA NA URL ---
+    // Agora anexadas ao window para serem vistas pelo HTML
+    window.openHiScore = async function(gameKey) {
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
         
-        // Exibe o modal imediatamente
-        if (modal) modal.style.display = 'flex';
-        
-        // Define título e mostra carregando
-        if (title) title.textContent = `Ranking: ${gameKey}`;
-        if (list) list.innerHTML = '<div style="padding:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+        if(modal) modal.style.display = 'flex';
+        if(title) title.textContent = `Ranking: ${gameKey}`;
+        if(list) list.innerHTML = '<div style="padding:20px; text-align:center;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
         
         try {
-            // Remove barra extra da URL se houver para evitar erro
+            // Remove barra final da URL se existir para evitar erro de "//"
             const baseUrlClean = BASE_DB_URL.endsWith('/') ? BASE_DB_URL.slice(0, -1) : BASE_DB_URL;
             const resp = await fetch(`${baseUrlClean}/games/${gameKey}/scores.json`);
             
-            if (!resp.ok) throw new Error('Erro na conexão');
+            if (!resp.ok) throw new Error('Falha na conexão');
             
             const data = await resp.json();
             
             if (!data) { 
-                if (list) list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Sem recordes ainda.</p>'; 
+                if(list) list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Sem recordes registrados ainda.</p>'; 
                 return; 
             }
             
             let scoresArray = Object.values(data);
             
-            // Ordenação numérica segura (maior para menor)
+            // Ordenação numérica
             scoresArray.sort((a, b) => {
                 let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 return scoreB - scoreA;
             });
             
-            if (list) {
+            if(list) {
                 list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `
                     <div class="hiscore-item">
                         <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
@@ -888,14 +943,14 @@ async function openHiScore(gameKey) {
             }
         } catch (error) { 
             console.error(error); 
-            if (list) list.innerHTML = '<p style="color:var(--vermelho-erro); text-align:center; padding:20px;">Erro ao carregar ranking.</p>'; 
+            if(list) list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar ranking. Verifique a conexão.</p>'; 
         }
-    }
+    };
     
-    function closeHiScore() { 
+    window.closeHiScore = function() { 
         const modal = document.getElementById('hiscore-modal');
         if(modal) modal.style.display = 'none'; 
-    }
+    };
 
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
@@ -1020,6 +1075,8 @@ async function openHiScore(gameKey) {
         if(!container || !linksContainer) return;
         
         container.innerHTML = ''; linksContainer.innerHTML = '';
+        
+        // Gera links usando a nova função global de elogios
         const dataMonths = new Set();
         dataMonths.add(new Date().toISOString().slice(0, 7));
         Object.values(globalPraiseData).forEach(msg => { if(msg.date) dataMonths.add(msg.date.slice(0, 7)); });
@@ -1030,6 +1087,7 @@ async function openHiScore(gameKey) {
             link.textContent = label; link.onclick = () => renderPraiseSection(mStr);
             linksContainer.appendChild(link);
         });
+
         const msgs = Object.entries(globalPraiseData)
             .filter(([_, d]) => d.date && d.date.startsWith(selectedMonth))
             .sort((a,b) => new Date(b[1].date) - new Date(a[1].date));
@@ -1063,39 +1121,88 @@ async function openHiScore(gameKey) {
         if(f&&t&&m) { await fetch(`${BASE_DB_URL}/praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
     }
     
+    // --- FUNÇÕES DE HOBBY ATUALIZADAS (USANDO _history) ---
     async function likeHobby() {
-        const url = `${BASE_DB_URL}/hobby_interactions/likes/${MY_DEVICE_ID}.json`;
-        const exists = globalHobbyData.likes && globalHobbyData.likes[MY_DEVICE_ID];
-        if(exists) { await fetch(url, {method:'DELETE'}); delete globalHobbyData.likes[MY_DEVICE_ID]; }
-        else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalHobbyData.likes) globalHobbyData.likes={}; globalHobbyData.likes[MY_DEVICE_ID]=true; }
-        renderJornal();
+        // Grava no mês atual em _history
+        const monthKey = currentHobbyMonth; // Usa o mês que está sendo visualizado ou o atual? Geralmente curtir é no mês vigente.
+        // Se a pessoa estiver vendo um mês antigo, ela não pode curtir o mês antigo? Vamos assumir que curte o que está vendo.
+        
+        const url = `${BASE_DB_URL}/hobby_interactions_history/${monthKey}/likes/${MY_DEVICE_ID}.json`;
+        
+        // Verifica no state local
+        const monthData = globalHobbyHistory[monthKey] || {};
+        const likes = monthData.likes || {};
+        const exists = likes[MY_DEVICE_ID];
+
+        if(exists) { 
+            await fetch(url, {method:'DELETE'}); 
+            if(globalHobbyHistory[monthKey] && globalHobbyHistory[monthKey].likes) delete globalHobbyHistory[monthKey].likes[MY_DEVICE_ID];
+        } else { 
+            await fetch(url, {method:'PUT', body:JSON.stringify(true)}); 
+            if(!globalHobbyHistory[monthKey]) globalHobbyHistory[monthKey] = {};
+            if(!globalHobbyHistory[monthKey].likes) globalHobbyHistory[monthKey].likes = {};
+            globalHobbyHistory[monthKey].likes[MY_DEVICE_ID] = true;
+        }
+        renderHobbySection(monthKey);
     }
+
     async function sendHobbyComment() {
         const txt = document.getElementById('input-hobby-comment').value;
         if(txt) {
             const author = prompt("Seu nome:") || "Anônimo";
-            await fetch(`${BASE_DB_URL}/hobby_interactions/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
-            // Recarrega apenas a parte de hobby/comments
-            const resp = await fetch(`${BASE_DB_URL}/hobby_interactions.json`);
-            globalHobbyData = await resp.json() || {};
-            renderJornal();
+            const monthKey = currentHobbyMonth;
+            
+            // Posta no histórico do mês
+            await fetch(`${BASE_DB_URL}/hobby_interactions_history/${monthKey}/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
+            
+            // Recarrega tudo para simplificar
+            const resp = await fetch(`${BASE_DB_URL}/hobby_interactions_history.json`);
+            globalHobbyHistory = await resp.json() || {};
+            renderHobbySection(monthKey);
         }
     }
 
-    function renderTestimonials(data) {
+    // --- RENDERIZAR DEPOIMENTOS COM HISTÓRICO ---
+    window.renderTestimonialsSection = function(selectedMonth) {
+        currentTestimonialMonth = selectedMonth;
         const container = document.getElementById('testimonials-display');
+        
+        // Precisamos criar um container para os links se não existir, ou injetar antes
+        let navContainer = document.getElementById('testimonials-nav');
+        if (!navContainer && container) {
+            navContainer = document.createElement('div');
+            navContainer.id = 'testimonials-nav';
+            navContainer.className = 'praise-archive-links'; // Reusa estilo
+            navContainer.style.marginBottom = '15px';
+            navContainer.style.justifyContent = 'center';
+            container.parentNode.insertBefore(navContainer, container);
+        }
+
         if(!container) return;
+        
+        // Gera Links
+        navContainer.innerHTML = generateHistoryLinks(globalTestimonialsHistory, currentTestimonialMonth, 'renderTestimonialsSection', 'temp-testim-id');
+
         container.innerHTML = '';
-        const sorted = Object.entries(data).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).slice(0,3);
-        if(sorted.length===0) { container.innerHTML='<p style="color:#999;font-style:italic;">Seja o primeiro a compartilhar!</p>'; return; }
+        
+        // Pega dados do mês
+        const monthData = globalTestimonialsHistory[selectedMonth] || {};
+        const sorted = Object.entries(monthData).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date));
+        
+        if(sorted.length===0) { container.innerHTML='<p style="color:#999;font-style:italic;">Nenhum depoimento neste mês. Seja o primeiro!</p>'; return; }
+        
         sorted.forEach(([id, t]) => {
             container.innerHTML += `
-            <div style="background:#f4f7f9; padding:20px; border-radius:10px; border-top:4px solid var(--dourado); text-align:left;">
+            <div style="background:#f4f7f9; padding:20px; border-radius:10px; border-top:4px solid var(--dourado); text-align:left; margin-bottom:10px;">
                 <span style="font-weight:700; color:var(--azul-marinho);">${t.name}</span>
                 <p style="font-style:italic; color:#555;">"${t.text}"</p>
+                <div style="font-size:0.7em; color:#999; text-align:right; margin-top:5px;">${new Date(t.date).toLocaleDateString('pt-BR')}</div>
             </div>`;
         });
     }
+
+    // Manteiga compatibilidade antiga se algo chamar renderTestimonials direto
+    function renderTestimonials(data) { renderTestimonialsSection(currentTestimonialMonth); }
 
     function toggleGeneric(c, b, o, f) { const el=document.getElementById(c), btn=document.getElementById(b); if(el.style.display==='block'){el.style.display='none';btn.innerText=o;btn.style.background='var(--azul-marinho)';btn.style.color='white';}else{el.style.display='block';btn.innerText=f;btn.style.background='white';btn.style.color='var(--azul-marinho)';btn.style.border='2px solid var(--azul-marinho)';}}
     function toggleMateria() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
@@ -1109,7 +1216,19 @@ async function openHiScore(gameKey) {
     function setupForms() {
         const btnS=document.getElementById('btn-submit-suggestion'); if(btnS) btnS.onclick=async()=>{const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; if(n&&m){await fetch(`${BASE_DB_URL}/suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnR=document.getElementById('btn-submit-recipe'); if(btnR) btnR.onclick=async()=>{const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; if(a&&d){await fetch(`${BASE_DB_URL}/recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); alert('Enviado!'); location.reload();}};
-        const btnT=document.getElementById('btn-submit-testimonial'); if(btnT) btnT.onclick=async()=>{const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; if(n&&t){await fetch(`${BASE_DB_URL}/testimonials.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); initFirebaseData();}};
+        
+        // --- DEPOIMENTO AGORA VAI PARA _history/MES ---
+        const btnT=document.getElementById('btn-submit-testimonial'); 
+        if(btnT) btnT.onclick=async()=>{
+            const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; 
+            if(n&&t){
+                const monthKey = new Date().toISOString().slice(0, 7);
+                await fetch(`${BASE_DB_URL}/testimonials_history/${monthKey}.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); 
+                alert('Enviado!'); 
+                initFirebaseData();
+            }
+        };
+
         const btnP=document.getElementById('btn-submit-praise'); if(btnP) btnP.onclick=submitPraise;
         const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}/game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}/hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
