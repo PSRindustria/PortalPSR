@@ -303,86 +303,12 @@
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
     /* MODALS */
-/* MODALS - CORREÇÃO DE Z-INDEX E LISTA */
-    .modal-overlay { 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        background: rgba(0,0,0,0.6); 
-        z-index: 2000; /* Aumentado para ficar acima do menu (1001) */
-        display: none; 
-        justify-content: center; 
-        align-items: center; 
-        padding: 20px; 
-        animation: fadeIn 0.3s; 
-        backdrop-filter: blur(2px); /* Efeito de desfoque no fundo */
-    }
-    
-    .modal-content { 
-        background: white; 
-        width: 100%; 
-        max-width: 500px; 
-        border-radius: 15px; 
-        padding: 25px; 
-        position: relative; 
-        box-shadow: 0 5px 25px rgba(0,0,0,0.2); 
-        display: flex;
-        flex-direction: column;
-        max-height: 80vh; /* Limita altura para telas pequenas */
-    }
-
-    /* CLASSE QUE FALTAVA PARA A LISTA */
-    .hiscore-list {
-        margin-top: 10px;
-        overflow-y: auto; /* Permite rolar se a lista for grande */
-        max-height: 400px;
-        padding-right: 5px;
-    }
-    
-    /* Estilização da barra de rolagem da lista */
-    .hiscore-list::-webkit-scrollbar { width: 6px; }
-    .hiscore-list::-webkit-scrollbar-track { background: #f1f1f1; }
-    .hiscore-list::-webkit-scrollbar-thumb { background: var(--azul-marinho); border-radius: 10px; }
-
-    .modal-close { 
-        position: absolute; 
-        top: 15px; 
-        right: 15px; 
-        font-size: 1.5em; 
-        cursor: pointer; 
-        color: #999; 
-        border: none; 
-        background: none; 
-        transition: 0.2s;
-    }
-    .modal-close:hover { color: var(--vermelho-erro); }
-
-    .hiscore-item { 
-        display: flex; 
-        justify-content: space-between; 
-        padding: 12px 10px; 
-        border-bottom: 1px solid #eee; 
-        align-items: center; 
-        transition: 0.2s;
-    }
-    .hiscore-item:hover { background-color: #f9f9f9; }
-    
-    .hiscore-rank { 
-        font-weight: bold; 
-        width: 32px; 
-        height: 32px; 
-        background: var(--azul-marinho); 
-        color: white; 
-        border-radius: 50%; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        font-size: 0.9em; 
-        flex-shrink: 0;
-    }
-    .hiscore-points { color: var(--dourado); font-weight: 700; font-size: 1.1em; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; animation: fadeIn 0.3s; }
+    .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 15px; padding: 25px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.2); }
+    .modal-close { position: absolute; top: 15px; right: 15px; font-size: 1.5em; cursor: pointer; color: #999; border: none; background: none; }
+    .hiscore-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
+    .hiscore-rank { font-weight: bold; width: 30px; height: 30px; background: var(--azul-marinho); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; }
+    .hiscore-points { color: var(--dourado); font-weight: 700; }
 
     @media (max-width: 768px) {
         .jornal-section-title { font-size: 1.5em; }
@@ -902,65 +828,31 @@
     async function openHiScore(gameKey) {
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
-        
-        // Abre o modal imediatamente para dar feedback visual
         modal.style.display = 'flex';
-        document.getElementById('modal-game-title').innerHTML = `<i class="fas fa-trophy" style="color:var(--dourado)"></i> Ranking: ${gameKey}`;
-        list.innerHTML = '<div style="text-align:center; padding:20px; color:#666;"><i class="fas fa-spinner fa-spin"></i> Carregando pontuações...</div>';
-
+        document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
+        list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
         try {
-            console.log(`Buscando ranking para: ${gameKey}...`);
-            // Busca os dados no Firebase
             const resp = await fetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
-            
-            if (!resp.ok) throw new Error("Erro na conexão com o banco de dados.");
-
             const data = await resp.json();
-            console.log("Dados recebidos:", data);
-
-            if (!data) {
-                list.innerHTML = `
-                    <div style="text-align:center; padding:30px; color:#999;">
-                        <i class="far fa-sad-tear" style="font-size:2em; margin-bottom:10px;"></i><br>
-                        Ainda não há recordes para este jogo.<br>
-                        <strong>Seja o primeiro!</strong>
-                    </div>`;
-                return;
-            }
-
-            // Converte objeto em array e ordena
+            if (!data) { list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; return; }
             let scoresArray = Object.values(data);
-            
-            // Ordenação robusta (trata texto e números)
             scoresArray.sort((a, b) => {
                 let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
                 let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
-                return scoreB - scoreA; // Maior para o menor
+                return scoreB - scoreA;
             });
+            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${s.pontos}</div></div>`).join('');
+        } catch (error) { console.error(error); list.innerHTML = '<p style="color:red;">Erro ao carregar.</p>'; }
+    }
+    function closeHiScore() { document.getElementById('hiscore-modal').style.display = 'none'; }
 
-            // Gera o HTML da lista (Top 10)
-            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
-                // Cores diferentes para 1º, 2º e 3º lugar
-                let rankColor = 'var(--azul-marinho)';
-                let icon = '';
-                if (index === 0) { rankColor = '#FFD700'; icon = '👑 '; } // Ouro
-                else if (index === 1) { rankColor = '#C0C0C0'; } // Prata
-                else if (index === 2) { rankColor = '#CD7F32'; } // Bronze
-
-                return `
-                <div class="hiscore-item">
-                    <div class="hiscore-rank" style="background:${rankColor}">${index + 1}</div>
-                    <div style="flex:1; margin-left:15px; font-weight:600; color:#444;">
-                        ${icon}${s.nome || 'Anônimo'}
-                    </div>
-                    <div class="hiscore-points">${s.pontos}</div>
-                </div>`;
-            }).join('');
-
-        } catch (error) {
-            console.error("Erro no ranking:", error);
-            list.innerHTML = '<p style="text-align:center; color:#dc3545; padding:20px;">Erro ao carregar o ranking. Verifique sua conexão.</p>';
-        }
+    function renderQuizHTML() {
+        const container = document.getElementById('quiz-questions-container');
+        container.innerHTML = '';
+        SAFETY_QUIZ.forEach((q, index) => {
+            let optionsHtml = q.options.map((opt, i) => `<label class="quiz-option"><input type="radio" name="${q.id}" value="${i}"> ${opt}</label>`).join('');
+            container.innerHTML += `<div class="quiz-question" id="quiz-block-${q.id}"><h4>${index + 1}. ${q.question}</h4><div style="display:flex; flex-direction:column; gap:5px;">${optionsHtml}</div><div class="quiz-stats"><div class="quiz-bar" id="bar-${q.id}"></div><div class="quiz-bar-text" id="text-${q.id}">0% acertaram</div></div></div>`;
+        });
     }
     
     function setupQuizToggle() {
