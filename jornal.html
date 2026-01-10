@@ -131,12 +131,18 @@
     .btn-ver-todos:hover { background: var(--azul-marinho); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,51,102,0.2); }
     .loading-container { text-align: center; padding: 20px; color: #999; grid-column: 1 / -1; }
 
-    @media (max-width: 768px) {
-        .stat-box-inner { flex-direction: column; gap: 5px; }
-        .stat-label { font-size: 0.75em; text-transform: uppercase; letter-spacing: 2px; color: var(--cinza-texto); }
-        #lista-clientes-content { grid-template-columns: 1fr; }
-        .cliente-item { border-right: none; }
+/* Exemplo de como deve estar no seu CSS para funcionar */
+@media (max-width: 768px) {
+    #menu {
+        display: none; /* Escondido por padrão no celular */
+        /* Outros estilos de posicionamento mobile... */
     }
+
+    #menu.active {
+        display: block !important; /* Aparece quando tem a classe active */
+        /* Ou display: flex, dependendo do seu layout */
+    }
+}
 
     /* RECEITAS */
     .receita-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
@@ -587,21 +593,72 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         // Carrega Menu e Footer
-        ['menu', 'footer'].forEach(file => {
-            fetch(`${file}.html?t=${Date.now()}`).then(r => r.text()).then(html => {
+['menu', 'footer'].forEach(file => {
+        fetch(`${file}.html?t=${Date.now()}`)
+            .then(r => {
+                if (!r.ok) throw new Error(`Erro ao carregar ${file}`);
+                return r.text();
+            })
+            .then(html => {
                 const el = document.getElementById(`${file}-placeholder`);
-                if(el) el.innerHTML = html;
-                if(file==='menu'){const t=document.getElementById('menu-toggle');const m=document.getElementById('menu');if(t&&m){t.onclick=()=>m.classList.toggle('active');m.querySelectorAll('a').forEach(l=>l.onclick=()=>m.classList.remove('active'));}}
-            }).catch(e => console.log(e));
-        });
+                if (el) {
+                    el.innerHTML = html;
+                    
+                    // Lógica específica para ativar o menu após o carregamento
+                    if (file === 'menu') {
+                        // Tenta achar pelo ID, se falhar, tenta pela classe (fallback)
+                        const btnToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle');
+                        const menuNav = document.getElementById('menu') || document.querySelector('.menu');
 
-        initFirebaseData();
-        setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
-        setupToggle('btn-toggle-recipe', 'recipe-form-container');
-        setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
-        setupToggle('btn-toggle-praise', 'praise-form-container');
-        setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
-        setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
+                        if (btnToggle && menuNav) {
+                            // Garante que o botão tenha o cursor de clique
+                            btnToggle.style.cursor = 'pointer';
+
+                            // Usa addEventListener para garantir que o clique funcione no mobile
+                            btnToggle.addEventListener('click', function(e) {
+                                e.stopPropagation(); // Evita cliques fantasmas
+                                menuNav.classList.toggle('active');
+                                
+                                // Opcional: Anima o ícone se ele existir (transforma fa-bars em fa-times)
+                                const icon = btnToggle.querySelector('i');
+                                if(icon) {
+                                    icon.classList.toggle('fa-bars');
+                                    icon.classList.toggle('fa-times');
+                                }
+                            });
+
+                            // Fecha o menu ao clicar em um link
+                            menuNav.querySelectorAll('a').forEach(link => {
+                                link.addEventListener('click', () => {
+                                    menuNav.classList.remove('active');
+                                    const icon = btnToggle.querySelector('i');
+                                    if(icon) {
+                                        icon.classList.add('fa-bars');
+                                        icon.classList.remove('fa-times');
+                                    }
+                                });
+                            });
+                            
+                            // Fecha o menu ao clicar fora dele
+                            document.addEventListener('click', function(e) {
+                                if (!menuNav.contains(e.target) && !btnToggle.contains(e.target) && menuNav.classList.contains('active')) {
+                                    menuNav.classList.remove('active');
+                                    const icon = btnToggle.querySelector('i');
+                                    if(icon) {
+                                        icon.classList.add('fa-bars');
+                                        icon.classList.remove('fa-times');
+                                    }
+                                }
+                            });
+                            
+                            console.log("Menu mobile ativado com sucesso!");
+                        } else {
+                            console.error("ERRO: Não foi possível encontrar os elementos '#menu-toggle' ou '#menu' dentro do arquivo menu.html. Verifique os IDs.");
+                        }
+                    }
+                }
+            })
+            .catch(e => console.error("Erro no carregamento do menu/footer:", e));
     });
 
     // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
