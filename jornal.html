@@ -575,9 +575,25 @@
         </div>
     </div>
 
-  </main>
+    </main>
 
-  <div id="footer-placeholder"></div>
+ <div id="footer-placeholder"></div>
+
+  <div id="hiscore-modal" class="modal-overlay">
+      <div class="modal-content">
+          <button class="modal-close" onclick="closeHiScore()">&times;</button>
+          <h3 id="modal-game-title" style="color: var(--azul-marinho); text-align: center; margin-bottom: 20px;">Ranking</h3>
+          <div id="modal-score-list" class="hiscore-list"></div>
+      </div>
+  </div>
+  
+  <div id="synopsis-modal" class="modal-overlay">
+      <div class="modal-content">
+          <button class="modal-close" onclick="closeSynopsis()">&times;</button>
+          <h3 id="modal-synopsis-title" style="color: var(--azul-marinho); text-align: center; margin-bottom: 20px;">Sinopse</h3>
+          <div id="modal-synopsis-text" style="color: #555; line-height: 1.6;"></div>
+      </div>
+  </div>
 
 <script>
 // ==========================================
