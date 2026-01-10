@@ -181,30 +181,27 @@
     .hobby-titulo { font-size: 1.1em; color: var(--dourado); font-weight: 700; margin-bottom: 25px; text-transform: uppercase; }
     
     /* CORREÇÃO DO ÍCONE DE ASPAS */
-/* ESTILO DA CAIXA DE CITAÇÃO (Estilo Revista) */
     .hobby-quote-box { 
         background: #f8f9fa; 
         border-left: 4px solid var(--azul-marinho); 
         padding: 20px 25px; 
         margin-bottom: 25px; 
         border-radius: 0 10px 10px 0; 
-        display: block; /* Removemos o flex para permitir o texto fluir */
+        display: block; 
     }
-
     .hobby-quote-box i { 
         color: var(--dourado); 
         font-size: 1.5em; 
-        float: left;        /* O segredo: faz o ícone flutuar à esquerda */
-        margin-right: 8px; /* Espaço entre as aspas e a primeira letra */
+        float: left; 
+        margin-right: 8px; 
         line-height: 1;
     }
-
     .hobby-quote-box p {
         font-style: italic;
         margin: 0;
         color: #555;
         line-height: 1.6;
-        display: inline; /* Garante que o texto se comporte fluidamente */
+        display: inline; 
     }
     
     .hobby-tag { display: inline-block; background-color: var(--verde-escuro); color: var(--branco); padding: 8px 16px; border-radius: 50px; font-size: 0.85em; font-weight: 600; margin-right: 8px; margin-bottom: 8px; }
@@ -302,9 +299,8 @@
     .banner-saude-fisica { background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center center; }
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
-    /* MODALS */
-/* MODALS */
-.modal-overlay { 
+    /* MODALS - ESTILO CORRIGIDO E REFORÇADO */
+    .modal-overlay { 
         position: fixed !important; /* Força ser fixo na tela */
         top: 0; 
         left: 0; 
@@ -561,25 +557,9 @@
         </div>
     </section>
 
-    <div id="hiscore-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeHiScore()">&times;</button>
-            <h3 id="modal-game-title" style="color: var(--azul-marinho); text-align: center; margin-bottom: 20px;">Ranking</h3>
-            <div id="modal-score-list" class="hiscore-list"></div>
-        </div>
-    </div>
-    
-    <div id="synopsis-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeSynopsis()">&times;</button>
-            <h3 id="modal-synopsis-title" style="color: var(--azul-marinho); text-align: center; margin-bottom: 20px;">Sinopse</h3>
-            <div id="modal-synopsis-text" style="color: #555; line-height: 1.6;"></div>
-        </div>
-    </div>
+  </main>
 
-    </main>
-
- <div id="footer-placeholder"></div>
+  <div id="footer-placeholder"></div>
 
   <div id="hiscore-modal" class="modal-overlay">
       <div class="modal-content">
@@ -597,8 +577,8 @@
       </div>
   </div>
 
-<script>
-// ==========================================
+  <script>
+    // ==========================================
     // CONFIGURAÇÃO E DADOS GLOBAIS
     // ==========================================
     let CONTEUDO_JORNAL = {
@@ -838,22 +818,18 @@
     window.closeSynopsis = function() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
     // 2. HISCORE
-window.openHiScore = async function(gameKey) {
+    window.openHiScore = async function(gameKey) {
         console.log('Abrindo HiScore para:', gameKey); 
         
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
         
-        if (!modal) {
-             console.error("ERRO CRÍTICO: HTML do modal não encontrado!");
-             alert("Erro interno: Modal sumiu.");
-             return; 
-        }
+        if (!modal) return;
 
-        // FORÇA O DISPLAY
         modal.style.display = 'flex';
-        console.log('Comando de display flex enviado. Modal visível?', modal.style.display);
+        title.textContent = `Ranking: ${gameKey}`;
+        list.innerHTML = '<p style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
         
         try {
             // Ajuste na URL para garantir que pegue o nó correto
@@ -999,150 +975,6 @@ window.openHiScore = async function(gameKey) {
     function mostrarAba(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
-    
-    // Funções de Interação (Likes/Votos)
-    async function voteChallenge(cId, type) {
-        if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
-        globalChallengesData[cId][MY_DEVICE_ID] = type;
-        renderChallenges(globalChallengesData);
-        await fetch(`${BASE_DB_URL}challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
-    }
-    function renderChallenges(data) {
-        document.querySelectorAll('.desafio-saude-card').forEach(card => {
-            const id = card.dataset.challengeId;
-            const cData = data[id] || {};
-            let s=0, f=0, my=null;
-            for(const [k,v] of Object.entries(cData)) { if(v==='success') s++; else f++; if(k===MY_DEVICE_ID) my=v; }
-            card.querySelector('.stat-success').textContent = s;
-            card.querySelector('.stat-fail').textContent = f;
-            card.querySelector('.btn-challenge.success').classList.toggle('active', my==='success');
-            card.querySelector('.btn-challenge.fail').classList.toggle('active', my==='fail');
-        });
-    }
-    function renderPraiseSection(selectedMonth) {
-        currentPraiseMonth = selectedMonth;
-        const container = document.getElementById('praise-container');
-        const linksContainer = document.getElementById('praise-archive-links');
-        container.innerHTML = ''; linksContainer.innerHTML = '';
-        const dataMonths = new Set();
-        dataMonths.add(new Date().toISOString().slice(0, 7));
-        Object.values(globalPraiseData).forEach(msg => { if(msg.date) dataMonths.add(msg.date.slice(0, 7)); });
-        Array.from(dataMonths).sort().reverse().forEach(mStr => {
-            const [y, m] = mStr.split('-');
-            const label = new Date(y, m - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase();
-            const link = document.createElement('span'); link.className = `praise-link ${mStr === currentPraiseMonth ? 'active' : ''}`;
-            link.textContent = label; link.onclick = () => renderPraiseSection(mStr);
-            linksContainer.appendChild(link);
-        });
-        const msgs = Object.entries(globalPraiseData)
-            .filter(([_, d]) => d.date && d.date.startsWith(selectedMonth))
-            .sort((a,b) => new Date(b[1].date) - new Date(a[1].date));
-        if (msgs.length === 0) container.innerHTML = '<p style="text-align:center; color:#999; width:100%;">Nenhum elogio neste mês.</p>';
-        msgs.forEach(([id, msg]) => {
-            const likes = msg.likes || {};
-            const userLiked = likes[MY_DEVICE_ID] ? 'liked' : '';
-            container.innerHTML += `<div class="praise-card"><div style="border-bottom:1px solid #eee; padding-bottom:8px; margin-bottom:10px; color:#777; font-size:0.9em;">De: <strong>${msg.from}</strong> <br> Para: <strong>${msg.to}</strong></div><p style="font-style:italic; color:#444; margin-bottom:15px;">"${msg.message}"</p><div style="margin-top:auto; display:flex; justify-content:space-between; color:#999; font-size:0.8em;"><span>${new Date(msg.date).toLocaleDateString('pt-BR')}</span><button class="praise-like-btn ${userLiked}" onclick="likePraise('${id}')" style="background:none; border:none; cursor:pointer;"><i class="${userLiked?'fas':'far'} fa-heart"></i> ${Object.keys(likes).length}</button></div></div>`;
-        });
-    }
-    async function likePraise(id) {
-        const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
-        const exists = globalPraiseData[id].likes && globalPraiseData[id].likes[MY_DEVICE_ID];
-        if(exists) { await fetch(url, {method:'DELETE'}); delete globalPraiseData[id].likes[MY_DEVICE_ID]; }
-        else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; globalPraiseData[id].likes[MY_DEVICE_ID]=true; }
-        renderPraiseSection(currentPraiseMonth);
-    }
-    async function submitPraise() {
-        const f=document.getElementById('praise-from').value, t=document.getElementById('praise-to').value, m=document.getElementById('praise-msg').value;
-        if(f&&t&&m) { await fetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
-    }
-    async function likeHobby() {
-        const url = `${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/likes/${MY_DEVICE_ID}.json`;
-        const exists = globalHobbyData.likes && globalHobbyData.likes[MY_DEVICE_ID];
-        if(exists) { await fetch(url, {method:'DELETE'}); delete globalHobbyData.likes[MY_DEVICE_ID]; }
-        else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalHobbyData.likes) globalHobbyData.likes={}; globalHobbyData.likes[MY_DEVICE_ID]=true; }
-        renderJornal();
-    }
-    async function sendHobbyComment() {
-        const txt = document.getElementById('input-hobby-comment').value;
-        if(txt) {
-            const author = prompt("Seu nome:") || "Anônimo";
-            await fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
-            const resp = await fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json");
-            globalHobbyData = await resp.json() || {};
-            renderJornal();
-        }
-    }
-
-    // Quiz
-    function renderQuizHTML() {
-        const container = document.getElementById('quiz-questions-container');
-        container.innerHTML = '';
-        SAFETY_QUIZ.forEach((q, index) => {
-            let optionsHtml = q.options.map((opt, i) => `<label class="quiz-option"><input type="radio" name="${q.id}" value="${i}"> ${opt}</label>`).join('');
-            container.innerHTML += `<div class="quiz-question" id="quiz-block-${q.id}"><h4>${index + 1}. ${q.question}</h4><div style="display:flex; flex-direction:column; gap:5px;">${optionsHtml}</div><div class="quiz-stats"><div class="quiz-bar" id="bar-${q.id}"></div><div class="quiz-bar-text" id="text-${q.id}">0% acertaram</div></div></div>`;
-        });
-    }
-    function setupQuizToggle() {
-        const btn = document.getElementById('btn-open-quiz');
-        const content = document.getElementById('quiz-content');
-        if (btn && content) {
-            btn.onclick = () => {
-                if(content.style.display === 'block') { content.style.display = 'none'; btn.innerHTML = '<i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança'; }
-                else { content.style.display = 'block'; btn.innerHTML = '<i class="fas fa-chevron-up"></i> Fechar Quiz'; }
-            };
-        }
-    }
-    function checkIfQuizTaken() {
-        let hasTaken = false;
-        for (const qId in globalQuizData) { if (globalQuizData[qId] && globalQuizData[qId][MY_DEVICE_ID] !== undefined) { hasTaken = true; break; } }
-        if (hasTaken) lockQuizUI();
-    }
-    function lockQuizUI() {
-        document.getElementById('safety-quiz-form').classList.add('quiz-locked');
-        document.getElementById('btn-submit-quiz').style.display = 'none';
-        document.getElementById('btn-reset-quiz').style.display = 'block';
-        SAFETY_QUIZ.forEach(q => {
-            const userAns = globalQuizData[q.id] ? globalQuizData[q.id][MY_DEVICE_ID] : null;
-            const block = document.getElementById(`quiz-block-${q.id}`);
-            block.querySelectorAll('input').forEach(inp => inp.disabled = true);
-            if (userAns !== undefined && userAns !== null) {
-                const correctLabel = block.querySelectorAll('.quiz-option')[q.correct];
-                if(correctLabel) correctLabel.classList.add('correct-answer');
-            }
-            const qData = globalQuizData[q.id] || {};
-            const total = Object.keys(qData).length;
-            let correct = 0; Object.values(qData).forEach(v => {if(v) correct++});
-            const pct = total>0 ? Math.round((correct/total)*100) : 0;
-            block.querySelector('.quiz-stats').style.display = 'block';
-            const bar = document.getElementById(`bar-${q.id}`);
-            bar.style.width = `${pct}%`;
-            document.getElementById(`text-${q.id}`).textContent = `${pct}% acertaram`;
-            bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)';
-        });
-    }
-    document.getElementById('safety-quiz-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const updates = {};
-        for (const q of SAFETY_QUIZ) {
-            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
-            if (!selected) { alert(`Responda a questão ${q.id.replace('q','')}`); return; }
-            const isCorrect = (parseInt(selected.value) === q.correct);
-            if (!globalQuizData[q.id]) globalQuizData[q.id] = {};
-            globalQuizData[q.id][MY_DEVICE_ID] = isCorrect;
-            updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = isCorrect;
-        }
-        await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
-        lockQuizUI();
-    });
-    document.getElementById('btn-reset-quiz').addEventListener('click', async()=>{
-        if(!confirm("Refazer?")) return;
-        const updates = {};
-        SAFETY_QUIZ.forEach(q => updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = null);
-        await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
-        location.reload();
-    });
-
-    // Forms Setup
     function setupForms() {
         const btnS=document.getElementById('btn-submit-suggestion'); if(btnS) btnS.onclick=async()=>{const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; if(n&&m){await fetch(`${BASE_DB_URL}suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnR=document.getElementById('btn-submit-recipe'); if(btnR) btnR.onclick=async()=>{const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; if(a&&d){await fetch(`${BASE_DB_URL}recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); alert('Enviado!'); location.reload();}};
@@ -1151,6 +983,6 @@ window.openHiScore = async function(gameKey) {
         const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
     }
-</script>
+  </script>
 </body>
 </html>
