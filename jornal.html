@@ -303,94 +303,130 @@
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
 /* ==================================================
-       MODALS (ESTRUTURA + BLINDAGEM)
+       BLINDAGEM TOTAL: RANK (HISCORE) E SINOPSE
        ================================================== */
-    .modal-overlay { 
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-        background: rgba(0,0,0,0.5); z-index: 1000; 
-        display: none; justify-content: center; align-items: center; 
-        padding: 20px; animation: fadeIn 0.3s; 
-    }
-
-    .modal-content {
-        /* --- 1. ESTILO VISUAL (Mantido do original) --- */
-        background: white; 
-        width: 100%; 
-        max-width: 500px; 
-        border-radius: 15px; 
-        padding: 25px; 
-        position: relative; 
-        box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-
-        /* --- 2. BLINDAGEM DE TEXTO (Sua adição) --- */
-        text-align: left;
-        font-family: 'Poppins', sans-serif;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: var(--cinza-escuro);
-        font-weight: 400;
-        float: none;
-    }
-
-    /* Reseta elementos comuns para evitar herança externa */
-    .modal-content h1, 
-    .modal-content h2, 
-    .modal-content h3, 
-    .modal-content p, 
-    .modal-content ul, 
-    .modal-content li {
-        margin: 0; padding: 0; border: none; background: none; 
-        box-shadow: none; text-transform: none;
-    }
-
-    /* Re-aplica estilos específicos do Modal */
-    .modal-content h3 {
-        color: var(--azul-marinho);
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        text-align: center;
-        font-weight: 700;
-        display: block;
-    }
-
-    .modal-content p {
-        margin-bottom: 1rem;
-        color: #555;
-    }
-
-    /* --- 3. BLINDAGEM DE BOTÕES --- */
-    .modal-content button:not(.hiscore-btn) { 
-        all: unset; /* Remove estilos globais */
-        box-sizing: border-box; 
-        cursor: pointer;
-    }
-
-    /* Estilo do botão de fechar (X) */
-    .modal-content .modal-close {
-        position: absolute;
-        top: 15px; 
-        right: 15px; 
-        font-size: 1.5em; 
-        color: #999; 
-        display: flex; /* Adicionado para centralizar o ícone se necessário */
-        align-items: center;
+    
+    /* 1. BLINDAGEM DO FUNDO (OVERLAY) 
+       Usamos os IDs específicos para garantir que sobreponham qualquer regra do index.html */
+    #hiscore-modal,
+    #synopsis-modal {
+        position: fixed !important; /* !important garante que nada mude a posição */
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0,0,0,0.5) !important;
+        z-index: 99999 !important; /* Valor altíssimo para ficar acima de tudo */
+        
+        /* Garante o alinhamento central */
+        display: none; /* O JS muda isso para flex, mas começamos oculto */
         justify-content: center;
-        width: 30px;
-        height: 30px;
-        background: none;
-        transition: color 0.2s; 
+        align-items: center;
+        padding: 20px;
+        
+        /* Reseta transformações que podem vir de fora */
+        transform: none !important;
+        opacity: 1 !important;
+        visibility: visible;
+    }
+
+    /* 2. BLINDAGEM DA CAIXA DE CONTEÚDO (A JANELA EM SI) */
+    #hiscore-modal .modal-content,
+    #synopsis-modal .modal-content {
+        /* Estrutura Visual */
+        background: white !important;
+        width: 100% !important;
+        max-width: 500px !important;
+        border-radius: 15px !important;
+        padding: 25px !important;
+        position: relative !important;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3) !important;
+        
+        /* Reset de Texto (A blindagem que fizemos antes) */
+        text-align: left !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        color: #4B4B4B !important;
+        font-weight: 400 !important;
+        float: none !important;
+        display: block !important; /* Garante que a caixa apareça */
+        margin: auto !important; /* Centraliza no flex container */
+    }
+
+    /* 3. RESET DE ELEMENTOS INTERNOS (Para ignorar CSS global) */
+    #hiscore-modal .modal-content h3,
+    #synopsis-modal .modal-content h3 {
+        color: #003366 !important; /* Azul Marinho */
+        font-size: 1.5rem !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+        font-weight: 700 !important;
+        border: none !important;
+        display: block !important;
+    }
+
+    #hiscore-modal .modal-content p, 
+    #synopsis-modal .modal-content p,
+    #synopsis-modal .modal-content div {
+        color: #555 !important;
+        margin-bottom: 1rem;
+        line-height: 1.6 !important;
+    }
+
+    /* 4. BLINDAGEM DO BOTÃO FECHAR (X) */
+    #hiscore-modal .modal-close,
+    #synopsis-modal .modal-close {
+        all: unset !important; /* Remove qualquer herança do index */
+        position: absolute !important;
+        top: 15px !important;
+        right: 15px !important;
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 1.8rem !important;
+        color: #999 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        background: transparent !important;
+        border: none !important;
     }
     
-    .modal-content .modal-close:hover {
-        color: var(--vermelho-erro);
+    #hiscore-modal .modal-close:hover,
+    #synopsis-modal .modal-close:hover {
+        color: #dc3545 !important; /* Vermelho Erro */
     }
 
-    /* Listas internas do modal (Ranking) */
-    .hiscore-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
-    .hiscore-rank { font-weight: bold; width: 30px; height: 30px; background: var(--azul-marinho); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; }
-    .hiscore-points { color: var(--dourado); font-weight: 700; }
+    /* 5. LISTA DE RANKING (Específica do Hiscore) */
+    #hiscore-modal .hiscore-item { 
+        display: flex !important; 
+        justify-content: space-between !important; 
+        padding: 10px !important; 
+        border-bottom: 1px solid #eee !important; 
+        align-items: center !important; 
+        background: transparent !important;
+    }
+    
+    #hiscore-modal .hiscore-rank { 
+        font-weight: bold !important; 
+        width: 30px !important; 
+        height: 30px !important; 
+        background: #003366 !important; 
+        color: white !important; 
+        border-radius: 50% !important; 
+        display: flex !important; 
+        align-items: center !important; 
+        justify-content: center !important; 
+        font-size: 0.9em !important; 
+        margin-right: 10px !important;
+    }
+    
+    #hiscore-modal .hiscore-points { 
+        color: #DAA520 !important; /* Dourado */
+        font-weight: 700 !important; 
+    }
 
-    /* Media Query (Mantido no final) */
     @media (max-width: 768px) {
         .jornal-section-title { font-size: 1.5em; }
         .destaque-container { padding: 30px 20px; }
