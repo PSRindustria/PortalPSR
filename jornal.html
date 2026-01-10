@@ -303,19 +303,20 @@
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
     /* MODALS */
-.modal-overlay { 
+/* MODALS */
+    .modal-overlay { 
         position: fixed; 
         top: 0; 
         left: 0; 
         width: 100%; 
         height: 100%; 
-        background: rgba(0,0,0,0.8); /* Fundo mais escuro */
-        z-index: 9999; /* Z-INDEX BEM ALTO PARA FICAR NA FRENTE DE TUDO */
+        background: rgba(0,0,0,0.85); /* Fundo bem escuro para destaque */
+        z-index: 99999 !important; /* FORÇA FICAR NA FRENTE DE TUDO */
         display: none; 
         justify-content: center; 
         align-items: center; 
         padding: 20px; 
-        animation: fadeIn 0.3s; 
+        backdrop-filter: blur(2px); /* Efeito de desfoque no fundo */
     }
     .modal-content { 
         background: white; 
@@ -324,18 +325,25 @@
         border-radius: 15px; 
         padding: 25px; 
         position: relative; 
-        box-shadow: 0 5px 25px rgba(0,0,0,0.3); 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        animation: fadeIn 0.3s ease-out;
     }
     .modal-close { 
         position: absolute; 
         top: 10px; 
         right: 15px; 
-        font-size: 2em; 
+        font-size: 2rem; 
         cursor: pointer; 
-        color: #333; 
+        color: #555; 
         border: none; 
         background: none; 
         font-weight: bold;
+        line-height: 1;
+        z-index: 10;
+    }
+    .hiscore-list {
+        max-height: 400px;
+        overflow-y: auto;
     }
     .hiscore-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
     .hiscore-rank { font-weight: bold; width: 30px; height: 30px; background: var(--azul-marinho); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; }
@@ -572,12 +580,13 @@
   <div id="footer-placeholder"></div>
 
 <script>
-    // VARIAVEL GLOBAL VAZIA
+// ==========================================
+    // CONFIGURAÇÃO E DADOS GLOBAIS
+    // ==========================================
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
     };
 
-    // Estrutura padrão para não quebrar a tela se o firebase falhar
     const SUSTENTABILIDADE_PADRAO = {
         meioAmbiente: [
             { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." }
@@ -612,7 +621,9 @@
     let globalPraiseData = {}; 
     let currentPraiseMonth = CURRENT_MONTH_KEY; 
 
-    // --- INICIALIZAÇÃO ---
+    // ==========================================
+    // INICIALIZAÇÃO
+    // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
         // Carrega Menu e Footer
         ['menu', 'footer'].forEach(file => {
@@ -647,7 +658,9 @@
         }
     });
 
-    // --- CARREGAMENTO DE DADOS ---
+    // ==========================================
+    // CARREGAMENTO DE DADOS (FIREBASE)
+    // ==========================================
     async function initFirebaseData() {
         try {
             const [contentResp, clientesResp, hobbyResp, praiseResp, challengesResp, quizResp, ratingsResp, testimonialsResp] = await Promise.all([
@@ -661,37 +674,44 @@
                 fetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
             ]);
 
+            // Conteúdo
             const contentData = await contentResp.json() || {};
             CONTEUDO_JORNAL = contentData;
             if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-
-            // Converter Cultura para Array se for Objeto (Correção para Firebase)
+            // Garante que cultura é array
             if (CONTEUDO_JORNAL.cultura && !Array.isArray(CONTEUDO_JORNAL.cultura)) {
                 CONTEUDO_JORNAL.cultura = Object.values(CONTEUDO_JORNAL.cultura);
             }
 
-            renderNovosClientes(await clientesResp.json() || {});
-            
+            // Globais
             globalHobbyData = await hobbyResp.json() || {};
             globalPraiseData = await praiseResp.json() || {};
             globalChallengesData = await challengesResp.json() || {};
             globalQuizData = await quizResp.json() || {};
-            
+            const ratingsData = await ratingsResp.json() || {};
+            const testimonialsData = await testimonialsResp.json() || {}; // Dados dos depoimentos
+
+            // Renderização
+            renderNovosClientes(await clientesResp.json() || {});
             renderJornal(); 
             renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
-            renderTestimonials(await testimonialsResp.json() || {});
+            renderTestimonials(testimonialsData); // <--- AQUI ESTAVA O ERRO ANTES, AGORA A FUNÇÃO EXISTE
             checkIfQuizTaken();
-            
-            const ratingsData = await ratingsResp.json() || {};
             setupRatings(ratingsData);
 
-        } catch (e) { console.error("Erro geral no carregamento:", e); }
+        } catch (e) { 
+            console.error("Erro CRÍTICO no carregamento:", e); 
+            // Fallback para renderizar o jornal mesmo com erro
+            renderJornal();
+        }
         
         setupForms(); 
     }
 
-    // --- RENDERIZAÇÃO ---
+    // ==========================================
+    // RENDERIZAÇÃO PRINCIPAL
+    // ==========================================
     function renderJornal() {
         // Tema do Mês
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
@@ -768,43 +788,38 @@
         setupQuizToggle();
     }
 
-    // --- FUNÇÕES DE INTERFACE (MODAIS) ---
+    // ==========================================
+    // FUNÇÕES DE INTERFACE (MODAIS E ACTIONS)
+    // ==========================================
 
-    // 1. SINOPSE (CORRIGIDA E ROBUSTA)
+    // 1. SINOPSE
     window.openSynopsis = function(idClicado) {
         console.log("Abrindo sinopse para ID:", idClicado);
         
-        // Garante que é array
-        let lista = [];
-        if (Array.isArray(CONTEUDO_JORNAL.cultura)) {
-            lista = CONTEUDO_JORNAL.cultura;
-        } else if (CONTEUDO_JORNAL.cultura) {
-            lista = Object.values(CONTEUDO_JORNAL.cultura);
-        }
-
+        let lista = Array.isArray(CONTEUDO_JORNAL.cultura) ? CONTEUDO_JORNAL.cultura : Object.values(CONTEUDO_JORNAL.cultura || {});
+        
         if (lista.length === 0) {
-            alert("Os dados de cultura ainda não carregaram. Tente novamente em alguns segundos.");
+            alert("Aguarde o carregamento do conteúdo...");
             return;
         }
 
-        // Busca convertendo ambos para string para evitar erro (1 vs "1")
+        // Comparação flexível (string vs number)
         const item = lista.find(c => String(c.id) === String(idClicado));
 
         if (item) {
             document.getElementById('modal-synopsis-title').textContent = item.titulo;
             document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível.";
             
-            // Força o display
             const modal = document.getElementById('synopsis-modal');
-            modal.style.display = 'flex';
+            modal.style.display = 'flex'; // Força display flex
         } else {
-            console.error("Item não encontrado:", idClicado, "na lista:", lista);
-            alert("Erro: Item não encontrado na base de dados.");
+            console.error("Item não encontrado:", idClicado);
+            alert("Sinopse não encontrada. Tente recarregar a página.");
         }
     }
     window.closeSynopsis = function() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
-    // 2. HISCORE (CORRIGIDA E ROBUSTA)
+    // 2. HISCORE
     window.openHiScore = async function(gameKey) {
         console.log('Abrindo HiScore para:', gameKey); 
         
@@ -812,17 +827,15 @@
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
         
-        if (!modal) { alert("Erro de HTML: Modal não existe."); return; }
+        if (!modal) return;
 
-        modal.style.display = 'flex'; // Abre imediatamente
+        modal.style.display = 'flex';
         title.textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<p style="text-align:center; color:#666; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
+        list.innerHTML = '<p style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
         
         try {
-            // Fetch com tratamento de erro
+            // Ajuste na URL para garantir que pegue o nó correto
             const url = `${BASE_DB_URL}games/${gameKey}/scores.json`;
-            console.log("Buscando URL:", url);
-            
             const resp = await fetch(url);
             const data = await resp.json();
             
@@ -832,34 +845,62 @@
             }
             
             let scoresArray = Object.values(data);
+            
+            // Ordenação inteligente (lida com "130 km" e 37 ao mesmo tempo)
             scoresArray.sort((a, b) => {
-                let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
-                let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
-                return scoreB - scoreA;
+                let valA = String(a.pontos).replace(/[^\d.-]/g, ''); // Remove letras, mantém números
+                let valB = String(b.pontos).replace(/[^\d.-]/g, '');
+                return (parseFloat(valB) || 0) - (parseFloat(valA) || 0); // Decrescente
             });
             
             list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
-                const medalColor = index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'var(--azul-marinho)';
-                const medalIcon = index < 3 ? '<i class="fas fa-trophy" style="margin-left:5px; color:' + medalColor + ';"></i>' : '';
+                const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
+                const bg = index < 3 ? colors[index] : 'var(--azul-marinho)';
+                const icon = index < 3 ? '<i class="fas fa-trophy" style="margin-left:5px; color:'+colors[index]+'"></i>' : '';
+                
                 return `
                     <div class="hiscore-item">
-                        <div class="hiscore-rank" style="background:${medalColor}">${index + 1}</div>
-                        <div style="flex:1; margin-left:10px; font-weight:600; display:flex; align-items:center;">
-                            ${s.nome || 'Anônimo'} ${medalIcon}
-                        </div>
+                        <div class="hiscore-rank" style="background:${bg}; color:white;">${index + 1}</div>
+                        <div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'} ${icon}</div>
                         <div class="hiscore-points">${s.pontos}</div>
                     </div>`;
             }).join('');
             
         } catch (error) {
-            console.error('Erro ao carregar ranking:', error);
-            list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro de conexão ao carregar ranking.</p>';
+            console.error('Erro ranking:', error);
+            list.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar ranking.</p>';
         }
     }
     window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
 
 
-    // --- FUNÇÕES AUXILIARES ---
+    // ==========================================
+    // FUNÇÕES AUXILIARES DE RENDERIZAÇÃO
+    // ==========================================
+    
+    // ESTA FUNÇÃO ESTAVA FALTANDO E CAUSAVA O ERRO!
+    function renderTestimonials(data) {
+        const container = document.getElementById('testimonials-display');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        // Se data for null, converte para objeto vazio
+        const entries = Object.entries(data || {});
+        if(entries.length === 0) { 
+            container.innerHTML='<p style="color:#999;font-style:italic;">Seja o primeiro a compartilhar!</p>'; 
+            return; 
+        }
+
+        const sorted = entries.sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).slice(0,3);
+        sorted.forEach(([id, t]) => {
+            container.innerHTML += `
+            <div class="testimonial-card">
+                <span class="testimonial-author">${t.name}</span>
+                <p class="testimonial-text">"${t.text}"</p>
+            </div>`;
+        });
+    }
+
     function renderNovosClientes(dados) {
         if (dados.resumo) {
             document.getElementById('stat-qtd').textContent = dados.resumo.quantidade || "0";
