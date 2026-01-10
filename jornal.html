@@ -45,16 +45,7 @@
         --sombra-card-jornal: 0 4px 12px rgba(0, 0, 0, 0.08);
         --sombra-suave: 0 10px 30px -10px rgba(0, 51, 102, 0.15);
     }
-#menu-toggle {
-        color: var(--azul-marinho) !important;
-        font-size: 1.8rem;
-        z-index: 2000;
-        cursor: pointer;
-        display: block;
-    }
-    #menu-toggle i {
-        color: inherit;
-    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     /* MENU FIXO ANTI-QUEBRA */
@@ -140,18 +131,12 @@
     .btn-ver-todos:hover { background: var(--azul-marinho); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,51,102,0.2); }
     .loading-container { text-align: center; padding: 20px; color: #999; grid-column: 1 / -1; }
 
-/* Exemplo de como deve estar no seu CSS para funcionar */
-@media (max-width: 768px) {
-    #menu {
-        display: none; /* Escondido por padrão no celular */
-        /* Outros estilos de posicionamento mobile... */
+    @media (max-width: 768px) {
+        .stat-box-inner { flex-direction: column; gap: 5px; }
+        .stat-label { font-size: 0.75em; text-transform: uppercase; letter-spacing: 2px; color: var(--cinza-texto); }
+        #lista-clientes-content { grid-template-columns: 1fr; }
+        .cliente-item { border-right: none; }
     }
-
-    #menu.active {
-        display: block !important; /* Aparece quando tem a classe active */
-        /* Ou display: flex, dependendo do seu layout */
-    }
-}
 
     /* RECEITAS */
     .receita-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
@@ -555,8 +540,8 @@
 
   <div id="footer-placeholder"></div>
 
-<script>
-    // VARIAVEL GLOBAL VAZIA
+  <script>
+    // VARIAVEL GLOBAL VAZIA - SERÁ PREENCHIDA PELO FIREBASE
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
     };
@@ -601,74 +586,36 @@
     let currentPraiseMonth = CURRENT_MONTH_KEY; 
 
     document.addEventListener("DOMContentLoaded", () => {
-        // 1. CARREGA DADOS DO FIREBASE (Fundamental para o conteúdo aparecer)
+        // Carrega Menu e Footer
+['menu', 'footer'].forEach(file => {
+    fetch(`${file}.html?t=${Date.now()}`)
+        .then(r => r.text())
+        .then(html => {
+            const placeholder = document.getElementById(`${file}-placeholder`);
+            if (placeholder) placeholder.innerHTML = html;
+            
+            if (file === 'menu') {
+                const toggle = document.getElementById('menu-toggle');
+                const navEl = document.getElementById('nav-principal'); // <-- MUDANÇA AQUI
+                
+                if (toggle && navEl) {
+                    toggle.addEventListener('click', () => {
+                        navEl.classList.toggle('active'); // <-- MUDANÇA AQUI
+                    });
+                    
+                    // Fecha o menu ao clicar em links
+                    navEl.querySelectorAll('a').forEach(link => {
+                        link.addEventListener('click', () => {
+                            navEl.classList.remove('active');
+                        });
+                    });
+                }
+            }
+        })
+        .catch(e => console.error(`Error loading ${file}.html:`, e));
+});
+
         initFirebaseData();
-
-        // 2. Carrega Menu e Footer
-        ['menu', 'footer'].forEach(file => {
-            fetch(`${file}.html?t=${Date.now()}`)
-                .then(r => {
-                    if (!r.ok) throw new Error(`Erro ao carregar ${file}`);
-                    return r.text();
-                })
-                .then(html => {
-                    const el = document.getElementById(`${file}-placeholder`);
-                    if (el) {
-                        el.innerHTML = html;
-                        
-                        // LÓGICA DO MENU MOBILE (Corrigida e Reforçada)
-                        if (file === 'menu') {
-                            const btnToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle');
-                            const menuNav = document.getElementById('menu') || document.querySelector('.menu');
-
-                            if (btnToggle && menuNav) {
-                                // Força o estado inicial correto (Barras visíveis, X escondido)
-                                const icon = btnToggle.querySelector('i');
-                                if(icon) {
-                                    icon.className = 'fas fa-bars'; // Reseta para barras
-                                }
-
-                                btnToggle.style.cursor = 'pointer';
-                                
-                                btnToggle.addEventListener('click', function(e) {
-                                    e.stopPropagation();
-                                    menuNav.classList.toggle('active');
-                                    
-                                    // Alterna ícone com verificação explícita
-                                    if(icon) {
-                                        if (menuNav.classList.contains('active')) {
-                                            icon.classList.remove('fa-bars');
-                                            icon.classList.add('fa-times');
-                                        } else {
-                                            icon.classList.add('fa-bars');
-                                            icon.classList.remove('fa-times');
-                                        }
-                                    }
-                                });
-
-                                // Fechar ao clicar nos links
-                                menuNav.querySelectorAll('a').forEach(link => {
-                                    link.addEventListener('click', () => {
-                                        menuNav.classList.remove('active');
-                                        if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
-                                    });
-                                });
-
-                                // Fechar ao clicar fora
-                                document.addEventListener('click', function(e) {
-                                    if (!menuNav.contains(e.target) && !btnToggle.contains(e.target) && menuNav.classList.contains('active')) {
-                                        menuNav.classList.remove('active');
-                                        if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                })
-                .catch(e => console.error("Erro no carregamento do menu/footer:", e));
-        });
-
-        setupForms();
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
         setupToggle('btn-toggle-recipe', 'recipe-form-container');
         setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
@@ -680,7 +627,17 @@
     // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
     async function initFirebaseData() {
         try {
-            const [contentResp, clientesResp, hobbyResp, praiseResp, challengesResp, quizResp, ratingsResp, testimonialsResp] = await Promise.all([
+            // Dispara requisições simultâneas
+            const [
+                contentResp, 
+                clientesResp,
+                hobbyResp, 
+                praiseResp, 
+                challengesResp, 
+                quizResp,
+                ratingsResp,
+                testimonialsResp
+            ] = await Promise.all([
                 fetch(BASE_DB_URL + "content.json"),
                 fetch(BASE_DB_URL + "novos_clientes.json"),
                 fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
@@ -691,29 +648,36 @@
                 fetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
             ]);
 
+            // 1. Carrega dados de conteúdo
             const contentData = await contentResp.json() || {};
             if (contentData) {
                 CONTEUDO_JORNAL = contentData;
                 if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
+                // renderJornal(); // REMOVIDO: Não precisamos renderizar aqui, pois renderizaremos abaixo com tudo pronto
             }
 
+            // 2. Carrega Clientes
             const clientesData = await clientesResp.json() || {};
             renderNovosClientes(clientesData);
 
+            // 3. Carrega Dados Globais
             globalHobbyData = await hobbyResp.json() || {};
             globalPraiseData = await praiseResp.json() || {};
-            globalChallengesData = await challengesResp.json() || {}; 
+            globalChallengesData = await challengesResp.json() || {}; // Dados dos desafios carregados
             globalQuizData = await quizResp.json() || {};
             const ratingsData = await ratingsResp.json() || {};
             const testimonialsData = await testimonialsResp.json() || {};
 
+            // 4. RENDERIZAÇÃO PRINCIPAL (Apenas uma vez, com todos os dados prontos)
             renderJornal(); 
 
-            renderChallenges(globalChallengesData); 
+            // 5. ATUALIZAÇÃO DA UI (Deve acontecer DEPOIS de renderJornal criar o HTML)
+            renderChallenges(globalChallengesData); // <--- AGORA VAI FUNCIONAR (Preenche os zeros com os dados)
             renderPraiseSection(currentPraiseMonth);
             renderTestimonials(testimonialsData);
             checkIfQuizTaken();
             
+            // Lógica de Ratings (Estrelas)
             document.querySelectorAll('.rating-container').forEach(container => {
                 const itemId = container.dataset.id;
                 const stars = container.querySelectorAll('.rating-stars i');
@@ -755,9 +719,10 @@
             });
 
         } catch (e) { console.error("Erro no carregamento paralelo:", e); }
+        
+        setupForms(); 
     }
 
-    // --- FUNÇÕES DE RENDERIZAÇÃO E AUXILIARES ---
     function renderJornal() {
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Cliqui para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
@@ -1090,6 +1055,6 @@
         const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
     }
-</script>
+  </script>
 </body>
 </html>
