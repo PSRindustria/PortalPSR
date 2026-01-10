@@ -540,7 +540,7 @@
 
   <div id="footer-placeholder"></div>
 
-  <script>
+<script>
     // VARIAVEL GLOBAL VAZIA - SERÁ PREENCHIDA PELO FIREBASE
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
@@ -587,33 +587,24 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         // Carrega Menu e Footer
-['menu', 'footer'].forEach(file => {
-    fetch(`${file}.html?t=${Date.now()}`)
-        .then(r => r.text())
-        .then(html => {
-            const placeholder = document.getElementById(`${file}-placeholder`);
-            if (placeholder) placeholder.innerHTML = html;
-            
-            if (file === 'menu') {
-                const toggle = document.getElementById('menu-toggle');
-                const navEl = document.getElementById('nav-principal'); // <-- MUDANÇA AQUI
-                
-                if (toggle && navEl) {
-                    toggle.addEventListener('click', () => {
-                        navEl.classList.toggle('active'); // <-- MUDANÇA AQUI
-                    });
+        ['menu', 'footer'].forEach(file => {
+            fetch(`${file}.html?t=${Date.now()}`)
+                .then(r => r.text())
+                .then(html => {
+                    const placeholder = document.getElementById(`${file}-placeholder`);
+                    if (placeholder) placeholder.innerHTML = html;
                     
-                    // Fecha o menu ao clicar em links
-                    navEl.querySelectorAll('a').forEach(link => {
-                        link.addEventListener('click', () => {
-                            navEl.classList.remove('active');
-                        });
-                    });
-                }
-            }
-        })
-        .catch(e => console.error(`Error loading ${file}.html:`, e));
-});
+                    if (file === 'menu') {
+                        const toggle = document.getElementById('menu-toggle');
+                        const navEl = document.getElementById('nav-principal');
+                        if (toggle && navEl) {
+                            toggle.addEventListener('click', () => { navEl.classList.toggle('active'); });
+                            navEl.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { navEl.classList.remove('active'); }); });
+                        }
+                    }
+                })
+                .catch(e => console.error(`Error loading ${file}.html:`, e));
+        });
 
         initFirebaseData();
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
@@ -627,17 +618,7 @@
     // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
     async function initFirebaseData() {
         try {
-            // Dispara requisições simultâneas
-            const [
-                contentResp, 
-                clientesResp,
-                hobbyResp, 
-                praiseResp, 
-                challengesResp, 
-                quizResp,
-                ratingsResp,
-                testimonialsResp
-            ] = await Promise.all([
+            const [contentResp, clientesResp, hobbyResp, praiseResp, challengesResp, quizResp, ratingsResp, testimonialsResp] = await Promise.all([
                 fetch(BASE_DB_URL + "content.json"),
                 fetch(BASE_DB_URL + "novos_clientes.json"),
                 fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
@@ -648,31 +629,25 @@
                 fetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
             ]);
 
-            // 1. Carrega dados de conteúdo
             const contentData = await contentResp.json() || {};
             if (contentData) {
                 CONTEUDO_JORNAL = contentData;
                 if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-                // renderJornal(); // REMOVIDO: Não precisamos renderizar aqui, pois renderizaremos abaixo com tudo pronto
             }
 
-            // 2. Carrega Clientes
             const clientesData = await clientesResp.json() || {};
             renderNovosClientes(clientesData);
 
-            // 3. Carrega Dados Globais
             globalHobbyData = await hobbyResp.json() || {};
             globalPraiseData = await praiseResp.json() || {};
-            globalChallengesData = await challengesResp.json() || {}; // Dados dos desafios carregados
+            globalChallengesData = await challengesResp.json() || {};
             globalQuizData = await quizResp.json() || {};
             const ratingsData = await ratingsResp.json() || {};
             const testimonialsData = await testimonialsResp.json() || {};
 
-            // 4. RENDERIZAÇÃO PRINCIPAL (Apenas uma vez, com todos os dados prontos)
             renderJornal(); 
 
-            // 5. ATUALIZAÇÃO DA UI (Deve acontecer DEPOIS de renderJornal criar o HTML)
-            renderChallenges(globalChallengesData); // <--- AGORA VAI FUNCIONAR (Preenche os zeros com os dados)
+            renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
             renderTestimonials(testimonialsData);
             checkIfQuizTaken();
@@ -691,9 +666,7 @@
                     updateVisualStars(stars, avg);
                     if (votes[MY_DEVICE_ID]) container.querySelector('.rating-stars').classList.add('voted');
                 };
-                
                 calcRender(itemVotes);
-                
                 stars.forEach(star => {
                     star.addEventListener('click', async () => {
                         const val = parseInt(star.dataset.value);
@@ -705,16 +678,9 @@
                     });
                     star.addEventListener('mouseover', () => {
                         const val = parseInt(star.dataset.value);
-                        stars.forEach(s => { 
-                            s.classList.remove('filled'); 
-                            if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); 
-                            else s.classList.remove('hover-active'); 
-                        });
+                        stars.forEach(s => { s.classList.remove('filled'); if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); else s.classList.remove('hover-active'); });
                     });
-                    star.addEventListener('mouseout', () => { 
-                        stars.forEach(s => s.classList.remove('hover-active')); 
-                        updateVisualStars(stars, scoreDisplay.textContent); 
-                    });
+                    star.addEventListener('mouseout', () => { stars.forEach(s => s.classList.remove('hover-active')); updateVisualStars(stars, scoreDisplay.textContent); });
                 });
             });
 
@@ -770,6 +736,7 @@
         cultContainer.innerHTML = ''; 
         (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
             const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; 
+            // CORREÇÃO AQUI: onclick direto, sem listeners externos conflitantes
             cultContainer.innerHTML += `
                 <article class="jornal-card" id="card_${c.id}">
                     <a href="${c.link}" target="_blank" class="video-thumbnail-container">
@@ -836,31 +803,42 @@
         }
     }
 
-    function openSynopsis(id) {
-        const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id);
+    // --- FUNÇÃO DE SINOPSE CORRIGIDA ---
+    // Agora aceita tanto string quanto número (usando == em vez de ===)
+    window.openSynopsis = function(id) {
+        console.log("Tentando abrir sinopse para ID:", id); // Log para debug
+        
+        // Uso de == (loose equality) para garantir que "1" (string) seja igual a 1 (number)
+        const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id == id);
+        
         if (item) {
             document.getElementById('modal-synopsis-title').textContent = item.titulo;
             document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível.";
             document.getElementById('synopsis-modal').style.display = 'flex';
+        } else {
+            console.error("Item não encontrado para ID:", id);
+            alert("Erro: Sinopse não encontrada.");
         }
     }
-    function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
+    
+    window.closeSynopsis = function() { 
+        document.getElementById('synopsis-modal').style.display = 'none'; 
+    }
 
+    // --- FUNÇÃO DE HISCORE CORRIGIDA ---
+    // Simples e direta, sem EventListeners externos atrapalhando
     window.openHiScore = async function(gameKey) {
-        console.log('Abrindo HiScore para:', gameKey); // Debug
+        console.log('Abrindo HiScore para:', gameKey); 
         
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
         
-        // Verifica se os elementos existem
         if (!modal || !list || !title) {
             console.error('Elementos do modal não encontrados!');
-            alert('Erro ao abrir ranking. Tente recarregar a página.');
             return;
         }
         
-        // Mostra o modal
         modal.style.display = 'flex';
         title.textContent = `Ranking: ${gameKey}`;
         list.innerHTML = '<p style="text-align:center; color:#666;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
@@ -874,21 +852,16 @@
                 return;
             }
             
-            // Converte objeto em array
             let scoresArray = Object.values(data);
-            
-            // Ordena por pontuação (maior para menor)
             scoresArray.sort((a, b) => {
                 let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
                 let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
                 return scoreB - scoreA;
             });
             
-            // Renderiza o ranking
             list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
                 const medalColor = index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'var(--azul-marinho)';
                 const medalIcon = index < 3 ? '<i class="fas fa-trophy" style="margin-left:5px; color:' + medalColor + ';"></i>' : '';
-                
                 return `
                     <div class="hiscore-item">
                         <div class="hiscore-rank" style="background:${medalColor}">
@@ -905,16 +878,25 @@
             
         } catch (error) {
             console.error('Erro ao carregar ranking:', error);
-            list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar ranking.<br>Tente novamente mais tarde.</p>';
+            list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar ranking.</p>';
         }
     }
 
     window.closeHiScore = function() {
         const modal = document.getElementById('hiscore-modal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
+        if (modal) modal.style.display = 'none';
     }
+
+    // Modal fechar ao clicar fora
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalScore = document.getElementById('hiscore-modal');
+        const modalSynopsis = document.getElementById('synopsis-modal');
+        
+        window.onclick = function(event) {
+            if (event.target == modalScore) window.closeHiScore();
+            if (event.target == modalSynopsis) window.closeSynopsis();
+        }
+    });
 
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
@@ -1104,29 +1086,6 @@
         const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
     }
-
-    // Inicialização adicional para eventos de UI do HiScore
-    document.addEventListener('DOMContentLoaded', function() {
-        // Garante que os botões do menu hiscore funcionem
-        const hiscoreButtons = document.querySelectorAll('.hiscore-btn');
-        hiscoreButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const gameKey = this.getAttribute('onclick').match(/'([^']+)'/)[1];
-                window.openHiScore(gameKey);
-            });
-        });
-        
-        // Fecha modal ao clicar fora dele
-        const modal = document.getElementById('hiscore-modal');
-        if (modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    window.closeHiScore();
-                }
-            });
-        }
-    });
-  </script>
+</script>
 </body>
 </html>
