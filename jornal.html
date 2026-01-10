@@ -838,18 +838,22 @@
     window.closeSynopsis = function() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
     // 2. HISCORE
-    window.openHiScore = async function(gameKey) {
+window.openHiScore = async function(gameKey) {
         console.log('Abrindo HiScore para:', gameKey); 
         
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
         
-        if (!modal) return;
+        if (!modal) {
+             console.error("ERRO CRÍTICO: HTML do modal não encontrado!");
+             alert("Erro interno: Modal sumiu.");
+             return; 
+        }
 
+        // FORÇA O DISPLAY
         modal.style.display = 'flex';
-        title.textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<p style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
+        console.log('Comando de display flex enviado. Modal visível?', modal.style.display);
         
         try {
             // Ajuste na URL para garantir que pegue o nó correto
