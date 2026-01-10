@@ -847,25 +847,74 @@
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
 
     window.openHiScore = async function(gameKey) {
+        console.log('Abrindo HiScore para:', gameKey); // Debug
+        
         const modal = document.getElementById('hiscore-modal');
         const list = document.getElementById('modal-score-list');
+        const title = document.getElementById('modal-game-title');
+        
+        // Verifica se os elementos existem
+        if (!modal || !list || !title) {
+            console.error('Elementos do modal não encontrados!');
+            alert('Erro ao abrir ranking. Tente recarregar a página.');
+            return;
+        }
+        
+        // Mostra o modal
         modal.style.display = 'flex';
-        document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
+        title.textContent = `Ranking: ${gameKey}`;
+        list.innerHTML = '<p style="text-align:center; color:#666;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
+        
         try {
             const resp = await fetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
             const data = await resp.json();
-            if (!data) { list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; return; }
+            
+            if (!data || Object.keys(data).length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde registrado ainda.<br>Seja o primeiro!</p>';
+                return;
+            }
+            
+            // Converte objeto em array
             let scoresArray = Object.values(data);
+            
+            // Ordena por pontuação (maior para menor)
             scoresArray.sort((a, b) => {
-                let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0; 
-                let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0; 
+                let scoreA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
+                let scoreB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
                 return scoreB - scoreA;
             });
-            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${s.pontos}</div></div>`).join('');
-        } catch (error) { console.error(error); list.innerHTML = '<p style="color:red;">Erro ao carregar.</p>'; }
+            
+            // Renderiza o ranking
+            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
+                const medalColor = index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'var(--azul-marinho)';
+                const medalIcon = index < 3 ? '<i class="fas fa-trophy" style="margin-left:5px; color:' + medalColor + ';"></i>' : '';
+                
+                return `
+                    <div class="hiscore-item">
+                        <div class="hiscore-rank" style="background:${medalColor}">
+                            ${index + 1}
+                        </div>
+                        <div style="flex:1; margin-left:10px; font-weight:600; display:flex; align-items:center;">
+                            ${s.nome || 'Anônimo'}
+                            ${medalIcon}
+                        </div>
+                        <div class="hiscore-points">${s.pontos}</div>
+                    </div>
+                `;
+            }).join('');
+            
+        } catch (error) {
+            console.error('Erro ao carregar ranking:', error);
+            list.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Erro ao carregar ranking.<br>Tente novamente mais tarde.</p>';
+        }
     }
-    window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
+
+    window.closeHiScore = function() {
+        const modal = document.getElementById('hiscore-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
 
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
@@ -1055,6 +1104,29 @@
         const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
         const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
     }
+
+    // Inicialização adicional para eventos de UI do HiScore
+    document.addEventListener('DOMContentLoaded', function() {
+        // Garante que os botões do menu hiscore funcionem
+        const hiscoreButtons = document.querySelectorAll('.hiscore-btn');
+        hiscoreButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const gameKey = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                window.openHiScore(gameKey);
+            });
+        });
+        
+        // Fecha modal ao clicar fora dele
+        const modal = document.getElementById('hiscore-modal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    window.closeHiScore();
+                }
+            });
+        }
+    });
   </script>
 </body>
 </html>
