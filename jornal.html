@@ -546,7 +546,7 @@
 
   <div id="footer-placeholder"></div>
 
-  <script>
+<script>
     // VARIAVEL GLOBAL VAZIA - SERÁ PREENCHIDA PELO FIREBASE
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
@@ -592,73 +592,60 @@
     let currentPraiseMonth = CURRENT_MONTH_KEY; 
 
     document.addEventListener("DOMContentLoaded", () => {
-        // Carrega Menu e Footer
-['menu', 'footer'].forEach(file => {
-        fetch(`${file}.html?t=${Date.now()}`)
-            .then(r => {
-                if (!r.ok) throw new Error(`Erro ao carregar ${file}`);
-                return r.text();
-            })
-            .then(html => {
-                const el = document.getElementById(`${file}-placeholder`);
-                if (el) {
-                    el.innerHTML = html;
-                    
-                    // Lógica específica para ativar o menu após o carregamento
-                    if (file === 'menu') {
-                        // Tenta achar pelo ID, se falhar, tenta pela classe (fallback)
-                        const btnToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle');
-                        const menuNav = document.getElementById('menu') || document.querySelector('.menu');
+        // 1. Carrega Menu e Footer (Versão com correção Mobile)
+        ['menu', 'footer'].forEach(file => {
+            fetch(`${file}.html?t=${Date.now()}`)
+                .then(r => {
+                    if (!r.ok) throw new Error(`Erro ao carregar ${file}`);
+                    return r.text();
+                })
+                .then(html => {
+                    const el = document.getElementById(`${file}-placeholder`);
+                    if (el) {
+                        el.innerHTML = html;
+                        if (file === 'menu') {
+                            const btnToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle');
+                            const menuNav = document.getElementById('menu') || document.querySelector('.menu');
 
-                        if (btnToggle && menuNav) {
-                            // Garante que o botão tenha o cursor de clique
-                            btnToggle.style.cursor = 'pointer';
-
-                            // Usa addEventListener para garantir que o clique funcione no mobile
-                            btnToggle.addEventListener('click', function(e) {
-                                e.stopPropagation(); // Evita cliques fantasmas
-                                menuNav.classList.toggle('active');
-                                
-                                // Opcional: Anima o ícone se ele existir (transforma fa-bars em fa-times)
-                                const icon = btnToggle.querySelector('i');
-                                if(icon) {
-                                    icon.classList.toggle('fa-bars');
-                                    icon.classList.toggle('fa-times');
-                                }
-                            });
-
-                            // Fecha o menu ao clicar em um link
-                            menuNav.querySelectorAll('a').forEach(link => {
-                                link.addEventListener('click', () => {
-                                    menuNav.classList.remove('active');
+                            if (btnToggle && menuNav) {
+                                btnToggle.style.cursor = 'pointer';
+                                btnToggle.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    menuNav.classList.toggle('active');
                                     const icon = btnToggle.querySelector('i');
-                                    if(icon) {
-                                        icon.classList.add('fa-bars');
-                                        icon.classList.remove('fa-times');
+                                    if(icon) { icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); }
+                                });
+                                menuNav.querySelectorAll('a').forEach(link => {
+                                    link.addEventListener('click', () => {
+                                        menuNav.classList.remove('active');
+                                        const icon = btnToggle.querySelector('i');
+                                        if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
+                                    });
+                                });
+                                document.addEventListener('click', function(e) {
+                                    if (!menuNav.contains(e.target) && !btnToggle.contains(e.target) && menuNav.classList.contains('active')) {
+                                        menuNav.classList.remove('active');
+                                        const icon = btnToggle.querySelector('i');
+                                        if(icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
                                     }
                                 });
-                            });
-                            
-                            // Fecha o menu ao clicar fora dele
-                            document.addEventListener('click', function(e) {
-                                if (!menuNav.contains(e.target) && !btnToggle.contains(e.target) && menuNav.classList.contains('active')) {
-                                    menuNav.classList.remove('active');
-                                    const icon = btnToggle.querySelector('i');
-                                    if(icon) {
-                                        icon.classList.add('fa-bars');
-                                        icon.classList.remove('fa-times');
-                                    }
-                                }
-                            });
-                            
-                            console.log("Menu mobile ativado com sucesso!");
-                        } else {
-                            console.error("ERRO: Não foi possível encontrar os elementos '#menu-toggle' ou '#menu' dentro do arquivo menu.html. Verifique os IDs.");
+                            }
                         }
                     }
-                }
-            })
-            .catch(e => console.error("Erro no carregamento do menu/footer:", e));
+                })
+                .catch(e => console.error("Erro no carregamento do menu/footer:", e));
+        });
+
+        // 2. INICIALIZAÇÃO DOS DADOS (ISSO ESTAVA FALTANDO!)
+        initFirebaseData();
+
+        // 3. CONFIGURAÇÃO DOS BOTÕES (ISSO TAMBÉM ESTAVA FALTANDO!)
+        setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
+        setupToggle('btn-toggle-recipe', 'recipe-form-container');
+        setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
+        setupToggle('btn-toggle-praise', 'praise-form-container');
+        setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
+        setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
     });
 
     // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
