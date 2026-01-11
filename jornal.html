@@ -733,7 +733,7 @@
     ];
 
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
-    // O Mês vigente (ex: 2026-01) será a chave principal para separar os dados
+    // Define a chave do mês (ex: 2026-01) para segregar os dados
     const CURRENT_MONTH_KEY = new Date().toISOString().slice(0, 7);
 
     function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
@@ -777,7 +777,7 @@
     // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
     async function initFirebaseData() {
         try {
-            // ALTERAÇÃO: URLs apontando para 'challenges_history' e 'ratings_history' com o MÊS VIGENTE
+            // ALTERAÇÃO: URLs agora usam CURRENT_MONTH_KEY para separar os dados
             const [
                 contentResp, 
                 clientesResp,
@@ -792,9 +792,9 @@
                 fetch(BASE_DB_URL + "novos_clientes.json"),
                 fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
                 fetch(BASE_DB_URL + "praise_messages.json"),
-                fetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"), // Mudado para separar por mês
+                fetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"), // Desafios por mês
                 fetch(BASE_DB_URL + "safety_quiz.json"),
-                fetch(BASE_DB_URL + "ratings_history/" + CURRENT_MONTH_KEY + ".json"), // Mudado para separar por mês
+                fetch(BASE_DB_URL + "ratings_history/" + CURRENT_MONTH_KEY + ".json"), // Ratings por mês
                 fetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
             ]);
 
@@ -826,12 +826,12 @@
             renderTestimonials(testimonialsData);
             checkIfQuizTaken();
             
-            // Lógica de Ratings (Estrelas) - Mês vigente
+            // Lógica de Ratings (Estrelas)
             document.querySelectorAll('.rating-container').forEach(container => {
                 const itemId = container.dataset.id;
                 const stars = container.querySelectorAll('.rating-stars i');
                 const scoreDisplay = container.querySelector('.score-value');
-                const itemVotes = ratingsData[itemId] || {}; // Votos do mês atual
+                const itemVotes = ratingsData[itemId] || {}; // Pega votos do mês atual
                 
                 const calcRender = (votes) => {
                     const vals = Object.values(votes);
@@ -847,7 +847,7 @@
                     star.addEventListener('click', async () => {
                         const val = parseInt(star.dataset.value);
                         if(!itemVotes[MY_DEVICE_ID]) {
-                             itemVotes[MY_DEVICE_ID] = val; // Atualiza localmente
+                             itemVotes[MY_DEVICE_ID] = val; // Atualiza local
                              calcRender(itemVotes);
                              // Salva no caminho do MÊS VIGENTE
                              await fetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) });
@@ -886,6 +886,7 @@
         const hHeartIcon = hUserLiked ? 'fas' : 'far';
         hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
 
+        // ADICIONEI IDs NOS BOTÕES PARA ATUALIZAÇÃO VIA JS SEM RE-RENDER
         document.getElementById('hobby-container').innerHTML = `
             <div class="hobby-content">
                 <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
