@@ -671,26 +671,26 @@
 
     // 3. INICIALIZA O FIREBASE
 firebase.initializeApp(firebaseConfig);
-    let AUTH_TOKEN = null;
-    // --- CÓDIGO DE DIAGNÓSTICO (Substitua o trecho antigo por este) ---
-    console.log("Tentando logar...");
     
+    // Variável para guardar o Token de Segurança
+    let AUTH_TOKEN = null;
+
+    // --- 2. LOGIN SILENCIOSO (Versão Final) ---
+    // O site tenta logar nos bastidores. O usuário não vê nada.
     firebase.auth().signInAnonymously()
         .then((userCred) => {
-            // Se der certo, vai aparecer este alerta na tela
+            // Sucesso: Guarda o crachá e carrega o site
             return userCred.user.getIdToken().then(token => {
                 AUTH_TOKEN = token;
-                alert("✅ SUCESSO! O Login funcionou.\nAgora os likes devem funcionar.");
-                initFirebaseData(); // Carrega o jornal
+                console.log("Site autenticado com segurança.");
+                initFirebaseData(); 
             });
         })
         .catch((error) => {
-            // Se der erro, o código do erro vai aparecer na tela
-            alert("❌ ERRO CRÍTICO NO LOGIN:\n\nCódigo: " + error.code + "\n\nMensagem: " + error.message);
-            // Mesmo com erro, tenta carregar o jornal (modo leitura)
+            // Falha: Avisa apenas no console (F12) e carrega o site em modo leitura
+            console.error("Erro silencioso na autenticação:", error);
             initFirebaseData(); 
         });
-    
 ;
 
     // --- FUNÇÃO DE BLINDAGEM (Intercepta envios para adicionar a chave) ---
