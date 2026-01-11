@@ -671,96 +671,113 @@
       projectId: "jornalpsr-1b8c6",
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     
     let AUTH_TOKEN = null;
+    
+    // Variáveis Globais (Iniciam vazias ou com padrão)
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
     };
-
-    // Dados globais
     let globalChallengesData = {};
     let globalQuizData = {};
     let globalHobbyData = {}; 
     let globalPraiseData = {}; 
+    let globalRatingsData = {};
+    let globalTestimonialsData = {};
     
     // Controle de Mês (Histórico mensal)
     const CURRENT_MONTH_KEY = new Date().toISOString().slice(0, 7); // Ex: "2026-01"
     let currentPraiseMonth = CURRENT_MONTH_KEY; 
 
-    // Identificador Único do Dispositivo
+    // Identificador Único do Dispositivo (Persistente)
     function getDeviceId() { 
         let d = localStorage.getItem('psr_device_id'); 
-        if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } 
+        if (!d) { 
+            d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); 
+            localStorage.setItem('psr_device_id', d); 
+        } 
         return d; 
     }
     const MY_DEVICE_ID = getDeviceId();
 
     // =================================================================
-    // SISTEMA DE CACHE (OTIMIZAÇÃO DE VELOCIDADE)
+    // SISTEMA DE CACHE INTELIGENTE (Correção do "Zera Dados")
     // =================================================================
-    const CACHE_PREFIX = "psr_portal_cache_v1_";
     const CACHE_KEYS = {
-        CONTENT: CACHE_PREFIX + "content",
-        CLIENTES: CACHE_PREFIX + "clientes",
-        HOBBY: CACHE_PREFIX + "hobby_" + CURRENT_MONTH_KEY,
-        PRAISE: CACHE_PREFIX + "praise",
-        CHALLENGES: CACHE_PREFIX + "challenges_" + CURRENT_MONTH_KEY,
-        QUIZ: CACHE_PREFIX + "quiz",
-        RATINGS: CACHE_PREFIX + "ratings_" + CURRENT_MONTH_KEY,
-        TESTIMONIALS: CACHE_PREFIX + "testimonials_" + CURRENT_MONTH_KEY
+        CONTENT: "psr_cache_content_v2",
+        CLIENTES: "psr_cache_clientes_v2",
+        HOBBY: "psr_cache_hobby_" + CURRENT_MONTH_KEY,
+        PRAISE: "psr_cache_praise_v2",
+        CHALLENGES: "psr_cache_challenges_" + CURRENT_MONTH_KEY,
+        QUIZ: "psr_cache_quiz_v2",
+        RATINGS: "psr_cache_ratings_" + CURRENT_MONTH_KEY,
+        TESTIMONIALS: "psr_cache_testimonials_" + CURRENT_MONTH_KEY
     };
 
     function saveCache(key, data) {
-        try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { console.warn("Cache cheio/erro", e); }
-    }
-    function loadCache(key) {
-        try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch (e) { return null; }
+        if (!data) return; // Não salva se for nulo/undefined
+        try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { console.warn("Cache cheio", e); }
     }
 
-    function tryRenderFromCache() {
-        console.log("Tentando renderizar do cache...");
-        const cContent = loadCache(CACHE_KEYS.CONTENT);
-        if(cContent) { CONTEUDO_JORNAL = cContent; if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO; renderJornal(); }
+    function loadCache(key) {
+        try { 
+            const d = localStorage.getItem(key); 
+            return d ? JSON.parse(d) : null; 
+        } catch (e) { return null; }
+    }
+
+    // Função que carrega o que tem localmente ANTES da internet
+    function loadInitialCache() {
+        console.log("Carregando cache local...");
         
+        const cContent = loadCache(CACHE_KEYS.CONTENT);
+        if(cContent) CONTEUDO_JORNAL = cContent;
+        if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
+
         const cClientes = loadCache(CACHE_KEYS.CLIENTES);
         if(cClientes) renderNovosClientes(cClientes);
 
+        // Carrega interações nas variáveis globais
         globalHobbyData = loadCache(CACHE_KEYS.HOBBY) || {};
         globalPraiseData = loadCache(CACHE_KEYS.PRAISE) || {};
         globalChallengesData = loadCache(CACHE_KEYS.CHALLENGES) || {};
         globalQuizData = loadCache(CACHE_KEYS.QUIZ) || {};
-        const ratingsData = loadCache(CACHE_KEYS.RATINGS) || {};
-        const testimonialsData = loadCache(CACHE_KEYS.TESTIMONIALS) || {};
+        globalRatingsData = loadCache(CACHE_KEYS.RATINGS) || {};
+        globalTestimonialsData = loadCache(CACHE_KEYS.TESTIMONIALS) || {};
 
-        if(cContent) { // Só renderiza complementos se o conteúdo principal existiu
-            renderJornal(); // Atualiza com dados de likes/comentários se existirem
+        // Renderiza com o que temos (instantâneo)
+        if(cContent) {
+            renderJornal(); 
             renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
-            renderTestimonials(testimonialsData);
+            renderTestimonials(globalTestimonialsData);
             checkIfQuizTaken();
-            setupRatings(ratingsData);
+            setupRatings(globalRatingsData);
         }
     }
 
     // =================================================================
-    // AUTENTICAÇÃO E REDE (BLINDAGEM)
+    // AUTENTICAÇÃO E ATUALIZAÇÃO SILENCIOSA
     // =================================================================
     
-    // Tenta carregar cache IMEDIATAMENTE antes mesmo da autenticação
-    tryRenderFromCache();
+    // 1. Renderiza Cache Imediatamente
+    loadInitialCache();
 
+    // 2. Conecta Firebase em Segundo Plano
     firebase.auth().signInAnonymously()
         .then((userCred) => {
             return userCred.user.getIdToken().then(token => {
                 AUTH_TOKEN = token;
-                console.log("Autenticado (Token OK). Buscando atualizações...");
+                console.log("Online. Buscando dados frescos...");
                 initFirebaseData(); 
             });
         })
         .catch((error) => {
-            console.error("Erro Auth:", error);
-            initFirebaseData(); 
+            console.error("Modo Offline/Erro Auth:", error);
+            // Se der erro, o usuário continua vendo a versão do cache carregada acima
         });
 
     async function secureFetch(url, options = {}) {
@@ -774,37 +791,12 @@
     }
 
     // =================================================================
-    // CARREGAMENTO DE DADOS
+    // GERENCIAMENTO DE DADOS (COM PROTEÇÃO CONTRA SOBRESCRITA)
     // =================================================================
-    document.addEventListener("DOMContentLoaded", () => {
-        ['menu', 'footer'].forEach(file => {
-            fetch(`${file}.html?t=${Date.now()}`)
-                .then(r => r.text())
-                .then(html => {
-                    const placeholder = document.getElementById(`${file}-placeholder`);
-                    if (placeholder) placeholder.innerHTML = html;
-                    if (file === 'menu') {
-                        const toggle = document.getElementById('menu-toggle');
-                        const navEl = document.getElementById('nav-principal');
-                        if (toggle && navEl) {
-                            toggle.addEventListener('click', () => { navEl.classList.toggle('active'); });
-                            navEl.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { navEl.classList.remove('active'); }); });
-                        }
-                    }
-                })
-                .catch(e => console.error(`Erro ao carregar ${file}:`, e));
-        });
-
-        setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
-        setupToggle('btn-toggle-recipe', 'recipe-form-container');
-        setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
-        setupToggle('btn-toggle-praise', 'praise-form-container');
-        setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
-        setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
-    });
-
+    
     async function initFirebaseData() {
         try {
+            // Buscamos tudo em paralelo
             const [
                 contentResp, clientesResp, hobbyResp, praiseResp, 
                 challengesResp, quizResp, ratingsResp, testimonialsResp
@@ -819,48 +811,61 @@
                 fetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
             ]);
 
-            const contentData = await contentResp.json() || {};
-            CONTEUDO_JORNAL = contentData;
+            // Helper para atualizar segura (só salva se vier dado válido)
+            const processData = async (resp, key, globalSetter) => {
+                const data = await resp.json();
+                if (data) {
+                    saveCache(key, data); // Atualiza cache
+                    return data;
+                }
+                return null; // Retorna null se vazio, para não zerarmos a global sem querer
+            };
+
+            // Atualiza Conteúdo
+            const newContent = await processData(contentResp, CACHE_KEYS.CONTENT);
+            if(newContent) CONTEUDO_JORNAL = newContent;
             if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-            saveCache(CACHE_KEYS.CONTENT, contentData); // Salva Cache
 
-            const clientesData = await clientesResp.json() || {};
-            renderNovosClientes(clientesData);
-            saveCache(CACHE_KEYS.CLIENTES, clientesData); // Salva Cache
+            // Atualiza Clientes
+            const newClientes = await processData(clientesResp, CACHE_KEYS.CLIENTES);
+            if(newClientes) renderNovosClientes(newClientes);
 
-            globalHobbyData = await hobbyResp.json() || {};
-            saveCache(CACHE_KEYS.HOBBY, globalHobbyData); // Salva Cache
+            // Atualiza Interações (Com check de nulo para não zerar)
+            const newHobby = await processData(hobbyResp, CACHE_KEYS.HOBBY);
+            if(newHobby) globalHobbyData = newHobby;
 
-            globalPraiseData = await praiseResp.json() || {};
-            saveCache(CACHE_KEYS.PRAISE, globalPraiseData); // Salva Cache
+            const newPraise = await processData(praiseResp, CACHE_KEYS.PRAISE);
+            if(newPraise) globalPraiseData = newPraise;
 
-            globalChallengesData = await challengesResp.json() || {}; 
-            saveCache(CACHE_KEYS.CHALLENGES, globalChallengesData); // Salva Cache
+            const newChallenges = await processData(challengesResp, CACHE_KEYS.CHALLENGES);
+            if(newChallenges) globalChallengesData = newChallenges;
 
-            globalQuizData = await quizResp.json() || {};
-            saveCache(CACHE_KEYS.QUIZ, globalQuizData); // Salva Cache
+            const newQuiz = await processData(quizResp, CACHE_KEYS.QUIZ);
+            if(newQuiz) globalQuizData = newQuiz;
 
-            const ratingsData = await ratingsResp.json() || {};
-            saveCache(CACHE_KEYS.RATINGS, ratingsData); // Salva Cache
+            const newRatings = await processData(ratingsResp, CACHE_KEYS.RATINGS);
+            if(newRatings) globalRatingsData = newRatings;
 
-            const testimonialsData = await testimonialsResp.json() || {};
-            saveCache(CACHE_KEYS.TESTIMONIALS, testimonialsData); // Salva Cache
+            const newTestimonials = await processData(testimonialsResp, CACHE_KEYS.TESTIMONIALS);
+            if(newTestimonials) globalTestimonialsData = newTestimonials;
 
-            // RE-RENDERIZA TUDO COM DADOS FRESCOS
+            // RE-RENDERIZA A TELA COM DADOS FRESCOS
             renderJornal(); 
             renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
-            renderTestimonials(testimonialsData);
+            renderTestimonials(globalTestimonialsData);
             checkIfQuizTaken();
-            setupRatings(ratingsData);
+            setupRatings(globalRatingsData);
 
-        } catch (e) { console.error("Erro crítico no initFirebaseData:", e); }
+        } catch (e) { 
+            console.error("Erro ao atualizar dados (mantendo cache):", e); 
+        }
         
         setupForms(); 
     }
 
     // =================================================================
-    // LÓGICA DE RATINGS (ESTRELAS) - AGORA PERMITE MUDAR O VOTO
+    // LÓGICA DE RATINGS (ESTRELAS)
     // =================================================================
 
     function setupRatings(ratingsData) {
@@ -869,11 +874,9 @@
             const stars = container.querySelectorAll('.rating-stars i');
             const scoreDisplay = container.querySelector('.score-value');
             
-            // Cria objeto vazio se não existir
             if (!ratingsData[itemId]) ratingsData[itemId] = {};
             const itemVotes = ratingsData[itemId]; 
             
-            // Função para calcular média e pintar
             const calcRender = (votes) => {
                 const vals = Object.values(votes);
                 let avg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "0.0";
@@ -881,47 +884,43 @@
                 updateVisualStars(stars, avg);
             };
             
-            // Renderiza estado inicial
             calcRender(itemVotes);
             
             stars.forEach(star => {
-                // CLIQUE: Grava ou Atualiza o Voto
                 star.addEventListener('click', async () => {
                     const val = parseInt(star.dataset.value);
                     
-                    // Atualiza localmente (Sobrescreve se já existir, permitindo mudar)
-                    itemVotes[MY_DEVICE_ID] = val; 
+                    // Atualiza Estado Global e Visual Imediatamente (Feedback Rápido)
+                    if(!globalRatingsData[itemId]) globalRatingsData[itemId] = {};
+                    globalRatingsData[itemId][MY_DEVICE_ID] = val;
                     
-                    // Recalcula visualmente na hora
-                    calcRender(itemVotes);
+                    calcRender(globalRatingsData[itemId]);
                     
-                    // Envia ao Firebase (PUT sobrescreve o valor anterior deste ID)
+                    // Salva no Cache Local Imediatamente
+                    saveCache(CACHE_KEYS.RATINGS, globalRatingsData);
+
+                    // Envia ao Firebase
                     await secureFetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json`, { 
                         method: 'PUT', body: JSON.stringify(val) 
                     });
                 });
 
-                // HOVER: Pinta da Esquerda para Direita
-                // Funciona SEMPRE, mesmo se já tiver votado, para permitir ver a nova opção
                 star.addEventListener('mouseover', () => {
                     const val = parseInt(star.dataset.value);
                     stars.forEach(s => { 
                         const sVal = parseInt(s.dataset.value);
                         if(sVal <= val) {
                             s.style.color = 'var(--dourado)'; 
-                            s.classList.remove('far');
-                            s.classList.add('fas');
+                            s.classList.remove('far'); s.classList.add('fas');
                         } else {
                             s.style.color = '#d1d1d1';
-                            s.classList.remove('fas');
-                            s.classList.add('far');
+                            s.classList.remove('fas'); s.classList.add('far');
                         }
                     });
                 });
 
-                // MOUSEOUT: Volta para a média atual
                 star.addEventListener('mouseout', () => { 
-                    stars.forEach(s => s.style.color = ''); // Remove cor forçada
+                    stars.forEach(s => s.style.color = ''); 
                     updateVisualStars(stars, scoreDisplay.textContent); 
                 });
             });
@@ -933,7 +932,7 @@
         stars.forEach(s => { 
             s.classList.remove('fas', 'filled', 'hover-active'); 
             s.classList.add('far'); 
-            s.style.color = ''; // Limpa estilo inline
+            s.style.color = ''; 
             
             if(parseInt(s.dataset.value) <= r) {
                 s.classList.remove('far'); 
@@ -949,9 +948,14 @@
         if(!globalChallengesData) globalChallengesData = {};
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
         
+        // 1. Atualiza local
         globalChallengesData[cId][MY_DEVICE_ID] = type;
-        renderChallenges(globalChallengesData);
         
+        // 2. Renderiza e Salva Cache
+        renderChallenges(globalChallengesData);
+        saveCache(CACHE_KEYS.CHALLENGES, globalChallengesData);
+        
+        // 3. Envia rede
         await secureFetch(`${BASE_DB_URL}challenges_history/${CURRENT_MONTH_KEY}/${cId}/${MY_DEVICE_ID}.json`, { 
             method: 'PUT', body: JSON.stringify(type) 
         });
@@ -975,11 +979,12 @@
             const btnSuccess = card.querySelector('.btn-challenge.success');
             const btnFail = card.querySelector('.btn-challenge.fail');
             
-            btnSuccess.classList.remove('active');
-            btnFail.classList.remove('active');
-            
-            if(my === 'success') btnSuccess.classList.add('active');
-            if(my === 'fail') btnFail.classList.add('active');
+            if(btnSuccess && btnFail) {
+                btnSuccess.classList.remove('active');
+                btnFail.classList.remove('active');
+                if(my === 'success') btnSuccess.classList.add('active');
+                if(my === 'fail') btnFail.classList.add('active');
+            }
         });
     }
 
@@ -988,9 +993,14 @@
     // =================================================================
 
     function renderJornal() {
+        // Tema do Mês
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
-        document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
-        
+        const divTema = document.getElementById('tema-mes');
+        if(divTema) {
+            divTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
+        }
+
+        // Hobby
         const h = CONTEUDO_JORNAL.hobby || {};
         const hData = globalHobbyData || {};
         const hLikes = hData.likes || {};
@@ -999,7 +1009,9 @@
         const hHeartIcon = hUserLiked ? 'fas' : 'far';
         hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-        document.getElementById('hobby-container').innerHTML = `
+        const divHobby = document.getElementById('hobby-container');
+        if(divHobby) {
+            divHobby.innerHTML = `
             <div class="hobby-content">
                 <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
                 <div class="hobby-texto">
@@ -1017,49 +1029,74 @@
                     </div>
                 </div>
             </div>`;
+        }
         
+        // Saúde Física
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
-        document.getElementById('saude-fisica-hero').innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
+        const divSaude = document.getElementById('saude-fisica-hero');
+        if(divSaude) {
+            divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
+        }
         
-        const recContainer = document.getElementById('receitas-container'); recContainer.innerHTML = ''; 
-        (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
+        // Receitas
+        const recContainer = document.getElementById('receitas-container'); 
+        if(recContainer) {
+            recContainer.innerHTML = ''; 
+            (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
+        }
         
+        // Título Desafios
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        document.getElementById('titulo-desafio-mes').innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
+        const titDes = document.getElementById('titulo-desafio-mes');
+        if(titDes) titDes.innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
 
-        const desContainer = document.getElementById('desafios-container'); desContainer.innerHTML = ''; 
-        (CONTEUDO_JORNAL.desafios||[]).forEach(d => { 
-            desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; 
-        });
+        // Cards Desafios
+        const desContainer = document.getElementById('desafios-container'); 
+        if(desContainer) {
+            desContainer.innerHTML = ''; 
+            (CONTEUDO_JORNAL.desafios||[]).forEach(d => { 
+                desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; 
+            });
+        }
         
+        // Cultura
         const cultContainer = document.getElementById('cultura-container'); 
-        cultContainer.innerHTML = ''; 
-        (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
-            const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; 
-            cultContainer.innerHTML += `
-                <article class="jornal-card" id="card_${c.id}">
-                    <a href="${c.link}" target="_blank" class="video-thumbnail-container">
-                        <img src="${c.img}">
-                        <i class="fas ${ic} play-button"></i>
-                    </a>
-                    <div class="jornal-card-content" style="text-align:center;">
-                        <h3>${c.titulo}</h3>
-                        <p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p>
-                        <button class="btn-ler-sinopse" onclick="openSynopsis('${c.id}')">Ler Sinopse</button>
-                        <span class="tag-discreta">${c.tag||''}</span>
-                        <div class="rating-container" data-id="${c.id}">
-                            <div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div>
-                            <div style="font-size:0.9rem; color:#777; margin-top:10px;">Média:<br><span class="score-value">0.0</span></div>
+        if(cultContainer) {
+            cultContainer.innerHTML = ''; 
+            (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
+                const ic = c.tipo==='livro'?'fa-book-open':'fa-play-circle'; 
+                cultContainer.innerHTML += `
+                    <article class="jornal-card" id="card_${c.id}">
+                        <a href="${c.link}" target="_blank" class="video-thumbnail-container">
+                            <img src="${c.img}">
+                            <i class="fas ${ic} play-button"></i>
+                        </a>
+                        <div class="jornal-card-content" style="text-align:center;">
+                            <h3>${c.titulo}</h3>
+                            <p class="indicacao-texto"><strong>Indicado por:</strong> ${c.indicadoPor}</p>
+                            <button class="btn-ler-sinopse" onclick="openSynopsis('${c.id}')">Ler Sinopse</button>
+                            <span class="tag-discreta">${c.tag||''}</span>
+                            <div class="rating-container" data-id="${c.id}">
+                                <div class="rating-stars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div>
+                                <div style="font-size:0.9rem; color:#777; margin-top:10px;">Média:<br><span class="score-value">0.0</span></div>
+                            </div>
                         </div>
-                    </div>
-                </article>`; 
-        });
+                    </article>`; 
+            });
+        }
 
-        const maContainer = document.getElementById('cards-meio-ambiente'); maContainer.innerHTML = '';
-        CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
+        // Sustentabilidade
+        const maContainer = document.getElementById('cards-meio-ambiente'); 
+        if(maContainer) {
+            maContainer.innerHTML = '';
+            CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
+        }
 
-        const segContainer = document.getElementById('cards-seguranca'); segContainer.innerHTML = '';
-        CONTEUDO_JORNAL.sustentabilidade.seguranca.forEach(s => { let listaHtml = s.lista.map(item => `<li>${item}</li>`).join(''); segContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${s.cor};"><div class="jornal-card-content"><h3 style="color: ${s.cor}; font-size: 1.2em;"><i class="${s.icon}"></i> ${s.titulo}</h3><ul style="font-size: 0.9rem; margin-left: 15px; color: #555;">${listaHtml}</ul></div></div>`; });
+        const segContainer = document.getElementById('cards-seguranca'); 
+        if(segContainer) {
+            segContainer.innerHTML = '';
+            CONTEUDO_JORNAL.sustentabilidade.seguranca.forEach(s => { let listaHtml = s.lista.map(item => `<li>${item}</li>`).join(''); segContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${s.cor};"><div class="jornal-card-content"><h3 style="color: ${s.cor}; font-size: 1.2em;"><i class="${s.icon}"></i> ${s.titulo}</h3><ul style="font-size: 0.9rem; margin-left: 15px; color: #555;">${listaHtml}</ul></div></div>`; });
+        }
 
         renderQuizHTML();
         setupQuizToggle();
@@ -1068,20 +1105,24 @@
     function renderNovosClientes(dados) {
         if (!dados) return;
         if (dados.resumo) {
-            document.getElementById('stat-qtd').textContent = dados.resumo.quantidade || "0";
-            document.getElementById('stat-periodo').textContent = dados.resumo.periodo || "";
+            const elQtd = document.getElementById('stat-qtd');
+            const elPer = document.getElementById('stat-periodo');
+            if(elQtd) elQtd.textContent = dados.resumo.quantidade || "0";
+            if(elPer) elPer.textContent = dados.resumo.periodo || "";
         }
         const listaContainer = document.getElementById('lista-clientes-content');
-        listaContainer.innerHTML = ""; 
-        if (dados.lista && dados.lista.length > 0) {
-            dados.lista.forEach(cliente => {
-                const classeDestaque = cliente.destaque ? 'destaque' : '';
-                const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                const itemHtml = `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
-                listaContainer.innerHTML += itemHtml;
-            });
-        } else {
-            listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
+        if(listaContainer) {
+            listaContainer.innerHTML = ""; 
+            if (dados.lista && dados.lista.length > 0) {
+                dados.lista.forEach(cliente => {
+                    const classeDestaque = cliente.destaque ? 'destaque' : '';
+                    const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
+                    const itemHtml = `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
+                    listaContainer.innerHTML += itemHtml;
+                });
+            } else {
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
+            }
         }
     }
 
@@ -1139,6 +1180,7 @@
 
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container');
+        if(!container) return;
         container.innerHTML = '';
         SAFETY_QUIZ.forEach((q, index) => {
             let optionsHtml = q.options.map((opt, i) => `<label class="quiz-option"><input type="radio" name="${q.id}" value="${i}"> ${opt}</label>`).join('');
@@ -1162,27 +1204,42 @@
         for (const qId in globalQuizData) { if (globalQuizData[qId] && globalQuizData[qId][MY_DEVICE_ID] !== undefined) { hasTaken = true; break; } }
         if (hasTaken) lockQuizUI();
     }
+    
     function lockQuizUI() {
-        document.getElementById('safety-quiz-form').classList.add('quiz-locked');
-        document.getElementById('btn-submit-quiz').style.display = 'none';
-        document.getElementById('btn-reset-quiz').style.display = 'block';
+        const frm = document.getElementById('safety-quiz-form');
+        if(!frm) return;
+        frm.classList.add('quiz-locked');
+        
+        const btnSub = document.getElementById('btn-submit-quiz');
+        const btnReset = document.getElementById('btn-reset-quiz');
+        if(btnSub) btnSub.style.display = 'none';
+        if(btnReset) btnReset.style.display = 'block';
+        
         SAFETY_QUIZ.forEach(q => {
             const userAns = globalQuizData[q.id] ? globalQuizData[q.id][MY_DEVICE_ID] : null;
             const block = document.getElementById(`quiz-block-${q.id}`);
-            block.querySelectorAll('input').forEach(inp => inp.disabled = true);
-            if (userAns !== undefined && userAns !== null) {
-                const correctLabel = block.querySelectorAll('.quiz-option')[q.correct];
-                if(correctLabel) correctLabel.classList.add('correct-answer');
+            if(block) {
+                block.querySelectorAll('input').forEach(inp => inp.disabled = true);
+                if (userAns !== undefined && userAns !== null) {
+                    const correctLabel = block.querySelectorAll('.quiz-option')[q.correct];
+                    if(correctLabel) correctLabel.classList.add('correct-answer');
+                }
+                const qData = globalQuizData[q.id] || {};
+                const total = Object.keys(qData).length;
+                let correct = 0; Object.values(qData).forEach(v => {if(v) correct++});
+                const pct = total>0 ? Math.round((correct/total)*100) : 0;
+                
+                const statsDiv = block.querySelector('.quiz-stats');
+                if(statsDiv) statsDiv.style.display = 'block';
+                
+                const bar = document.getElementById(`bar-${q.id}`);
+                const txt = document.getElementById(`text-${q.id}`);
+                if(bar) {
+                    bar.style.width = `${pct}%`;
+                    bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)';
+                }
+                if(txt) txt.textContent = `${pct}% acertaram`;
             }
-            const qData = globalQuizData[q.id] || {};
-            const total = Object.keys(qData).length;
-            let correct = 0; Object.values(qData).forEach(v => {if(v) correct++});
-            const pct = total>0 ? Math.round((correct/total)*100) : 0;
-            block.querySelector('.quiz-stats').style.display = 'block';
-            const bar = document.getElementById(`bar-${q.id}`);
-            bar.style.width = `${pct}%`;
-            document.getElementById(`text-${q.id}`).textContent = `${pct}% acertaram`;
-            bar.style.backgroundColor = pct<50?'var(--vermelho-erro)':'var(--verde-sucesso)';
         });
     }
 
@@ -1193,10 +1250,15 @@
             const selected = document.querySelector(`input[name="${q.id}"]:checked`);
             if (!selected) { alert(`Responda a questão ${q.id.replace('q','')}`); return; }
             const isCorrect = (parseInt(selected.value) === q.correct);
+            
+            // Atualiza Local e Cache
             if (!globalQuizData[q.id]) globalQuizData[q.id] = {};
             globalQuizData[q.id][MY_DEVICE_ID] = isCorrect;
+            
             updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = isCorrect;
         }
+        
+        saveCache(CACHE_KEYS.QUIZ, globalQuizData);
         await secureFetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
         lockQuizUI();
     });
@@ -1217,6 +1279,8 @@
         currentPraiseMonth = selectedMonth;
         const container = document.getElementById('praise-container');
         const linksContainer = document.getElementById('praise-archive-links');
+        if(!container) return;
+        
         container.innerHTML = ''; linksContainer.innerHTML = '';
         const dataMonths = new Set();
         dataMonths.add(new Date().toISOString().slice(0, 7));
@@ -1252,20 +1316,20 @@
         const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
         const exists = globalPraiseData[id].likes && globalPraiseData[id].likes[MY_DEVICE_ID];
         
+        // Atualiza Local e Cache
         if(exists) { 
-            await secureFetch(url, {method:'DELETE'}); 
             if (globalPraiseData[id].likes) delete globalPraiseData[id].likes[MY_DEVICE_ID]; 
         } else { 
-            await secureFetch(url, {method:'PUT', body:JSON.stringify(true)}); 
             if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; 
             globalPraiseData[id].likes[MY_DEVICE_ID]=true; 
         }
+        
+        saveCache(CACHE_KEYS.PRAISE, globalPraiseData);
         renderPraiseSection(currentPraiseMonth);
-    }
-
-    async function submitPraise() {
-        const f=document.getElementById('praise-from').value, t=document.getElementById('praise-to').value, m=document.getElementById('praise-msg').value;
-        if(f&&t&&m) { await fetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
+        
+        // Envia Rede
+        if(exists) await secureFetch(url, {method:'DELETE'});
+        else await secureFetch(url, {method:'PUT', body:JSON.stringify(true)});
     }
     
     window.likeHobby = async function() {
@@ -1279,21 +1343,24 @@
         const countSpan = document.getElementById('hobby-like-count');
         let currentCount = parseInt(countSpan.textContent) || 0;
 
+        // Atualiza Visual Local
         if (exists) {
             btn.classList.remove('liked');
-            icon.classList.remove('fas');
-            icon.classList.add('far');
+            icon.classList.remove('fas'); icon.classList.add('far');
             countSpan.textContent = Math.max(0, currentCount - 1);
             delete globalHobbyData.likes[MY_DEVICE_ID];
-            await secureFetch(url, {method:'DELETE'});
         } else {
             btn.classList.add('liked');
-            icon.classList.remove('far');
-            icon.classList.add('fas');
+            icon.classList.remove('far'); icon.classList.add('fas');
             countSpan.textContent = currentCount + 1;
             globalHobbyData.likes[MY_DEVICE_ID] = true;
-            await secureFetch(url, {method:'PUT', body:JSON.stringify(true)});
         }
+        
+        saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
+        
+        // Envia Rede
+        if(exists) await secureFetch(url, {method:'DELETE'});
+        else await secureFetch(url, {method:'PUT', body:JSON.stringify(true)});
     }
 
     window.sendHobbyComment = async function() {
@@ -1302,6 +1369,7 @@
             const author = prompt("Seu nome:") || "Anônimo";
             const newComment = {text:txt, author, date:new Date().toISOString()};
             
+            // Otimista: Renderiza
             const list = document.getElementById('hobby-comments-list-inner');
             const placeholder = list.querySelector('p');
             if(placeholder) placeholder.remove();
@@ -1312,19 +1380,25 @@
             list.insertBefore(div, list.firstChild); 
             
             document.getElementById('input-hobby-comment').value = '';
-            
             const countSpan = document.getElementById('hobby-comment-count');
             countSpan.textContent = parseInt(countSpan.textContent) + 1;
 
+            // Envia e Atualiza Cache Completo
             await fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json`, {method:'POST', body:JSON.stringify(newComment)});
             
+            // Recarrega para ter ID correto do comentário
             const resp = await fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json");
-            globalHobbyData = await resp.json() || {};
+            const data = await resp.json();
+            if(data) {
+                globalHobbyData = data;
+                saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
+            }
         }
     }
 
     function renderTestimonials(data) {
         const container = document.getElementById('testimonials-display');
+        if(!container) return;
         container.innerHTML = '';
         const sorted = Object.entries(data).sort((a,b)=>new Date(b[1].date)-new Date(a[1].date)).slice(0,3);
         if(sorted.length===0) { container.innerHTML='<p style="color:#999;font-style:italic;">Seja o primeiro a compartilhar!</p>'; return; }
