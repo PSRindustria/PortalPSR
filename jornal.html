@@ -660,8 +660,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-  <script>
-    // 2. COLE SUA CONFIGURAÇÃO AQUI NO TOPO DO SCRIPT
+<script>
+    // 2. CONFIGURAÇÃO DO FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyBzMvAw9ahEyd-tSYY08HxcMzo9RKf3IFY",
       authDomain: "jornalpsr-1b8c6.firebaseapp.com",
@@ -670,16 +670,14 @@
     };
 
     // 3. INICIALIZA O FIREBASE
-firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     
     // Variável para guardar o Token de Segurança
     let AUTH_TOKEN = null;
 
-    // --- 2. LOGIN SILENCIOSO (Versão Final) ---
-    // O site tenta logar nos bastidores. O usuário não vê nada.
+    // --- LOGIN SILENCIOSO ---
     firebase.auth().signInAnonymously()
         .then((userCred) => {
-            // Sucesso: Guarda o crachá e carrega o site
             return userCred.user.getIdToken().then(token => {
                 AUTH_TOKEN = token;
                 console.log("Site autenticado com segurança.");
@@ -687,23 +685,22 @@ firebase.initializeApp(firebaseConfig);
             });
         })
         .catch((error) => {
-            // Falha: Avisa apenas no console (F12) e carrega o site em modo leitura
             console.error("Erro silencioso na autenticação:", error);
             initFirebaseData(); 
         });
-;
 
-    // --- FUNÇÃO DE BLINDAGEM (Intercepta envios para adicionar a chave) ---
+    // --- FUNÇÃO DE BLINDAGEM ---
     async function secureFetch(url, options = {}) {
         if (!AUTH_TOKEN) {
             console.warn("Aguardando autenticação...");
-            return null; // Bloqueia envio se não estiver autenticado
+            return null; 
         }
         const separator = url.includes('?') ? '&' : '?';
         const secureUrl = `${url}${separator}auth=${AUTH_TOKEN}`;
         return fetch(secureUrl, options);
     }
-    // VARIAVEL GLOBAL VAZIA - SERÁ PREENCHIDA PELO FIREBASE
+
+    // VARIAVEIS GLOBAIS
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
     };
@@ -736,6 +733,7 @@ firebase.initializeApp(firebaseConfig);
     ];
 
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
+    // O Mês vigente (ex: 2026-01) será a chave principal para separar os dados
     const CURRENT_MONTH_KEY = new Date().toISOString().slice(0, 7);
 
     function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
@@ -749,33 +747,23 @@ firebase.initializeApp(firebaseConfig);
 
     document.addEventListener("DOMContentLoaded", () => {
         // Carrega Menu e Footer
-['menu', 'footer'].forEach(file => {
-    fetch(`${file}.html?t=${Date.now()}`)
-        .then(r => r.text())
-        .then(html => {
-            const placeholder = document.getElementById(`${file}-placeholder`);
-            if (placeholder) placeholder.innerHTML = html;
-            
-            if (file === 'menu') {
-                const toggle = document.getElementById('menu-toggle');
-                const navEl = document.getElementById('nav-principal'); // <-- MUDANÇA AQUI
-                
-                if (toggle && navEl) {
-                    toggle.addEventListener('click', () => {
-                        navEl.classList.toggle('active'); // <-- MUDANÇA AQUI
-                    });
-                    
-                    // Fecha o menu ao clicar em links
-                    navEl.querySelectorAll('a').forEach(link => {
-                        link.addEventListener('click', () => {
-                            navEl.classList.remove('active');
-                        });
-                    });
-                }
-            }
-        })
-        .catch(e => console.error(`Error loading ${file}.html:`, e));
-});
+        ['menu', 'footer'].forEach(file => {
+            fetch(`${file}.html?t=${Date.now()}`)
+                .then(r => r.text())
+                .then(html => {
+                    const placeholder = document.getElementById(`${file}-placeholder`);
+                    if (placeholder) placeholder.innerHTML = html;
+                    if (file === 'menu') {
+                        const toggle = document.getElementById('menu-toggle');
+                        const navEl = document.getElementById('nav-principal');
+                        if (toggle && navEl) {
+                            toggle.addEventListener('click', () => { navEl.classList.toggle('active'); });
+                            navEl.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { navEl.classList.remove('active'); }); });
+                        }
+                    }
+                })
+                .catch(e => console.error(`Error loading ${file}.html:`, e));
+        });
 
         initFirebaseData();
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
@@ -789,7 +777,7 @@ firebase.initializeApp(firebaseConfig);
     // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
     async function initFirebaseData() {
         try {
-            // Dispara requisições simultâneas
+            // ALTERAÇÃO: URLs apontando para 'challenges_history' e 'ratings_history' com o MÊS VIGENTE
             const [
                 contentResp, 
                 clientesResp,
@@ -804,9 +792,9 @@ firebase.initializeApp(firebaseConfig);
                 fetch(BASE_DB_URL + "novos_clientes.json"),
                 fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
                 fetch(BASE_DB_URL + "praise_messages.json"),
-                fetch(BASE_DB_URL + "challenges_v2.json"),
+                fetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"), // Mudado para separar por mês
                 fetch(BASE_DB_URL + "safety_quiz.json"),
-                fetch(BASE_DB_URL + "ratings_v2.json"),
+                fetch(BASE_DB_URL + "ratings_history/" + CURRENT_MONTH_KEY + ".json"), // Mudado para separar por mês
                 fetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
             ]);
 
@@ -815,7 +803,6 @@ firebase.initializeApp(firebaseConfig);
             if (contentData) {
                 CONTEUDO_JORNAL = contentData;
                 if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-                // renderJornal(); // REMOVIDO: Não precisamos renderizar aqui, pois renderizaremos abaixo com tudo pronto
             }
 
             // 2. Carrega Clientes
@@ -825,26 +812,26 @@ firebase.initializeApp(firebaseConfig);
             // 3. Carrega Dados Globais
             globalHobbyData = await hobbyResp.json() || {};
             globalPraiseData = await praiseResp.json() || {};
-            globalChallengesData = await challengesResp.json() || {}; // Dados dos desafios carregados
+            globalChallengesData = await challengesResp.json() || {}; 
             globalQuizData = await quizResp.json() || {};
             const ratingsData = await ratingsResp.json() || {};
             const testimonialsData = await testimonialsResp.json() || {};
 
-            // 4. RENDERIZAÇÃO PRINCIPAL (Apenas uma vez, com todos os dados prontos)
+            // 4. RENDERIZAÇÃO PRINCIPAL 
             renderJornal(); 
 
-            // 5. ATUALIZAÇÃO DA UI (Deve acontecer DEPOIS de renderJornal criar o HTML)
-            renderChallenges(globalChallengesData); // <--- AGORA VAI FUNCIONAR (Preenche os zeros com os dados)
+            // 5. ATUALIZAÇÃO DA UI PÓS-RENDER
+            renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
             renderTestimonials(testimonialsData);
             checkIfQuizTaken();
             
-            // Lógica de Ratings (Estrelas)
+            // Lógica de Ratings (Estrelas) - Mês vigente
             document.querySelectorAll('.rating-container').forEach(container => {
                 const itemId = container.dataset.id;
                 const stars = container.querySelectorAll('.rating-stars i');
                 const scoreDisplay = container.querySelector('.score-value');
-                const itemVotes = ratingsData[itemId] || {};
+                const itemVotes = ratingsData[itemId] || {}; // Votos do mês atual
                 
                 const calcRender = (votes) => {
                     const vals = Object.values(votes);
@@ -860,12 +847,14 @@ firebase.initializeApp(firebaseConfig);
                     star.addEventListener('click', async () => {
                         const val = parseInt(star.dataset.value);
                         if(!itemVotes[MY_DEVICE_ID]) {
-                             itemVotes[MY_DEVICE_ID] = val;
+                             itemVotes[MY_DEVICE_ID] = val; // Atualiza localmente
                              calcRender(itemVotes);
-                             await fetch(`${BASE_DB_URL}ratings_v2/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) });
+                             // Salva no caminho do MÊS VIGENTE
+                             await fetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) });
                         }
                     });
                     star.addEventListener('mouseover', () => {
+                        if(container.querySelector('.rating-stars.voted')) return;
                         const val = parseInt(star.dataset.value);
                         stars.forEach(s => { 
                             s.classList.remove('filled'); 
@@ -887,7 +876,7 @@ firebase.initializeApp(firebaseConfig);
 
     function renderJornal() {
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
-        document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Cliqui para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
+        document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
         
         const h = CONTEUDO_JORNAL.hobby || {};
         const hData = globalHobbyData || {};
@@ -906,12 +895,12 @@ firebase.initializeApp(firebaseConfig);
                     <div class="hobby-quote-box"><i class="fas fa-quote-left"></i><p>${(h.texto||'').replace(/"/g, '')}</p></div>
                     <div class="hobby-hobbies"><div class="hobby-list">${(h.tags||[]).map(t => `<span class="hobby-tag">${t}</span>`).join('')}</div></div>
                     <div class="hobby-actions">
-                        <button class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> ${Object.keys(hLikes).length} Curtidas</button>
-                        <button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> ${hComments.length} Comentários</button>
+                        <button id="btn-hobby-like" class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> <span id="hobby-like-count">${Object.keys(hLikes).length}</span> Curtidas</button>
+                        <button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> <span id="hobby-comment-count">${hComments.length}</span> Comentários</button>
                     </div>
                     <div id="hobby-comments-box" class="hobby-comments-section">
                         <div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div>
-                        <div class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar!</p>'}</div>
+                        <div id="hobby-comments-list-inner" class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar!</p>'}</div>
                     </div>
                 </div>
             </div>`;
@@ -1101,12 +1090,18 @@ firebase.initializeApp(firebaseConfig);
         location.reload();
     });
 
-async function voteChallenge(cId, type) {
+    // --- FUNÇÕES DE VOTO E LIKE CORRIGIDAS (SEM RESETAR TELA) ---
+    async function voteChallenge(cId, type) {
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
         globalChallengesData[cId][MY_DEVICE_ID] = type;
+        
+        // Atualiza a UI imediatamente sem recarregar tudo
         renderChallenges(globalChallengesData);
-        await secureFetch(`${BASE_DB_URL}challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
+        
+        // Salva na pasta do mês vigente
+        await secureFetch(`${BASE_DB_URL}challenges_history/${CURRENT_MONTH_KEY}/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
     }
+
     function renderChallenges(data) {
         document.querySelectorAll('.desafio-saude-card').forEach(card => {
             const id = card.dataset.challengeId;
@@ -1155,16 +1150,14 @@ async function voteChallenge(cId, type) {
         });
     }
     
-async function likePraise(id) {
+    async function likePraise(id) {
         const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
         const exists = globalPraiseData[id].likes && globalPraiseData[id].likes[MY_DEVICE_ID];
         
         if(exists) { 
-            // CORREÇÃO: secureFetch
             await secureFetch(url, {method:'DELETE'}); 
             if (globalPraiseData[id].likes) delete globalPraiseData[id].likes[MY_DEVICE_ID]; 
         } else { 
-            // CORREÇÃO: secureFetch
             await secureFetch(url, {method:'PUT', body:JSON.stringify(true)}); 
             if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; 
             globalPraiseData[id].likes[MY_DEVICE_ID]=true; 
@@ -1177,31 +1170,68 @@ async function likePraise(id) {
         if(f&&t&&m) { await fetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
     }
     
-async function likeHobby() {
+    // CORREÇÃO LIKE HOBBY: NÃO RECARREGA A PÁGINA (renderJornal)
+    async function likeHobby() {
         const url = `${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/likes/${MY_DEVICE_ID}.json`;
-        const exists = globalHobbyData.likes && globalHobbyData.likes[MY_DEVICE_ID];
         
-        if(exists) { 
-            // CORREÇÃO: secureFetch para deletar
-            await secureFetch(url, {method:'DELETE'}); 
-            if (globalHobbyData.likes) delete globalHobbyData.likes[MY_DEVICE_ID]; 
-        } else { 
-            // CORREÇÃO: secureFetch para adicionar
-            await secureFetch(url, {method:'PUT', body:JSON.stringify(true)}); 
-            if(!globalHobbyData.likes) globalHobbyData.likes={}; 
-            globalHobbyData.likes[MY_DEVICE_ID]=true; 
+        if(!globalHobbyData.likes) globalHobbyData.likes = {};
+        const exists = globalHobbyData.likes[MY_DEVICE_ID];
+
+        // Atualização Visual Imediata (Otimista)
+        const btn = document.getElementById('btn-hobby-like');
+        const icon = btn.querySelector('i');
+        const countSpan = document.getElementById('hobby-like-count');
+        let currentCount = parseInt(countSpan.textContent) || 0;
+
+        if (exists) {
+            // Remove Like Visualmente
+            btn.classList.remove('liked');
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+            countSpan.textContent = Math.max(0, currentCount - 1);
+            delete globalHobbyData.likes[MY_DEVICE_ID];
+            // Remove no Banco
+            await secureFetch(url, {method:'DELETE'});
+        } else {
+            // Adiciona Like Visualmente
+            btn.classList.add('liked');
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+            countSpan.textContent = currentCount + 1;
+            globalHobbyData.likes[MY_DEVICE_ID] = true;
+            // Adiciona no Banco
+            await secureFetch(url, {method:'PUT', body:JSON.stringify(true)});
         }
-        renderJornal();
+        // NÃO CHAMAR renderJornal() AQUI!
     }
+
     async function sendHobbyComment() {
         const txt = document.getElementById('input-hobby-comment').value;
         if(txt) {
             const author = prompt("Seu nome:") || "Anônimo";
-            await fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json`, {method:'POST', body:JSON.stringify({text:txt, author, date:new Date().toISOString()})});
-            // Recarrega apenas a parte de hobby/comments
+            const newComment = {text:txt, author, date:new Date().toISOString()};
+            
+            // Adiciona visualmente antes de recarregar tudo
+            const list = document.getElementById('hobby-comments-list-inner');
+            const placeholder = list.querySelector('p');
+            if(placeholder) placeholder.remove();
+            
+            const div = document.createElement('div');
+            div.className = 'hobby-comment-item';
+            div.innerHTML = `<strong>${author}:</strong> ${txt}`;
+            list.insertBefore(div, list.firstChild); // Adiciona no topo
+            
+            document.getElementById('input-hobby-comment').value = '';
+            
+            const countSpan = document.getElementById('hobby-comment-count');
+            countSpan.textContent = parseInt(countSpan.textContent) + 1;
+
+            // Envia ao Banco
+            await fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json`, {method:'POST', body:JSON.stringify(newComment)});
+            
+            // Atualiza global data discretamente
             const resp = await fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json");
             globalHobbyData = await resp.json() || {};
-            renderJornal();
         }
     }
 
@@ -1227,7 +1257,8 @@ async function likeHobby() {
     function mostrarAba(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
-function setupForms() {
+    
+    function setupForms() {
         // Sugestão de Filme
         const btnS=document.getElementById('btn-submit-suggestion'); 
         if(btnS) btnS.onclick=async()=>{
