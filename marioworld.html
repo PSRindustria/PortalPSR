@@ -147,8 +147,38 @@
       <button id="btn-back" class="btn-tertiary" style="color: #666;">Voltar ao Portal</button>
     </div>
   </div>
-
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAd9ZTb-vI2ohVLaU22Vt9TuuduQWcve2A", // A mesma chave do Jornal
+      authDomain: "jornalpsr-1b8c6.firebaseapp.com",
+      databaseURL: "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com",
+      projectId: "jornalpsr-1b8c6",
+  };
+
+  // Inicializa
+  firebase.initializeApp(firebaseConfig);
+  let AUTH_TOKEN = null;
+
+  // Faz login silencioso enquanto o jogo carrega
+  firebase.auth().signInAnonymously()
+      .then(u => u.user.getIdToken())
+      .then(token => {
+          AUTH_TOKEN = token;
+          console.log("Jogo conectado com segurança!");
+      })
+      .catch(e => console.error("Erro no login do jogo:", e));
+
+  // Função para enviar dados com o crachá
+  async function secureFetch(url, options = {}) {
+      if (!AUTH_TOKEN) {
+          alert("Erro de Segurança: O jogo ainda não conectou ao servidor. Tente novamente em alguns segundos.");
+          throw new Error("Sem token");
+      }
+      const separator = url.includes('?') ? '&' : '?';
+      return fetch(`${url}${separator}auth=${AUTH_TOKEN}`, options);
+  }
     const FIREBASE_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/games/BobinaWorld/scores.json";
     const PORTAL_URL = "https://psrindustria.github.io/PortalPSR/AreaInterna.html";
     const PLAYER_IMG_URL = "https://i.postimg.cc/k5gYjdCG/Bobinasv2-(1).png"; 
@@ -614,7 +644,7 @@
         const payload = { nome: name, pontos: score, data: new Date().toLocaleString('pt-BR') };
         btnSave.disabled = true; btnSave.innerText = "Enviando...";
         try {
-            await fetch(FIREBASE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+await secureFetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(payload) });
             saveArea.style.display = 'none'; msgSuccess.style.display = 'block';
         } catch (error) {
             console.error(error); alert("Erro de conexão."); btnSave.disabled = false; btnSave.innerText = "Tentar Novamente";
@@ -627,3 +657,4 @@
 </body>
 
 </html>
+
