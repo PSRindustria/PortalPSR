@@ -1071,7 +1071,7 @@
             globalQuizData[q.id][MY_DEVICE_ID] = isCorrect;
             updates[`safety_quiz/${q.id}/${MY_DEVICE_ID}`] = isCorrect;
         }
-        await fetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
+        await secureFetch(BASE_DB_URL + ".json", { method: 'PATCH', body: JSON.stringify(updates) });
         lockQuizUI();
     });
     
