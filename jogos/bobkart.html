@@ -165,7 +165,7 @@
       </div>
 
       <button id="btn-restart" class="btn-action btn-secondary"><i class="fas fa-redo"></i> Correr Novamente</button>
-      <button id="btn-back" class="btn-tertiary">Voltar ao Portal</button>
+      <button id="btn-back" class="btn-tertiary">Voltar para a ConexãoPSR</button>
     </div>
   </div>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -201,7 +201,7 @@
       return fetch(`${url}${separator}auth=${AUTH_TOKEN}`, options);
   }
     const FIREBASE_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/games/BobinaKart/scores.json";
-    const PORTAL_URL = "https://psrindustria.github.io/PortalPSR/AreaInterna.html";
+    const PORTAL_URL = "https://psrindustria.github.io/PortalPSR/jornal.html";
     
     const PLAYER_IMG_URL = "https://i.postimg.cc/d38dYLFv/van-(1).png";
     const CAR_IMAGES_URLS = [
@@ -614,4 +614,5 @@ await secureFetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(payload) 
 </body>
 
 </html>
+
 
