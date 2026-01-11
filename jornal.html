@@ -661,7 +661,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
 <script>
-    // 2. CONFIGURAÇÃO DO FIREBASE
+    // =================================================================
+    // CONFIGURAÇÕES E INICIALIZAÇÃO
+    // =================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyBzMvAw9ahEyd-tSYY08HxcMzo9RKf3IFY",
       authDomain: "jornalpsr-1b8c6.firebaseapp.com",
@@ -669,82 +671,68 @@
       projectId: "jornalpsr-1b8c6",
     };
 
-    // 3. INICIALIZA O FIREBASE
     firebase.initializeApp(firebaseConfig);
     
-    // Variável para guardar o Token de Segurança
     let AUTH_TOKEN = null;
-
-    // --- LOGIN SILENCIOSO ---
-    firebase.auth().signInAnonymously()
-        .then((userCred) => {
-            return userCred.user.getIdToken().then(token => {
-                AUTH_TOKEN = token;
-                console.log("Site autenticado com segurança.");
-                initFirebaseData(); 
-            });
-        })
-        .catch((error) => {
-            console.error("Erro silencioso na autenticação:", error);
-            initFirebaseData(); 
-        });
-
-    // --- FUNÇÃO DE BLINDAGEM ---
-    async function secureFetch(url, options = {}) {
-        if (!AUTH_TOKEN) {
-            console.warn("Aguardando autenticação...");
-            return null; 
-        }
-        const separator = url.includes('?') ? '&' : '?';
-        const secureUrl = `${url}${separator}auth=${AUTH_TOKEN}`;
-        return fetch(secureUrl, options);
-    }
-
-    // VARIAVEIS GLOBAIS
     let CONTEUDO_JORNAL = {
         temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: { meioAmbiente: [], seguranca: [] }
     };
 
-    const SUSTENTABILIDADE_PADRAO = {
-        meioAmbiente: [
-            { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
-            { cor: "#2196f3", icon: "fas fa-lightbulb", titulo: "Energia Renovável", texto: "Transição para energia solar." },
-            { cor: "#ff9800", icon: "fas fa-trash-alt", titulo: "Redução de Resíduos", texto: "Programa de reciclagem de papéis e plásticos." }
-        ],
-        seguranca: [
-            { cor: "#f44336", icon: "fas fa-ban", titulo: "Regras de Ouro", lista: ["Proibido fumar no galpão", "Proibido celular na operação", "Proibido uso de adornos"] },
-            { cor: "#ff9800", icon: "fas fa-hard-hat", titulo: "Uso de EPI", lista: ["Uso obrigatório de EPIs", "Sapatos de segurança e óculos", "Protetor auricular"] },
-            { cor: "#2196f3", icon: "fas fa-comments", titulo: "DDS", lista: ["Informação previne acidentes", "Interação é fundamental", "Siga normas"] },
-            { cor: "#000000", icon: "fas fa-cogs", titulo: "NR-12", lista: ["Nunca retire proteções das máquinas", "Botões de emergência acionáveis"] }
-        ]
-    };
-
-    const SAFETY_QUIZ = [
-        { id: "q1", question: "O que deve ser feito caso uma proteção de máquina precise ser removida?", options: ["Deixar sem proteção", "Recolocar imediatamente após finalizar", "Avisar o colega"], correct: 1 },
-        { id: "q2", question: "Sobre o uso de celulares na área operacional:", options: ["Permitido com fone", "Permitido só redes sociais", "Proibido"], correct: 2 },
-        { id: "q3", question: "Se identificar dano no EPI:", options: ["Informar ao supervisor/trocar", "Usar fita", "Continuar usando"], correct: 0 },
-        { id: "q4", question: "Função do botão de emergência:", options: ["Desligar fim do dia", "Situação de risco imediato", "Produzir mais rápido"], correct: 1 },
-        { id: "q5", question: "Objetivo do DDS:", options: ["Conversa aleatória", "Atrasar serviço", "Prevenir acidentes e orientar"], correct: 2 },
-        { id: "q6", question: "Onde é proibido fumar?", options: ["Apenas escritório", "Dentro do galpão e áreas comuns", "Qualquer lugar"], correct: 1 },
-        { id: "q7", question: "Risco NR-12 (Mãos):", options: ["Refeitório", "Engrenagens e partes móveis", "Computador"], correct: 1 },
-        { id: "q8", question: "Responsável pela limpeza do EPI:", options: ["Supervisor", "Colaborador", "Faxina"], correct: 1 },
-        { id: "q9", question: "Adornos (anéis/pulseiras) na operação:", options: ["Sim, discretos", "Não, proibido", "Sim, debaixo da luva"], correct: 1 },
-        { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
-    ];
-
-    const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
-    // Define a chave do mês (ex: 2026-01) para segregar os dados
-    const CURRENT_MONTH_KEY = new Date().toISOString().slice(0, 7);
-
-    function getDeviceId() { let d = localStorage.getItem('psr_device_id'); if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } return d; }
-    const MY_DEVICE_ID = getDeviceId();
-    
+    // Dados globais para manipulação
     let globalChallengesData = {};
     let globalQuizData = {};
     let globalHobbyData = {}; 
     let globalPraiseData = {}; 
+    
+    // Controle de Mês
+    const CURRENT_MONTH_KEY = new Date().toISOString().slice(0, 7); // Ex: "2026-01"
     let currentPraiseMonth = CURRENT_MONTH_KEY; 
 
+    // Identificador Único do Dispositivo
+    function getDeviceId() { 
+        let d = localStorage.getItem('psr_device_id'); 
+        if (!d) { d = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('psr_device_id', d); } 
+        return d; 
+    }
+    const MY_DEVICE_ID = getDeviceId();
+
+    // =================================================================
+    // AUTENTICAÇÃO E REDE (BLINDAGEM)
+    // =================================================================
+    
+    // Login Silencioso
+    firebase.auth().signInAnonymously()
+        .then((userCred) => {
+            return userCred.user.getIdToken().then(token => {
+                AUTH_TOKEN = token;
+                console.log("Autenticado (Token OK).");
+                initFirebaseData(); 
+            });
+        })
+        .catch((error) => {
+            console.error("Erro Auth:", error);
+            initFirebaseData(); // Tenta carregar mesmo sem auth (modo leitura pública se permitido)
+        });
+
+    // Função de Fetch Seguro (Adiciona Token)
+    async function secureFetch(url, options = {}) {
+        if (!AUTH_TOKEN) {
+            console.warn("Aguardando token de autenticação...");
+            // Tenta obter token novamente se falhou antes
+            const user = firebase.auth().currentUser;
+            if (user) AUTH_TOKEN = await user.getIdToken();
+        }
+        
+        const separator = url.includes('?') ? '&' : '?';
+        // Se ainda não tiver token, tenta enviar sem (pode falhar se regras exigirem auth)
+        const secureUrl = AUTH_TOKEN ? `${url}${separator}auth=${AUTH_TOKEN}` : url;
+        
+        return fetch(secureUrl, options);
+    }
+
+    // =================================================================
+    // CARREGAMENTO DE DADOS
+    // =================================================================
     document.addEventListener("DOMContentLoaded", () => {
         // Carrega Menu e Footer
         ['menu', 'footer'].forEach(file => {
@@ -762,10 +750,12 @@
                         }
                     }
                 })
-                .catch(e => console.error(`Error loading ${file}.html:`, e));
+                .catch(e => console.error(`Erro ao carregar ${file}:`, e));
         });
 
-        initFirebaseData();
+        // Inicia carregamento dos dados principais
+        // Nota: initFirebaseData é chamado após o login anônimo acima
+        
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
         setupToggle('btn-toggle-recipe', 'recipe-form-container');
         setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
@@ -774,10 +764,10 @@
         setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
     });
 
-    // --- CARREGAMENTO OTIMIZADO (PARALELO) ---
     async function initFirebaseData() {
         try {
-            // ALTERAÇÃO: URLs agora usam CURRENT_MONTH_KEY para separar os dados
+            console.log("Iniciando carregamento de dados...");
+            // URLs baseadas no MÊS VIGENTE para histórico limpo mensalmente
             const [
                 contentResp, 
                 clientesResp,
@@ -792,24 +782,21 @@
                 fetch(BASE_DB_URL + "novos_clientes.json"),
                 fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
                 fetch(BASE_DB_URL + "praise_messages.json"),
-                fetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"), // Desafios por mês
+                fetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"),
                 fetch(BASE_DB_URL + "safety_quiz.json"),
-                fetch(BASE_DB_URL + "ratings_history/" + CURRENT_MONTH_KEY + ".json"), // Ratings por mês
+                fetch(BASE_DB_URL + "ratings_history/" + CURRENT_MONTH_KEY + ".json"),
                 fetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
             ]);
 
-            // 1. Carrega dados de conteúdo
+            // 1. Processa Conteúdo
             const contentData = await contentResp.json() || {};
-            if (contentData) {
-                CONTEUDO_JORNAL = contentData;
-                if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
-            }
+            CONTEUDO_JORNAL = contentData;
+            if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
 
-            // 2. Carrega Clientes
-            const clientesData = await clientesResp.json() || {};
-            renderNovosClientes(clientesData);
+            // 2. Processa Clientes
+            renderNovosClientes(await clientesResp.json() || {});
 
-            // 3. Carrega Dados Globais
+            // 3. Processa Dados Globais (com fallback para objeto vazio)
             globalHobbyData = await hobbyResp.json() || {};
             globalPraiseData = await praiseResp.json() || {};
             globalChallengesData = await challengesResp.json() || {}; 
@@ -817,67 +804,163 @@
             const ratingsData = await ratingsResp.json() || {};
             const testimonialsData = await testimonialsResp.json() || {};
 
-            // 4. RENDERIZAÇÃO PRINCIPAL 
+            // 4. Renderiza a estrutura HTML
             renderJornal(); 
 
-            // 5. ATUALIZAÇÃO DA UI PÓS-RENDER
+            // 5. Aplica Lógica Dinâmica (Eventos e Estados)
             renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
             renderTestimonials(testimonialsData);
             checkIfQuizTaken();
-            
-            // Lógica de Ratings (Estrelas)
-            document.querySelectorAll('.rating-container').forEach(container => {
-                const itemId = container.dataset.id;
-                const stars = container.querySelectorAll('.rating-stars i');
-                const scoreDisplay = container.querySelector('.score-value');
-                const itemVotes = ratingsData[itemId] || {}; // Pega votos do mês atual
-                
-                const calcRender = (votes) => {
-                    const vals = Object.values(votes);
-                    let avg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "0.0";
-                    scoreDisplay.textContent = avg;
-                    updateVisualStars(stars, avg);
-                    if (votes[MY_DEVICE_ID]) container.querySelector('.rating-stars').classList.add('voted');
-                };
-                
-                calcRender(itemVotes);
-                
-                stars.forEach(star => {
-                    star.addEventListener('click', async () => {
-                        const val = parseInt(star.dataset.value);
-                        if(!itemVotes[MY_DEVICE_ID]) {
-                             itemVotes[MY_DEVICE_ID] = val; // Atualiza local
-                             calcRender(itemVotes);
-                             // Salva no caminho do MÊS VIGENTE
-                             await fetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(val) });
-                        }
-                    });
-                    star.addEventListener('mouseover', () => {
-                        if(container.querySelector('.rating-stars.voted')) return;
-                        const val = parseInt(star.dataset.value);
-                        stars.forEach(s => { 
-                            s.classList.remove('filled'); 
-                            if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); 
-                            else s.classList.remove('hover-active'); 
-                        });
-                    });
-                    star.addEventListener('mouseout', () => { 
-                        stars.forEach(s => s.classList.remove('hover-active')); 
-                        updateVisualStars(stars, scoreDisplay.textContent); 
-                    });
-                });
-            });
+            setupRatings(ratingsData);
 
-        } catch (e) { console.error("Erro no carregamento paralelo:", e); }
+        } catch (e) { console.error("Erro crítico no initFirebaseData:", e); }
         
         setupForms(); 
     }
 
+    // =================================================================
+    // RENDERIZAÇÃO E LÓGICA (ESTRELAS & DESAFIOS CORRIGIDOS)
+    // =================================================================
+
+    function setupRatings(ratingsData) {
+        document.querySelectorAll('.rating-container').forEach(container => {
+            const itemId = container.dataset.id;
+            const stars = container.querySelectorAll('.rating-stars i');
+            const scoreDisplay = container.querySelector('.score-value');
+            
+            // Garante que existe um objeto para este item, mesmo que vazio
+            if (!ratingsData[itemId]) ratingsData[itemId] = {};
+            const itemVotes = ratingsData[itemId]; 
+            
+            const calcRender = (votes) => {
+                const vals = Object.values(votes);
+                let avg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "0.0";
+                scoreDisplay.textContent = avg;
+                updateVisualStars(stars, avg);
+                
+                // Marca se o usuário atual já votou
+                if (votes[MY_DEVICE_ID]) {
+                    container.querySelector('.rating-stars').classList.add('voted');
+                    // Opcional: Bloquear hover se já votou
+                }
+            };
+            
+            // Renderiza estado inicial
+            calcRender(itemVotes);
+            
+            // Eventos de Clique
+            stars.forEach(star => {
+                star.addEventListener('click', async () => {
+                    const val = parseInt(star.dataset.value);
+                    
+                    // Se ainda não votou
+                    if(!itemVotes[MY_DEVICE_ID]) {
+                         // 1. Atualiza Localmente (Instantâneo)
+                         itemVotes[MY_DEVICE_ID] = val; 
+                         calcRender(itemVotes);
+                         
+                         // 2. Envia para o Firebase (USANDO SECURE FETCH CORRIGIDO)
+                         // Caminho: ratings_history/ANO-MES/item_id/user_id
+                         await secureFetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json`, { 
+                             method: 'PUT', 
+                             body: JSON.stringify(val) 
+                         });
+                    }
+                });
+
+                // Efeito Hover
+                star.addEventListener('mouseover', () => {
+                    if(itemVotes[MY_DEVICE_ID]) return; // Não faz hover se já votou
+                    const val = parseInt(star.dataset.value);
+                    stars.forEach(s => { 
+                        s.classList.remove('filled'); 
+                        if(parseInt(s.dataset.value)<=val) s.classList.add('hover-active'); 
+                        else s.classList.remove('hover-active'); 
+                    });
+                });
+
+                star.addEventListener('mouseout', () => { 
+                    stars.forEach(s => s.classList.remove('hover-active')); 
+                    // Restaura visual baseado na média atual
+                    updateVisualStars(stars, scoreDisplay.textContent); 
+                });
+            });
+        });
+    }
+
+    function updateVisualStars(stars, val) { 
+        const r = Math.round(parseFloat(val)); 
+        stars.forEach(s=>{ 
+            s.classList.remove('fas','filled','hover-active'); 
+            s.classList.add('far'); 
+            if(parseInt(s.dataset.value) <= r) {
+                s.classList.remove('far'); 
+                s.classList.add('fas','filled');
+            } 
+        }); 
+    }
+
+    // Função Global (precisa estar no window) para o clique do HTML
+    window.voteChallenge = async function(cId, type) {
+        // Inicializa objeto se não existir (Correção do bug de leitura)
+        if(!globalChallengesData) globalChallengesData = {};
+        if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
+        
+        // 1. Atualiza Localmente
+        globalChallengesData[cId][MY_DEVICE_ID] = type;
+        
+        // 2. Atualiza Interface
+        renderChallenges(globalChallengesData);
+        
+        // 3. Salva no Firebase
+        await secureFetch(`${BASE_DB_URL}challenges_history/${CURRENT_MONTH_KEY}/${cId}/${MY_DEVICE_ID}.json`, { 
+            method: 'PUT', 
+            body: JSON.stringify(type) 
+        });
+    }
+
+    function renderChallenges(data) {
+        if(!data) data = {};
+        document.querySelectorAll('.desafio-saude-card').forEach(card => {
+            const id = card.dataset.challengeId;
+            const cData = data[id] || {};
+            
+            let s=0, f=0, my=null;
+            for(const [k,v] of Object.entries(cData)) { 
+                if(v==='success') s++; 
+                else f++; 
+                if(k===MY_DEVICE_ID) my=v; 
+            }
+            
+            // Atualiza contadores
+            card.querySelector('.stat-success').textContent = s;
+            card.querySelector('.stat-fail').textContent = f;
+            
+            // Atualiza botões (Active state)
+            const btnSuccess = card.querySelector('.btn-challenge.success');
+            const btnFail = card.querySelector('.btn-challenge.fail');
+            
+            // Remove active de todos
+            btnSuccess.classList.remove('active');
+            btnFail.classList.remove('active');
+            
+            // Adiciona active no selecionado
+            if(my === 'success') btnSuccess.classList.add('active');
+            if(my === 'fail') btnFail.classList.add('active');
+        });
+    }
+
+    // =================================================================
+    // FUNÇÕES DE RENDERIZAÇÃO GERAL
+    // =================================================================
+
     function renderJornal() {
+        // Tema do Mês
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         document.getElementById('tema-mes').innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
         
+        // Hobby (Além do Crachá)
         const h = CONTEUDO_JORNAL.hobby || {};
         const hData = globalHobbyData || {};
         const hLikes = hData.likes || {};
@@ -886,7 +969,6 @@
         const hHeartIcon = hUserLiked ? 'fas' : 'far';
         hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-        // ADICIONEI IDs NOS BOTÕES PARA ATUALIZAÇÃO VIA JS SEM RE-RENDER
         document.getElementById('hobby-container').innerHTML = `
             <div class="hobby-content">
                 <div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div>
@@ -906,18 +988,25 @@
                 </div>
             </div>`;
         
+        // Saúde Física
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         document.getElementById('saude-fisica-hero').innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
+        // Receitas
         const recContainer = document.getElementById('receitas-container'); recContainer.innerHTML = ''; 
         (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; });
         
+        // Desafios
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         document.getElementById('titulo-desafio-mes').innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
 
         const desContainer = document.getElementById('desafios-container'); desContainer.innerHTML = ''; 
-        (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; });
+        (CONTEUDO_JORNAL.desafios||[]).forEach(d => { 
+            // IMPORTANTE: onclick chama a função global window.voteChallenge
+            desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; 
+        });
         
+        // Cultura (Filmes/Livros)
         const cultContainer = document.getElementById('cultura-container'); 
         cultContainer.innerHTML = ''; 
         (CONTEUDO_JORNAL.cultura||[]).forEach(c => { 
@@ -941,6 +1030,7 @@
                 </article>`; 
         });
 
+        // Sustentabilidade
         const maContainer = document.getElementById('cards-meio-ambiente'); maContainer.innerHTML = '';
         CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; });
 
@@ -970,6 +1060,10 @@
             listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>';
         }
     }
+
+    // =================================================================
+    // INTERAÇÕES E OUTRAS FUNÇÕES
+    // =================================================================
 
     function toggleTodosClientes() {
         const lista = document.getElementById('lista-clientes');
@@ -1091,31 +1185,8 @@
         location.reload();
     });
 
-    // --- FUNÇÕES DE VOTO E LIKE CORRIGIDAS (SEM RESETAR TELA) ---
-    async function voteChallenge(cId, type) {
-        if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
-        globalChallengesData[cId][MY_DEVICE_ID] = type;
-        
-        // Atualiza a UI imediatamente sem recarregar tudo
-        renderChallenges(globalChallengesData);
-        
-        // Salva na pasta do mês vigente
-        await secureFetch(`${BASE_DB_URL}challenges_history/${CURRENT_MONTH_KEY}/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
-    }
-
-    function renderChallenges(data) {
-        document.querySelectorAll('.desafio-saude-card').forEach(card => {
-            const id = card.dataset.challengeId;
-            const cData = data[id] || {};
-            let s=0, f=0, my=null;
-            for(const [k,v] of Object.entries(cData)) { if(v==='success') s++; else f++; if(k===MY_DEVICE_ID) my=v; }
-            card.querySelector('.stat-success').textContent = s;
-            card.querySelector('.stat-fail').textContent = f;
-            card.querySelector('.btn-challenge.success').classList.toggle('active', my==='success');
-            card.querySelector('.btn-challenge.fail').classList.toggle('active', my==='fail');
-        });
-    }
-
+    // --- FUNÇÕES DE VOTO E LIKE ---
+    
     function renderPraiseSection(selectedMonth) {
         currentPraiseMonth = selectedMonth;
         const container = document.getElementById('praise-container');
@@ -1171,48 +1242,40 @@
         if(f&&t&&m) { await fetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
     }
     
-    // CORREÇÃO LIKE HOBBY: NÃO RECARREGA A PÁGINA (renderJornal)
-    async function likeHobby() {
+    window.likeHobby = async function() {
         const url = `${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/likes/${MY_DEVICE_ID}.json`;
         
         if(!globalHobbyData.likes) globalHobbyData.likes = {};
         const exists = globalHobbyData.likes[MY_DEVICE_ID];
 
-        // Atualização Visual Imediata (Otimista)
         const btn = document.getElementById('btn-hobby-like');
         const icon = btn.querySelector('i');
         const countSpan = document.getElementById('hobby-like-count');
         let currentCount = parseInt(countSpan.textContent) || 0;
 
         if (exists) {
-            // Remove Like Visualmente
             btn.classList.remove('liked');
             icon.classList.remove('fas');
             icon.classList.add('far');
             countSpan.textContent = Math.max(0, currentCount - 1);
             delete globalHobbyData.likes[MY_DEVICE_ID];
-            // Remove no Banco
             await secureFetch(url, {method:'DELETE'});
         } else {
-            // Adiciona Like Visualmente
             btn.classList.add('liked');
             icon.classList.remove('far');
             icon.classList.add('fas');
             countSpan.textContent = currentCount + 1;
             globalHobbyData.likes[MY_DEVICE_ID] = true;
-            // Adiciona no Banco
             await secureFetch(url, {method:'PUT', body:JSON.stringify(true)});
         }
-        // NÃO CHAMAR renderJornal() AQUI!
     }
 
-    async function sendHobbyComment() {
+    window.sendHobbyComment = async function() {
         const txt = document.getElementById('input-hobby-comment').value;
         if(txt) {
             const author = prompt("Seu nome:") || "Anônimo";
             const newComment = {text:txt, author, date:new Date().toISOString()};
             
-            // Adiciona visualmente antes de recarregar tudo
             const list = document.getElementById('hobby-comments-list-inner');
             const placeholder = list.querySelector('p');
             if(placeholder) placeholder.remove();
@@ -1227,10 +1290,8 @@
             const countSpan = document.getElementById('hobby-comment-count');
             countSpan.textContent = parseInt(countSpan.textContent) + 1;
 
-            // Envia ao Banco
             await fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json`, {method:'POST', body:JSON.stringify(newComment)});
             
-            // Atualiza global data discretamente
             const resp = await fetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json");
             globalHobbyData = await resp.json() || {};
         }
@@ -1250,17 +1311,45 @@
         });
     }
 
+    // Funções de Toggle Genéricas
+    const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
+    const SUSTENTABILIDADE_PADRAO = {
+        meioAmbiente: [
+            { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
+            { cor: "#2196f3", icon: "fas fa-lightbulb", titulo: "Energia Renovável", texto: "Transição para energia solar." },
+            { cor: "#ff9800", icon: "fas fa-trash-alt", titulo: "Redução de Resíduos", texto: "Programa de reciclagem de papéis e plásticos." }
+        ],
+        seguranca: [
+            { cor: "#f44336", icon: "fas fa-ban", titulo: "Regras de Ouro", lista: ["Proibido fumar no galpão", "Proibido celular na operação", "Proibido uso de adornos"] },
+            { cor: "#ff9800", icon: "fas fa-hard-hat", titulo: "Uso de EPI", lista: ["Uso obrigatório de EPIs", "Sapatos de segurança e óculos", "Protetor auricular"] },
+            { cor: "#2196f3", icon: "fas fa-comments", titulo: "DDS", lista: ["Informação previne acidentes", "Interação é fundamental", "Siga normas"] },
+            { cor: "#000000", icon: "fas fa-cogs", titulo: "NR-12", lista: ["Nunca retire proteções das máquinas", "Botões de emergência acionáveis"] }
+        ]
+    };
+
+    const SAFETY_QUIZ = [
+        { id: "q1", question: "O que deve ser feito caso uma proteção de máquina precise ser removida?", options: ["Deixar sem proteção", "Recolocar imediatamente após finalizar", "Avisar o colega"], correct: 1 },
+        { id: "q2", question: "Sobre o uso de celulares na área operacional:", options: ["Permitido com fone", "Permitido só redes sociais", "Proibido"], correct: 2 },
+        { id: "q3", question: "Se identificar dano no EPI:", options: ["Informar ao supervisor/trocar", "Usar fita", "Continuar usando"], correct: 0 },
+        { id: "q4", question: "Função do botão de emergência:", options: ["Desligar fim do dia", "Situação de risco imediato", "Produzir mais rápido"], correct: 1 },
+        { id: "q5", question: "Objetivo do DDS:", options: ["Conversa aleatória", "Atrasar serviço", "Prevenir acidentes e orientar"], correct: 2 },
+        { id: "q6", question: "Onde é proibido fumar?", options: ["Apenas escritório", "Dentro do galpão e áreas comuns", "Qualquer lugar"], correct: 1 },
+        { id: "q7", question: "Risco NR-12 (Mãos):", options: ["Refeitório", "Engrenagens e partes móveis", "Computador"], correct: 1 },
+        { id: "q8", question: "Responsável pela limpeza do EPI:", options: ["Supervisor", "Colaborador", "Faxina"], correct: 1 },
+        { id: "q9", question: "Adornos (anéis/pulseiras) na operação:", options: ["Sim, discretos", "Não, proibido", "Sim, debaixo da luva"], correct: 1 },
+        { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
+    ];
+
     function toggleGeneric(c, b, o, f) { const el=document.getElementById(c), btn=document.getElementById(b); if(el.style.display==='block'){el.style.display='none';btn.innerText=o;btn.style.background='var(--azul-marinho)';btn.style.color='white';}else{el.style.display='block';btn.innerText=f;btn.style.background='white';btn.style.color='var(--azul-marinho)';btn.style.border='2px solid var(--azul-marinho)';}}
-    function toggleMateria() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
-    function toggleSaudeFisica() { toggleGeneric('materiaSaudeFisica', 'btnLerMaisSaudeFisica', 'Ler sobre saúde', 'Fechar'); }
-    function toggleReceita(id) { const el=document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; }
-    function toggleHobbyComments() { const el=document.getElementById('hobby-comments-box'); el.style.display=el.style.display==='block'?'none':'block'; }
-    function mostrarAba(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
-    function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
+    window.toggleMateria = function() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
+    window.toggleSaudeFisica = function() { toggleGeneric('materiaSaudeFisica', 'btnLerMaisSaudeFisica', 'Ler sobre saúde', 'Fechar'); }
+    window.toggleReceita = function(id) { const el=document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; }
+    window.toggleHobbyComments = function() { const el=document.getElementById('hobby-comments-box'); el.style.display=el.style.display==='block'?'none':'block'; }
+    window.mostrarAba = function(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
+    
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
     
     function setupForms() {
-        // Sugestão de Filme
         const btnS=document.getElementById('btn-submit-suggestion'); 
         if(btnS) btnS.onclick=async()=>{
             const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; 
@@ -1270,7 +1359,6 @@
             }
         };
 
-        // Receita
         const btnR=document.getElementById('btn-submit-recipe'); 
         if(btnR) btnR.onclick=async()=>{
             const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; 
@@ -1280,7 +1368,6 @@
             }
         };
 
-        // Depoimento
         const btnT=document.getElementById('btn-submit-testimonial'); 
         if(btnT) btnT.onclick=async()=>{
             const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; 
@@ -1290,7 +1377,6 @@
             }
         };
 
-        // Elogio (Novo)
         const btnP=document.getElementById('btn-submit-praise'); 
         if(btnP) btnP.onclick=async()=>{
             const f=document.getElementById('praise-from').value, t=document.getElementById('praise-to').value, m=document.getElementById('praise-msg').value;
@@ -1300,7 +1386,6 @@
             }
         };
 
-        // Sugestão de Jogo
         const btnG=document.getElementById('btn-submit-game-suggestion'); 
         if(btnG) btnG.onclick=async()=>{
             const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; 
@@ -1310,7 +1395,6 @@
             }
         };
 
-        // Indicação Hobby
         const btnH=document.getElementById('btn-submit-hobby-suggestion'); 
         if(btnH) btnH.onclick=async()=>{
             const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; 
