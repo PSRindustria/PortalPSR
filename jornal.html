@@ -697,14 +697,64 @@
     const MY_DEVICE_ID = getDeviceId();
 
     // =================================================================
+    // SISTEMA DE CACHE (OTIMIZAÇÃO DE VELOCIDADE)
+    // =================================================================
+    const CACHE_PREFIX = "psr_portal_cache_v1_";
+    const CACHE_KEYS = {
+        CONTENT: CACHE_PREFIX + "content",
+        CLIENTES: CACHE_PREFIX + "clientes",
+        HOBBY: CACHE_PREFIX + "hobby_" + CURRENT_MONTH_KEY,
+        PRAISE: CACHE_PREFIX + "praise",
+        CHALLENGES: CACHE_PREFIX + "challenges_" + CURRENT_MONTH_KEY,
+        QUIZ: CACHE_PREFIX + "quiz",
+        RATINGS: CACHE_PREFIX + "ratings_" + CURRENT_MONTH_KEY,
+        TESTIMONIALS: CACHE_PREFIX + "testimonials_" + CURRENT_MONTH_KEY
+    };
+
+    function saveCache(key, data) {
+        try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { console.warn("Cache cheio/erro", e); }
+    }
+    function loadCache(key) {
+        try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch (e) { return null; }
+    }
+
+    function tryRenderFromCache() {
+        console.log("Tentando renderizar do cache...");
+        const cContent = loadCache(CACHE_KEYS.CONTENT);
+        if(cContent) { CONTEUDO_JORNAL = cContent; if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO; renderJornal(); }
+        
+        const cClientes = loadCache(CACHE_KEYS.CLIENTES);
+        if(cClientes) renderNovosClientes(cClientes);
+
+        globalHobbyData = loadCache(CACHE_KEYS.HOBBY) || {};
+        globalPraiseData = loadCache(CACHE_KEYS.PRAISE) || {};
+        globalChallengesData = loadCache(CACHE_KEYS.CHALLENGES) || {};
+        globalQuizData = loadCache(CACHE_KEYS.QUIZ) || {};
+        const ratingsData = loadCache(CACHE_KEYS.RATINGS) || {};
+        const testimonialsData = loadCache(CACHE_KEYS.TESTIMONIALS) || {};
+
+        if(cContent) { // Só renderiza complementos se o conteúdo principal existiu
+            renderJornal(); // Atualiza com dados de likes/comentários se existirem
+            renderChallenges(globalChallengesData);
+            renderPraiseSection(currentPraiseMonth);
+            renderTestimonials(testimonialsData);
+            checkIfQuizTaken();
+            setupRatings(ratingsData);
+        }
+    }
+
+    // =================================================================
     // AUTENTICAÇÃO E REDE (BLINDAGEM)
     // =================================================================
     
+    // Tenta carregar cache IMEDIATAMENTE antes mesmo da autenticação
+    tryRenderFromCache();
+
     firebase.auth().signInAnonymously()
         .then((userCred) => {
             return userCred.user.getIdToken().then(token => {
                 AUTH_TOKEN = token;
-                console.log("Autenticado (Token OK).");
+                console.log("Autenticado (Token OK). Buscando atualizações...");
                 initFirebaseData(); 
             });
         })
@@ -755,7 +805,6 @@
 
     async function initFirebaseData() {
         try {
-            console.log("Iniciando carregamento...");
             const [
                 contentResp, clientesResp, hobbyResp, praiseResp, 
                 challengesResp, quizResp, ratingsResp, testimonialsResp
@@ -773,18 +822,32 @@
             const contentData = await contentResp.json() || {};
             CONTEUDO_JORNAL = contentData;
             if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
+            saveCache(CACHE_KEYS.CONTENT, contentData); // Salva Cache
 
-            renderNovosClientes(await clientesResp.json() || {});
+            const clientesData = await clientesResp.json() || {};
+            renderNovosClientes(clientesData);
+            saveCache(CACHE_KEYS.CLIENTES, clientesData); // Salva Cache
 
             globalHobbyData = await hobbyResp.json() || {};
+            saveCache(CACHE_KEYS.HOBBY, globalHobbyData); // Salva Cache
+
             globalPraiseData = await praiseResp.json() || {};
+            saveCache(CACHE_KEYS.PRAISE, globalPraiseData); // Salva Cache
+
             globalChallengesData = await challengesResp.json() || {}; 
+            saveCache(CACHE_KEYS.CHALLENGES, globalChallengesData); // Salva Cache
+
             globalQuizData = await quizResp.json() || {};
+            saveCache(CACHE_KEYS.QUIZ, globalQuizData); // Salva Cache
+
             const ratingsData = await ratingsResp.json() || {};
+            saveCache(CACHE_KEYS.RATINGS, ratingsData); // Salva Cache
+
             const testimonialsData = await testimonialsResp.json() || {};
+            saveCache(CACHE_KEYS.TESTIMONIALS, testimonialsData); // Salva Cache
 
+            // RE-RENDERIZA TUDO COM DADOS FRESCOS
             renderJornal(); 
-
             renderChallenges(globalChallengesData);
             renderPraiseSection(currentPraiseMonth);
             renderTestimonials(testimonialsData);
