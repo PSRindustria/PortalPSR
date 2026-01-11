@@ -24,7 +24,7 @@
       margin: 0; padding: 0;
       overflow: hidden;
       font-family: 'Poppins', sans-serif;
-      background-color: var(--azul-ceu-claro);
+      background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 50%, #E0F6FF 100%);
       touch-action: none;
       user-select: none;
     }
@@ -43,48 +43,51 @@
       position: absolute; top: 20px; right: 20px;
       font-size: 2.5rem; font-weight: 800;
       color: var(--branco);
-      text-shadow: 3px 3px 0px #000;
+      text-shadow: 3px 3px 0px #000, 0 0 20px rgba(218, 165, 32, 0.5);
       z-index: 10;
-      background: rgba(0,0,0,0.2);
+      background: linear-gradient(135deg, rgba(0,51,102,0.8), rgba(0,51,102,0.6));
       padding: 5px 20px;
       border-radius: 15px;
-      border: 3px solid var(--branco);
+      border: 3px solid var(--dourado);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 2px 10px rgba(255,255,255,0.2);
     }
 
     .btn-start {
       pointer-events: auto;
-      background-color: var(--dourado);
+      background: linear-gradient(135deg, #FFD700, #FFA500);
       color: var(--azul-marinho);
       font-size: 1.5rem; font-weight: 700;
       padding: 15px 40px; border: none; border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 8px 0px #b8860b, 0 15px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 0px #b8860b, 0 15px 30px rgba(0,0,0,0.3);
       display: flex; align-items: center; gap: 10px;
       animation: pulse 2s infinite;
       text-transform: uppercase; letter-spacing: 1px;
       transition: transform 0.1s, box-shadow 0.1s;
+      border: 3px solid rgba(255,255,255,0.5);
     }
     .btn-start:active { transform: translateY(8px); box-shadow: 0 0 0 #b8860b, inset 0 2px 5px rgba(0,0,0,0.2); }
 
     @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
+        0% { transform: scale(1); box-shadow: 0 8px 0px #b8860b, 0 15px 30px rgba(0,0,0,0.3), 0 0 0 0 rgba(255, 215, 0, 0.7); }
+        50% { transform: scale(1.05); box-shadow: 0 8px 0px #b8860b, 0 15px 30px rgba(0,0,0,0.3), 0 0 0 15px rgba(255, 215, 0, 0); }
+        100% { transform: scale(1); box-shadow: 0 8px 0px #b8860b, 0 15px 30px rgba(0,0,0,0.3), 0 0 0 0 rgba(255, 215, 0, 0); }
     }
 
     /* MODAL */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 51, 102, 0.9);
-      backdrop-filter: blur(8px); z-index: 100;
+      background: rgba(0, 51, 102, 0.95);
+      backdrop-filter: blur(12px); z-index: 100;
       display: none; justify-content: center; align-items: center;
       padding: 20px; box-sizing: border-box;
     }
 
     .modal-content {
-      background: var(--branco); width: 100%; max-width: 380px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      width: 100%; max-width: 380px;
       border-radius: 20px; padding: 25px; text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 100px rgba(218, 165, 32, 0.3);
       border-top: 8px solid var(--dourado);
       animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex; flex-direction: column;
@@ -96,20 +99,20 @@
     }
 
     .modal-title { color: var(--azul-marinho); font-size: 1.8rem; margin: 0 0 10px 0; font-weight: 800; }
-    .final-score { font-size: 4rem; color: var(--dourado); font-weight: 800; line-height: 1; margin-bottom: 20px; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+    .final-score { font-size: 4rem; color: transparent; background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00); background-clip: text; -webkit-background-clip: text; font-weight: 800; line-height: 1; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(255, 215, 0, 0.3); }
 
     .input-group { text-align: left; margin-bottom: 15px; }
     .input-group label { display: block; color: #555; font-size: 0.9rem; margin-bottom: 5px; font-weight: 700; }
-    .input-group input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 12px; font-family: inherit; font-size: 1.1rem; outline: none; box-sizing: border-box; }
-    .input-group input:focus { border-color: var(--dourado); }
+    .input-group input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 12px; font-family: inherit; font-size: 1.1rem; outline: none; box-sizing: border-box; transition: 0.3s; }
+    .input-group input:focus { border-color: var(--dourado); box-shadow: 0 0 15px rgba(218, 165, 32, 0.3); }
 
-    .btn-action { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
-    .btn-primary { background: var(--azul-marinho); color: white; }
-    .btn-primary:hover { background: #002244; transform: translateY(-2px); }
-    .btn-secondary { background: #f0f0f0; color: #666; }
-    .btn-secondary:hover { background: #e0e0e0; }
+    .btn-action { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-bottom: 12px; transition: 0.3s; }
+    .btn-primary { background: linear-gradient(135deg, var(--azul-marinho), #004080); color: white; box-shadow: 0 4px 15px rgba(0, 51, 102, 0.3); }
+    .btn-primary:hover { background: linear-gradient(135deg, #002244, #003366); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 51, 102, 0.4); }
+    .btn-secondary { background: linear-gradient(135deg, #f0f0f0, #e8e8e8); color: #666; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+    .btn-secondary:hover { background: linear-gradient(135deg, #e0e0e0, #d8d8d8); transform: translateY(-2px); }
     
-    .btn-tertiary { background: transparent; color: #bbb; font-size: 0.9rem; margin-top: 5px; font-weight: 500; padding: 10px; border: none; cursor: pointer; }
+    .btn-tertiary { background: transparent; color: #bbb; font-size: 0.9rem; margin-top: 5px; font-weight: 500; padding: 10px; border: none; cursor: pointer; transition: 0.3s; }
     .btn-tertiary:hover { color: #fff; text-decoration: underline; }
 
     .hidden { display: none !important; }
@@ -122,7 +125,7 @@
   <div id="ui-layer">
     <div id="score-display" class="hud-score hidden">0</div>
     <button id="start-btn" class="btn-start hidden"><i class="fas fa-play"></i> START GAME</button>
-    <div id="loading-msg" style="font-weight: bold; color: var(--azul-marinho); font-size: 1.2rem;">Carregando...</div>
+    <div id="loading-msg" style="font-weight: bold; color: var(--azul-marinho); font-size: 1.2rem; text-shadow: 2px 2px 4px rgba(255,255,255,0.8);">Carregando...</div>
   </div>
 
   <div id="modal-gameover" class="modal-overlay">
@@ -157,11 +160,9 @@
       projectId: "jornalpsr-1b8c6",
   };
 
-  // Inicializa
   firebase.initializeApp(firebaseConfig);
   let AUTH_TOKEN = null;
 
-  // Faz login silencioso enquanto o jogo carrega
   firebase.auth().signInAnonymously()
       .then(u => u.user.getIdToken())
       .then(token => {
@@ -170,7 +171,6 @@
       })
       .catch(e => console.error("Erro no login do jogo:", e));
 
-  // Função para enviar dados com o crachá
   async function secureFetch(url, options = {}) {
       if (!AUTH_TOKEN) {
           alert("Erro de Segurança: O jogo ainda não conectou ao servidor. Tente novamente em alguns segundos.");
@@ -210,13 +210,11 @@
         resizeCanvas();
     };
 
-    // === VARIÁVEIS DE JOGO ===
     let gameRunning = false;
     let frames = 0;
     let score = 0;
     let gameSpeed = 6;
     
-    // Configuração de Dificuldade
     const START_SPEED = 6;
     const MAX_SPEED = 22; 
     
@@ -224,11 +222,10 @@
     let groundY = 0;
     
     let nextSpawnDistance = 0;
-    let nextShortcutFrame = 0; // Timer para o atalho
+    let nextShortcutFrame = 0;
 
-    // CMYK CORES
-    const CMYK_COLORS = ['#00FFFF', '#FF00FF', '#FFFF00', '#111111']; // Ciano, Magenta, Amarelo, Preto
-    let currentInkIndex = 0; // Para controlar o ciclo
+    const CMYK_COLORS = ['#00FFFF', '#FF00FF', '#FFFF00', '#111111'];
+    let currentInkIndex = 0;
 
     const player = {
         x: 100,
@@ -238,8 +235,8 @@
         legHeight: 20,
         vy: 0,
         gravity: 0.7, 
-        jumpForce: -17, // 1º PULO FORTE
-        doubleJumpForce: -12, // 2º PULO FRACO
+        jumpForce: -17,
+        doubleJumpForce: -12,
         jumpCount: 0, 
         grounded: true,
         runFrame: 0,
@@ -262,14 +259,14 @@
     }
 
     function spawnJumpSmoke(x, y, big = false) {
-        const count = big ? 10 : 5;
+        const count = big ? 15 : 8;
         for(let i=0; i<count; i++) {
             particles.push({
-                x: x + (Math.random() * 20 - 10),
+                x: x + (Math.random() * 30 - 15),
                 y: y,
-                vx: (Math.random() - 0.5) * 4,
-                vy: (Math.random() * 2) + 1,
-                size: Math.random() * 6 + 4,
+                vx: (Math.random() - 0.5) * 5,
+                vy: (Math.random() * 3) + 1,
+                size: Math.random() * 8 + 3,
                 life: 1.0,
                 color: `rgba(255,255,255,`
             });
@@ -289,7 +286,6 @@
         }
     }
 
-    // === GERAÇÃO ===
     function spawnObstacle() {
         const type = Math.random() < 0.35 ? 'INK' : 'TUBETE';
         let width, height, yPos, color = null;
@@ -299,9 +295,7 @@
             height = 25; 
             yPos = groundY - height + 10;
             
-            // Atribui a cor da ordem CMYK
             color = CMYK_COLORS[currentInkIndex];
-            // Avança para a próxima cor (0->1->2->3->0...)
             currentInkIndex = (currentInkIndex + 1) % CMYK_COLORS.length;
 
         } else {
@@ -316,7 +310,7 @@
             y: yPos,
             width: width,
             height: height,
-            color: color, // Salva a cor específica desse obstáculo
+            color: color,
             passed: false
         });
         
@@ -338,8 +332,8 @@
         clouds.push({
             x: canvas.width,
             y: Math.random() * (canvas.height / 2),
-            width: Math.random() * 60 + 40,
-            speed: Math.random() * 1 + 0.5
+            width: Math.random() * 80 + 50,
+            speed: Math.random() * 1.2 + 0.5
         });
     }
 
@@ -347,11 +341,9 @@
         gameSpeed = START_SPEED + (score * 0.18);
         if(gameSpeed > MAX_SPEED) gameSpeed = MAX_SPEED;
 
-        // Física
         player.vy += player.gravity;
         player.y += player.vy;
 
-        // Colisões (Plataforma/Chão)
         let onPlatform = false;
         if (player.vy >= 0) { 
             for (let p of platforms) {
@@ -379,15 +371,13 @@
             }
         }
 
-        // Animação
-        player.runFrame += 0.25 + (gameSpeed * 0.03);
+        player.runFrame += 0.3 + (gameSpeed * 0.025);
         if(player.grounded) {
-            player.bobOffset = Math.sin(player.runFrame * 2) * 4; 
+            player.bobOffset = Math.sin(player.runFrame * 2.2) * 5; 
         } else {
             player.bobOffset = 0;
         }
 
-        // Objetos
         for(let i = platforms.length - 1; i >= 0; i--) {
             platforms[i].x -= gameSpeed;
             if(platforms[i].x + platforms[i].width < 0) platforms.splice(i, 1);
@@ -397,22 +387,19 @@
             let p = particles[i];
             p.x -= gameSpeed * 0.5;
             p.y += p.vy * 0.2;
-            p.size *= 0.9;
-            p.life -= 0.05;
+            p.size *= 0.92;
+            p.life -= 0.04;
             if(p.life <= 0) particles.splice(i, 1);
         }
 
-        // === SPAWN ATALHO DINÂMICO (4 a 8s) ===
         if (frames >= nextShortcutFrame) {
             spawnSkyShortcut();
             obstacles.push({x: canvas.width + 400, y: 0, width: 0, height: 0, passed: true}); 
             
-            // Calcula próximo spawn: entre 4s (240f) e 8s (480f) a partir de agora
             const randomDelay = Math.floor(Math.random() * (480 - 240 + 1)) + 240;
             nextShortcutFrame = frames + randomDelay;
         }
 
-        // Spawn Obstáculos
         const lastObs = obstacles[obstacles.length - 1];
         if (!lastObs || (canvas.width - lastObs.x > nextSpawnDistance)) {
             const incomingPlatform = platforms.some(p => p.x > canvas.width - 200 && p.x < canvas.width + 100);
@@ -444,7 +431,7 @@
             if (obs.x + obs.width < 0) obstacles.splice(i, 1);
         }
 
-        if(Math.random() < 0.02) spawnCloud();
+        if(Math.random() < 0.015) spawnCloud();
         for(let i=clouds.length-1; i>=0; i--) {
             clouds[i].x -= clouds[i].speed;
             if(clouds[i].x + clouds[i].width < 0) clouds.splice(i,1);
@@ -452,56 +439,143 @@
     }
 
     function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        skyGrad.addColorStop(0, '#87CEEB');
+        skyGrad.addColorStop(0.5, '#B0E0E6');
+        skyGrad.addColorStop(1, '#E0F6FF');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
         clouds.forEach(c => {
-            ctx.beginPath(); ctx.arc(c.x, c.y, c.width/2, 0, Math.PI*2);
-            ctx.arc(c.x + c.width*0.5, c.y-10, c.width/3, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = "rgba(255,255,255,0.85)";
+            ctx.shadowColor = 'rgba(0,0,0,0.1)';
+            ctx.shadowBlur = 15;
+            ctx.beginPath(); 
+            ctx.arc(c.x, c.y, c.width/2, 0, Math.PI*2);
+            ctx.arc(c.x + c.width*0.4, c.y-c.width*0.15, c.width/2.5, 0, Math.PI*2);
+            ctx.arc(c.x + c.width*0.7, c.y, c.width/3, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
         });
 
-        ctx.fillStyle = "#5D4037"; ctx.strokeStyle = "#3E2723"; ctx.lineWidth = 3;
         platforms.forEach(p => {
-            ctx.fillRect(p.x, p.y, p.width, p.height); ctx.strokeRect(p.x, p.y, p.width, p.height);
-            ctx.fillStyle = "#AA8800"; ctx.beginPath(); ctx.arc(p.x+5, p.y+5, 3, 0, Math.PI*2); ctx.fill();
-            ctx.beginPath(); ctx.arc(p.x+p.width-5, p.y+5, 3, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = "#5D4037"; 
+            const platGrad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.height);
+            platGrad.addColorStop(0, '#6D4C41');
+            platGrad.addColorStop(0.5, '#5D4037');
+            platGrad.addColorStop(1, '#4E342E');
+            ctx.fillStyle = platGrad;
+            ctx.fillRect(p.x, p.y, p.width, p.height);
+            
+            ctx.strokeStyle = "#3E2723";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(p.x, p.y, p.width, p.height);
+            
+            ctx.fillStyle = "#D4A574";
+            ctx.beginPath();
+            ctx.arc(p.x+8, p.y+p.height/2, 4, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(p.x+p.width-8, p.y+p.height/2, 4, 0, Math.PI*2);
+            ctx.fill();
         });
 
-        ctx.fillStyle = "#228B22"; ctx.fillRect(0, groundY, canvas.width, 20);
-        ctx.fillStyle = "#D2691E"; ctx.fillRect(0, groundY + 20, canvas.width, canvas.height - groundY - 20);
-        ctx.fillStyle = "#8B4500";
+        const grassGrad = ctx.createLinearGradient(0, groundY, 0, groundY + 25);
+        grassGrad.addColorStop(0, '#2E7D32');
+        grassGrad.addColorStop(1, '#1B5E20');
+        ctx.fillStyle = grassGrad;
+        ctx.fillRect(0, groundY, canvas.width, 25);
+        
+        ctx.fillStyle = '#1B5E20';
+        for(let i = 0; i < canvas.width; i += 15) {
+            ctx.fillRect(i, groundY, 2, 8);
+            ctx.fillRect(i + 5, groundY + 3, 2, 6);
+            ctx.fillRect(i + 10, groundY + 1, 2, 7);
+        }
+
+        const dirtGrad = ctx.createLinearGradient(0, groundY + 25, 0, canvas.height);
+        dirtGrad.addColorStop(0, '#6D4C41');
+        dirtGrad.addColorStop(0.3, '#5D4037');
+        dirtGrad.addColorStop(1, '#4E342E');
+        ctx.fillStyle = dirtGrad;
+        ctx.fillRect(0, groundY + 25, canvas.width, canvas.height - groundY - 25);
+        
+        ctx.fillStyle = "#8B6F47";
         let offset = (frames * gameSpeed) % 200;
         for(let i=0; i<canvas.width + 200; i+=200) {
-            ctx.fillRect(i - offset, groundY + 30, 20, 10);
-            ctx.fillRect((i - offset) + 80, groundY + 60, 15, 8);
+            ctx.beginPath();
+            ctx.ellipse(i - offset, groundY + 40, 12, 8, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse((i - offset) + 80, groundY + 65, 10, 6, 0, 0, Math.PI*2);
+            ctx.fill();
         }
 
         obstacles.forEach(obs => {
             if (obs.type === 'INK') {
-                // TINTA CMYK
-                ctx.fillStyle = obs.color || "#000"; // Usa a cor salva ou preto fallback
+                ctx.shadowColor = obs.color;
+                ctx.shadowBlur = 20;
+                
+                ctx.fillStyle = obs.color || "#000";
                 ctx.beginPath();
-                ctx.ellipse(obs.x + obs.width/2, obs.y + obs.height - 2, obs.width/2, obs.height/1.5, 0, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.ellipse(obs.x + 15, obs.y + obs.height - 2, 15, 8, 0, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.ellipse(obs.x + obs.width - 15, obs.y + obs.height - 5, 12, 10, 0, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.arc(obs.x - 5, obs.y + obs.height, 3, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.arc(obs.x + obs.width + 5, obs.y + obs.height - 5, 4, 0, Math.PI*2); ctx.fill();
+                ctx.ellipse(obs.x + obs.width/2, obs.y + obs.height - 2, obs.width/2, obs.height/1.5, 0, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.ellipse(obs.x + 15, obs.y + obs.height - 2, 15, 8, 0, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.ellipse(obs.x + obs.width - 15, obs.y + obs.height - 5, 12, 10, 0, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(obs.x - 5, obs.y + obs.height, 3, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(obs.x + obs.width + 5, obs.y + obs.height - 5, 4, 0, Math.PI*2);
+                ctx.fill();
 
-                ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-                ctx.beginPath(); ctx.ellipse(obs.x + obs.width/2 - 5, obs.y + obs.height - 8, obs.width/3, 4, 0, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                ctx.beginPath();
+                ctx.ellipse(obs.x + obs.width/2 - 8, obs.y + obs.height - 10, obs.width/3.5, 5, 0, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.shadowBlur = 0;
             } else {
-                const grad = ctx.createLinearGradient(obs.x, 0, obs.x + obs.width, 0);
-                grad.addColorStop(0, "#5D4037"); grad.addColorStop(0.5, "#A1887F"); grad.addColorStop(1, "#5D4037");
-                ctx.fillStyle = grad; ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                ctx.fillStyle = "#3E2723"; ctx.fillRect(obs.x - 2, obs.y, obs.width + 4, 15); 
-                ctx.fillStyle = "rgba(255,255,255,0.1)";
-                ctx.beginPath(); ctx.moveTo(obs.x, obs.y + 20); ctx.lineTo(obs.x + obs.width, obs.y + obs.height - 10);
-                ctx.lineTo(obs.x + obs.width, obs.y + obs.height); ctx.lineTo(obs.x, obs.y + 30); ctx.fill();
+                const grad = ctx.createLinearGradient(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height);
+                grad.addColorStop(0, "#6D4C41");
+                grad.addColorStop(0.3, "#8D6E63");
+                grad.addColorStop(0.7, "#A1887F");
+                grad.addColorStop(1, "#5D4037");
+                ctx.fillStyle = grad;
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+                
+                const capGrad = ctx.createLinearGradient(obs.x, obs.y, obs.x + obs.width, obs.y + 15);
+                capGrad.addColorStop(0, "#4E342E");
+                capGrad.addColorStop(0.5, "#3E2723");
+                capGrad.addColorStop(1, "#4E342E");
+                ctx.fillStyle = capGrad;
+                ctx.fillRect(obs.x - 2, obs.y, obs.width + 4, 15);
+                
+                ctx.fillStyle = "rgba(255,255,255,0.15)";
+                ctx.beginPath();
+                ctx.moveTo(obs.x + 5, obs.y + 20);
+                ctx.lineTo(obs.x + obs.width - 5, obs.y + obs.height - 10);
+                ctx.lineTo(obs.x + obs.width - 5, obs.y + obs.height);
+                ctx.lineTo(obs.x + 5, obs.y + 30);
+                ctx.fill();
             }
         });
 
         particles.forEach(p => {
-            ctx.fillStyle = `${p.color}${p.life})`; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+            ctx.shadowColor = 'rgba(255,255,255,0.8)';
+            ctx.shadowBlur = 8;
+            ctx.fillStyle = `${p.color}${p.life})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
         });
 
         drawPlayer();
@@ -514,7 +588,8 @@
 
         const cx = player.width / 2;
         const bodyBottom = player.height;
-        const stride = 20; const lift = 12;   
+        const stride = 22;
+        const lift = 14;   
         
         const legSpeed = player.runFrame; 
         const lLegX = cx + Math.sin(legSpeed) * stride;
@@ -522,48 +597,96 @@
         const rLegX = cx + Math.sin(legSpeed + Math.PI) * stride;
         const rLegY = bodyBottom + player.legHeight - Math.abs(Math.sin(legSpeed + Math.PI)) * lift;
 
-        ctx.strokeStyle = "#000"; ctx.lineWidth = 5; ctx.lineCap = "round";
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 6;
+        ctx.lineCap = "round";
+        ctx.shadowColor = 'rgba(0,0,0,0.3)';
+        ctx.shadowBlur = 4;
 
-        // Perna Trás
-        ctx.beginPath(); ctx.moveTo(cx - 5, bodyBottom - 5); ctx.lineTo(lLegX, lLegY); ctx.stroke();
-        ctx.fillStyle = "#0055FF"; ctx.beginPath(); ctx.ellipse(lLegX+2, lLegY, 7, 4, 0, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx - 5, bodyBottom - 5);
+        ctx.lineTo(lLegX, lLegY);
+        ctx.stroke();
+        
+        const shoeGrad = ctx.createRadialGradient(lLegX, lLegY, 0, lLegX, lLegY, 8);
+        shoeGrad.addColorStop(0, '#0066FF');
+        shoeGrad.addColorStop(1, '#0044CC');
+        ctx.fillStyle = shoeGrad;
+        ctx.beginPath();
+        ctx.ellipse(lLegX+2, lLegY, 8, 5, 0, 0, Math.PI*2);
+        ctx.fill();
 
-        // Perna Frente
-        ctx.beginPath(); ctx.moveTo(cx + 5, bodyBottom - 5); ctx.lineTo(rLegX, rLegY); ctx.stroke();
-        ctx.fillStyle = "#0055FF"; ctx.beginPath(); ctx.ellipse(rLegX+2, rLegY, 7, 4, 0, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx + 5, bodyBottom - 5);
+        ctx.lineTo(rLegX, rLegY);
+        ctx.stroke();
+        
+        const shoeGrad2 = ctx.createRadialGradient(rLegX, rLegY, 0, rLegX, rLegY, 8);
+        shoeGrad2.addColorStop(0, '#0066FF');
+        shoeGrad2.addColorStop(1, '#0044CC');
+        ctx.fillStyle = shoeGrad2;
+        ctx.beginPath();
+        ctx.ellipse(rLegX+2, rLegY, 8, 5, 0, 0, Math.PI*2);
+        ctx.fill();
 
-        // Braços
         let lArmAngle, rArmAngle;
         let shoulderY = player.height * 0.4;
-        let armLen = 25;
+        let armLen = 28;
 
         if (player.grounded) {
-            lArmAngle = Math.sin(legSpeed + Math.PI) * 1.5; 
-            rArmAngle = Math.sin(legSpeed) * 1.5;
+            lArmAngle = Math.sin(legSpeed + Math.PI) * 1.8; 
+            rArmAngle = Math.sin(legSpeed) * 1.8;
         } else {
-            lArmAngle = -2.5 + Math.sin(frames * 0.5) * 0.2; 
-            rArmAngle = -2.8 + Math.cos(frames * 0.5) * 0.2; 
+            lArmAngle = -2.7 + Math.sin(frames * 0.4) * 0.3; 
+            rArmAngle = -3.0 + Math.cos(frames * 0.4) * 0.3; 
         }
 
-        ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.moveTo(cx - 10, shoulderY);
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(cx - 10, shoulderY);
         let lHandX = (cx - 10) + Math.cos(lArmAngle + 1.5) * armLen; 
         let lHandY = shoulderY + Math.sin(lArmAngle + 1.5) * armLen;
-        ctx.lineTo(lHandX, lHandY); ctx.stroke();
-        ctx.fillStyle = "#FFD700"; ctx.beginPath(); ctx.arc(lHandX, lHandY, 5, 0, Math.PI*2); ctx.fill();
+        ctx.lineTo(lHandX, lHandY);
+        ctx.stroke();
+        
+        const handGrad = ctx.createRadialGradient(lHandX, lHandY, 0, lHandX, lHandY, 6);
+        handGrad.addColorStop(0, '#FFE57F');
+        handGrad.addColorStop(1, '#FFD700');
+        ctx.fillStyle = handGrad;
+        ctx.beginPath();
+        ctx.arc(lHandX, lHandY, 6, 0, Math.PI*2);
+        ctx.fill();
 
+        ctx.shadowBlur = 0;
         if(bobinaImg.complete) {
             ctx.drawImage(bobinaImg, 0, 0, player.width, player.height);
         } else {
-            ctx.fillStyle = "gold"; ctx.fillRect(0, 0, player.width, player.height);
+            const bodyGrad = ctx.createLinearGradient(0, 0, player.width, player.height);
+            bodyGrad.addColorStop(0, '#FFD700');
+            bodyGrad.addColorStop(0.5, '#FFA500');
+            bodyGrad.addColorStop(1, '#FFD700');
+            ctx.fillStyle = bodyGrad;
+            ctx.fillRect(0, 0, player.width, player.height);
         }
 
-        ctx.beginPath(); ctx.moveTo(cx + 10, shoulderY);
+        ctx.shadowColor = 'rgba(0,0,0,0.3)';
+        ctx.shadowBlur = 4;
+        ctx.beginPath();
+        ctx.moveTo(cx + 10, shoulderY);
         let rHandX = (cx + 10) + Math.cos(rArmAngle + 1.5) * armLen;
         let rHandY = shoulderY + Math.sin(rArmAngle + 1.5) * armLen;
-        ctx.lineTo(rHandX, rHandY); ctx.stroke();
-        ctx.fillStyle = "#FFD700"; ctx.beginPath(); ctx.arc(rHandX, rHandY, 5, 0, Math.PI*2); ctx.fill();
+        ctx.lineTo(rHandX, rHandY);
+        ctx.stroke();
+        
+        const handGrad2 = ctx.createRadialGradient(rHandX, rHandY, 0, rHandX, rHandY, 6);
+        handGrad2.addColorStop(0, '#FFE57F');
+        handGrad2.addColorStop(1, '#FFD700');
+        ctx.fillStyle = handGrad2;
+        ctx.beginPath();
+        ctx.arc(rHandX, rHandY, 6, 0, Math.PI*2);
+        ctx.fill();
 
+        ctx.shadowBlur = 0;
         ctx.restore();
     }
 
@@ -606,9 +729,8 @@
         gameSpeed = START_SPEED;
         player.jumpCount = 0;
         nextSpawnDistance = 300; 
-        currentInkIndex = 0; // Reset CMYK cycle
+        currentInkIndex = 0;
         
-        // Define o primeiro tempo do atalho (entre 4 e 8s)
         nextShortcutFrame = Math.floor(Math.random() * (680 - 240 + 1)) + 440;
 
         for(let i=0; i<5; i++) spawnCloud();
@@ -655,9 +777,4 @@ await secureFetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(payload) 
     resizeCanvas(); 
   </script>
 </body>
-
 </html>
-
-
-
-
