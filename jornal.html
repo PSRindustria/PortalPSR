@@ -1083,11 +1083,11 @@
         location.reload();
     });
 
-    async function voteChallenge(cId, type) {
+async function voteChallenge(cId, type) {
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
         globalChallengesData[cId][MY_DEVICE_ID] = type;
         renderChallenges(globalChallengesData);
-        await fetch(`${BASE_DB_URL}challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
+        await secureFetch(`${BASE_DB_URL}challenges_v2/${cId}/${MY_DEVICE_ID}.json`, { method: 'PUT', body: JSON.stringify(type) });
     }
     function renderChallenges(data) {
         document.querySelectorAll('.desafio-saude-card').forEach(card => {
@@ -1137,11 +1137,20 @@
         });
     }
     
-    async function likePraise(id) {
+async function likePraise(id) {
         const url = `${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json`;
         const exists = globalPraiseData[id].likes && globalPraiseData[id].likes[MY_DEVICE_ID];
-        if(exists) { await fetch(url, {method:'DELETE'}); delete globalPraiseData[id].likes[MY_DEVICE_ID]; }
-        else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; globalPraiseData[id].likes[MY_DEVICE_ID]=true; }
+        
+        if(exists) { 
+            // CORREÇÃO: secureFetch
+            await secureFetch(url, {method:'DELETE'}); 
+            if (globalPraiseData[id].likes) delete globalPraiseData[id].likes[MY_DEVICE_ID]; 
+        } else { 
+            // CORREÇÃO: secureFetch
+            await secureFetch(url, {method:'PUT', body:JSON.stringify(true)}); 
+            if(!globalPraiseData[id].likes) globalPraiseData[id].likes={}; 
+            globalPraiseData[id].likes[MY_DEVICE_ID]=true; 
+        }
         renderPraiseSection(currentPraiseMonth);
     }
 
@@ -1150,11 +1159,20 @@
         if(f&&t&&m) { await fetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); location.reload(); }
     }
     
-    async function likeHobby() {
+async function likeHobby() {
         const url = `${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/likes/${MY_DEVICE_ID}.json`;
         const exists = globalHobbyData.likes && globalHobbyData.likes[MY_DEVICE_ID];
-        if(exists) { await fetch(url, {method:'DELETE'}); delete globalHobbyData.likes[MY_DEVICE_ID]; }
-        else { await fetch(url, {method:'PUT', body:JSON.stringify(true)}); if(!globalHobbyData.likes) globalHobbyData.likes={}; globalHobbyData.likes[MY_DEVICE_ID]=true; }
+        
+        if(exists) { 
+            // CORREÇÃO: secureFetch para deletar
+            await secureFetch(url, {method:'DELETE'}); 
+            if (globalHobbyData.likes) delete globalHobbyData.likes[MY_DEVICE_ID]; 
+        } else { 
+            // CORREÇÃO: secureFetch para adicionar
+            await secureFetch(url, {method:'PUT', body:JSON.stringify(true)}); 
+            if(!globalHobbyData.likes) globalHobbyData.likes={}; 
+            globalHobbyData.likes[MY_DEVICE_ID]=true; 
+        }
         renderJornal();
     }
     async function sendHobbyComment() {
@@ -1191,13 +1209,66 @@
     function mostrarAba(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function updateVisualStars(stars, val) { const r=Math.round(val); stars.forEach(s=>{ s.classList.remove('fas','filled','hover-active'); s.classList.add('far'); if(parseInt(s.dataset.value)<=r) {s.classList.remove('far'); s.classList.add('fas','filled');} }); }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
-    function setupForms() {
-        const btnS=document.getElementById('btn-submit-suggestion'); if(btnS) btnS.onclick=async()=>{const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; if(n&&m){await fetch(`${BASE_DB_URL}suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); alert('Enviado!'); location.reload();}};
-        const btnR=document.getElementById('btn-submit-recipe'); if(btnR) btnR.onclick=async()=>{const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; if(a&&d){await fetch(`${BASE_DB_URL}recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); alert('Enviado!'); location.reload();}};
-        const btnT=document.getElementById('btn-submit-testimonial'); if(btnT) btnT.onclick=async()=>{const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; if(n&&t){await fetch(`${BASE_DB_URL}testimonials_history/${CURRENT_MONTH_KEY}.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); initFirebaseData();}};
-        const btnP=document.getElementById('btn-submit-praise'); if(btnP) btnP.onclick=submitPraise;
-        const btnG=document.getElementById('btn-submit-game-suggestion'); if(btnG) btnG.onclick=async()=>{const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; if(n&&t){await fetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); alert('Enviado!'); location.reload();}};
-        const btnH=document.getElementById('btn-submit-hobby-suggestion'); if(btnH) btnH.onclick=async()=>{const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; if(f&&t){await fetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); alert('Enviado!'); location.reload();}};
+function setupForms() {
+        // Sugestão de Filme
+        const btnS=document.getElementById('btn-submit-suggestion'); 
+        if(btnS) btnS.onclick=async()=>{
+            const n=document.getElementById('suggest-name').value, m=document.getElementById('suggest-movie').value; 
+            if(n&&m){
+                await secureFetch(`${BASE_DB_URL}suggestions.json`,{method:'POST',body:JSON.stringify({name:n,movie:m,date:new Date()})}); 
+                alert('Enviado!'); location.reload();
+            }
+        };
+
+        // Receita
+        const btnR=document.getElementById('btn-submit-recipe'); 
+        if(btnR) btnR.onclick=async()=>{
+            const a=document.getElementById('recipe-author').value, d=document.getElementById('recipe-name').value; 
+            if(a&&d){
+                await secureFetch(`${BASE_DB_URL}recipe_suggestions.json`,{method:'POST',body:JSON.stringify({author:a,dish:d,date:new Date()})}); 
+                alert('Enviado!'); location.reload();
+            }
+        };
+
+        // Depoimento
+        const btnT=document.getElementById('btn-submit-testimonial'); 
+        if(btnT) btnT.onclick=async()=>{
+            const n=document.getElementById('testim-name').value, t=document.getElementById('testim-text').value; 
+            if(n&&t){
+                await secureFetch(`${BASE_DB_URL}testimonials_history/${CURRENT_MONTH_KEY}.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); 
+                alert('Enviado!'); initFirebaseData();
+            }
+        };
+
+        // Elogio (Novo)
+        const btnP=document.getElementById('btn-submit-praise'); 
+        if(btnP) btnP.onclick=async()=>{
+            const f=document.getElementById('praise-from').value, t=document.getElementById('praise-to').value, m=document.getElementById('praise-msg').value;
+            if(f&&t&&m) { 
+                await secureFetch(`${BASE_DB_URL}praise_messages.json`, {method:'POST', body:JSON.stringify({from:f, to:t, message:m, date:new Date().toISOString()})}); 
+                location.reload(); 
+            }
+        };
+
+        // Sugestão de Jogo
+        const btnG=document.getElementById('btn-submit-game-suggestion'); 
+        if(btnG) btnG.onclick=async()=>{
+            const n=document.getElementById('game-suggest-name').value, t=document.getElementById('game-suggest-text').value; 
+            if(n&&t){
+                await secureFetch(`${BASE_DB_URL}game_suggestions.json`,{method:'POST',body:JSON.stringify({name:n,text:t,date:new Date()})}); 
+                alert('Enviado!'); location.reload();
+            }
+        };
+
+        // Indicação Hobby
+        const btnH=document.getElementById('btn-submit-hobby-suggestion'); 
+        if(btnH) btnH.onclick=async()=>{
+            const f=document.getElementById('hobby-suggest-from').value, t=document.getElementById('hobby-suggest-target').value, r=document.getElementById('hobby-suggest-reason').value; 
+            if(f&&t){
+                await secureFetch(`${BASE_DB_URL}hobby_suggestions.json`,{method:'POST',body:JSON.stringify({from:f,target:t,reason:r,date:new Date()})}); 
+                alert('Enviado!'); location.reload();
+            }
+        };
     }
   </script>
 </body>
