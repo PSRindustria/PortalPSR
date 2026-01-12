@@ -723,20 +723,20 @@
     }
 
     function handleInput(e) {
-        if (e.type !== 'mousedown') e.preventDefault();
+        e.preventDefault();
         if (gameRunning) {
             bird.flap();
-        } else if (modalGameOver.style.display === 'none' && !uiStartBtn.classList.contains('hidden') && e.target !== uiStartBtn) {
+        } else if (modalGameOver.style.display === 'none' && uiStartBtn.classList.contains('hidden')) {
             startGame();
         }
     }
 
-    window.addEventListener('mousedown', (e) => {
+    canvas.addEventListener('mousedown', (e) => {
         if(modalGameOver.style.display === 'flex') return;
         handleInput(e);
     });
     
-    window.addEventListener('touchstart', (e) => {
+    canvas.addEventListener('touchstart', (e) => {
         if(modalGameOver.style.display === 'flex') return;
         handleInput(e);
     }, {passive: false});
@@ -750,6 +750,13 @@
 
     uiStartBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        e.preventDefault();
+        startGame();
+    });
+
+    uiStartBtn.addEventListener('touchend', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         startGame();
     });
 
