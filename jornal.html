@@ -662,7 +662,7 @@
 
 <script>
     // =================================================================
-    // 1. CONFIGURAÇÕES, CONSTANTES E VARIÁVEIS GLOBAIS (DEFINIDAS PRIMEIRO)
+    // 1. CONFIGURAÇÕES, CONSTANTES E VARIÁVEIS GLOBAIS
     // =================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyBzMvAw9ahEyd-tSYY08HxcMzo9RKf3IFY",
@@ -676,7 +676,7 @@
     let AUTH_TOKEN = null;
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
 
-    // 1.1 CONSTANTES DE DADOS (Movidas para o topo para evitar o erro)
+    // CONSTANTES DE DADOS
     const SUSTENTABILIDADE_PADRAO = {
         meioAmbiente: [
             { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
@@ -704,7 +704,7 @@
         { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
     ];
 
-    // 1.2 VARIÁVEIS DE ESTADO
+    // VARIÁVEIS DE ESTADO
     let CONTEUDO_JORNAL = { temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: SUSTENTABILIDADE_PADRAO };
     let globalChallengesData = {}, globalQuizData = {}, globalHobbyData = {}, globalPraiseData = {}, globalRatingsData = {}, globalTestimonialsData = {};
     
@@ -719,7 +719,7 @@
     const MY_DEVICE_ID = getDeviceId();
 
     // =================================================================
-    // 2. SISTEMA DE CACHE (Para carregar instantâneo)
+    // 2. SISTEMA DE CACHE
     // =================================================================
     const CACHE_KEYS = {
         CONTENT: "psr_v3_content",
@@ -757,7 +757,8 @@
     // 3. FUNÇÕES DE RENDERIZAÇÃO (UI)
     // =================================================================
     function refreshAllUI() {
-        renderJornal();
+        renderJornal(); // Renderiza estrutura
+        renderHobbyUI(); // Renderiza Hobby (separado para não bugar o resto)
         renderChallenges(globalChallengesData);
         renderPraiseSection(currentPraiseMonth);
         renderTestimonials(globalTestimonialsData);
@@ -765,11 +766,8 @@
         setupRatings(globalRatingsData);
     }
 
-    function renderJornal() {
-        const tm = CONTEUDO_JORNAL.temaMes || {}; 
-        const divTema = document.getElementById('tema-mes');
-        if(divTema) divTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
-        
+    // NOVA FUNÇÃO ESPECÍFICA PARA O HOBBY (CORREÇÃO DO BUG)
+    function renderHobbyUI() {
         const h = CONTEUDO_JORNAL.hobby || {};
         const hLikes = globalHobbyData.likes || {};
         const hComments = globalHobbyData.comments ? Object.values(globalHobbyData.comments) : [];
@@ -778,7 +776,17 @@
         hComments.sort((a,b) => new Date(b.date) - new Date(a.date));
 
         const divHobby = document.getElementById('hobby-container');
-        if(divHobby) divHobby.innerHTML = `<div class="hobby-content"><div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div><div class="hobby-texto"><h3>${h.nome||'Colega'}</h3><div class="hobby-titulo">${h.cargo||''}</div><div class="hobby-quote-box"><i class="fas fa-quote-left"></i><p>${(h.texto||'').replace(/"/g, '')}</p></div><div class="hobby-hobbies"><div class="hobby-list">${(h.tags||[]).map(t => `<span class="hobby-tag">${t}</span>`).join('')}</div></div><div class="hobby-actions"><button id="btn-hobby-like" class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> <span id="hobby-like-count">${Object.keys(hLikes).length}</span> Curtidas</button><button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> <span id="hobby-comment-count">${hComments.length}</span> Comentários</button></div><div id="hobby-comments-box" class="hobby-comments-section"><div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div><div id="hobby-comments-list-inner" class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar!</p>'}</div></div></div></div>`;
+        if(divHobby) {
+            divHobby.innerHTML = `<div class="hobby-content"><div class="hobby-foto"><img src="${h.foto||''}" alt="${h.nome||''}"></div><div class="hobby-texto"><h3>${h.nome||'Colega'}</h3><div class="hobby-titulo">${h.cargo||''}</div><div class="hobby-quote-box"><i class="fas fa-quote-left"></i><p>${(h.texto||'').replace(/"/g, '')}</p></div><div class="hobby-hobbies"><div class="hobby-list">${(h.tags||[]).map(t => `<span class="hobby-tag">${t}</span>`).join('')}</div></div><div class="hobby-actions"><button id="btn-hobby-like" class="hobby-btn-action ${hUserLiked}" onclick="likeHobby()"><i class="${hHeartIcon} fa-heart"></i> <span id="hobby-like-count">${Object.keys(hLikes).length}</span> Curtidas</button><button class="hobby-btn-action" onclick="toggleHobbyComments()"><i class="far fa-comment-dots"></i> <span id="hobby-comment-count">${hComments.length}</span> Comentários</button></div><div id="hobby-comments-box" class="hobby-comments-section"><div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="input-hobby-comment" placeholder="Comente..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:20px;"><button onclick="sendHobbyComment()" style="border:none; background:var(--azul-marinho); color:white; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div><div id="hobby-comments-list-inner" class="hobby-comments-list">${hComments.length > 0 ? hComments.map(c => `<div class="hobby-comment-item"><strong>${c.author || 'Colega'}:</strong> ${c.text}</div>`).join('') : '<p style="color:#999; text-align:center;">Seja o primeiro a comentar!</p>'}</div></div></div></div>`;
+        }
+    }
+
+    function renderJornal() {
+        const tm = CONTEUDO_JORNAL.temaMes || {}; 
+        const divTema = document.getElementById('tema-mes');
+        if(divTema) divTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
+        
+        // renderHobbyUI() agora é chamado separadamente ou no refreshAllUI
         
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const divSaude = document.getElementById('saude-fisica-hero');
@@ -835,22 +843,21 @@
     }
 
     // =================================================================
-    // 4. INICIALIZAÇÃO E REDE (AGORA ESTÁ SEGURO)
+    // 4. INICIALIZAÇÃO E REDE
     // =================================================================
     
-    // Passo 1: Mostra o que tem no cache imediatamente (agora as variáveis existem)
+    // Passo 1: Renderiza Cache
     renderFromCache();
 
-    // Passo 2: Autentica silenciosamente e baixa dados novos
+    // Passo 2: Login e Download
     firebase.auth().signInAnonymously().then((userCred) => {
         return userCred.user.getIdToken().then(token => {
             AUTH_TOKEN = token;
-            console.log("Conectado. Baixando dados atualizados...");
             downloadData(); 
         });
     }).catch((error) => {
         console.error("Erro no Login:", error);
-        downloadData(); // Tenta baixar mesmo sem login (fallback)
+        downloadData(); 
     });
 
     async function secureFetch(url) {
@@ -1029,7 +1036,7 @@
         const exists = globalHobbyData.likes[MY_DEVICE_ID];
         if (exists) delete globalHobbyData.likes[MY_DEVICE_ID]; else globalHobbyData.likes[MY_DEVICE_ID] = true;
         saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
-        renderJornal(); // Re-renderiza só a parte do jornal/hobby
+        renderHobbyUI(); // Atualiza APENAS o Hobby, sem bugar o resto
         const method = exists ? 'DELETE' : 'PUT';
         if(AUTH_TOKEN) fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/likes/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, { method: method, body: JSON.stringify(true) });
     }
@@ -1042,7 +1049,7 @@
             const tempId = "temp_" + Date.now();
             globalHobbyData.comments[tempId] = newComment;
             saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
-            renderJornal();
+            renderHobbyUI(); // Atualiza APENAS o Hobby
             if(AUTH_TOKEN) fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json?auth=${AUTH_TOKEN}`, {method:'POST', body:JSON.stringify(newComment)});
         }
     }
