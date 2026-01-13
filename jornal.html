@@ -1155,83 +1155,75 @@
     window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
 
 // =================================================================
-    // 6. SISTEMA DE ANALYTICS (NOVO)
+    // 6. SISTEMA DE ANALYTICS
     // =================================================================
 
     async function initAnalytics() {
-        if (!AUTH_TOKEN) return; // Só roda se estiver autenticado
+        if (!AUTH_TOKEN) return; 
 
         const timestamp = new Date().toISOString();
-        const userAgent = navigator.userAgent; // Pega info do navegador/celular
+        const userAgent = navigator.userAgent; 
 
         // -------------------------------------------------------
-        // A. REGISTRAR PRESENÇA (Sessão Única)
+        // A. REGISTRAR PRESENÇA 
         // -------------------------------------------------------
-        // Isso atualiza o registro do usuário com a última vez que ele foi visto
         const sessionData = {
             last_seen: timestamp,
             device_info: userAgent,
             platform: navigator.platform
         };
 
-        // Salva em: analytics/users/ID_DO_USUARIO
-        // Usamos PATCH para atualizar sem apagar dados antigos se houverem
-        fetch(`${BASE_DB_URL}analytics/users/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
+        // MUDANÇA AQUI: De 'analytics' para 'monitor_interno' para evitar bloqueadores
+        fetch(`${BASE_DB_URL}monitor_interno/users/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
             method: 'PATCH',
             body: JSON.stringify(sessionData)
-        }).catch(err => console.error("Erro analytics sessão:", err));
+        }).catch(err => console.error("Erro monitor sessão:", err));
 
         // -------------------------------------------------------
-        // B. REGISTRAR LOG DE ACESSO DIÁRIO (Contagem de Pessoas)
+        // B. REGISTRAR LOG DIÁRIO
         // -------------------------------------------------------
-        // Isso cria uma lista de quem entrou hoje. Útil para contar "Visitantes Únicos Hoje"
-        const hoje = timestamp.slice(0, 10); // Formato YYYY-MM-DD
+        const hoje = timestamp.slice(0, 10); 
         
-        // Salva em: analytics/daily_visits/2026-01-13/ID_DO_USUARIO = true
-        fetch(`${BASE_DB_URL}analytics/daily_visits/${hoje}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
+        fetch(`${BASE_DB_URL}monitor_interno/daily_visits/${hoje}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
             method: 'PUT',
             body: JSON.stringify(true)
         });
 
-        console.log("Analytics: Sessão iniciada para", MY_DEVICE_ID);
+        console.log("Monitoramento iniciado para", MY_DEVICE_ID);
     }
 
     // -------------------------------------------------------
-    // C. RASTREADOR DE CLIQUES (Interações)
+    // C. RASTREADOR DE CLIQUES
     // -------------------------------------------------------
-    // Adiciona um evento no documento inteiro. Se o clique for em um botão ou link, registramos.
     document.addEventListener('click', (event) => {
-        // Procura se o elemento clicado (ou o pai dele) é um botão ou link
         const target = event.target.closest('button, a, .clickable');
 
         if (target && AUTH_TOKEN) {
-            // Pega o ID, o Texto ou a Classe para identificar o botão
             const elementoId = target.id || 'sem_id';
-            const elementoTexto = target.innerText ? target.innerText.substring(0, 30) : 'sem_texto'; // Pega só os 30 primeiros caracteres
+            const elementoTexto = target.innerText ? target.innerText.substring(0, 30) : 'sem_texto';
             const elementoTag = target.tagName;
 
-            // Ignora cliques no próprio analytics (ex: fechar modal) para não sujar o banco
+            // Ignora cliques no modal de fechar para não sujar dados
             if(elementoId === 'modal-close') return;
 
             const clickData = {
-                user_id: MY_DEVICE_ID,
-                timestamp: new Date().toISOString(),
-                element_id: elementoId,
-                element_tag: elementoTag,
-                element_text: elementoTexto,
-                page_section: target.closest('section') ? target.closest('section').id : 'geral'
+                u: MY_DEVICE_ID, // Abreviei para economizar dados
+                t: new Date().toISOString().split('T')[1].split('.')[0], // Só a hora
+                id: elementoId,
+                tag: elementoTag,
+                txt: elementoTexto,
+                sec: target.closest('section') ? target.closest('section').id : 'geral'
             };
 
-            // Envia para: analytics/events/YYYY-MM-DD/ (cria uma lista de eventos do dia)
             const hoje = new Date().toISOString().slice(0, 10);
             
-            fetch(`${BASE_DB_URL}analytics/events/${hoje}.json?auth=${AUTH_TOKEN}`, {
-                method: 'POST', // POST cria uma chave única automática para cada clique
-                body: JSON.stringify(clickData)
+            // MUDANÇA AQUI: 'monitor_interno' e adicionamos 'keepalive: true'
+            // keepalive garante que o dado seja enviado mesmo se a pessoa mudar de página
+            fetch(`${BASE_DB_URL}monitor_interno/events/${hoje}.json?auth=${AUTH_TOKEN}`, {
+                method: 'POST',
+                body: JSON.stringify(clickData),
+                keepalive: true 
             });
-            
-            // Opcional: Console log para você ver funcionando
-            // console.log("Analytics Click:", clickData);
         }
     });
 
