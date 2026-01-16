@@ -911,42 +911,106 @@
     // =================================================================
     // 5. INTERAÇÕES E LÓGICA (UI)
     // =================================================================
-    
-    // Ratings
+
     function setupRatings(ratingsData) {
         document.querySelectorAll('.rating-container').forEach(container => {
             const itemId = container.dataset.id;
             const stars = container.querySelectorAll('.rating-stars i');
             const scoreDisplay = container.querySelector('.score-value');
+            
+            // Garante que existe o objeto para este item
             if (!ratingsData[itemId]) ratingsData[itemId] = {};
             const itemVotes = ratingsData[itemId]; 
+
+            // Função interna para calcular e renderizar
             const calcRender = (votes) => {
-                const vals = Object.values(votes);
-                let avg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "0.0";
-                scoreDisplay.textContent = avg;
+                const vals = Object.values(votes); // Pega apenas os números (votos) do JSON
+                
+                // CÁLCULO DA MÉDIA
+                // Soma todos os votos e divide pela quantidade de pessoas
+                let avg = 0;
+                if (vals.length > 0) {
+                    const sum = vals.reduce((a, b) => a + Number(b), 0); // Garante que seja número
+                    avg = sum / vals.length;
+                }
+                
+                // Atualiza o texto (Ex: 4.5)
+                scoreDisplay.textContent = avg.toFixed(1);
+                
+                // Atualiza as estrelas visuais
                 updateVisualStars(stars, avg);
             };
+
+            // Executa o cálculo inicial ao carregar
             calcRender(itemVotes);
+
+            // Adiciona os eventos de clique nas estrelas
             stars.forEach(star => {
                 star.addEventListener('click', async () => {
                     const val = parseInt(star.dataset.value);
+                    
+                    // Atualiza localmente imediatamente
                     if(!globalRatingsData[itemId]) globalRatingsData[itemId] = {};
                     globalRatingsData[itemId][MY_DEVICE_ID] = val;
-                    calcRender(globalRatingsData[itemId]);
+                    
+                    calcRender(globalRatingsData[itemId]); // Recalcula a média visualmente
                     saveCache(CACHE_KEYS.RATINGS, globalRatingsData);
-                    secureFetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, { method: 'PUT', body: JSON.stringify(val) });
+
+                    // Envia para o Firebase
+                    fetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(val)
+                    });
                 });
+
+                // Efeito Hover (apenas visual, não altera a média real)
                 star.addEventListener('mouseover', () => {
                     const val = parseInt(star.dataset.value);
-                    stars.forEach(s => { const sVal = parseInt(s.dataset.value); if(sVal <= val) { s.classList.remove('far'); s.classList.add('fas'); s.style.color='var(--dourado)'; } else { s.classList.remove('fas'); s.classList.add('far'); s.style.color='#d1d1d1'; } });
+                    stars.forEach(s => { 
+                        const sVal = parseInt(s.dataset.value); 
+                        s.className = ''; // Limpa classes
+                        if(sVal <= val) { 
+                            s.className = 'fas fa-star filled'; // Estrela cheia
+                            s.style.color='var(--dourado)'; 
+                        } else { 
+                            s.className = 'far fa-star'; // Estrela vazia
+                            s.style.color='#d1d1d1'; 
+                        } 
+                    });
                 });
-                star.addEventListener('mouseout', () => { stars.forEach(s => s.style.color = ''); updateVisualStars(stars, scoreDisplay.textContent); });
+
+                // Ao tirar o mouse, volta a mostrar a Média Real calculada
+                star.addEventListener('mouseout', () => { 
+                    stars.forEach(s => s.style.color = ''); 
+                    updateVisualStars(stars, parseFloat(scoreDisplay.textContent)); 
+                });
             });
         });
     }
+
     function updateVisualStars(stars, val) { 
-        const r = Math.round(parseFloat(val)); 
-        stars.forEach(s => { s.classList.remove('fas', 'filled'); s.classList.add('far'); s.style.color = ''; if(parseInt(s.dataset.value) <= r) { s.classList.remove('far'); s.classList.add('fas', 'filled'); } }); 
+        const rating = parseFloat(val); // Garante que é decimal (ex: 4.5)
+
+        stars.forEach((s, index) => { 
+            const starValue = index + 1; // Valor da estrela (1, 2, 3, 4, 5)
+
+            // Reseta a estrela
+            s.className = ''; 
+            s.style.color = ''; 
+
+            if (rating >= starValue) {
+                // Se a média for maior que a estrela atual -> CHEIA
+                s.className = 'fas fa-star filled'; 
+            } else if (rating >= starValue - 0.5) {
+                // Se a média for maior que a anterior + 0.5 -> MEIA ESTRELA
+                // Ex: Média 4.5. Na estrela 5 (5 - 0.5 = 4.5), entra aqui.
+                s.className = 'fas fa-star-half-alt filled'; 
+            } else {
+                // Caso contrário -> VAZIA
+                s.className = 'far fa-star'; 
+            }
+        }); 
     }
 
     // Desafios
@@ -1127,7 +1191,31 @@
         simplePost('btn-submit-suggestion', ['suggest-name'], 'suggestions');
         simplePost('btn-submit-recipe', ['recipe-author'], 'recipe_suggestions');
         simplePost('btn-submit-game-suggestion', ['game-suggest-name', 'game-suggest-text'], 'game_suggestions');
-        simplePost('btn-submit-hobby-suggestion', ['hobby-suggest-from', 'hobby-suggest-target', 'hobby-suggest-reason'], 'hobby_suggestions');
+
+        // --- CORREÇÃO 2: LÓGICA DE INDICAÇÃO "ALÉM DO CRACHÁ" ---
+        const btnHobby = document.getElementById('btn-submit-hobby-suggestion');
+        if(btnHobby) btnHobby.onclick = async () => {
+            const from = document.getElementById('hobby-suggest-from').value;
+            const target = document.getElementById('hobby-suggest-target').value;
+            const reason = document.getElementById('hobby-suggest-reason').value;
+            if(from && target && AUTH_TOKEN) {
+                const data = {
+                    from: from,
+                    target: target,
+                    reason: reason || '',
+                    date: new Date().toISOString()
+                };
+                await fetch(BASE_DB_URL + 'hobby_suggestions.json?auth=' + AUTH_TOKEN, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                alert('Indicação enviada com sucesso!');
+                location.reload();
+            } else if(!from || !target) {
+                alert('Preencha pelo menos o seu nome e quem você indica!');
+            }
+        };
 
         const btnT = document.getElementById('btn-submit-testimonial');
         if(btnT) btnT.onclick = async () => {
@@ -1153,6 +1241,19 @@
         list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${s.pontos}</div></div>`).join('');
     }
     window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
+
+    // --- CORREÇÃO 3: FUNÇÃO PARA EXPANDIR LISTA DE CLIENTES ---
+    window.toggleTodosClientes = function() {
+        const lista = document.getElementById('lista-clientes');
+        const btn = event.target;
+        if(lista.style.display === 'block') {
+            lista.style.display = 'none';
+            btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa';
+        } else {
+            lista.style.display = 'block';
+            btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista';
+        }
+    };
 
 // =================================================================
     // 6. SISTEMA DE ANALYTICS
