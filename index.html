@@ -186,6 +186,204 @@
 
   <div id="footer-placeholder"></div>
 
+  <div id="dayoff-placeholder"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const placeholder = document.getElementById("dayoff-placeholder");
+      const urlCard = "https://psrindustria.github.io/PortalPSR/card_dayoff.html";
+
+      // -------------------------------------------------------
+      // CONFIGURAÇÃO: Se quiser que apareça apenas 1 vez por dia,
+      // descomente a linha abaixo (remova as duas barras //):
+      // if (localStorage.getItem('dayoff_visto_' + new Date().toDateString())) return;
+      // -------------------------------------------------------
+
+      try {
+        // 1. Busca o arquivo
+        const response = await fetch(urlCard + '?t=' + Date.now());
+        if (!response.ok) return;
+        const htmlText = await response.text();
+
+        // 2. Prepara o Parser para modificar o HTML antes de inserir
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, "text/html");
+
+        // 3. SEGURANÇA CSS: Renomeia estilos do 'body' para evitar conflito
+        const styles = doc.querySelectorAll("style");
+        let safeCss = "";
+        styles.forEach(styleTag => {
+          let css = styleTag.innerHTML;
+          // Troca 'body' por '#dayoff-scope' para prender o estilo no modal
+          css = css.replace(/body\s*\{/g, '#dayoff-scope {'); 
+          css = css.replace(/body\s/g, '#dayoff-scope '); 
+          safeCss += css;
+        });
+
+        // 4. Configura o Placeholder (Fundo Escuro)
+        Object.assign(placeholder.style, {
+          position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: '999999',
+          display: 'flex', justifyContent: 'center', alignItems: 'center',
+          opacity: '0', transition: 'opacity 0.4s ease', backdropFilter: 'blur(4px)'
+        });
+
+        // 5. Injeta o HTML Seguro + CSS Modificado
+        const content = doc.body.innerHTML;
+        placeholder.innerHTML = `
+          <style>${safeCss}</style>
+          <div id="dayoff-scope" style="background: transparent; width: 100%; display: flex; justify-content: center;">
+            ${content}
+          </div>
+        `;
+
+        // 6. Reativa os Scripts do Card
+        const scripts = placeholder.querySelectorAll("script");
+        scripts.forEach(oldScript => {
+          const newScript = document.createElement("script");
+          newScript.textContent = oldScript.textContent;
+          document.body.appendChild(newScript);
+        });
+
+        // 7. Função Mestra de Fechar (Limpa tudo da memória)
+        window.fecharTotal = function() {
+          placeholder.style.opacity = '0';
+          setTimeout(() => {
+            placeholder.remove(); // REMOVE do HTML para não pesar
+            // Marca como visto hoje (se a opção lá em cima estiver ativa)
+            localStorage.setItem('dayoff_visto_' + new Date().toDateString(), 'true');
+          }, 400);
+        };
+
+        // 8. Intercepta o botão de fechar original do card
+        setTimeout(() => {
+            const originalFechar = window.fecharCard;
+            window.fecharCard = function(elemento) {
+                if(originalFechar) originalFechar(elemento); // Roda animação do card
+                window.fecharTotal(); // Roda nossa limpeza
+            };
+            
+            // Também fecha se clicar no fundo escuro (fora do card)
+            placeholder.addEventListener('click', (e) => {
+                if(e.target === placeholder || e.target.id === 'dayoff-scope') {
+                    window.fecharTotal();
+                }
+            });
+        }, 200);
+
+        // 9. Anima a entrada
+        requestAnimationFrame(() => placeholder.style.opacity = '1');
+
+      } catch (e) {
+        console.error("Erro card:", e);
+        placeholder.style.display = 'none';
+      }
+    });
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <script>
+    (function() { 
+      // 1. CONFIGURAÇÃO
+      const firebaseConfig = {
+        apiKey: "AIzaSyBzMvAw9ahEyd-tSYY08HxcMzo9RKf3IFY",
+        authDomain: "jornalpsr-1b8c6.firebaseapp.com",
+        databaseURL: "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com",
+        projectId: "jornalpsr-1b8c6",
+      };
+
+      // Inicializa apenas se ainda não existir
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      let AUTH_TOKEN = null;
+      const DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com";
+      const ANALYTICS_NODE = "analytics_portal"; 
+
+      // 2. IDENTIFICAÇÃO DO DISPOSITIVO
+      function getDeviceId() {
+          let id = localStorage.getItem('portal_device_id');
+          if (!id) {
+              id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+              localStorage.setItem('portal_device_id', id);
+          }
+          return id;
+      }
+      const DEVICE_ID = getDeviceId();
+
+      // 3. INICIALIZAÇÃO
+      function initPortalAnalytics() {
+          firebase.auth().signInAnonymously()
+              .then((userCred) => {
+                  return userCred.user.getIdToken();
+              })
+              .then((token) => {
+                  AUTH_TOKEN = token;
+                  registrarVisita();
+                  iniciarRastreadorDeCliques();
+              })
+              .catch((error) => {
+                  console.warn("Analytics: Modo offline", error);
+              });
+      }
+
+      // 4. REGISTRAR VISITA DIÁRIA
+      function registrarVisita() {
+          if (!AUTH_TOKEN) return;
+          const agora = new Date();
+          const hoje = agora.toISOString().slice(0, 10);
+          const timestamp = agora.toISOString();
+
+          const userData = {
+              last_seen: timestamp,
+              device_info: navigator.userAgent,
+              platform: navigator.platform,
+              screen: `${window.screen.width}x${window.screen.height}`
+          };
+
+          fetch(`${DB_URL}/${ANALYTICS_NODE}/users/${DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
+              method: 'PATCH', body: JSON.stringify(userData), keepalive: true
+          });
+
+          fetch(`${DB_URL}/${ANALYTICS_NODE}/daily_visits/${hoje}/${DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
+              method: 'PUT', body: JSON.stringify(true), keepalive: true
+          });
+      }
+
+      // 5. RASTREADOR DE CLIQUES
+      function iniciarRastreadorDeCliques() {
+          document.addEventListener('click', (event) => {
+              const target = event.target.closest('button, a, .clickable, .card-dayoff');
+              if (target && AUTH_TOKEN) {
+                  const elId = target.id || 'sem_id';
+                  const elTag = target.tagName;
+                  let elTexto = (target.innerText || target.title || 'sem_texto').substring(0, 40);
+                  const parentSection = target.closest('section, header, footer, div[id]');
+                  const sectionId = parentSection ? (parentSection.id || 'geral') : 'geral';
+
+                  const clickData = {
+                      u: DEVICE_ID,
+                      t: new Date().toISOString().split('T')[1].split('.')[0],
+                      id: elId,
+                      tag: elTag,
+                      txt: elTexto.replace(/[\n\r]+/g, ' ').trim(),
+                      sec: sectionId
+                  };
+                  const hoje = new Date().toISOString().slice(0, 10);
+                  fetch(`${DB_URL}/${ANALYTICS_NODE}/events/${hoje}.json?auth=${AUTH_TOKEN}`, {
+                      method: 'POST', body: JSON.stringify(clickData), keepalive: true
+                  });
+              }
+          });
+      }
+
+      initPortalAnalytics();
+    })();
+  </script>
+
   <script>
     function leiaMais() {
         var pontos = document.getElementById("pontos");
@@ -1001,12 +1199,3 @@ async function renderDestaques() {
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
