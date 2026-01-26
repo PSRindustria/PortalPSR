@@ -189,40 +189,12 @@
 <div id="dayoff-placeholder"></div>
 
   <script>
-    // --- FUNÇÕES GLOBAIS FORÇADAS (Garantem que o botão funcione) ---
-    window.dayoff_abrirModal = function() {
-      // Tenta encontrar o modal pelo ID novo ou pelo antigo (para garantir)
-      const modal = document.getElementById('dayoff-modal-info') || document.getElementById('modal');
-      
-      if(modal) {
-        modal.style.display = 'flex'; // Abre o modal de detalhes
-        // Força estilo para garantir que fique acima de tudo
-        modal.style.zIndex = '9999999'; 
-        modal.style.position = 'fixed';
-        if(document.body) document.body.style.overflow = 'hidden'; // Trava rolagem do fundo
-      } else {
-        console.error("ERRO: Modal de detalhes não encontrado no HTML carregado.");
-      }
-    };
-
-    // Mapeia também o nome antigo da função, caso o arquivo carregado esteja desatualizado
-    window.abrirModal = window.dayoff_abrirModal;
-
-    window.dayoff_fecharModal = function() {
-      const modal = document.getElementById('dayoff-modal-info') || document.getElementById('modal');
-      if(modal) {
-        modal.style.display = 'none';
-        if(document.body) document.body.style.overflow = 'auto';
-      }
-    };
-    window.fecharModal = window.dayoff_fecharModal; // Compatibilidade
-
-    // --- CARREGAMENTO E ESTILIZAÇÃO ---
     document.addEventListener("DOMContentLoaded", async () => {
       const placeholder = document.getElementById("dayoff-placeholder");
       const urlCard = "https://psrindustria.github.io/PortalPSR/card_dayoff.html";
 
-      // Para ativar (1x ao dia), descomente a linha abaixo:
+      // --- CONTROLE DE FREQUÊNCIA ---
+      // Se quiser ativar (1x ao dia), descomente a linha abaixo:
       // if (localStorage.getItem('dayoff_visto_' + new Date().toDateString())) return;
 
       try {
@@ -233,43 +205,117 @@
         // 1. Configura o Fundo Escuro (Overlay)
         Object.assign(placeholder.style, {
           position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.8)', // Um pouco mais escuro
+          backgroundColor: 'rgba(0, 0, 0, 0.85)', // Fundo bem escuro
           zIndex: '999999',
           display: 'flex', justifyContent: 'center', alignItems: 'center',
-          opacity: '0', transition: 'opacity 0.4s ease', backdropFilter: 'blur(3px)',
-          padding: '20px' // Margem de segurança para não colar na borda
+          opacity: '0', transition: 'opacity 0.4s ease', backdropFilter: 'blur(5px)',
+          padding: '10px' // Margem segura mobile
         });
 
-        // 2. Injeta CSS Corretivo para Mobile (AQUI ESTÁ A MÁGICA DO TAMANHO)
-        const styleMobile = document.createElement('style');
-        styleMobile.innerHTML = `
-          /* Ajustes para o card injetado */
-          #dayoff-scope, .card-dayoff {
-             max-width: 450px !important; 
+        // 2. INJEÇÃO DE CSS (Ajuste de Largura e Mobile)
+        const styleFix = document.createElement('style');
+        styleFix.textContent = `
+          /* Força a largura maior que você pediu */
+          #dayoff-scope .card-dayoff, .card-dayoff {
+             max-width: 500px !important; /* Aumentei de 420px para 500px */
              width: 100% !important;
              margin: 0 auto !important;
           }
-          /* Regra específica para Celular: Diminuir o card */
+          
+          /* Ajuste Mobile: Ocupa 92% da tela, sem diminuir a fonte */
           @media (max-width: 600px) {
-             #dayoff-placeholder {
-                align-items: center !important; /* Centraliza verticalmente */
+             #dayoff-scope .card-dayoff, .card-dayoff {
+                width: 92% !important;
+                max-width: none !important;
              }
-             /* Escala o card para 85% do tamanho original e centraliza */
-             #dayoff-scope, .card-dayoff {
-                transform: scale(0.85) !important; 
-                transform-origin: center center !important;
-                max-width: 90vw !important; /* Nunca passa de 90% da largura da tela */
+             /* Garante que o modal de texto também fique bom no mobile */
+             .modal-content {
+                width: 95% !important;
+                margin: auto;
              }
           }
-          /* Garante que o modal de detalhes fique acima do card */
-          .modal-overlay { z-index: 9999999 !important; }
+          /* Garante que o modal de detalhes fique ACIMA de tudo */
+          .modal-overlay { z-index: 9999999 !important; position: fixed !important; }
         `;
-        document.head.appendChild(styleMobile);
+        document.head.appendChild(styleFix);
 
-        // 3. Injeta o HTML do Card
+        // 3. Injeta o HTML
         placeholder.innerHTML = htmlText;
 
-        // 4. Reativa Scripts (Necessário para a animação interna do card)
+        // =========================================================
+        // 4. LÓGICA MANUAL (Aqui resolvemos o botão "Saiba Mais")
+        // =========================================================
+        
+        // Identifica os elementos recém-criados
+        const cardPrincipal = placeholder.querySelector('.card-dayoff');
+        const btnSaibaMais = placeholder.querySelector('.btn-saiba-mais');
+        const btnFecharCard = placeholder.querySelector('.card-close');
+        
+        // Tenta achar o modal de detalhes (pode ser o ID novo ou antigo, procuramos os dois)
+        const modalDetalhes = placeholder.querySelector('#dayoff-modal-info') || placeholder.querySelector('#modal');
+        const btnFecharDetalhes = modalDetalhes ? modalDetalhes.querySelector('.modal-close') : null;
+
+        // -- CONSERTANDO O BOTÃO SAIBA MAIS --
+        if (btnSaibaMais && modalDetalhes) {
+            // Removemos qualquer onclick antigo e forçamos o nosso
+            btnSaibaMais.onclick = function(e) {
+                e.stopPropagation(); // Não fecha o card principal
+                modalDetalhes.style.display = 'flex'; // ABRE O MODAL
+                
+                // Trava a rolagem do fundo
+                document.body.style.overflow = 'hidden'; 
+            };
+        }
+
+        // -- CONSERTANDO O FECHAMENTO DO MODAL DE DETALHES --
+        if (btnFecharDetalhes && modalDetalhes) {
+            btnFecharDetalhes.onclick = function(e) {
+                e.stopPropagation();
+                modalDetalhes.style.display = 'none';
+                document.body.style.overflow = 'auto'; // Destrava rolagem
+            };
+            // Fecha clicando fora do conteúdo (no fundo escuro do modal)
+            modalDetalhes.onclick = function(e) {
+                if (e.target === modalDetalhes) {
+                    modalDetalhes.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            };
+        }
+
+        // -- CONSERTANDO O FECHAMENTO GERAL (X do Card Principal) --
+        window.fecharTotal = function() {
+          placeholder.style.opacity = '0';
+          setTimeout(() => {
+            placeholder.style.display = 'none'; 
+            // Salva que já viu
+            localStorage.setItem('dayoff_visto_' + new Date().toDateString(), 'true');
+          }, 400);
+        };
+
+        if (btnFecharCard) {
+            btnFecharCard.onclick = function(e) {
+                e.stopPropagation();
+                // Efeito visual
+                if(cardPrincipal) {
+                    cardPrincipal.style.opacity = '0';
+                    cardPrincipal.style.transform = 'scale(0.9)';
+                }
+                setTimeout(window.fecharTotal, 300);
+            };
+        }
+
+        // Fecha ao clicar no fundo preto geral (mas não no card)
+        placeholder.addEventListener('click', (e) => {
+           // Verifica se clicou no fundo preto e se o modal de detalhes NÃO está aberto
+           const detalhesAbertos = modalDetalhes && modalDetalhes.style.display === 'flex';
+           
+           if (!detalhesAbertos && (e.target === placeholder || e.target.id === 'dayoff-scope')) {
+               window.fecharTotal();
+           }
+        });
+
+        // 5. Reativa Scripts internos do card (para animações CSS funcionarem bem)
         const scripts = placeholder.querySelectorAll("script");
         scripts.forEach(oldScript => {
           const newScript = document.createElement("script");
@@ -277,35 +323,7 @@
           document.body.appendChild(newScript);
         });
 
-        // 5. Função para Fechar Tudo (Overlay + Card)
-        window.fecharTotal = function() {
-          placeholder.style.opacity = '0';
-          setTimeout(() => {
-            placeholder.style.display = 'none'; 
-            localStorage.setItem('dayoff_visto_' + new Date().toDateString(), 'true');
-          }, 400);
-        };
-
-        // 6. Intercepta o botão X do card
-        window.dayoff_fecharCard = function(btn) {
-           const card = document.querySelector('.card-dayoff');
-           if(card) {
-               card.style.opacity = '0';
-               card.style.transform = 'scale(0.7)'; // Efeito de diminuir
-           }
-           setTimeout(window.fecharTotal, 300);
-        };
-        window.fecharCard = window.dayoff_fecharCard; // Compatibilidade
-
-        // 7. Fecha ao clicar fora
-        placeholder.addEventListener('click', (e) => {
-           // Verifica se clicou no fundo preto e NÃO no card ou no modal de detalhes
-           if(e.target === placeholder || e.target.id === 'dayoff-scope') {
-               window.fecharTotal();
-           }
-        });
-
-        // 8. Anima a entrada
+        // 6. Anima a entrada final
         requestAnimationFrame(() => placeholder.style.opacity = '1');
 
       } catch (e) {
@@ -1055,4 +1073,5 @@
   </script>
 </body>
 </html>
+
 
