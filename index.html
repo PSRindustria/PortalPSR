@@ -193,11 +193,9 @@
       const placeholder = document.getElementById("dayoff-placeholder");
       const urlCard = "https://psrindustria.github.io/PortalPSR/card_dayoff.html";
 
-      // -------------------------------------------------------
-      // CONFIGURAÇÃO: Se quiser que apareça apenas 1 vez por dia,
-      // descomente a linha abaixo (remova as duas barras //):
+      // --- CONTROLE DE FREQUÊNCIA ---
+      // Se quiser testar, mantenha comentado. Para ativar (1x ao dia), descomente:
       // if (localStorage.getItem('dayoff_visto_' + new Date().toDateString())) return;
-      // -------------------------------------------------------
 
       try {
         // 1. Busca o arquivo
@@ -205,22 +203,8 @@
         if (!response.ok) return;
         const htmlText = await response.text();
 
-        // 2. Prepara o Parser para modificar o HTML antes de inserir
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, "text/html");
-
-        // 3. SEGURANÇA CSS: Renomeia estilos do 'body' para evitar conflito
-        const styles = doc.querySelectorAll("style");
-        let safeCss = "";
-        styles.forEach(styleTag => {
-          let css = styleTag.innerHTML;
-          // Troca 'body' por '#dayoff-scope' para prender o estilo no modal
-          css = css.replace(/body\s*\{/g, '#dayoff-scope {'); 
-          css = css.replace(/body\s/g, '#dayoff-scope '); 
-          safeCss += css;
-        });
-
-        // 4. Configura o Placeholder (Fundo Escuro)
+        // 2. Configura o Placeholder (Overlay Escuro)
+        // Aqui apenas preparamos o fundo. O conteúdo vem do arquivo blindado.
         Object.assign(placeholder.style, {
           position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
           backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: '999999',
@@ -228,16 +212,11 @@
           opacity: '0', transition: 'opacity 0.4s ease', backdropFilter: 'blur(4px)'
         });
 
-        // 5. Injeta o HTML Seguro + CSS Modificado
-        const content = doc.body.innerHTML;
-        placeholder.innerHTML = `
-          <style>${safeCss}</style>
-          <div id="dayoff-scope" style="background: transparent; width: 100%; display: flex; justify-content: center;">
-            ${content}
-          </div>
-        `;
+        // 3. Injeta o HTML DIRETAMENTE (Sem modificar o CSS)
+        // O arquivo card_dayoff.html blindado já cuida de não quebrar o layout.
+        placeholder.innerHTML = htmlText;
 
-        // 6. Reativa os Scripts do Card
+        // 4. Reativa os Scripts (Essencial para o botão "Saiba Mais" funcionar)
         const scripts = placeholder.querySelectorAll("script");
         scripts.forEach(oldScript => {
           const newScript = document.createElement("script");
@@ -245,33 +224,32 @@
           document.body.appendChild(newScript);
         });
 
-        // 7. Função Mestra de Fechar (Limpa tudo da memória)
+        // 5. Função Mestra de Fechar (Fecha o overlay preto do index)
         window.fecharTotal = function() {
           placeholder.style.opacity = '0';
           setTimeout(() => {
-            placeholder.remove(); // REMOVE do HTML para não pesar
-            // Marca como visto hoje (se a opção lá em cima estiver ativa)
+            placeholder.style.display = 'none'; // Apenas esconde, não remove, caso queira reabrir
+            // Marca como visto hoje
             localStorage.setItem('dayoff_visto_' + new Date().toDateString(), 'true');
           }, 400);
         };
 
-        // 8. Intercepta o botão de fechar original do card
-        setTimeout(() => {
-            const originalFechar = window.fecharCard;
-            window.fecharCard = function(elemento) {
-                if(originalFechar) originalFechar(elemento); // Roda animação do card
-                window.fecharTotal(); // Roda nossa limpeza
-            };
-            
-            // Também fecha se clicar no fundo escuro (fora do card)
-            placeholder.addEventListener('click', (e) => {
-                if(e.target === placeholder || e.target.id === 'dayoff-scope') {
-                    window.fecharTotal();
-                }
-            });
-        }, 200);
+        // 6. Fecha se clicar no fundo escuro
+        placeholder.addEventListener('click', (e) => {
+           // Se clicou no fundo preto ou no wrapper de escopo, fecha tudo
+           if(e.target === placeholder || e.target.id === 'dayoff-scope') {
+               // Verifica se existe a função de fechar do card (animação) antes de fechar tudo
+               if(window.dayoff_fecharCard) {
+                   const card = document.getElementById('dayoff-card-main');
+                   // Simula o clique no botão X passando o card, se possível
+                   window.dayoff_fecharCard(card); 
+               } else {
+                   window.fecharTotal();
+               }
+           }
+        });
 
-        // 9. Anima a entrada
+        // 7. Anima a entrada
         requestAnimationFrame(() => placeholder.style.opacity = '1');
 
       } catch (e) {
@@ -294,7 +272,6 @@
         projectId: "jornalpsr-1b8c6",
       };
 
-      // Inicializa apenas se ainda não existir
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
       }
@@ -422,7 +399,7 @@
 
   // --- VARIÁVEIS GLOBAIS ---
   let currentComunicadoId = null;
-  let dadosComunicadoGlobal = null; // <--- NOVA VARIÁVEL AQUI
+  let dadosComunicadoGlobal = null; 
 
   document.addEventListener('DOMContentLoaded', async () => {
     
@@ -437,15 +414,11 @@
         });
     }
 
-    // --- 1. LÓGICA DO COMUNICADO (ATUALIZADA) ---
-// --- 1. LÓGICA DO COMUNICADO (OTIMIZADA PARA VELOCIDADE) ---
+    // --- 1. LÓGICA DO COMUNICADO ---
     async function carregarComunicado() {
-        // MUDANÇA AQUI: Adicionamos limitToLast=5 para baixar apenas os 5 últimos
-        // Isso torna o download minúsculo e muito rápido
         const url = `${DB_URL}/Comunicado.json?orderBy="$key"&limitToLast=5`;
         
         try {
-            // Mantemos o timestamp para evitar cache do navegador, mas o payload é pequeno agora
             const res = await fetch(url + '&t=' + Date.now()); 
             if (!res.ok) throw new Error("Erro ao buscar comunicado");
             
@@ -453,17 +426,14 @@
             if (!data) return;
 
             let lista = [];
-            // O Firebase com filtros sempre retorna um Objeto, não Array
             if (typeof data === 'object') {
                 lista = Object.keys(data).map(key => ({ ...data[key], id: key }));
             } else if (Array.isArray(data)) {
-                // Fallback caso o filtro falhe ou estrutura mude
                 lista = data.map((item, index) => ({ ...item, id: index })).filter(item => item !== null);
             }
 
             if (lista.length === 0) return;
 
-            // Ordenar por data (Do mais recente para o mais antigo)
             lista.sort((a, b) => {
                 const dataA = new Date(a['data:']);
                 const dataB = new Date(b['data:']);
@@ -472,12 +442,11 @@
 
             const ultimo = lista[0];
             dadosComunicadoGlobal = ultimo; 
-            const passados = lista.slice(1); // O histórico agora terá no máximo 4 itens (os mais recentes)
+            const passados = lista.slice(1); 
 
             const texto = ultimo['comunicado:'] || "";
             const autor = ultimo['autor:'] || "RH Informa";
             
-            // Renderização mais rápida do resumo
             const divTexto = document.createElement("div");
             divTexto.innerHTML = texto;
             const textoPuro = divTexto.textContent || divTexto.innerText || "";
@@ -490,12 +459,11 @@
             
             if (strip && pResumo) {
                 pResumo.innerHTML = `<strong>${autor}</strong> ${resumo}`;
-                strip.style.display = 'block'; // Mostra a barra
+                strip.style.display = 'block'; 
 
                 const relev = (ultimo['relevancia:'] || "none").toLowerCase();
                 if (relev.includes('importante')) {
                     strip.classList.add('comunicado-importante');
-                    // Reduzi o tempo de espera para abrir o modal automático para 800ms (era 1500ms)
                     setTimeout(() => abrirLeitura(ultimo), 800);
                 } else {
                     strip.classList.remove('comunicado-importante');
@@ -557,17 +525,13 @@
     function abrirLeitura(item) {
         fecharModal('modal-lista-historico');
         const modal = document.getElementById('modal-comunicado');
-        
         currentComunicadoId = item.id; 
-
         const dataRaw = item['data:'];
         let dataFmt = "--/--/----";
         if (dataRaw) dataFmt = new Date(dataRaw).toLocaleDateString('pt-BR');
-
         document.getElementById('modal-autor').textContent = item['autor:'];
         document.getElementById('modal-data').textContent = dataFmt;
         document.getElementById('modal-texto').textContent = item['comunicado:'];
-        
         contarLeituras(currentComunicadoId);
         modal.classList.add('active');
     }
@@ -576,13 +540,11 @@
         const modal = document.getElementById('modal-lista-historico');
         const container = document.getElementById('conteudo-historico');
         container.innerHTML = "";
-
         lista.forEach(item => {
             const div = document.createElement('div');
             div.className = 'history-item';
             const dataRaw = item['data:'];
             let dataFmt = dataRaw ? new Date(dataRaw).toLocaleDateString('pt-BR') : "";
-            
             div.innerHTML = `
                 <div class="history-header">
                     <span>${item['autor:']}</span>
@@ -607,12 +569,10 @@
           const hashIndex = href.lastIndexOf('#');
           const targetId = href.substring(hashIndex + 1);
           const targetSection = document.getElementById(targetId);
-
           if (targetSection) {
             e.preventDefault(); 
             const menuEl = document.getElementById('menu'); 
             if (menuEl) menuEl.classList.remove('active');
-            
             const isMobile = window.innerWidth < 768;
             targetSection.scrollIntoView({
               behavior: 'smooth',
@@ -626,27 +586,22 @@
     // --- 3. FOGOS ---
     function spawnFirework(container) {
       if (!container || document.hidden) return;
-      
       const rect = container.getBoundingClientRect();
       const startX = (Math.random() * (rect.width - 40)) + 20; 
       const startY = (Math.random() * (rect.height - 40)) + 20;
       const colors = ['#74b9ff', '#ffffff', '#81ecec', '#0984e3', '#b2bec3', '#dfe6e9'];
       const particleCount = 90; 
-
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         const size = Math.random() * 2.5 + 1; 
         const color = colors[Math.floor(Math.random() * colors.length)];
-
         Object.assign(particle.style, {
           position: 'absolute', top: '0', left: '0', width: `${size}px`, height: `${size}px`,
           backgroundColor: color, borderRadius: '50%', opacity: '0', pointerEvents: 'none',
           transform: `translate3d(${startX}px, ${startY}px, 0) scale(1)`,
           boxShadow: `0 0 ${size * 4}px ${color}`, zIndex: '10'
         });
-
         container.appendChild(particle);
-
         const angle = Math.random() * Math.PI * 2;
         const velocity = Math.random() * 4 + 2; 
         let vx = Math.cos(angle) * velocity;
@@ -655,14 +610,12 @@
         let life = 1.0;
         const decay = Math.random() * 0.007 + 0.003; 
         const friction = 0.96; const gravity = 0.04; 
-
         setTimeout(() => {
              if(document.body.contains(particle)){
                  particle.style.opacity = '1';
                  requestAnimationFrame(animate);
              }
         }, Math.random() * 80);
-
         function animate() {
           if(document.hidden) { particle.remove(); return; }
           vx *= friction; vy *= friction; vy += gravity;  
@@ -711,7 +664,7 @@
       }
     });
     
-    // --- 4. CARREGAMENTO MENU/FOOTER (ATUALIZADO COM CLIQUE) ---
+    // --- 4. CARREGAMENTO MENU/FOOTER ---
     ['menu','footer'].forEach(file => {
       fetch(`${file}.html?t=${Date.now()}`)
         .then(r => r.text())
@@ -722,20 +675,16 @@
           if (file === 'menu') {
             const toggle = document.getElementById('menu-toggle');
             const navEl = document.getElementById('nav-principal'); 
-            
             if (toggle && navEl) {
               toggle.addEventListener('click', () => {
                 navEl.classList.toggle('active');
               });
             }
-
-            // Lógica para o botão Comunicado do Menu
             const btnMenuComunicado = document.getElementById('link-abrir-comunicado-menu');
             if (btnMenuComunicado) {
                 btnMenuComunicado.addEventListener('click', (e) => {
                     e.preventDefault(); 
                     if(navEl) navEl.classList.remove('active');
-
                     if (dadosComunicadoGlobal) {
                         abrirLeitura(dadosComunicadoGlobal);
                     } else {
@@ -761,8 +710,6 @@
     }
     
     // --- 6. RENDERIZADORES ---
-    
-    // Reflexão
     async function renderReflexao() {
       const data = await fetchData('reflexaododia.json');
       const c = document.getElementById('reflexao-container');
@@ -770,22 +717,14 @@
       const dia = hoje.getDate();
       const mes = hoje.getMonth();
       const ano = hoje.getFullYear();
-      
       if (!c) return;
-      if (!data) {
-        c.innerHTML = '<p>Erro ao carregar reflexão.</p>';
-        return;
-      }
+      if (!data) { c.innerHTML = '<p>Erro ao carregar reflexão.</p>'; return; }
       const key = `${String(dia).padStart(2,'0')}/${String(mes+1).padStart(2,'0')}/${ano}`;
       const r = data.find(x => x.data === key);
       c.innerHTML = '';
-      if (!r) {
-        c.innerHTML = '<p>Sem reflexão para hoje.</p>';
-        return;
-      }
+      if (!r) { c.innerHTML = '<p>Sem reflexão para hoje.</p>'; return; }
       const card = document.createElement('div');
       card.className = 'reflexao-card';
-      
       card.innerHTML = `
         <p class="reflexao-frase">"${r.frase}"</p>
         <p class="reflexao-autor">- ${r.autor}</p>
@@ -794,10 +733,8 @@
           <p class="reflexao-texto">${r.reflexao}</p>
           <p class="reflexao-data">Reflexão: ${r.data}</p>
         </div>`;
-        
       const extra = card.querySelector('.reflexao-extra');
       const instr = card.querySelector('.reflexao-instrucao');
-      
       if (extra) extra.style.display = 'none';
       if (instr) {
         instr.addEventListener('click', () => {
@@ -807,81 +744,55 @@
       c.appendChild(card);
     }
 
-    // Aniversariantes
     async function renderAniversariantes() {
       const data = await fetchData('aniversariantes.json');
       const container = document.getElementById('aniversariantes-container');
       if (!container) return;
-      if (!data) {
-        container.innerHTML = '<p>Erro ao carregar aniversariantes.</p>';
-        return;
-      }
+      if (!data) { container.innerHTML = '<p>Erro ao carregar aniversariantes.</p>'; return; }
       container.innerHTML = '';
       clearAllFireworkIntervals();
-
       const hojeAtual = new Date();
       const diaHoje = String(hojeAtual.getDate()).padStart(2,'0');
       const mesHoje = String(hojeAtual.getMonth()+1).padStart(2,'0');
       const nomesMes = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-
       data.forEach(a => {
         const [dStr,mStr] = a.data ? a.data.split('/') : ['',''];
         const card = document.createElement('div');
         card.className = 'aniversariante-card';
-
         if (dStr === diaHoje && mStr === mesHoje) {
           card.classList.add('destaque-hoje');
           const tw = document.createElement('div');
           tw.className = 'twinkle-lights';
           card.appendChild(tw);
-          if(!document.hidden) {
-            startFireworkForElement(tw);
-          }
+          if(!document.hidden) { startFireworkForElement(tw); }
         }
-
         const dataFmt = (dStr && mStr && nomesMes[Number(mStr)-1]) ? `${dStr} de ${nomesMes[Number(mStr)-1]}` : 'Data inválida';
-        
         const imgContainer = document.createElement('div');
         imgContainer.className = 'aniversariante-img';
-        
         if (a.imagem) {
           const img = document.createElement('img');
           img.alt = a.nome || 'Aniversariante';
           img.onerror = function() {
-            if (a.imagem_fallback) {
-              this.onerror = function() { imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>'; };
-              this.src = a.imagem_fallback;
-            } else {
-              imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
-            }
+            if (a.imagem_fallback) { this.onerror = function() { imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>'; }; this.src = a.imagem_fallback; } else { imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>'; }
           };
           img.src = a.imagem;
           imgContainer.appendChild(img);
-        } else {
-          imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>';
-        }
+        } else { imgContainer.innerHTML = '<i class="fas fa-birthday-cake"></i>'; }
         card.appendChild(imgContainer);
-        
         const infoDiv = document.createElement('div');
         infoDiv.className = 'aniversariante-info';
-        infoDiv.innerHTML = `
-          <h3><i class="fas fa-birthday-cake"></i> ${a.nome || 'Aniversariante'}</h3>
-          ${a.cargo ? `<p>${a.cargo}</p>` : ''}
-          <p class="aniversariante-data">${dataFmt}</p>
-        `;
+        infoDiv.innerHTML = `<h3><i class="fas fa-birthday-cake"></i> ${a.nome || 'Aniversariante'}</h3>${a.cargo ? `<p>${a.cargo}</p>` : ''}<p class="aniversariante-data">${dataFmt}</p>`;
         card.appendChild(infoDiv);
         container.appendChild(card);
       });
     }
 
-    // Férias
     async function renderFerias() {
        const data = await fetchData("ferias.json");
        const tb = document.getElementById("ferias-tbody");
        if (!tb) return;
        const hoje = new Date();
        hoje.setHours(0, 0, 0, 0);
-
        function isSameDate(dateStr, comparisonDate) {
          try {
            const [dia, mes, ano] = dateStr.split("/");
@@ -891,7 +802,6 @@
            return dataObj.getTime() === comparisonDate.getTime();
          } catch (e) { return false; }
        }
-
        const dataFiltrada = (data || []).filter(f => {
          try {
              const [dia, mes, ano] = f.retorno.split("/");
@@ -901,16 +811,9 @@
              return dataRetorno >= hoje;
           } catch (e) { return false; }
        });
-
        tb.innerHTML = "";
-       if (data === null) {
-         tb.innerHTML = `<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>`;
-         return;
-       }
-       if (dataFiltrada.length === 0) {
-         tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`;
-         return;
-       }
+       if (data === null) { tb.innerHTML = `<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>`; return; }
+       if (dataFiltrada.length === 0) { tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`; return; }
        dataFiltrada.forEach(f => {
          const retornaHoje = isSameDate(f.retorno, hoje);
          const tr = document.createElement("tr");
@@ -920,115 +823,40 @@
        });
      }
 
-    // --- 7. DESTAQUES (Reconhecimento) ---
-async function renderDestaques() {
-        const raw = await fetchData('destaques.json'); //
+    // --- 7. DESTAQUES ---
+    async function renderDestaques() {
+        const raw = await fetchData('destaques.json'); 
         const container = document.getElementById('destaques-container');
-        
         if (!container) return;
-        if (!raw) {
-            container.innerHTML = '<p>Erro ao carregar destaques.</p>';
-            return;
-        }
-        
+        if (!raw) { container.innerHTML = '<p>Erro ao carregar destaques.</p>'; return; }
         container.innerHTML = '';
         const lista = Array.isArray(raw) ? raw : (typeof raw === 'object' && raw !== null ? Object.values(raw) : []);
-        
-        if (lista.length === 0) {
-            container.innerHTML = '<p>Nenhum destaque no momento.</p>';
-            return;
-        }
-
+        if (lista.length === 0) { container.innerHTML = '<p>Nenhum destaque no momento.</p>'; return; }
         lista.forEach(item => {
             const div = document.createElement('div');
             div.className = 'destaque-card';
-            
-            // Define Imagem Principal (usada no Valor e Mês)
-            let imgHtml = item.foto 
-                ? `<div class="destaque-img"><img src="${item.foto}" alt="${item.colaborador}"></div>` 
-                : `<div class="destaque-icon-generic"><i class="fas fa-user-circle"></i></div>`;
-
-            // Gera ID único para os comentários
+            let imgHtml = item.foto ? `<div class="destaque-img"><img src="${item.foto}" alt="${item.colaborador}"></div>` : `<div class="destaque-icon-generic"><i class="fas fa-user-circle"></i></div>`;
             const idUnico = (item.colaborador + "_" + item.tipo).replace(/\s+/g, '_').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-            // Template da Área de Comentários (Igual para todos)
             const areaComentariosHtml = `
                 <div class="comentarios-area">
-                    <div class="comentarios-lista" id="lista-${idUnico}">
-                        <small>Carregando comentários...</small>
-                    </div>
+                    <div class="comentarios-lista" id="lista-${idUnico}"><small>Carregando comentários...</small></div>
                     <div class="input-area">
                         <input type="text" id="input-${idUnico}" placeholder="Deixe seu parabéns...">
                         <button onclick="enviarComentario('${idUnico}')"><i class="fas fa-paper-plane"></i></button>
                     </div>
-                </div>
-            `;
-
-            // --- TIPO 1: VALOR ---
+                </div>`;
             if (item.tipo === 'valor') {
                 div.classList.add('card-valor');
-                div.innerHTML = `
-                    <div class="badge-destaque badge-valor"><i class="fas fa-gem"></i> Guardião do Valor</div>
-                    <div class="destaque-body-padrao">
-                        ${imgHtml}
-                        <h3>${item.colaborador}</h3>
-                        <p class="destaque-cargo">${item.cargo}</p>
-                        <div class="valor-box">
-                            <span class="valor-label">Valor:</span>
-                            <span class="valor-nome">${item.valor}</span>
-                        </div>
-                        <p class="destaque-msg">"${item.mensagem}"</p>
-                        ${areaComentariosHtml}
-                    </div>
-                `;
-            }
-            // --- TIPO 2: DESTAQUE DO MÊS ---
-            else if (item.tipo === 'mes') {
+                div.innerHTML = `<div class="badge-destaque badge-valor"><i class="fas fa-gem"></i> Guardião do Valor</div><div class="destaque-body-padrao">${imgHtml}<h3>${item.colaborador}</h3><p class="destaque-cargo">${item.cargo}</p><div class="valor-box"><span class="valor-label">Valor:</span><span class="valor-nome">${item.valor}</span></div><p class="destaque-msg">"${item.mensagem}"</p>${areaComentariosHtml}</div>`;
+            } else if (item.tipo === 'mes') {
                 div.classList.add('card-mes');
-                div.innerHTML = `
-                    <div class="badge-destaque badge-mes"><i class="fas fa-trophy"></i> Destaque do Mês</div>
-                    <div class="destaque-body-padrao">
-                        ${imgHtml}
-                        <h3>${item.colaborador}</h3>
-                        <p class="destaque-cargo">${item.cargo}</p>
-                        <div class="mes-referencia">${item.referencia}</div>
-                        <p class="destaque-msg">"${item.mensagem}"</p>
-                        ${areaComentariosHtml}
-                    </div>
-                `;
-            }
-            // --- TIPO 3: TEMPO DE EMPRESA ---
-            else if (item.tipo === 'tempo') {
+                div.innerHTML = `<div class="badge-destaque badge-mes"><i class="fas fa-trophy"></i> Destaque do Mês</div><div class="destaque-body-padrao">${imgHtml}<h3>${item.colaborador}</h3><p class="destaque-cargo">${item.cargo}</p><div class="mes-referencia">${item.referencia}</div><p class="destaque-msg">"${item.mensagem}"</p>${areaComentariosHtml}</div>`;
+            } else if (item.tipo === 'tempo') {
                 div.classList.add('card-tempo');
-                
-                // Foto específica para o layout do card Tempo (menor, ao lado do nome)
-                let fotoTempoHtml = item.foto 
-                    ? `<img src="${item.foto}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #fff;">` 
-                    : `<i class="fas fa-user-circle" style="font-size:40px;"></i>`;
-
-                div.innerHTML = `
-                    <div class="header-tempo">
-                        <div class="selo-anos">${item.anos}<span>anos</span></div>
-                        <div class="info-tempo" style="display:flex; align-items:center; gap:10px;">
-                            <div>${fotoTempoHtml}</div>
-                            <div>
-                                <h3>${item.colaborador}</h3>
-                                <p>${item.cargo}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="body-tempo"> <p class="linkedin-cta">${item.mensagem_parabens}</p>
-                        <div class="trajetoria-box">
-                            <i class="fas fa-history"></i>
-                            <p>${item.trajetoria}</p>
-                        </div>
-                        ${areaComentariosHtml}
-                    </div>
-                `;
+                let fotoTempoHtml = item.foto ? `<img src="${item.foto}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #fff;">` : `<i class="fas fa-user-circle" style="font-size:40px;"></i>`;
+                div.innerHTML = `<div class="header-tempo"><div class="selo-anos">${item.anos}<span>anos</span></div><div class="info-tempo" style="display:flex; align-items:center; gap:10px;"><div>${fotoTempoHtml}</div><div><h3>${item.colaborador}</h3><p>${item.cargo}</p></div></div></div><div class="body-tempo"> <p class="linkedin-cta">${item.mensagem_parabens}</p><div class="trajetoria-box"><i class="fas fa-history"></i><p>${item.trajetoria}</p></div>${areaComentariosHtml}</div>`;
             }
-
             container.appendChild(div);
-            // Carrega comentários
             setTimeout(() => carregarComentarios(idUnico), 500);
         });
     }
@@ -1039,44 +867,24 @@ async function renderDestaques() {
     renderDestaques(); 
   });
 
-  // --- FUNÇÕES DE COMENTÁRIOS (GLOBAIS para o onclick funcionar) ---
   window.carregarComentarios = async function(id) {
       const divLista = document.getElementById(`lista-${id}`);
       if(!divLista) return;
-
       try {
           const res = await fetch(`${DB_URL}/Comentarios/${id}.json`);
           const data = await res.json();
-          
           divLista.innerHTML = '';
-          if(!data) {
-              divLista.innerHTML = '<small style="color:#aaa">Seja o primeiro a parabenizar!</small>';
-              return;
-          }
-
-          // FILTRO: Mês Vigente
+          if(!data) { divLista.innerHTML = '<small style="color:#aaa">Seja o primeiro a parabenizar!</small>'; return; }
           const hoje = new Date();
           const mesAtual = hoje.getMonth();
           const anoAtual = hoje.getFullYear();
-
           const comentariosFiltrados = Object.values(data).filter(c => {
               if(!c.data) return false;
               const dataComentario = new Date(c.data);
               return dataComentario.getMonth() === mesAtual && dataComentario.getFullYear() === anoAtual;
           });
-
-          if(comentariosFiltrados.length === 0) {
-              divLista.innerHTML = '<small style="color:#aaa">Nenhum comentário neste mês.</small>';
-              return;
-          }
-
-          comentariosFiltrados.forEach(c => {
-              divLista.innerHTML += `
-                  <div class="comentario-item">
-                      <strong>Colega PSR:</strong> ${c.texto}
-                  </div>
-              `;
-          });
+          if(comentariosFiltrados.length === 0) { divLista.innerHTML = '<small style="color:#aaa">Nenhum comentário neste mês.</small>'; return; }
+          comentariosFiltrados.forEach(c => { divLista.innerHTML += `<div class="comentario-item"><strong>Colega PSR:</strong> ${c.texto}</div>`; });
           divLista.scrollTop = divLista.scrollHeight; 
       } catch(e) { console.error(e); }
   };
@@ -1085,21 +893,12 @@ async function renderDestaques() {
       const input = document.getElementById(`input-${id}`);
       const texto = input.value;
       if(!texto.trim()) return;
-
-      try {
-          await fetch(`${DB_URL}/Comentarios/${id}.json`, {
-              method: 'POST',
-              body: JSON.stringify({ texto: texto, data: new Date() })
-          });
-          input.value = '';
-          carregarComentarios(id);
-      } catch(e) { alert("Erro ao enviar."); }
+      try { await fetch(`${DB_URL}/Comentarios/${id}.json`, { method: 'POST', body: JSON.stringify({ texto: texto, data: new Date() }) }); input.value = ''; carregarComentarios(id); } catch(e) { alert("Erro ao enviar."); }
   };
   </script>
 
   <script>
     const nomesFemininos = ['abigail', 'abriele', 'adriane', 'agnes', 'aitana', 'alana', 'alba', 'alessia', 'alexia', 'aliceia', 'alzira', 'amalia', 'ana paula', 'anais', 'angelica', 'angelina', 'antonia', 'anita', 'antonieta', 'ara', 'ariana', 'ariane', 'arlete', 'arlene', 'arminda', 'audrey', 'aurora', 'ayla', 'azilda', 'barbara', 'beatrice', 'bellamy', 'benedita', 'bernadete', 'bertina', 'bertha', 'betsy', 'biana', 'blendina', 'blenda', 'branda', 'brigitte', 'camille', 'candida', 'carmela', 'carminha', 'caroline', 'catarina', 'cecília', 'celia', 'celina', 'chantal', 'charlene', 'charlotte', 'christiane', 'cielete', 'cilene', 'clarice', 'claudete', 'claudiana', 'claudine', 'claudionora', 'clelia', 'cleusa', 'clotilde', 'clementina', 'cordelia', 'corina', 'cristal', 'cristela', 'crislaine', 'dadá', 'dagmar', 'dalila', 'dalva', 'damiana', 'danila', 'danisa', 'darcília', 'darlene', 'deadina', 'deise', 'dela', 'delia', 'demetria', 'denise', 'derci', 'desirée', 'diana', 'dilma', 'dinorah', 'dionísia', 'dirce', 'divina', 'dominica', 'domingas', 'doroteia', 'edi', 'edilene', 'edite', 'elaine', 'elba', 'elderina', 'eleonora', 'elfrida', 'elisabete', 'elisângela', 'eliza', 'elizabete', 'elma', 'elvira', 'ema', 'emília', 'ena', 'enede', 'ereia', 'erika', 'erise', 'erteca', 'erta', 'esmeralda', 'estela', 'estrela', 'eudoxia', 'eulália', 'eunice', 'eva', 'evangelina', 'everlúcia', 'exilda', 'fabiana', 'fátima', 'felicidade', 'fermina', 'fiama', 'flora', 'florinda', 'fortuna', 'francine', 'francisca', 'frida', 'gabrielle', 'gasparina', 'geneviève', 'genilda', 'geovana', 'geovana', 'geovana', 'gilda', 'gina', 'ginger', 'gislaine', 'gleice', 'glenda', 'glória', 'goretti', 'graciete', 'gracilene', 'guida', 'haidée', 'halina', 'hanae', 'hana', 'hanna', 'helle', 'helma', 'henriqueta', 'herminia', 'heveline', 'hilaria', 'hilda', 'homérica', 'hylda', 'ida', 'ileana', 'ilma', 'ilza', 'imelda', 'inês', 'iraci', 'irene', 'irislene', 'irlanda', 'ismaela', 'itaglêcia', 'ivanete', 'ivone', 'ivoneide', 'ivonilde', 'izabel', 'izabela', 'izildinha', 'jada', 'janete', 'janina', 'janine', 'jaqueline', 'jelena', 'jemima', 'jessiane', 'joana d’arc', 'jocasta', 'joelia', 'joenilda', 'jole', 'jonas', 'jorgeana', 'joselina', 'josiana', 'jovita', 'joyce', 'julia', 'junia', 'justina', 'karine', 'karla', 'karol', 'katia', 'kátia', 'kely', 'keyla', 'kimberly', 'kissia', 'kristina', 'laraine', 'larissa', 'lau', 'lauraine', 'lea', 'lebina', 'leila', 'leina', 'lemara', 'lendite', 'leonor', 'lepida', 'lesbia', 'letícia', 'levina', 'liana', 'lidia', 'lidiane', 'liliane', 'lilisa', 'lilja', 'linda', 'linet', 'lionê', 'liora', 'lisandra', 'lissa', 'lita', 'lizabeth', 'lorena', 'lorene', 'lority', 'lourdes', 'lucia', 'lucinda', 'ludmila', 'luene', 'luise', 'luiza', 'lumena', 'luzia', 'lygia', 'lys', 'madalena', 'mafalda', 'maisa', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina', 'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia', 'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice', 'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury', 'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele', 'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna', 'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa', 'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida', 'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa', 'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina', 'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela', 'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina', 'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina', 'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane', 'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita', 'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete', 'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane', 'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete', 'samara', 'samira', 'samandra', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly', 'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena', 'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara', 'sirlene', 'sônia', 'sonia', 'soraia', 'soraya', 'sueli', 'súellen', 'suely', 'susana', 'susanne', 'sweetie', 'talitha', 'tamara', 'tâmara', 'tamilia', 'tanice', 'tarcila', 'tatiane', 'tchabi', 'tecla', 'teodora', 'teresinha', 'theresa', 'thícia', 'thiffany', 'thina', 'thomazina', 'timóteo', 'tina', 'tresa', 'troiana', 'túlia', 'ulrica', 'unice', 'urânia', 'vanessa', 'vânia', 'vania', 'vanda', 'vangélia', 'vanice', 'vanusa', 'vanuza', 'vânia', 'venice', 'venucia', 'verena', 'verônica', 'viana', 'victoria', 'victória', 'violeta', 'virginia', 'vislane', 'viviane', 'viviana', 'wanda', 'welma', 'luciene', 'anielle', 'yasmin', 'yana', 'yara', 'yasmin', 'yone', 'yvana', 'yvone', 'yvone', 'zaíra', 'zanira', 'zelia', 'zelia', 'zelma', 'zélia', 'ziralda', 'zirene', 'iasmim', 'daniele', 'solanie Paz', 'tayane', 'solanie', 'milene', 'zoe'];
-
     function removeAcentos(str) { return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
     function determinarGenero(nome) {
       if (!nome) return 'masculino';
@@ -1132,12 +931,9 @@ async function renderDestaques() {
       const dataAtualStr = `${dia}/${mes}`;
       const dataCompleta = `${dia}/${mes}/${ano}`;
       let mensagens = [];
-
-      // Aniversariantes
       const aniversariantes = await carregaJSON('aniversariantes.json');
       const nomesAniv = [];
       const generosAniv = [];
-      
       if (Array.isArray(aniversariantes)) {
         aniversariantes.forEach(({ nome, data }) => {
           if (data === dataAtualStr) {
@@ -1145,23 +941,17 @@ async function renderDestaques() {
             generosAniv.push(determinarGenero(nome));
           }
         });
-
         if (nomesAniv.length === 1) {
           const genero = generosAniv[0];
           const pronome = genero === 'feminino' ? 'ela' : 'ele';
           const artigo = getArtigoSingular(genero);
-          
           mensagens.push(`🎂 Hoje é aniversário ${artigo} <br class="mobile-break"> ${nomesAniv[0]}, dê os parabéns <br class="mobile-break"> para ${pronome}! 🥳`);
-          
         } else if (nomesAniv.length > 1) {
           const nomesStr = juntarNomes(nomesAniv);
           const pronome = generosAniv.every(g => g === 'feminino') ? 'elas' : 'eles';
-          
           mensagens.push(`🎂 Hoje, <br class="mobile-break"> ${nomesStr} fazem aniversário. <br class="mobile-break"> Dê os parabéns a ${pronome}! 🥳`);
         }
       }
-
-      // Férias
       const ferias = await carregaJSON('ferias.json');
       let nomesFerias = [];
       let generosFerias = [];
@@ -1181,8 +971,6 @@ async function renderDestaques() {
           mensagens.push(`✈️ Hoje, ${nomesStr} retornam de férias. Dê as boas-vindas a ${plural.pronome}!`);
         }
       }
-
-      // Feriados
       const feriados = await carregaJSON('feriados.json');
       if (feriados && Array.isArray(feriados)) {
         feriados.forEach(f => {
@@ -1191,7 +979,6 @@ async function renderDestaques() {
           }
         });
       }
-
       let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Janeiro Branco: Saúde Mental.";
       const bannerP = document.querySelector('.banner > p');
       if (bannerP) bannerP.innerHTML = mensagemFinal;
