@@ -189,22 +189,51 @@
   <div id="dayoff-placeholder"></div>
 
   <script>
+    // --- FUNÇÕES GLOBAIS DO CARD (DEFINIDAS AQUI PARA GARANTIA) ---
+    // Isso garante que o botão funcione mesmo se o script externo falhar
+    
+    window.dayoff_abrirModal = function() {
+      // Tenta pegar o ID novo (blindado) ou o antigo (caso cache)
+      const modal = document.getElementById('dayoff-modal-info') || document.getElementById('modal');
+      if(modal) {
+        modal.style.display = 'flex';
+        if(document.body) document.body.style.overflow = 'hidden';
+      } else {
+        console.warn("Modal Day Off não encontrado.");
+      }
+    };
+
+    window.dayoff_fecharModal = function() {
+      const modal = document.getElementById('dayoff-modal-info') || document.getElementById('modal');
+      if(modal) {
+        modal.style.display = 'none';
+        if(document.body) document.body.style.overflow = 'auto';
+      }
+    };
+
+    // ALIAS DE COMPATIBILIDADE
+    // Se o seu arquivo no GitHub for antigo, ele chamará 'abrirModal'
+    // Se for novo, chamará 'dayoff_abrirModal'
+    // Aqui redirecionamos ambos para a mesma função.
+    window.abrirModal = window.dayoff_abrirModal;
+    window.fecharModalCard = window.dayoff_fecharModal;
+
+    // --- CARREGAMENTO DO CARD ---
     document.addEventListener("DOMContentLoaded", async () => {
       const placeholder = document.getElementById("dayoff-placeholder");
       const urlCard = "https://psrindustria.github.io/PortalPSR/card_dayoff.html";
 
       // --- CONTROLE DE FREQUÊNCIA ---
-      // Se quiser testar, mantenha comentado. Para ativar (1x ao dia), descomente:
+      // Para ativar (1x ao dia), descomente a linha abaixo:
       // if (localStorage.getItem('dayoff_visto_' + new Date().toDateString())) return;
 
       try {
-        // 1. Busca o arquivo
+        // 1. Busca o arquivo (Adiciona timestamp para evitar cache do fetch)
         const response = await fetch(urlCard + '?t=' + Date.now());
         if (!response.ok) return;
         const htmlText = await response.text();
 
         // 2. Configura o Placeholder (Overlay Escuro)
-        // Aqui apenas preparamos o fundo. O conteúdo vem do arquivo blindado.
         Object.assign(placeholder.style, {
           position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
           backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: '999999',
@@ -212,11 +241,10 @@
           opacity: '0', transition: 'opacity 0.4s ease', backdropFilter: 'blur(4px)'
         });
 
-        // 3. Injeta o HTML DIRETAMENTE (Sem modificar o CSS)
-        // O arquivo card_dayoff.html blindado já cuida de não quebrar o layout.
+        // 3. Injeta o HTML
         placeholder.innerHTML = htmlText;
 
-        // 4. Reativa os Scripts (Essencial para o botão "Saiba Mais" funcionar)
+        // 4. Reativa os Scripts (Backup)
         const scripts = placeholder.querySelectorAll("script");
         scripts.forEach(oldScript => {
           const newScript = document.createElement("script");
@@ -228,28 +256,33 @@
         window.fecharTotal = function() {
           placeholder.style.opacity = '0';
           setTimeout(() => {
-            placeholder.style.display = 'none'; // Apenas esconde, não remove, caso queira reabrir
+            placeholder.style.display = 'none'; 
             // Marca como visto hoje
             localStorage.setItem('dayoff_visto_' + new Date().toDateString(), 'true');
           }, 400);
         };
 
-        // 6. Fecha se clicar no fundo escuro
+        // 6. Intercepta clique no botão de fechar (X)
+        // Sobrescreve a função do botão para garantir que feche TUDO
+        window.dayoff_fecharCard = function(btn) {
+           const card = document.getElementById('dayoff-card-main') || document.querySelector('.card-dayoff');
+           if(card) {
+               card.style.opacity = '0';
+               card.style.transform = 'scale(0.9)';
+           }
+           setTimeout(window.fecharTotal, 300);
+        };
+        // Compatibilidade com arquivo antigo
+        window.fecharCard = window.dayoff_fecharCard;
+
+        // 7. Fecha se clicar no fundo escuro
         placeholder.addEventListener('click', (e) => {
-           // Se clicou no fundo preto ou no wrapper de escopo, fecha tudo
            if(e.target === placeholder || e.target.id === 'dayoff-scope') {
-               // Verifica se existe a função de fechar do card (animação) antes de fechar tudo
-               if(window.dayoff_fecharCard) {
-                   const card = document.getElementById('dayoff-card-main');
-                   // Simula o clique no botão X passando o card, se possível
-                   window.dayoff_fecharCard(card); 
-               } else {
-                   window.fecharTotal();
-               }
+               window.dayoff_fecharCard();
            }
         });
 
-        // 7. Anima a entrada
+        // 8. Anima a entrada
         requestAnimationFrame(() => placeholder.style.opacity = '1');
 
       } catch (e) {
@@ -899,6 +932,7 @@
 
   <script>
     const nomesFemininos = ['abigail', 'abriele', 'adriane', 'agnes', 'aitana', 'alana', 'alba', 'alessia', 'alexia', 'aliceia', 'alzira', 'amalia', 'ana paula', 'anais', 'angelica', 'angelina', 'antonia', 'anita', 'antonieta', 'ara', 'ariana', 'ariane', 'arlete', 'arlene', 'arminda', 'audrey', 'aurora', 'ayla', 'azilda', 'barbara', 'beatrice', 'bellamy', 'benedita', 'bernadete', 'bertina', 'bertha', 'betsy', 'biana', 'blendina', 'blenda', 'branda', 'brigitte', 'camille', 'candida', 'carmela', 'carminha', 'caroline', 'catarina', 'cecília', 'celia', 'celina', 'chantal', 'charlene', 'charlotte', 'christiane', 'cielete', 'cilene', 'clarice', 'claudete', 'claudiana', 'claudine', 'claudionora', 'clelia', 'cleusa', 'clotilde', 'clementina', 'cordelia', 'corina', 'cristal', 'cristela', 'crislaine', 'dadá', 'dagmar', 'dalila', 'dalva', 'damiana', 'danila', 'danisa', 'darcília', 'darlene', 'deadina', 'deise', 'dela', 'delia', 'demetria', 'denise', 'derci', 'desirée', 'diana', 'dilma', 'dinorah', 'dionísia', 'dirce', 'divina', 'dominica', 'domingas', 'doroteia', 'edi', 'edilene', 'edite', 'elaine', 'elba', 'elderina', 'eleonora', 'elfrida', 'elisabete', 'elisângela', 'eliza', 'elizabete', 'elma', 'elvira', 'ema', 'emília', 'ena', 'enede', 'ereia', 'erika', 'erise', 'erteca', 'erta', 'esmeralda', 'estela', 'estrela', 'eudoxia', 'eulália', 'eunice', 'eva', 'evangelina', 'everlúcia', 'exilda', 'fabiana', 'fátima', 'felicidade', 'fermina', 'fiama', 'flora', 'florinda', 'fortuna', 'francine', 'francisca', 'frida', 'gabrielle', 'gasparina', 'geneviève', 'genilda', 'geovana', 'geovana', 'geovana', 'gilda', 'gina', 'ginger', 'gislaine', 'gleice', 'glenda', 'glória', 'goretti', 'graciete', 'gracilene', 'guida', 'haidée', 'halina', 'hanae', 'hana', 'hanna', 'helle', 'helma', 'henriqueta', 'herminia', 'heveline', 'hilaria', 'hilda', 'homérica', 'hylda', 'ida', 'ileana', 'ilma', 'ilza', 'imelda', 'inês', 'iraci', 'irene', 'irislene', 'irlanda', 'ismaela', 'itaglêcia', 'ivanete', 'ivone', 'ivoneide', 'ivonilde', 'izabel', 'izabela', 'izildinha', 'jada', 'janete', 'janina', 'janine', 'jaqueline', 'jelena', 'jemima', 'jessiane', 'joana d’arc', 'jocasta', 'joelia', 'joenilda', 'jole', 'jonas', 'jorgeana', 'joselina', 'josiana', 'jovita', 'joyce', 'julia', 'junia', 'justina', 'karine', 'karla', 'karol', 'katia', 'kátia', 'kely', 'keyla', 'kimberly', 'kissia', 'kristina', 'laraine', 'larissa', 'lau', 'lauraine', 'lea', 'lebina', 'leila', 'leina', 'lemara', 'lendite', 'leonor', 'lepida', 'lesbia', 'letícia', 'levina', 'liana', 'lidia', 'lidiane', 'liliane', 'lilisa', 'lilja', 'linda', 'linet', 'lionê', 'liora', 'lisandra', 'lissa', 'lita', 'lizabeth', 'lorena', 'lorene', 'lority', 'lourdes', 'lucia', 'lucinda', 'ludmila', 'luene', 'luise', 'luiza', 'lumena', 'luzia', 'lygia', 'lys', 'madalena', 'mafalda', 'maisa', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina', 'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia', 'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice', 'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury', 'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele', 'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna', 'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa', 'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida', 'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa', 'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina', 'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela', 'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina', 'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina', 'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane', 'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita', 'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete', 'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane', 'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete', 'samara', 'samira', 'samandra', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly', 'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena', 'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara', 'sirlene', 'sônia', 'sonia', 'soraia', 'soraya', 'sueli', 'súellen', 'suely', 'susana', 'susanne', 'sweetie', 'talitha', 'tamara', 'tâmara', 'tamilia', 'tanice', 'tarcila', 'tatiane', 'tchabi', 'tecla', 'teodora', 'teresinha', 'theresa', 'thícia', 'thiffany', 'thina', 'thomazina', 'timóteo', 'tina', 'tresa', 'troiana', 'túlia', 'ulrica', 'unice', 'urânia', 'vanessa', 'vânia', 'vania', 'vanda', 'vangélia', 'vanice', 'vanusa', 'vanuza', 'vânia', 'venice', 'venucia', 'verena', 'verônica', 'viana', 'victoria', 'victória', 'violeta', 'virginia', 'vislane', 'viviane', 'viviana', 'wanda', 'welma', 'luciene', 'anielle', 'yasmin', 'yana', 'yara', 'yasmin', 'yone', 'yvana', 'yvone', 'yvone', 'zaíra', 'zanira', 'zelia', 'zelia', 'zelma', 'zélia', 'ziralda', 'zirene', 'iasmim', 'daniele', 'solanie Paz', 'tayane', 'solanie', 'milene', 'zoe'];
+
     function removeAcentos(str) { return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
     function determinarGenero(nome) {
       if (!nome) return 'masculino';
@@ -931,9 +965,12 @@
       const dataAtualStr = `${dia}/${mes}`;
       const dataCompleta = `${dia}/${mes}/${ano}`;
       let mensagens = [];
+
+      // Aniversariantes
       const aniversariantes = await carregaJSON('aniversariantes.json');
       const nomesAniv = [];
       const generosAniv = [];
+      
       if (Array.isArray(aniversariantes)) {
         aniversariantes.forEach(({ nome, data }) => {
           if (data === dataAtualStr) {
@@ -941,17 +978,23 @@
             generosAniv.push(determinarGenero(nome));
           }
         });
+
         if (nomesAniv.length === 1) {
           const genero = generosAniv[0];
           const pronome = genero === 'feminino' ? 'ela' : 'ele';
           const artigo = getArtigoSingular(genero);
+          
           mensagens.push(`🎂 Hoje é aniversário ${artigo} <br class="mobile-break"> ${nomesAniv[0]}, dê os parabéns <br class="mobile-break"> para ${pronome}! 🥳`);
+          
         } else if (nomesAniv.length > 1) {
           const nomesStr = juntarNomes(nomesAniv);
           const pronome = generosAniv.every(g => g === 'feminino') ? 'elas' : 'eles';
+          
           mensagens.push(`🎂 Hoje, <br class="mobile-break"> ${nomesStr} fazem aniversário. <br class="mobile-break"> Dê os parabéns a ${pronome}! 🥳`);
         }
       }
+
+      // Férias
       const ferias = await carregaJSON('ferias.json');
       let nomesFerias = [];
       let generosFerias = [];
@@ -971,6 +1014,8 @@
           mensagens.push(`✈️ Hoje, ${nomesStr} retornam de férias. Dê as boas-vindas a ${plural.pronome}!`);
         }
       }
+
+      // Feriados
       const feriados = await carregaJSON('feriados.json');
       if (feriados && Array.isArray(feriados)) {
         feriados.forEach(f => {
@@ -979,6 +1024,7 @@
           }
         });
       }
+
       let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Janeiro Branco: Saúde Mental.";
       const bannerP = document.querySelector('.banner > p');
       if (bannerP) bannerP.innerHTML = mensagemFinal;
