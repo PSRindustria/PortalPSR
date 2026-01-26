@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Day Off - Portal PSR</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card-dayoff {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(135deg, #003366 0%, #4682B4 100%);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 51, 102, 0.3);
+      position: relative;
+      cursor: pointer;
+      /* Adicionado opacity para animação de fechar */
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    }
+
+    .card-dayoff:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 50px rgba(0, 51, 102, 0.4);
+    }
+
+    /* --- Novo Estilo do Botão Fechar --- */
+    .card-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 20;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .card-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+    /* ----------------------------------- */
+
+    .card-header {
+      padding: 30px 25px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header::before {
+      content: '🎉';
+      position: absolute;
+      font-size: 12em;
+      opacity: 0.08;
+      top: -40px;
+      right: -30px;
+      transform: rotate(-20deg);
+    }
+
+    .badge-novo {
+      display: inline-block;
+      background: #DAA520;
+      color: white;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(218, 165, 32, 0.4);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .card-title {
+      color: white;
+      font-size: 1.8em;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .card-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    .card-body {
+      background: white;
+      padding: 25px;
+    }
+
+    .info-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+      background: #e8f4ff;
+      transform: translateX(5px);
+    }
+
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #003366, #4682B4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1em;
+      flex-shrink: 0;
+    }
+
+    .info-text {
+      flex: 1;
+    }
+
+    .info-text strong {
+      display: block;
+      color: #003366;
+      font-size: 0.9em;
+      margin-bottom: 2px;
+    }
+
+    .info-text span {
+      color: #666;
+      font-size: 0.85em;
+      line-height: 1.4;
+    }
+
+    .destaque-box {
+      background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(218, 165, 32, 0.05));
+      border-left: 4px solid #DAA520;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .destaque-box p {
+      color: #003366;
+      font-weight: 600;
+      font-size: 0.95em;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .destaque-box .emoji {
+      font-size: 1.3em;
+    }
+
+    .tags-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      background: #28a745;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 15px;
+      font-size: 0.8em;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-footer {
+      background: #f8f9fa;
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .inicio-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #003366;
+      font-weight: 700;
+      font-size: 0.9em;
+    }
+
+    .inicio-tag i {
+      color: #DAA520;
+      font-size: 1.2em;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .btn-saiba-mais {
+      background: #003366;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-saiba-mais:hover {
+      background: #DAA520;
+      transform: translateX(3px);
+    }
+
+    /* Modal Info Completa */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #003366, #4682B4);
+      color: white;
+      padding: 30px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 1.3em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .modal-section {
+      margin-bottom: 25px;
+    }
+
+    .modal-section h3 {
+      color: #003366;
+      font-size: 1.3em;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .modal-section li {
+      padding: 10px 0;
+      padding-left: 30px;
+      position: relative;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .modal-section li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #28a745;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    @media (max-width: 480px) {
+      .card-dayoff {
+        max-width: 100%;
+      }
+
+      .card-title {
+        font-size: 1.5em;
+      }
+
+      .card-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-dayoff" id="cardPrincipal" onclick="abrirModal()">
+    
+    <button class="card-close" onclick="event.stopPropagation(); fecharCard(this)" title="Fechar Card">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="card-header">
+      <div class="badge-novo">🎉 Novo Benefício</div>
+      <h2 class="card-title">Day Off de Aniversário</h2>
+      <p class="card-subtitle">Comemore seu dia com um presente especial da PSR!</p>
+    </div>
+
+    <div class="card-body">
+      <div class="destaque-box">
+        <p><span class="emoji">🎁</span> 1 dia de folga remunerada no mês do seu aniversário</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="info-text">
+            <strong>Quando usar</strong>
+            <span>No dia ou até 15 dias antes/depois</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="info-text">
+            <strong>Quem tem direito</strong>
+            <span>Colaboradores após 90 dias</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="info-text">
+            <strong>Solicitação</strong>
+            <span>Com 7 dias de antecedência</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tags-container">
+        <span class="tag"><i class="fas fa-check"></i> Não desconta férias</span>
+        <span class="tag"><i class="fas fa-check"></i> Não desconta banco</span>
+        <span class="tag"><i class="fas fa-check"></i> Remunerado</span>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="inicio-tag">
+        <i class="fas fa-rocket"></i>
+        <span>Início: 01/01/2026</span>
+      </div>
+      <button class="btn-saiba-mais" onclick="event.stopPropagation(); abrirModal()">
+        Saiba mais <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="modal" class="modal-overlay" onclick="fecharModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <button class="modal-close" onclick="fecharModal()">&times;</button>
+        <h2>🎉 Day Off de Aniversário</h2>
+        <p style="margin-top: 10px; opacity: 0.95;">Todas as informações sobre o benefício</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-section">
+          <h3>🎯 Objetivo</h3>
+          <p>Valorizar o colaborador no dia do seu aniversário, promovendo engajamento, bem-estar e reconhecimento, sem comprometer a produtividade da operação industrial.</p>
+        </div>
+
+        <div class="modal-section">
+          <h3>✅ Quem tem direito</h3>
+          <ul>
+            <li>Todos os colaboradores</li>
+            <li>Após 90 dias de empresa (período de experiência concluído)</li>
+            <li>Sem faltas injustificadas nos últimos 11 meses</li>
+            <li>Sem advertências nos últimos 6 meses</li>
+          </ul>
+        </div>
+
+        <div class="modal-section">
+          <h3>📋 Regras Operacionais</h3>
+          <ul>
+            <li>Solicitar com mínimo de 7 dias de antecedência</li>
+            <li>Necessária aprovação da liderança imediata</li>
+            <li>RH acompanha para evitar impacto na operação</li>
+            <li>Evita ausência simultânea no mesmo setor</li>
+          </ul>
+        </div>
+
+        <div class="modal-section">
+          <h3>🎁 O que NÃO desconta</h3>
+          <ul>
+            <li>Banco de horas</li>
+            <li>Férias</li>
+            <li>DSR (Descanso Semanal Remunerado)</li>
+          </ul>
+          <p style="margin-top: 15px; color: #666; font-style: italic;">
+            💡 Será registrado como "Day Off – Aniversário"
+          </p>
+        </div>
+
+        <div class="modal-section">
+          <div style="background: linear-gradient(135deg, #DAA520, #f4c430); color: white; padding: 20px; border-radius: 15px; text-align: center;">
+            <i class="fas fa-rocket" style="font-size: 2em; margin-bottom: 10px; display: block;"></i>
+            <strong style="font-size: 1.2em;">Início do Programa: 01/01/2026</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModal() {
+      document.getElementById('modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModal() {
+      document.getElementById('modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Função para fechar o Card Principal
+    function fecharCard(btn) {
+      const card = btn.closest('.card-dayoff');
+      
+      // Efeito visual de saída
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.9)'; // Diminui um pouco ao fechar
+      
+      // Aguarda a transição CSS antes de esconder
+      setTimeout(() => {
+        card.style.display = 'none';
+      }, 300);
+    }
+
+    // Fechar modal com ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') fecharModal();
+    });
+  </script>
+
+</body>
+</html>
