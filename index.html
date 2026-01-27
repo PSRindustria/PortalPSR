@@ -186,165 +186,296 @@
 
   <div id="footer-placeholder"></div>
 
-<div id="dayoff-placeholder"></div>
+  <div id="dayoff-placeholder"></div>
+
+
 
   <script>
+
     document.addEventListener("DOMContentLoaded", async () => {
+
       const placeholder = document.getElementById("dayoff-placeholder");
+
       const urlCard = "https://psrindustria.github.io/PortalPSR/card_dayoff.html";
 
+
+
       // --- CONTROLE DE FREQUÊNCIA ---
-      // Para ativar (1x ao dia), descomente a linha abaixo:
+
+      // Se quiser ativar (1x ao dia), descomente a linha abaixo:
+
       // if (localStorage.getItem('dayoff_visto_' + new Date().toDateString())) return;
 
+
+
       try {
+
         const response = await fetch(urlCard + '?t=' + Date.now());
+
         if (!response.ok) return;
+
         const htmlText = await response.text();
 
+
+
         // 1. Configura o Fundo Escuro (Overlay)
+
         Object.assign(placeholder.style, {
+
           position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+
+          backgroundColor: 'rgba(0, 0, 0, 0.85)', // Fundo bem escuro
+
           zIndex: '999999',
+
           display: 'flex', justifyContent: 'center', alignItems: 'center',
+
           opacity: '0', transition: 'opacity 0.4s ease', backdropFilter: 'blur(5px)',
-          padding: '10px'
+
+          padding: '10px' // Margem segura mobile
+
         });
 
-        // 2. INJEÇÃO DE CSS
+
+
+        // 2. INJEÇÃO DE CSS (Ajuste de Largura e Mobile)
+
         const styleFix = document.createElement('style');
+
         styleFix.textContent = `
+
+          /* Força a largura maior que você pediu */
+
           #dayoff-scope .card-dayoff, .card-dayoff {
-             max-width: 550px !important; 
+
+             max-width: 500px !important; /* Aumentei de 420px para 500px */
+
              width: 100% !important;
+
              margin: 0 auto !important;
+
           }
+
+          
+
+          /* Ajuste Mobile: Ocupa 92% da tela, sem diminuir a fonte */
+
           @media (max-width: 600px) {
+
              #dayoff-scope .card-dayoff, .card-dayoff {
+
                 width: 92% !important;
+
                 max-width: none !important;
+
              }
-             .modal-content { width: 95% !important; margin: auto; }
+
+             /* Garante que o modal de texto também fique bom no mobile */
+
+             .modal-content {
+
+                width: 95% !important;
+
+                margin: auto;
+
+             }
+
           }
+
+          /* Garante que o modal de detalhes fique ACIMA de tudo */
+
           .modal-overlay { z-index: 9999999 !important; position: fixed !important; }
+
         `;
+
         document.head.appendChild(styleFix);
 
+
+
         // 3. Injeta o HTML
+
         placeholder.innerHTML = htmlText;
 
-        // 4. LÓGICA DE EVENTOS CORRIGIDA
+
+
+        // =========================================================
+
+        // 4. LÓGICA MANUAL (Aqui resolvemos o botão "Saiba Mais")
+
+        // =========================================================
+
         
-        // Função para fechar tudo
-        function fecharTudo() {
-          const card = placeholder.querySelector('.card-dayoff');
-          if(card) {
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.9)';
-          }
+
+        // Identifica os elementos recém-criados
+
+        const cardPrincipal = placeholder.querySelector('.card-dayoff');
+
+        const btnSaibaMais = placeholder.querySelector('.btn-saiba-mais');
+
+        const btnFecharCard = placeholder.querySelector('.card-close');
+
+        
+
+        // Tenta achar o modal de detalhes (pode ser o ID novo ou antigo, procuramos os dois)
+
+        const modalDetalhes = placeholder.querySelector('#dayoff-modal-info') || placeholder.querySelector('#modal');
+
+        const btnFecharDetalhes = modalDetalhes ? modalDetalhes.querySelector('.modal-close') : null;
+
+
+
+        // -- CONSERTANDO O BOTÃO SAIBA MAIS --
+
+        if (btnSaibaMais && modalDetalhes) {
+
+            // Removemos qualquer onclick antigo e forçamos o nosso
+
+            btnSaibaMais.onclick = function(e) {
+
+                e.stopPropagation(); // Não fecha o card principal
+
+                modalDetalhes.style.display = 'flex'; // ABRE O MODAL
+
+                
+
+                // Trava a rolagem do fundo
+
+                document.body.style.overflow = 'hidden'; 
+
+            };
+
+        }
+
+
+
+        // -- CONSERTANDO O FECHAMENTO DO MODAL DE DETALHES --
+
+        if (btnFecharDetalhes && modalDetalhes) {
+
+            btnFecharDetalhes.onclick = function(e) {
+
+                e.stopPropagation();
+
+                modalDetalhes.style.display = 'none';
+
+                document.body.style.overflow = 'auto'; // Destrava rolagem
+
+            };
+
+            // Fecha clicando fora do conteúdo (no fundo escuro do modal)
+
+            modalDetalhes.onclick = function(e) {
+
+                if (e.target === modalDetalhes) {
+
+                    modalDetalhes.style.display = 'none';
+
+                    document.body.style.overflow = 'auto';
+
+                }
+
+            };
+
+        }
+
+
+
+        // -- CONSERTANDO O FECHAMENTO GERAL (X do Card Principal) --
+
+        window.fecharTotal = function() {
+
           placeholder.style.opacity = '0';
+
           setTimeout(() => {
-            placeholder.style.display = 'none';
+
+            placeholder.style.display = 'none'; 
+
+            // Salva que já viu
+
             localStorage.setItem('dayoff_visto_' + new Date().toDateString(), 'true');
+
           }, 400);
-        }
 
-        // A. ABRIR MODAL - Botão "Saiba Mais"
-        const btnSaibaMais = placeholder.querySelector('.action-open-modal-btn');
-        if (btnSaibaMais) {
-          btnSaibaMais.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const modal = placeholder.querySelector('#dayoff-modal-info');
-            if (modal) {
-              modal.style.display = 'flex';
-              document.body.style.overflow = 'hidden';
-            }
-          });
-        }
+        };
 
-        // B. ABRIR MODAL - Clique no card (exceto no botão X)
-        const card = placeholder.querySelector('.card-dayoff');
-        if (card) {
-          card.addEventListener('click', function(e) {
-            if (e.target.closest('.action-close-card')) return;
-            if (e.target.closest('.action-open-modal-btn')) return;
-            
-            e.stopPropagation();
-            const modal = placeholder.querySelector('#dayoff-modal-info');
-            if (modal) {
-              modal.style.display = 'flex';
-              document.body.style.overflow = 'hidden';
-            }
-          });
-        }
 
-        // C. FECHAR MODAL - Botão X do modal
-        const btnFecharModal = placeholder.querySelector('.modal-close');
-        if (btnFecharModal) {
-          btnFecharModal.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const modal = placeholder.querySelector('#dayoff-modal-info');
-            if (modal) {
-              modal.style.display = 'none';
-              document.body.style.overflow = 'auto';
-            }
-          });
-        }
 
-        // D. FECHAR MODAL - Clique no overlay do modal
-        const modalOverlay = placeholder.querySelector('#dayoff-modal-info');
-        if (modalOverlay) {
-          modalOverlay.addEventListener('click', function(e) {
-            if (e.target === modalOverlay) {
-              e.preventDefault();
-              modalOverlay.style.display = 'none';
-              document.body.style.overflow = 'auto';
-            }
-          });
-        }
-
-        // E. FECHAR CARD - Botão X do card
-        const btnFecharCard = placeholder.querySelector('.action-close-card');
         if (btnFecharCard) {
-          btnFecharCard.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            fecharTudo();
-          });
+
+            btnFecharCard.onclick = function(e) {
+
+                e.stopPropagation();
+
+                // Efeito visual
+
+                if(cardPrincipal) {
+
+                    cardPrincipal.style.opacity = '0';
+
+                    cardPrincipal.style.transform = 'scale(0.9)';
+
+                }
+
+                setTimeout(window.fecharTotal, 300);
+
+            };
+
         }
 
-        // F. FECHAR CARD - Clique no fundo preto (placeholder)
-        placeholder.addEventListener('click', function(e) {
-          if (e.target === placeholder) {
-            const modal = placeholder.querySelector('#dayoff-modal-info');
-            if (!modal || modal.style.display !== 'flex') {
-              fecharTudo();
-            }
-          }
+
+
+        // Fecha ao clicar no fundo preto geral (mas não no card)
+
+        placeholder.addEventListener('click', (e) => {
+
+           // Verifica se clicou no fundo preto e se o modal de detalhes NÃO está aberto
+
+           const detalhesAbertos = modalDetalhes && modalDetalhes.style.display === 'flex';
+
+           
+
+           if (!detalhesAbertos && (e.target === placeholder || e.target.id === 'dayoff-scope')) {
+
+               window.fecharTotal();
+
+           }
+
         });
 
-        // G. FECHAR MODAL com tecla ESC
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape') {
-            const modal = placeholder.querySelector('#dayoff-modal-info');
-            if (modal && modal.style.display === 'flex') {
-              modal.style.display = 'none';
-              document.body.style.overflow = 'auto';
-            }
-          }
+
+
+        // 5. Reativa Scripts internos do card (para animações CSS funcionarem bem)
+
+        const scripts = placeholder.querySelectorAll("script");
+
+        scripts.forEach(oldScript => {
+
+          const newScript = document.createElement("script");
+
+          newScript.textContent = oldScript.textContent;
+
+          document.body.appendChild(newScript);
+
         });
 
-        // 5. Anima entrada
+
+
+        // 6. Anima a entrada final
+
         requestAnimationFrame(() => placeholder.style.opacity = '1');
 
+
+
       } catch (e) {
+
         console.error("Erro card:", e);
+
         placeholder.style.display = 'none';
+
       }
+
     });
+
   </script>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -987,7 +1118,6 @@
 
   <script>
     const nomesFemininos = ['abigail', 'abriele', 'adriane', 'agnes', 'aitana', 'alana', 'alba', 'alessia', 'alexia', 'aliceia', 'alzira', 'amalia', 'ana paula', 'anais', 'angelica', 'angelina', 'antonia', 'anita', 'antonieta', 'ara', 'ariana', 'ariane', 'arlete', 'arlene', 'arminda', 'audrey', 'aurora', 'ayla', 'azilda', 'barbara', 'beatrice', 'bellamy', 'benedita', 'bernadete', 'bertina', 'bertha', 'betsy', 'biana', 'blendina', 'blenda', 'branda', 'brigitte', 'camille', 'candida', 'carmela', 'carminha', 'caroline', 'catarina', 'cecília', 'celia', 'celina', 'chantal', 'charlene', 'charlotte', 'christiane', 'cielete', 'cilene', 'clarice', 'claudete', 'claudiana', 'claudine', 'claudionora', 'clelia', 'cleusa', 'clotilde', 'clementina', 'cordelia', 'corina', 'cristal', 'cristela', 'crislaine', 'dadá', 'dagmar', 'dalila', 'dalva', 'damiana', 'danila', 'danisa', 'darcília', 'darlene', 'deadina', 'deise', 'dela', 'delia', 'demetria', 'denise', 'derci', 'desirée', 'diana', 'dilma', 'dinorah', 'dionísia', 'dirce', 'divina', 'dominica', 'domingas', 'doroteia', 'edi', 'edilene', 'edite', 'elaine', 'elba', 'elderina', 'eleonora', 'elfrida', 'elisabete', 'elisângela', 'eliza', 'elizabete', 'elma', 'elvira', 'ema', 'emília', 'ena', 'enede', 'ereia', 'erika', 'erise', 'erteca', 'erta', 'esmeralda', 'estela', 'estrela', 'eudoxia', 'eulália', 'eunice', 'eva', 'evangelina', 'everlúcia', 'exilda', 'fabiana', 'fátima', 'felicidade', 'fermina', 'fiama', 'flora', 'florinda', 'fortuna', 'francine', 'francisca', 'frida', 'gabrielle', 'gasparina', 'geneviève', 'genilda', 'geovana', 'geovana', 'geovana', 'gilda', 'gina', 'ginger', 'gislaine', 'gleice', 'glenda', 'glória', 'goretti', 'graciete', 'gracilene', 'guida', 'haidée', 'halina', 'hanae', 'hana', 'hanna', 'helle', 'helma', 'henriqueta', 'herminia', 'heveline', 'hilaria', 'hilda', 'homérica', 'hylda', 'ida', 'ileana', 'ilma', 'ilza', 'imelda', 'inês', 'iraci', 'irene', 'irislene', 'irlanda', 'ismaela', 'itaglêcia', 'ivanete', 'ivone', 'ivoneide', 'ivonilde', 'izabel', 'izabela', 'izildinha', 'jada', 'janete', 'janina', 'janine', 'jaqueline', 'jelena', 'jemima', 'jessiane', 'joana d’arc', 'jocasta', 'joelia', 'joenilda', 'jole', 'jonas', 'jorgeana', 'joselina', 'josiana', 'jovita', 'joyce', 'julia', 'junia', 'justina', 'karine', 'karla', 'karol', 'katia', 'kátia', 'kely', 'keyla', 'kimberly', 'kissia', 'kristina', 'laraine', 'larissa', 'lau', 'lauraine', 'lea', 'lebina', 'leila', 'leina', 'lemara', 'lendite', 'leonor', 'lepida', 'lesbia', 'letícia', 'levina', 'liana', 'lidia', 'lidiane', 'liliane', 'lilisa', 'lilja', 'linda', 'linet', 'lionê', 'liora', 'lisandra', 'lissa', 'lita', 'lizabeth', 'lorena', 'lorene', 'lority', 'lourdes', 'lucia', 'lucinda', 'ludmila', 'luene', 'luise', 'luiza', 'lumena', 'luzia', 'lygia', 'lys', 'madalena', 'mafalda', 'maisa', 'malu', 'mamede', 'mane', 'mara', 'marcia', 'marcelina', 'marcelly', 'marcia', 'margarete', 'mariana', 'marieta', 'marilene', 'marilia', 'marilsa', 'marilu', 'marina', 'marinete', 'maristela', 'mariza', 'marli', 'marlice', 'marlene', 'martina', 'maruza', 'mary', 'matilde', 'maura', 'maurine', 'maury', 'mayara', 'mayssa', 'meire', 'melina', 'melita', 'mell', 'melody', 'michele', 'michelle', 'milena', 'milka', 'miltonia', 'mirela', 'mirella', 'mirian', 'mirna', 'mirtes', 'mirthes', 'mônica', 'monse', 'muriel', 'nádia', 'naia', 'naísa', 'nailda', 'nália', 'nanda', 'neia', 'neide', 'neli', 'nelma', 'nélida', 'neri', 'nessa', 'neta', 'nette', 'nika', 'nilda', 'nilma', 'nilsa', 'ninfa', 'nisa', 'nutella', 'oaleska', 'olanda', 'olinda', 'omira', 'ontina', 'ophelia', 'otília', 'oterleia', 'ourienes', 'paine', 'paixão', 'paloma', 'pâmela', 'patience', 'paulaine', 'paulina', 'paz', 'pénélope', 'petra', 'piças', 'pina', 'pira', 'piedade', 'polina', 'priscilla', 'queli', 'queila', 'quezia', 'quina', 'raissa', 'ralphina', 'ramira', 'rania', 'raphaela', 'rayssa', 'rebecca', 'regiane', 'regina', 'rejanira', 'remila', 'renata', 'renata', 'renilda', 'renilda', 'renita', 'renata', 'renilda', 'renata', 'renilia', 'reny', 'reparatriz', 'resia', 'rete', 'ricasol', 'ricasol', 'rígia', 'rita de cássia', 'roberta', 'rosangela', 'rosaria', 'roselane', 'rosilda', 'rosineide', 'rosita', 'ruby', 'rute', 'sabrina', 'sagraja', 'salete', 'samara', 'samira', 'samandra', 'sandra', 'sandy', 'sania', 'sanira', 'sanita', 'saraly', 'sara', 'savina', 'seice', 'selia', 'selva', 'senda', 'serafina', 'serena', 'sheron', 'shirley', 'sidneia', 'sílvia', 'simara', 'simona', 'sintia', 'siomara', 'sirlene', 'sônia', 'sonia', 'soraia', 'soraya', 'sueli', 'súellen', 'suely', 'susana', 'susanne', 'sweetie', 'talitha', 'tamara', 'tâmara', 'tamilia', 'tanice', 'tarcila', 'tatiane', 'tchabi', 'tecla', 'teodora', 'teresinha', 'theresa', 'thícia', 'thiffany', 'thina', 'thomazina', 'timóteo', 'tina', 'tresa', 'troiana', 'túlia', 'ulrica', 'unice', 'urânia', 'vanessa', 'vânia', 'vania', 'vanda', 'vangélia', 'vanice', 'vanusa', 'vanuza', 'vânia', 'venice', 'venucia', 'verena', 'verônica', 'viana', 'victoria', 'victória', 'violeta', 'virginia', 'vislane', 'viviane', 'viviana', 'wanda', 'welma', 'luciene', 'anielle', 'yasmin', 'yana', 'yara', 'yasmin', 'yone', 'yvana', 'yvone', 'yvone', 'zaíra', 'zanira', 'zelia', 'zelia', 'zelma', 'zélia', 'ziralda', 'zirene', 'iasmim', 'daniele', 'solanie Paz', 'tayane', 'solanie', 'milene', 'zoe'];
-
     function removeAcentos(str) { return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
     function determinarGenero(nome) {
       if (!nome) return 'masculino';
@@ -1020,12 +1150,9 @@
       const dataAtualStr = `${dia}/${mes}`;
       const dataCompleta = `${dia}/${mes}/${ano}`;
       let mensagens = [];
-
-      // Aniversariantes
       const aniversariantes = await carregaJSON('aniversariantes.json');
       const nomesAniv = [];
       const generosAniv = [];
-      
       if (Array.isArray(aniversariantes)) {
         aniversariantes.forEach(({ nome, data }) => {
           if (data === dataAtualStr) {
@@ -1033,23 +1160,17 @@
             generosAniv.push(determinarGenero(nome));
           }
         });
-
         if (nomesAniv.length === 1) {
           const genero = generosAniv[0];
           const pronome = genero === 'feminino' ? 'ela' : 'ele';
           const artigo = getArtigoSingular(genero);
-          
           mensagens.push(`🎂 Hoje é aniversário ${artigo} <br class="mobile-break"> ${nomesAniv[0]}, dê os parabéns <br class="mobile-break"> para ${pronome}! 🥳`);
-          
         } else if (nomesAniv.length > 1) {
           const nomesStr = juntarNomes(nomesAniv);
           const pronome = generosAniv.every(g => g === 'feminino') ? 'elas' : 'eles';
-          
           mensagens.push(`🎂 Hoje, <br class="mobile-break"> ${nomesStr} fazem aniversário. <br class="mobile-break"> Dê os parabéns a ${pronome}! 🥳`);
         }
       }
-
-      // Férias
       const ferias = await carregaJSON('ferias.json');
       let nomesFerias = [];
       let generosFerias = [];
@@ -1069,8 +1190,6 @@
           mensagens.push(`✈️ Hoje, ${nomesStr} retornam de férias. Dê as boas-vindas a ${plural.pronome}!`);
         }
       }
-
-      // Feriados
       const feriados = await carregaJSON('feriados.json');
       if (feriados && Array.isArray(feriados)) {
         feriados.forEach(f => {
@@ -1079,7 +1198,6 @@
           }
         });
       }
-
       let mensagemFinal = mensagens.length ? mensagens.join("<br>") : "Aqui é o seu espaço. Janeiro Branco: Saúde Mental.";
       const bannerP = document.querySelector('.banner > p');
       if (bannerP) bannerP.innerHTML = mensagemFinal;
