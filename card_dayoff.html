@@ -1,463 +1,159 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Card Day Off - Portal PSR</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Day Off Aniversário - Portal PSR</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
-<style>
-  #dayoff-scope {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: transparent;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 1.6;
-    color: #333;
-    text-align: left;
-  }
+  <link rel="stylesheet" href="style.css?v=2" />
 
-  #dayoff-scope .card-dayoff {
-    width: 100%;
-    max-width: 550px; /* LARGURA AUMENTADA AQUI */
-    background: linear-gradient(135deg, #003366 0%, #4682B4 100%);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 51, 102, 0.3);
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-    margin: 0 auto;
-  }
+  <style>
+    /* Estilização específica para a página de conteúdo */
+    .page-content-wrapper {
+      padding: 120px 20px 60px; /* Espaço para não ficar embaixo do menu fixo */
+      max-width: 900px;
+      margin: 0 auto;
+      min-height: 70vh;
+    }
 
-  #dayoff-scope .card-dayoff:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 50px rgba(0, 51, 102, 0.4);
-  }
+    .dayoff-hero {
+      background: linear-gradient(135deg, #003366 0%, #4682B4 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 51, 102, 0.2);
+    }
 
-  /* Botão Fechar (X) */
-  #dayoff-scope .card-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(255, 255, 255, 0.15);
-    border: none;
-    color: white;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 20;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(4px);
-  }
-  #dayoff-scope .card-close:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-  }
+    .info-section {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
 
-  /* Header do Card */
-  #dayoff-scope .card-header {
-    padding: 30px 25px 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  #dayoff-scope .card-header::before {
-    content: '🎉';
-    position: absolute;
-    font-size: 12em;
-    opacity: 0.08;
-    top: -40px;
-    right: -30px;
-    transform: rotate(-20deg);
-  }
-  #dayoff-scope .badge-novo {
-    display: inline-block;
-    background: #DAA520;
-    color: white;
-    padding: 6px 15px;
-    border-radius: 20px;
-    font-size: 0.75em;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    box-shadow: 0 3px 10px rgba(218, 165, 32, 0.4);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .info-section h3 {
+      color: #003366;
+      border-bottom: 2px solid #DAA520;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  #dayoff-scope .card-title {
-    color: white;
-    font-size: 1.8em;
-    font-weight: 700;
-    margin-bottom: 8px;
-    line-height: 1.2;
-    display: block;
-  }
-  #dayoff-scope .card-subtitle {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95em;
-    line-height: 1.5;
-    display: block;
-  }
+    .rules-list {
+      list-style: none;
+      padding: 0;
+    }
 
-  /* Corpo do Card */
-  #dayoff-scope .card-body {
-    background: white;
-    padding: 25px;
-  }
-  #dayoff-scope .destaque-box {
-    background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(218, 165, 32, 0.05));
-    border-left: 4px solid #DAA520;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-  }
-  #dayoff-scope .destaque-box p {
-    color: #003366;
-    font-weight: 600;
-    font-size: 0.95em;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  #dayoff-scope .info-grid {
-    display: grid;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  #dayoff-scope .info-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-  }
-  #dayoff-scope .info-item:hover {
-    background: #e8f4ff;
-    transform: translateX(5px);
-  }
-  #dayoff-scope .info-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #003366, #4682B4);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.1em;
-    flex-shrink: 0;
-  }
-  #dayoff-scope .info-text strong {
-    display: block;
-    color: #003366;
-    font-size: 0.9em;
-    margin-bottom: 2px;
-  }
-  #dayoff-scope .info-text span {
-    color: #666;
-    font-size: 0.85em;
-    line-height: 1.4;
-    display: block;
-  }
-  #dayoff-scope .tags-container {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  #dayoff-scope .tag {
-    background: #28a745;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 15px;
-    font-size: 0.8em;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+    .rules-list li {
+      padding: 12px 0;
+      padding-left: 30px;
+      position: relative;
+      border-bottom: 1px solid #eee;
+    }
 
-  /* Footer do Card */
-  #dayoff-scope .card-footer {
-    background: #f8f9fa;
-    padding: 15px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #e0e0e0;
-  }
-  #dayoff-scope .inicio-tag {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #003366;
-    font-weight: 700;
-    font-size: 0.9em;
-  }
-  #dayoff-scope .inicio-tag i {
-    color: #DAA520;
-    font-size: 1.2em;
-    animation: bounce 2s infinite;
-  }
-  @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    .rules-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #28a745;
+      font-weight: bold;
+    }
 
-  /* Botão Saiba Mais */
-  #dayoff-scope .btn-saiba-mais {
-    background: #003366;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 0.85em;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-  }
-  #dayoff-scope .btn-saiba-mais:hover {
-    background: #DAA520;
-    transform: translateX(3px);
-  }
+    .highlight-card {
+      background: #f8f9fa;
+      border-left: 5px solid #DAA520;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 0 15px 15px 0;
+    }
+  </style>
+</head>
+<body>
 
-  /* Modal de Detalhes */
-  #dayoff-modal-info.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 2147483647; /* Máximo possível */
-    padding: 20px;
-    animation: fadeIn 0.3s ease;
-    backdrop-filter: blur(5px);
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  <div id="menu-placeholder"></div>
 
-  #dayoff-scope .modal-content {
-    background: white;
-    max-width: 600px;
-    width: 100%;
-    border-radius: 20px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    animation: slideUp 0.3s ease;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
-  @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-  #dayoff-scope .modal-header {
-    background: linear-gradient(135deg, #003366, #4682B4);
-    color: white;
-    padding: 30px;
-    position: relative;
-  }
-  #dayoff-scope .modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    font-size: 1.3em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #dayoff-scope .modal-close:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-  }
-  #dayoff-scope .modal-body { padding: 30px; text-align: left; }
-  #dayoff-scope .modal-section { margin-bottom: 25px; }
-  #dayoff-scope .modal-section h3 { color: #003366; font-size: 1.3em; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-  #dayoff-scope .modal-section ul { list-style: none; padding: 0; }
-  #dayoff-scope .modal-section li { padding: 10px 0; padding-left: 30px; position: relative; color: #555; line-height: 1.6; }
-  #dayoff-scope .modal-section li::before { content: '✓'; position: absolute; left: 0; color: #28a745; font-weight: bold; font-size: 1.2em; }
-
-  /* Responsividade */
-  @media (max-width: 480px) {
-    #dayoff-scope .card-dayoff { max-width: 100%; }
-    #dayoff-scope .card-title { font-size: 1.5em; }
-    #dayoff-scope .card-footer { flex-direction: column; gap: 15px; text-align: center; }
-  }
-</style>
-
-<div id="dayoff-scope">
-  
-  <div class="card-dayoff action-open-modal" id="dayoff-card-main">
+  <main class="page-content-wrapper">
     
-<button class="card-close action-close-card" title="Fechar Card" onclick="dayoff_fecharCard(this)">
-  <i class="fas fa-times"></i>
-</button>
-
-    <div class="card-header">
-      <div class="badge-novo">🎉 Novo Benefício</div>
-      <h2 class="card-title">Day Off de Aniversário</h2>
-      <p class="card-subtitle">Comemore seu dia com um presente especial da PSR!</p>
+    <div class="dayoff-hero">
+      <div style="font-size: 3em; margin-bottom: 10px;">🎉</div>
+      <h1>Day Off de Aniversário</h1>
+      <p>Comemore seu dia com um presente especial da PSR Indústria!</p>
     </div>
 
-    <div class="card-body">
-      <div class="destaque-box">
-        <p><span class="emoji">🎁</span> 1 dia de folga remunerada no mês do seu aniversário</p>
+    <section class="info-section">
+      <h3>🎯 O Benefício</h3>
+      <p>O <strong>Day Off de Aniversário</strong> é uma folga remunerada concedida aos colaboradores para que possam desfrutar do seu dia especial com amigos e família.</p>
+      
+      <div class="highlight-card">
+        <strong>Início do Programa:</strong> 01/01/2026
       </div>
+    </section>
 
-      <div class="info-grid">
-        <div class="info-item">
-          <div class="info-icon"><i class="fas fa-calendar-check"></i></div>
-          <div class="info-text"><strong>Quando usar</strong><span>No dia ou até 15 dias antes/depois</span></div>
-        </div>
-        <div class="info-item">
-          <div class="info-icon"><i class="fas fa-user-check"></i></div>
-          <div class="info-text"><strong>Quem tem direito</strong><span>Colaboradores após 90 dias</span></div>
-        </div>
-        <div class="info-item">
-          <div class="info-icon"><i class="fas fa-clock"></i></div>
-          <div class="info-text"><strong>Solicitação</strong><span>Com 7 dias de antecedência</span></div>
-        </div>
-      </div>
+    <section class="info-section">
+      <h3>✅ Quem tem direito?</h3>
+      <ul class="rules-list">
+        <li>Todos os colaboradores ativos</li>
+        <li>Conclusão do período de experiência (90 dias)</li>
+        <li>Sem faltas injustificadas nos últimos 11 meses</li>
+        <li>Sem advertências nos últimos 6 meses</li>
+      </ul>
+    </section>
 
-      <div class="tags-container">
-        <span class="tag"><i class="fas fa-check"></i> Não desconta férias</span>
-        <span class="tag"><i class="fas fa-check"></i> Não desconta banco</span>
-        <span class="tag"><i class="fas fa-check"></i> Remunerado</span>
-      </div>
-    </div>
+    <section class="info-section">
+      <h3>📋 Regras para Solicitação</h3>
+      <ul class="rules-list">
+        <li>Solicitar com no mínimo 7 dias de antecedência</li>
+        <li>Pode ser usado no dia do aniversário ou até 15 dias antes/depois</li>
+        <li>Sujeito a aprovação da liderança para não afetar a operação</li>
+        <li>Não pode haver ausências simultâneas no mesmo setor</li>
+      </ul>
+    </section>
 
-    <div class="card-footer">
-      <div class="inicio-tag">
-        <i class="fas fa-rocket"></i>
-        <span>Início: 01/01/2026</span>
-      </div>
-<button class="btn-saiba-mais action-open-modal-btn" onclick="dayoff_abrirModal()">
-  Saiba mais <i class="fas fa-arrow-right"></i>
-      </button>
-    </div>
-  </div>
+    <section class="info-section">
+      <h3>🎁 Informações Importantes</h3>
+      <p>Este dia é um presente da empresa e <strong>não gera descontos</strong> em:</p>
+      <ul class="rules-list">
+        <li>Banco de horas</li>
+        <li>Férias</li>
+        <li>DSR (Descanso Semanal Remunerado)</li>
+      </ul>
+    </section>
 
-  <div id="dayoff-modal-info" class="modal-overlay action-close-modal">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <button class="modal-close action-close-modal" onclick="dayoff_fecharModal()">&times;</button>
-        <h2>🎉 Day Off de Aniversário</h2>
-        <p style="margin-top: 10px; opacity: 0.95;">Todas as informações sobre o benefício</p>
-      </div>
+  </main>
 
-      <div class="modal-body">
-        <div class="modal-section">
-          <h3>🎯 Objetivo</h3>
-          <p>Valorizar o colaborador no dia do seu aniversário, promovendo engajamento, bem-estar e reconhecimento, sem comprometer a produtividade da operação industrial.</p>
-        </div>
-        <div class="modal-section">
-          <h3>✅ Quem tem direito</h3>
-          <ul>
-            <li>Todos os colaboradores</li>
-            <li>Após 90 dias de empresa (período de experiência concluído)</li>
-            <li>Sem faltas injustificadas nos últimos 11 meses</li>
-            <li>Sem advertências nos últimos 6 meses</li>
-          </ul>
-        </div>
-        <div class="modal-section">
-          <h3>📋 Regras Operacionais</h3>
-          <ul>
-            <li>Solicitar com mínimo de 7 dias de antecedência</li>
-            <li>Necessária aprovação da liderança imediata</li>
-            <li>RH acompanha para evitar impacto na operação</li>
-            <li>Evita ausência simultânea no mesmo setor</li>
-          </ul>
-        </div>
-        <div class="modal-section">
-          <h3>🎁 O que NÃO desconta</h3>
-          <ul>
-            <li>Banco de horas</li>
-            <li>Férias</li>
-            <li>DSR (Descanso Semanal Remunerado)</li>
-          </ul>
-          <p style="margin-top: 15px; color: #666; font-style: italic;">
-            💡 Será registrado como "Day Off – Aniversário"
-          </p>
-        </div>
-        <div class="modal-section">
-          <div style="background: linear-gradient(135deg, #DAA520, #f4c430); color: white; padding: 20px; border-radius: 15px; text-align: center;">
-            <i class="fas fa-rocket" style="font-size: 2em; margin-bottom: 10px; display: block;"></i>
-            <strong style="font-size: 1.2em;">Início do Programa: 01/01/2026</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  <div id="footer-placeholder"></div>
 
   <script>
-    // NAMESPACE JS: Funções renomeadas para evitar colisão com scripts do site principal
-    
-    // Anexa as funções ao objeto window explicitamente para garantir que o HTML as encontre
-    window.dayoff_abrirModal = function() {
-      const modal = document.getElementById('dayoff-modal-info');
-      if(modal) {
-        modal.style.display = 'flex';
-        // Evita rolar o fundo, mas só se o corpo principal existir
-        if(document.body) document.body.style.overflow = 'hidden';
-      }
-    };
+    document.addEventListener("DOMContentLoaded", () => {
+      // Carrega o Menu
+      fetch("menu.html")
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById("menu-placeholder").innerHTML = html;
+          // Ativa o toggle do menu mobile após carregar
+          const toggle = document.getElementById('menu-toggle');
+          const navEl = document.getElementById('nav-principal');
+          if (toggle && navEl) {
+            toggle.addEventListener('click', () => navEl.classList.toggle('active'));
+          }
+        });
 
-    window.dayoff_fecharModal = function() {
-      const modal = document.getElementById('dayoff-modal-info');
-      if(modal) {
-        modal.style.display = 'none';
-        if(document.body) document.body.style.overflow = 'auto';
-      }
-    };
-
-    // Esta função é chamada pelo botão X do card
-    // Ela vai acionar o 'window.fecharTotal' que está no index.html
-    window.dayoff_fecharCard = function(btn) {
-      const card = document.getElementById('dayoff-card-main');
-      
-      // Efeito visual de saída
-      if(card) {
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.9)';
-      }
-      
-      // Chama a função mestre do Index.html (se ela existir) para limpar tudo
-      if(typeof window.fecharTotal === 'function') {
-        setTimeout(() => {
-             window.fecharTotal();
-        }, 300);
-      } else {
-        // Fallback caso esteja testando o arquivo sozinho
-        setTimeout(() => {
-             if(card) card.style.display = 'none';
-        }, 300);
-      }
-    };
-
-    // Fechar modal com ESC
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') window.dayoff_fecharModal();
+      // Carrega o Footer
+      fetch("footer.html")
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById("footer-placeholder").innerHTML = html;
+        });
     });
   </script>
 
