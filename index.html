@@ -185,136 +185,7 @@
   </main>
 
   <div id="footer-placeholder"></div>
-
-<div id="dayoff-placeholder"></div>
-
-  <script>
-    // --- FUNÇÕES GLOBAIS FORÇADAS (Garantem que o botão funcione) ---
-    window.dayoff_abrirModal = function() {
-      // Tenta encontrar o modal pelo ID novo ou pelo antigo (para garantir)
-      const modal = document.getElementById('dayoff-modal-info') || document.getElementById('modal');
-      
-      if(modal) {
-        modal.style.display = 'flex'; // Abre o modal de detalhes
-        // Força estilo para garantir que fique acima de tudo
-        modal.style.zIndex = '9999999'; 
-        modal.style.position = 'fixed';
-        if(document.body) document.body.style.overflow = 'hidden'; // Trava rolagem do fundo
-      } else {
-        console.error("ERRO: Modal de detalhes não encontrado no HTML carregado.");
-      }
-    };
-
-    // Mapeia também o nome antigo da função, caso o arquivo carregado esteja desatualizado
-    window.abrirModal = window.dayoff_abrirModal;
-
-    window.dayoff_fecharModal = function() {
-      const modal = document.getElementById('dayoff-modal-info') || document.getElementById('modal');
-      if(modal) {
-        modal.style.display = 'none';
-        if(document.body) document.body.style.overflow = 'auto';
-      }
-    };
-    window.fecharModal = window.dayoff_fecharModal; // Compatibilidade
-
-    // --- CARREGAMENTO E ESTILIZAÇÃO ---
-    document.addEventListener("DOMContentLoaded", async () => {
-      const placeholder = document.getElementById("dayoff-placeholder");
-      const urlCard = "https://psrindustria.github.io/PortalPSR/card_dayoff.html";
-
-      // Para ativar (1x ao dia), descomente a linha abaixo:
-      // if (localStorage.getItem('dayoff_visto_' + new Date().toDateString())) return;
-
-      try {
-        const response = await fetch(urlCard + '?t=' + Date.now());
-        if (!response.ok) return;
-        const htmlText = await response.text();
-
-        // 1. Configura o Fundo Escuro (Overlay)
-        Object.assign(placeholder.style, {
-          position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.8)', // Um pouco mais escuro
-          zIndex: '999999',
-          display: 'flex', justifyContent: 'center', alignItems: 'center',
-          opacity: '0', transition: 'opacity 0.4s ease', backdropFilter: 'blur(3px)',
-          padding: '20px' // Margem de segurança para não colar na borda
-        });
-
-        // 2. Injeta CSS Corretivo para Mobile (AQUI ESTÁ A MÁGICA DO TAMANHO)
-        const styleMobile = document.createElement('style');
-        styleMobile.innerHTML = `
-          /* Ajustes para o card injetado */
-          #dayoff-scope, .card-dayoff {
-             max-width: 450px !important; 
-             width: 100% !important;
-             margin: 0 auto !important;
-          }
-          /* Regra específica para Celular: Diminuir o card */
-          @media (max-width: 600px) {
-             #dayoff-placeholder {
-                align-items: center !important; /* Centraliza verticalmente */
-             }
-             /* Escala o card para 85% do tamanho original e centraliza */
-             #dayoff-scope, .card-dayoff {
-                transform: scale(0.85) !important; 
-                transform-origin: center center !important;
-                max-width: 90vw !important; /* Nunca passa de 90% da largura da tela */
-             }
-          }
-          /* Garante que o modal de detalhes fique acima do card */
-          .modal-overlay { z-index: 9999999 !important; }
-        `;
-        document.head.appendChild(styleMobile);
-
-        // 3. Injeta o HTML do Card
-        placeholder.innerHTML = htmlText;
-
-        // 4. Reativa Scripts (Necessário para a animação interna do card)
-        const scripts = placeholder.querySelectorAll("script");
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement("script");
-          newScript.textContent = oldScript.textContent;
-          document.body.appendChild(newScript);
-        });
-
-        // 5. Função para Fechar Tudo (Overlay + Card)
-        window.fecharTotal = function() {
-          placeholder.style.opacity = '0';
-          setTimeout(() => {
-            placeholder.style.display = 'none'; 
-            localStorage.setItem('dayoff_visto_' + new Date().toDateString(), 'true');
-          }, 400);
-        };
-
-        // 6. Intercepta o botão X do card
-        window.dayoff_fecharCard = function(btn) {
-           const card = document.querySelector('.card-dayoff');
-           if(card) {
-               card.style.opacity = '0';
-               card.style.transform = 'scale(0.7)'; // Efeito de diminuir
-           }
-           setTimeout(window.fecharTotal, 300);
-        };
-        window.fecharCard = window.dayoff_fecharCard; // Compatibilidade
-
-        // 7. Fecha ao clicar fora
-        placeholder.addEventListener('click', (e) => {
-           // Verifica se clicou no fundo preto e NÃO no card ou no modal de detalhes
-           if(e.target === placeholder || e.target.id === 'dayoff-scope') {
-               window.fecharTotal();
-           }
-        });
-
-        // 8. Anima a entrada
-        requestAnimationFrame(() => placeholder.style.opacity = '1');
-
-      } catch (e) {
-        console.error("Erro card:", e);
-        placeholder.style.display = 'none';
-      }
-    });
-  </script>
-
+  
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
@@ -389,7 +260,7 @@
       // 5. RASTREADOR DE CLIQUES
       function iniciarRastreadorDeCliques() {
           document.addEventListener('click', (event) => {
-              const target = event.target.closest('button, a, .clickable, .card-dayoff');
+              const target = event.target.closest('button, a, .clickable');
               if (target && AUTH_TOKEN) {
                   const elId = target.id || 'sem_id';
                   const elTag = target.tagName;
@@ -1042,4 +913,5 @@
   </script>
 </body>
 </html>
+
 
