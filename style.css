@@ -1377,3 +1377,55 @@ footer .footer-content {
         width: 90%;
     }
 }
+
+/* Container para alinhar os botões */
+.banner-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap; /* Garante que no mobile um fique abaixo do outro se necessário */
+    margin-top: 10px;
+}
+
+/* Estilo Descontraído para o ConexãoPSR */
+.btn-conexao {
+    /* Gradiente usando o azul aco do seu tema */
+    background: linear-gradient(135deg, var(--azul-aco) 0%, #2980b9 100%) !important;
+    border: none !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4) !important;
+}
+
+.btn-conexao i {
+    font-size: 1.1rem;
+    /* Pequena animação no foguete ao carregar */
+    animation: bounce 2s infinite;
+}
+
+/* Efeito de Hover exclusivo para o Conexão */
+.btn-conexao:hover {
+    background: linear-gradient(135deg, #2980b9 0%, var(--azul-aco) 100%) !important;
+    transform: scale(1.08) translateY(-2px) !important;
+}
+
+/* Animação para o ícone de foguete */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* Ajuste mobile para os botões não colarem na borda */
+@media (max-width: 768px) {
+    .banner-buttons {
+        padding: 0 20px;
+        flex-direction: column;
+        width: 100%;
+    }
+    .banner-btn {
+        width: 100%; /* Botões ocupam largura total no celular */
+        text-align: center;
+        justify-content: center;
+    }
+}
