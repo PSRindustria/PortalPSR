@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   
   <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-
+  
   <title>Novidades - Portal PSR</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,12 +25,18 @@
       --white: #ffffff;
     }
 
-    /* 2. CORREÇÃO DA FONTE: Aplica no Body para herdar corretamente sem quebrar ícones */
+    /* O SEGREDO ESTÁ AQUI: */
+    /* Usamos 'body' em vez de '*' para não quebrar os ícones do menu */
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Poppins', sans-serif; 
       background-color: var(--bg-light);
       margin: 0;
       color: #333;
+    }
+
+    /* Se algum elemento específico ainda estiver teimoso (como botões), force apenas neles: */
+    button, input, textarea, select {
+      font-family: 'Poppins', sans-serif;
     }
 
     .page-content-wrapper {
@@ -42,7 +45,7 @@
       margin: 0 auto;
     }
 
-    /* Banner Hero Atraente */
+    /* Estilos do seu banner e cards (Mantidos) */
     .hero-novidades {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: var(--white);
@@ -51,24 +54,12 @@
       margin-bottom: 50px;
       text-align: center;
       position: relative;
-      overflow: hidden;
       box-shadow: 0 20px 40px rgba(0, 51, 102, 0.2);
     }
+    
+    .hero-novidades h1 { margin: 0 0 10px 0; font-weight: 700; font-size: 2.5rem; }
+    .hero-novidades i.main-icon { font-size: 4rem; color: var(--accent); margin-bottom: 20px; display: block; }
 
-    .hero-novidades i.main-icon {
-      font-size: 4rem;
-      color: var(--accent);
-      margin-bottom: 20px;
-      display: block;
-    }
-
-    .hero-novidades h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin: 0 0 10px 0;
-    }
-
-    /* Grid de Cards de Informação */
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -80,68 +71,22 @@
       padding: 30px;
       border-radius: 24px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-      transition: all 0.3s ease;
       border: 1px solid rgba(0,0,0,0.05);
     }
-
-    .news-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-    }
-
-    .news-card h3 {
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 0;
-    }
-
-    .news-card h3 i {
-      color: var(--accent);
-      background: rgba(218, 165, 32, 0.1);
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-    }
-
-    .check-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .check-list li {
-      padding: 10px 0 10px 30px;
-      position: relative;
-      font-size: 0.95rem;
-      color: #555;
-    }
-
+    
+    .news-card h3 { color: var(--primary); display: flex; align-items: center; gap: 12px; margin-top: 0; }
+    
+    .check-list { list-style: none; padding: 0; }
+    .check-list li { padding: 8px 0 8px 30px; position: relative; color: #555; }
     .check-list li::before {
       content: '\f058';
-      font-family: 'Font Awesome 6 Free';
+      font-family: 'Font Awesome 6 Free'; /* Garante que o check use a fonte de ícone */
       font-weight: 900;
-      position: absolute;
-      left: 0;
+      position: absolute; left: 0;
       color: #2ecc71;
     }
 
-    .badge-date {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-top: 15px;
-    }
-
     @media (max-width: 768px) {
-      .hero-novidades h1 { font-size: 1.8rem; }
       .page-content-wrapper { padding-top: 100px; }
     }
   </style>
