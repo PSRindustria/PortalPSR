@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="color-scheme" content="light only">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  
   <title>Novidades - Portal PSR</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <link rel="stylesheet" href="style.css?v=2" />
@@ -23,86 +25,63 @@
       --white: #ffffff;
     }
 
+    /* Força a fonte Poppins em absolutamente tudo, incluindo o menu que será injetado */
+    html, body, * {
+      font-family: 'Poppins', sans-serif !important;
+    }
+
     body {
-      font-family: 'Poppins', sans-serif;
       background-color: var(--bg-light);
       margin: 0;
       color: #333;
     }
 
-    /* Ajuste para o conteúdo não ficar por baixo do menu fixo */
     .page-content-wrapper {
-      padding: 120px 20px 80px;
-      max-width: 1100px;
+      padding: 120px 20px 60px; /* Espaço para o menu fixo */
+      max-width: 1000px;
       margin: 0 auto;
     }
 
-    /* Estilização dos Cards de Novidades */
+    /* Cards e Layout de Novidades */
     .hero-novidades {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: var(--white);
-      padding: 60px 40px;
-      border-radius: 30px;
-      margin-bottom: 50px;
+      padding: 60px 30px;
+      border-radius: 24px;
+      margin-bottom: 40px;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 51, 102, 0.2);
+      box-shadow: 0 15px 30px rgba(0, 51, 102, 0.15);
     }
 
-    .hero-novidades i.main-icon {
-      font-size: 4rem;
-      color: var(--accent);
-      margin-bottom: 20px;
-      display: block;
-    }
-
-    .hero-novidades h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin: 0;
-    }
+    .hero-novidades i { font-size: 3.5rem; color: var(--accent); margin-bottom: 20px; }
+    .hero-novidades h1 { font-size: 2.2rem; margin: 0; font-weight: 700; }
 
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
+      gap: 20px;
     }
 
     .news-card {
       background: var(--white);
-      padding: 30px;
-      border-radius: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-      transition: all 0.3s ease;
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .news-card:hover {
-      transform: translateY(-8px);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
     }
 
     .news-card h3 {
       color: var(--primary);
+      margin-top: 0;
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-top: 0;
-    }
-
-    .news-card h3 i {
-      color: var(--accent);
-      background: rgba(218, 165, 32, 0.1);
-      width: 40px; height: 40px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 10px;
+      gap: 10px;
     }
 
     .check-list { list-style: none; padding: 0; }
     .check-list li {
-      padding: 10px 0 10px 30px;
+      padding: 8px 0 8px 30px;
       position: relative;
-      font-size: 0.95rem;
     }
-
     .check-list li::before {
       content: '\f058';
       font-family: 'Font Awesome 6 Free';
@@ -112,8 +91,8 @@
     }
 
     @media (max-width: 768px) {
-      .hero-novidades h1 { font-size: 1.8rem; }
       .page-content-wrapper { padding-top: 100px; }
+      .hero-novidades h1 { font-size: 1.8rem; }
     }
   </style>
 </head>
@@ -123,43 +102,65 @@
 
   <main class="page-content-wrapper">
     <section class="hero-novidades">
-      <i class="fas fa-gift main-icon"></i>
+      <i class="fas fa-gift"></i>
       <h1>Day Off de Aniversário</h1>
-      <p>Um novo benefício pensado no seu bem-estar e reconhecimento.</p>
+      <p>Um presente da PSR para celebrar o seu dia especial!</p>
     </section>
 
     <div class="news-grid">
       <div class="news-card">
-        <h3><i class="fas fa-star"></i> O Benefício</h3>
-        <p>Você ganha 1 dia de folga remunerada para aproveitar o seu aniversário como preferir.</p>
+        <h3><i class="fas fa-info-circle"></i> Regras de Elegibilidade</h3>
+        <ul class="check-list">
+          <li>Colaboradores CLT</li>
+          <li>Após o período de experiência (90 dias)</li>
+          <li>Estar ativo na empresa</li>
+        </ul>
       </div>
+
+      <div class="news-card">
+        <h3><i class="fas fa-calendar-alt"></i> Como Usar</h3>
+        <ul class="check-list">
+          <li>Aviso de 7 dias de antecedência</li>
+          <li>Até 15 dias antes ou depois da data</li>
+          <li>Alinhamento com sua liderança</li>
+        </ul>
       </div>
+
+      <div class="news-card">
+        <h3><i class="fas fa-shield-alt"></i> Garantias</h3>
+        <p>Este dia é um presente e não afetará seus direitos:</p>
+        <ul class="check-list">
+          <li>Não desconta do Banco de Horas</li>
+          <li>Não interfere nas Férias</li>
+          <li>DSR preservado</li>
+        </ul>
+      </div>
+    </div>
   </main>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // Script unificado seguindo a lógica do Index.html
     document.addEventListener("DOMContentLoaded", () => {
+      // Carrega o Menu e o Footer exatamente como no index.html
       ['menu', 'footer'].forEach(file => {
-        fetch(`${file}.html?t=${Date.now()}`) // Timestamp para evitar cache
-          .then(r => r.text())
-          .then(html => {
+        fetch(`${file}.html?t=${Date.now()}`)
+          .then(response => response.text())
+          .then(data => {
             const placeholder = document.getElementById(`${file}-placeholder`);
             if (placeholder) {
-              placeholder.innerHTML = html;
+              placeholder.innerHTML = data;
               
-              // Ativa o menu mobile se for o arquivo de menu
+              // Se for o menu, reativa o botão de abrir/fechar do mobile
               if (file === 'menu') {
-                const toggle = document.getElementById('menu-toggle');
-                const navEl = document.getElementById('nav-principal');
-                if (toggle && navEl) {
-                  toggle.addEventListener('click', () => navEl.classList.toggle('active'));
+                const btn = document.getElementById('menu-toggle');
+                const nav = document.getElementById('nav-principal');
+                if (btn && nav) {
+                  btn.onclick = () => nav.classList.toggle('active');
                 }
               }
             }
-          })
-          .catch(err => console.error("Erro ao carregar componente:", err));
+          });
       });
     });
   </script>
