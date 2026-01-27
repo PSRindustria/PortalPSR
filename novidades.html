@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light only">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Novidades - Portal PSR</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <link rel="stylesheet" href="style.css?v=2" />
@@ -21,24 +23,21 @@
       --white: #ffffff;
     }
 
-    /* GARANTE QUE A FONTE SEJA APLICADA EM TUDO, INCLUINDO O MENU CARREGADO */
-    * {
-      font-family: 'Poppins', sans-serif !important;
-    }
-
     body {
+      font-family: 'Poppins', sans-serif;
       background-color: var(--bg-light);
       margin: 0;
       color: #333;
     }
 
+    /* Ajuste para o conteúdo não ficar por baixo do menu fixo */
     .page-content-wrapper {
       padding: 120px 20px 80px;
       max-width: 1100px;
       margin: 0 auto;
     }
 
-    /* Banner Hero Atraente */
+    /* Estilização dos Cards de Novidades */
     .hero-novidades {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: var(--white);
@@ -46,8 +45,6 @@
       border-radius: 30px;
       margin-bottom: 50px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
       box-shadow: 0 20px 40px rgba(0, 51, 102, 0.2);
     }
 
@@ -61,10 +58,9 @@
     .hero-novidades h1 {
       font-size: 2.5rem;
       font-weight: 700;
-      margin: 0 0 10px 0;
+      margin: 0;
     }
 
-    /* Grid de Cards de Informação */
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -82,7 +78,6 @@
 
     .news-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
     }
 
     .news-card h3 {
@@ -96,44 +91,24 @@
     .news-card h3 i {
       color: var(--accent);
       background: rgba(218, 165, 32, 0.1);
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
       border-radius: 10px;
     }
 
-    .check-list {
-      list-style: none;
-      padding: 0;
-    }
-
+    .check-list { list-style: none; padding: 0; }
     .check-list li {
       padding: 10px 0 10px 30px;
       position: relative;
       font-size: 0.95rem;
-      color: #555;
     }
 
     .check-list li::before {
       content: '\f058';
       font-family: 'Font Awesome 6 Free';
       font-weight: 900;
-      position: absolute;
-      left: 0;
+      position: absolute; left: 0;
       color: #2ecc71;
-    }
-
-    .badge-date {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-top: 15px;
     }
 
     @media (max-width: 768px) {
@@ -147,7 +122,6 @@
   <div id="menu-placeholder"></div>
 
   <main class="page-content-wrapper">
-    
     <section class="hero-novidades">
       <i class="fas fa-gift main-icon"></i>
       <h1>Day Off de Aniversário</h1>
@@ -155,68 +129,39 @@
     </section>
 
     <div class="news-grid">
-      
       <div class="news-card">
         <h3><i class="fas fa-star"></i> O Benefício</h3>
         <p>Você ganha 1 dia de folga remunerada para aproveitar o seu aniversário como preferir.</p>
-        <span class="badge-date">Início: 01/01/2026</span>
       </div>
-
-      <div class="news-card">
-        <h3><i class="fas fa-user-check"></i> Requisitos</h3>
-        <ul class="check-list">
-          <li>Após 90 dias de empresa</li>
-          <li>Sem faltas injustificadas (11 meses)</li>
-          <li>Sem advertências (6 meses)</li>
-        </ul>
       </div>
-
-      <div class="news-card">
-        <h3><i class="fas fa-calendar-alt"></i> Como Usar</h3>
-        <ul class="check-list">
-          <li>Aviso de 7 dias de antecedência</li>
-          <li>Até 15 dias antes ou depois da data</li>
-          <li>Alinhamento com sua liderança</li>
-        </ul>
-      </div>
-
-      <div class="news-card">
-        <h3><i class="fas fa-shield-alt"></i> Garantias</h3>
-        <p>Este dia é um presente da PSR e não afetará seus direitos:</p>
-        <ul class="check-list">
-          <li>Não desconta do Banco de Horas</li>
-          <li>Não interfere nas Férias</li>
-          <li>DSR preservado</li>
-        </ul>
-      </div>
-
-    </div>
-
   </main>
 
   <div id="footer-placeholder"></div>
 
   <script>
-    // Carregamento do Menu e Footer
+    // Script unificado seguindo a lógica do Index.html
     document.addEventListener("DOMContentLoaded", () => {
-      fetch("menu.html")
-        .then(r => r.text())
-        .then(html => {
-          document.getElementById("menu-placeholder").innerHTML = html;
-          const toggle = document.getElementById('menu-toggle');
-          const navEl = document.getElementById('nav-principal');
-          if (toggle && navEl) {
-            toggle.addEventListener('click', () => navEl.classList.toggle('active'));
-          }
-        });
-
-      fetch("footer.html")
-        .then(r => r.text())
-        .then(html => {
-          document.getElementById("footer-placeholder").innerHTML = html;
-        });
+      ['menu', 'footer'].forEach(file => {
+        fetch(`${file}.html?t=${Date.now()}`) // Timestamp para evitar cache
+          .then(r => r.text())
+          .then(html => {
+            const placeholder = document.getElementById(`${file}-placeholder`);
+            if (placeholder) {
+              placeholder.innerHTML = html;
+              
+              // Ativa o menu mobile se for o arquivo de menu
+              if (file === 'menu') {
+                const toggle = document.getElementById('menu-toggle');
+                const navEl = document.getElementById('nav-principal');
+                if (toggle && navEl) {
+                  toggle.addEventListener('click', () => navEl.classList.toggle('active'));
+                }
+              }
+            }
+          })
+          .catch(err => console.error("Erro ao carregar componente:", err));
+      });
     });
   </script>
-
 </body>
 </html>
