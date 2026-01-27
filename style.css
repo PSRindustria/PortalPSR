@@ -1390,7 +1390,7 @@ footer .footer-content {
 /* Estilo Descontraído para o ConexãoPSR */
 .btn-conexao {
     /* Gradiente usando o azul aco do seu tema */
-    background: linear-gradient(135deg, var(--azul-aco) 0%, #2980b9 100%) !important;
+    background: linear-gradient(135deg, #5c17cd 0%, #003366 100%); !important;
     border: none !important;
     display: flex;
     align-items: center;
@@ -1429,4 +1429,5 @@ footer .footer-content {
         justify-content: center;
     }
 }
+
 
