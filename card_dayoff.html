@@ -309,9 +309,9 @@
   
   <div class="card-dayoff action-open-modal" id="dayoff-card-main">
     
-    <button class="card-close action-close-card" title="Fechar Card">
-      <i class="fas fa-times"></i>
-    </button>
+<button class="card-close action-close-card" title="Fechar Card" onclick="dayoff_fecharCard(this)">
+  <i class="fas fa-times"></i>
+</button>
 
     <div class="card-header">
       <div class="badge-novo">🎉 Novo Benefício</div>
@@ -351,8 +351,8 @@
         <i class="fas fa-rocket"></i>
         <span>Início: 01/01/2026</span>
       </div>
-      <button class="btn-saiba-mais action-open-modal-btn">
-        Saiba mais <i class="fas fa-arrow-right"></i>
+<button class="btn-saiba-mais action-open-modal-btn" onclick="dayoff_abrirModal()">
+  Saiba mais <i class="fas fa-arrow-right"></i>
       </button>
     </div>
   </div>
@@ -360,7 +360,7 @@
   <div id="dayoff-modal-info" class="modal-overlay action-close-modal">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <button class="modal-close action-close-modal">&times;</button>
+        <button class="modal-close action-close-modal" onclick="dayoff_fecharModal()">&times;</button>
         <h2>🎉 Day Off de Aniversário</h2>
         <p style="margin-top: 10px; opacity: 0.95;">Todas as informações sobre o benefício</p>
       </div>
