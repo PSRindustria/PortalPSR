@@ -3,50 +3,121 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Day Off Aniversário - Portal PSR</title>
+  <title>Novidades - Portal PSR</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
   <link rel="stylesheet" href="style.css?v=2" />
 
   <style>
-    /* Estilização específica para a página de conteúdo */
+    :root {
+      --primary: #003366;
+      --secondary: #4682B4;
+      --accent: #DAA520;
+      --bg-light: #f4f7f9;
+      --white: #ffffff;
+      --text-dark: #2c3e50;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-dark);
+    }
+
     .page-content-wrapper {
-      padding: 120px 20px 60px; /* Espaço para não ficar embaixo do menu fixo */
-      max-width: 900px;
+      padding: 120px 20px 80px;
+      max-width: 1100px;
       margin: 0 auto;
-      min-height: 70vh;
     }
 
+    /* Banner Hero Modernizado */
     .dayoff-hero {
-      background: linear-gradient(135deg, #003366 0%, #4682B4 100%);
-      color: white;
-      padding: 40px;
-      border-radius: 20px;
-      margin-bottom: 40px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white);
+      padding: 60px 40px;
+      border-radius: 30px;
+      margin-bottom: 50px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 51, 102, 0.2);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 51, 102, 0.15);
     }
 
-    .info-section {
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      margin-bottom: 30px;
+    /* Detalhe abstrato no fundo do banner */
+    .dayoff-hero::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
     }
 
-    .info-section h3 {
-      color: #003366;
-      border-bottom: 2px solid #DAA520;
-      padding-bottom: 10px;
+    .dayoff-hero i.main-icon {
+      font-size: 4rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+    }
+
+    .dayoff-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .dayoff-hero p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Grid de Informações */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .info-card {
+      background: var(--white);
+      padding: 35px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+      transition: transform 0.3s ease;
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .info-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .info-card h3 {
+      color: var(--primary);
+      font-size: 1.3rem;
       margin-bottom: 20px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 15px;
+    }
+
+    .info-card h3 i {
+      background: rgba(218, 165, 32, 0.15);
+      color: var(--accent);
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 1.2rem;
     }
 
     .rules-list {
@@ -55,26 +126,41 @@
     }
 
     .rules-list li {
-      padding: 12px 0;
-      padding-left: 30px;
+      padding: 14px 0;
+      padding-left: 35px;
       position: relative;
-      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #f0f0f0;
+      color: #555;
     }
+
+    .rules-list li:last-child { border: none; }
 
     .rules-list li::before {
-      content: '✓';
+      content: '\f058'; /* FontAwesome Check Circle */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
       position: absolute;
       left: 0;
-      color: #28a745;
-      font-weight: bold;
+      color: #2ecc71;
     }
 
-    .highlight-card {
-      background: #f8f9fa;
-      border-left: 5px solid #DAA520;
-      padding: 20px;
-      margin: 20px 0;
-      border-radius: 0 15px 15px 0;
+    .highlight-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 15px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .dayoff-hero { padding: 40px 20px; }
+      .dayoff-hero h1 { font-size: 1.8rem; }
+      .page-content-wrapper { padding-top: 100px; }
     }
   </style>
 </head>
@@ -85,49 +171,48 @@
   <main class="page-content-wrapper">
     
     <div class="dayoff-hero">
-      <div style="font-size: 3em; margin-bottom: 10px;">🎉</div>
+      <i class="fas fa-gift main-icon"></i>
       <h1>Day Off de Aniversário</h1>
-      <p>Comemore seu dia com um presente especial da PSR Indústria!</p>
+      <p>Valorizamos quem faz a PSR crescer todos os dias. No seu aniversário, o presente é por nossa conta!</p>
     </div>
 
-    <section class="info-section">
-      <h3>🎯 O Benefício</h3>
-      <p>O <strong>Day Off de Aniversário</strong> é uma folga remunerada concedida aos colaboradores para que possam desfrutar do seu dia especial com amigos e família.</p>
-      
-      <div class="highlight-card">
-        <strong>Início do Programa:</strong> 01/01/2026
-      </div>
-    </section>
+    <div class="info-grid">
+      <section class="info-card">
+        <h3><i class="fas fa-star"></i> O Benefício</h3>
+        <p>Uma folga remunerada exclusiva para que você celebre sua vida com quem mais ama, sem preocupações com o trabalho.</p>
+        <span class="highlight-badge">Válido a partir de: 01/01/2026</span>
+      </section>
 
-    <section class="info-section">
-      <h3>✅ Quem tem direito?</h3>
-      <ul class="rules-list">
-        <li>Todos os colaboradores ativos</li>
-        <li>Conclusão do período de experiência (90 dias)</li>
-        <li>Sem faltas injustificadas nos últimos 11 meses</li>
-        <li>Sem advertências nos últimos 6 meses</li>
-      </ul>
-    </section>
+      <section class="info-card">
+        <h3><i class="fas fa-user-check"></i> Quem tem direito?</h3>
+        <ul class="rules-list">
+          <li>Colaboradores ativos da PSR</li>
+          <li>Após o período de experiência (90 dias)</li>
+          <li>Assiduidade nos últimos 11 meses</li>
+          <li>Bom histórico de conduta (últimos 6 meses)</li>
+        </ul>
+      </section>
 
-    <section class="info-section">
-      <h3>📋 Regras para Solicitação</h3>
-      <ul class="rules-list">
-        <li>Solicitar com no mínimo 7 dias de antecedência</li>
-        <li>Pode ser usado no dia do aniversário ou até 15 dias antes/depois</li>
-        <li>Sujeito a aprovação da liderança para não afetar a operação</li>
-        <li>Não pode haver ausências simultâneas no mesmo setor</li>
-      </ul>
-    </section>
+      <section class="info-card">
+        <h3><i class="fas fa-calendar-alt"></i> Como solicitar?</h3>
+        <ul class="rules-list">
+          <li>Aviso prévio mínimo de 7 dias</li>
+          <li>Janela de uso: 15 dias antes ou depois da data</li>
+          <li>Alinhamento prévio com a liderança imediata</li>
+          <li>Escala do setor deve permitir a ausência</li>
+        </ul>
+      </section>
 
-    <section class="info-section">
-      <h3>🎁 Informações Importantes</h3>
-      <p>Este dia é um presente da empresa e <strong>não gera descontos</strong> em:</p>
-      <ul class="rules-list">
-        <li>Banco de horas</li>
-        <li>Férias</li>
-        <li>DSR (Descanso Semanal Remunerado)</li>
-      </ul>
-    </section>
+      <section class="info-card">
+        <h3><i class="fas fa-info-circle"></i> Garantias</h3>
+        <p>Fique tranquilo! Este benefício é um presente e <strong>não impacta</strong> no seu bolso ou descanso futuro:</p>
+        <ul class="rules-list">
+          <li>Sem desconto no Banco de Horas</li>
+          <li>Não interfere nas suas Férias</li>
+          <li>DSR integralmente preservado</li>
+        </ul>
+      </section>
+    </div>
 
   </main>
 
@@ -135,12 +220,10 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Carrega o Menu
       fetch("menu.html")
         .then(r => r.text())
         .then(html => {
           document.getElementById("menu-placeholder").innerHTML = html;
-          // Ativa o toggle do menu mobile após carregar
           const toggle = document.getElementById('menu-toggle');
           const navEl = document.getElementById('nav-principal');
           if (toggle && navEl) {
@@ -148,7 +231,6 @@
           }
         });
 
-      // Carrega o Footer
       fetch("footer.html")
         .then(r => r.text())
         .then(html => {
