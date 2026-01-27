@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="color-scheme" content="light">
+  
+  <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <title>Novidades - Portal PSR</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,74 +28,121 @@
       --white: #ffffff;
     }
 
-    /* Força a fonte Poppins em absolutamente tudo, incluindo o menu que será injetado */
-    html, body, * {
-      font-family: 'Poppins', sans-serif !important;
-    }
-
+    /* 2. CORREÇÃO DA FONTE: Aplica no Body para herdar corretamente sem quebrar ícones */
     body {
+      font-family: 'Poppins', sans-serif;
       background-color: var(--bg-light);
       margin: 0;
       color: #333;
     }
 
     .page-content-wrapper {
-      padding: 120px 20px 60px; /* Espaço para o menu fixo */
-      max-width: 1000px;
+      padding: 120px 20px 80px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
-    /* Cards e Layout de Novidades */
+    /* Banner Hero Atraente */
     .hero-novidades {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: var(--white);
-      padding: 60px 30px;
-      border-radius: 24px;
-      margin-bottom: 40px;
+      padding: 60px 40px;
+      border-radius: 30px;
+      margin-bottom: 50px;
       text-align: center;
-      box-shadow: 0 15px 30px rgba(0, 51, 102, 0.15);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 51, 102, 0.2);
     }
 
-    .hero-novidades i { font-size: 3.5rem; color: var(--accent); margin-bottom: 20px; }
-    .hero-novidades h1 { font-size: 2.2rem; margin: 0; font-weight: 700; }
+    .hero-novidades i.main-icon {
+      font-size: 4rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+      display: block;
+    }
 
+    .hero-novidades h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+    }
+
+    /* Grid de Cards de Informação */
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      gap: 25px;
     }
 
     .news-card {
       background: var(--white);
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
     }
 
     .news-card h3 {
       color: var(--primary);
-      margin-top: 0;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      margin-top: 0;
     }
 
-    .check-list { list-style: none; padding: 0; }
-    .check-list li {
-      padding: 8px 0 8px 30px;
-      position: relative;
+    .news-card h3 i {
+      color: var(--accent);
+      background: rgba(218, 165, 32, 0.1);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
     }
+
+    .check-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .check-list li {
+      padding: 10px 0 10px 30px;
+      position: relative;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
     .check-list li::before {
       content: '\f058';
       font-family: 'Font Awesome 6 Free';
       font-weight: 900;
-      position: absolute; left: 0;
+      position: absolute;
+      left: 0;
       color: #2ecc71;
     }
 
+    .badge-date {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 15px;
+    }
+
     @media (max-width: 768px) {
-      .page-content-wrapper { padding-top: 100px; }
       .hero-novidades h1 { font-size: 1.8rem; }
+      .page-content-wrapper { padding-top: 100px; }
     }
   </style>
 </head>
@@ -101,19 +151,27 @@
   <div id="menu-placeholder"></div>
 
   <main class="page-content-wrapper">
+    
     <section class="hero-novidades">
-      <i class="fas fa-gift"></i>
+      <i class="fas fa-gift main-icon"></i>
       <h1>Day Off de Aniversário</h1>
-      <p>Um presente da PSR para celebrar o seu dia especial!</p>
+      <p>Um novo benefício pensado no seu bem-estar e reconhecimento.</p>
     </section>
 
     <div class="news-grid">
+      
       <div class="news-card">
-        <h3><i class="fas fa-info-circle"></i> Regras de Elegibilidade</h3>
+        <h3><i class="fas fa-star"></i> O Benefício</h3>
+        <p>Você ganha 1 dia de folga remunerada para aproveitar o seu aniversário como preferir.</p>
+        <span class="badge-date">Início: 01/01/2026</span>
+      </div>
+
+      <div class="news-card">
+        <h3><i class="fas fa-user-check"></i> Requisitos</h3>
         <ul class="check-list">
-          <li>Colaboradores CLT</li>
-          <li>Após o período de experiência (90 dias)</li>
-          <li>Estar ativo na empresa</li>
+          <li>Após 90 dias de empresa</li>
+          <li>Sem faltas injustificadas (11 meses)</li>
+          <li>Sem advertências (6 meses)</li>
         </ul>
       </div>
 
@@ -128,41 +186,48 @@
 
       <div class="news-card">
         <h3><i class="fas fa-shield-alt"></i> Garantias</h3>
-        <p>Este dia é um presente e não afetará seus direitos:</p>
+        <p>Este dia é um presente da PSR e não afetará seus direitos:</p>
         <ul class="check-list">
           <li>Não desconta do Banco de Horas</li>
           <li>Não interfere nas Férias</li>
           <li>DSR preservado</li>
         </ul>
       </div>
+
     </div>
+
   </main>
 
   <div id="footer-placeholder"></div>
 
   <script>
+    // 3. SCRIPT ROBUSTO (IDÊNTICO AO INDEX)
+    // Garante cache busting e funcionamento do botão mobile
     document.addEventListener("DOMContentLoaded", () => {
-      // Carrega o Menu e o Footer exatamente como no index.html
       ['menu', 'footer'].forEach(file => {
-        fetch(`${file}.html?t=${Date.now()}`)
-          .then(response => response.text())
-          .then(data => {
+        fetch(`${file}.html?t=${Date.now()}`) // Timestamp evita cache antigo
+          .then(r => r.text())
+          .then(html => {
             const placeholder = document.getElementById(`${file}-placeholder`);
             if (placeholder) {
-              placeholder.innerHTML = data;
+              placeholder.innerHTML = html;
               
               // Se for o menu, reativa o botão de abrir/fechar do mobile
               if (file === 'menu') {
-                const btn = document.getElementById('menu-toggle');
-                const nav = document.getElementById('nav-principal');
-                if (btn && nav) {
-                  btn.onclick = () => nav.classList.toggle('active');
+                const toggle = document.getElementById('menu-toggle');
+                const navEl = document.getElementById('nav-principal');
+                if (toggle && navEl) {
+                  toggle.addEventListener('click', () => {
+                    navEl.classList.toggle('active');
+                  });
                 }
               }
             }
-          });
+          })
+          .catch(err => console.error("Erro ao carregar componente:", err));
       });
     });
   </script>
+
 </body>
 </html>
