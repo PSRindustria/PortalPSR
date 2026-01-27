@@ -1406,7 +1406,7 @@ footer .footer-content {
 
 /* Efeito de Hover exclusivo para o Conexão */
 .btn-conexao:hover {
-    background: linear-gradient(135deg, #2980b9 0%, var(--azul-aco) 100%) !important;
+    background: linear-gradient(135deg, #007b00 0%, #006400 100%) !important;
     transform: scale(1.08) translateY(-2px) !important;
 }
 
@@ -1429,3 +1429,4 @@ footer .footer-content {
         justify-content: center;
     }
 }
+
