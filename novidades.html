@@ -26,6 +26,525 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=2" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .page-content-wrapper {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero-novidades {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 20px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      animation: slideInDown 0.6s ease-out;
+    }
+
+    .main-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+      animation: bounce 2s infinite;
+    }
+
+    .hero-novidades h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-novidades p {
+      font-size: 1rem;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+
+    /* ===== BADGE NOVIDADE ===== */
+    .badge-novidade {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      animation: pulse 2s infinite;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== ÚNICO CARD ===== */
+    .news-grid {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .news-card {
+      background: white;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 6px solid #667eea;
+      animation: slideInUp 0.6s ease-out;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.2);
+      border-left-color: #764ba2;
+    }
+
+    /* ===== SEÇÕES DO CARD ===== */
+    .card-section {
+      margin-bottom: 25px;
+      padding-bottom: 25px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .card-section:last-of-type {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .card-section h3 {
+      color: #667eea;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-section h3 i {
+      font-size: 1.4rem;
+    }
+
+    .card-section p {
+      color: #555;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .check-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .check-list li {
+      color: #666;
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .check-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #667eea;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .badge-date {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* ===== BOTÕES ===== */
+    .buttons-container {
+      display: flex;
+      gap: 12px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .btn-saiba-mais,
+    .btn-whatsapp {
+      flex: 1;
+      min-width: 140px;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-saiba-mais {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-saiba-mais:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-saiba-mais:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25d366 0%, #20ba58 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+      text-decoration: none;
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(37, 211, 102, 0.4);
+    }
+
+    .btn-whatsapp:active {
+      transform: translateY(-1px);
+    }
+
+    /* ===== MODAL ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.4s ease-out;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .modal-header h2 {
+      color: #667eea;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      color: #667eea;
+    }
+
+    .modal-body {
+      color: #555;
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .modal-body h3 {
+      color: #667eea;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .modal-body ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .modal-body li {
+      margin-bottom: 8px;
+      color: #666;
+    }
+
+    /* ===== ANIMAÇÕES ===== */
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* ===== RESPONSIVO MOBILE ===== */
+    @media (max-width: 768px) {
+      .page-content-wrapper {
+        padding: 15px;
+      }
+
+      .hero-novidades {
+        padding: 30px 15px;
+        margin-bottom: 20px;
+      }
+
+      .hero-novidades h1 {
+        font-size: 1.6rem;
+      }
+
+      .hero-novidades p {
+        font-size: 0.95rem;
+      }
+
+      .main-icon {
+        font-size: 2.5rem;
+      }
+
+      .news-card {
+        padding: 25px;
+        border-radius: 16px;
+        max-width: 100%;
+      }
+
+      .card-section h3 {
+        font-size: 1.1rem;
+      }
+
+      .card-section p {
+        font-size: 0.9rem;
+      }
+
+      .check-list li {
+        font-size: 0.9rem;
+        padding-left: 25px;
+      }
+
+      .buttons-container {
+        gap: 10px;
+      }
+
+      .btn-saiba-mais,
+      .btn-whatsapp {
+        min-width: 120px;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+      }
+
+      .modal-content {
+        padding: 25px;
+        width: 95%;
+        border-radius: 16px;
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .modal-body {
+        font-size: 0.95rem;
+      }
+
+      .modal-body h3 {
+        font-size: 1.1rem;
+      }
+
+      .close-btn {
+        font-size: 1.8rem;
+        width: 35px;
+        height: 35px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-content-wrapper {
+        padding: 12px;
+      }
+
+      .hero-novidades {
+        padding: 25px 12px;
+        margin-bottom: 15px;
+      }
+
+      .hero-novidades h1 {
+        font-size: 1.4rem;
+      }
+
+      .hero-novidades p {
+        font-size: 0.9rem;
+      }
+
+      .main-icon {
+        font-size: 2rem;
+      }
+
+      .news-card {
+        padding: 20px;
+        border-radius: 14px;
+      }
+
+      .card-section {
+        margin-bottom: 18px;
+        padding-bottom: 18px;
+      }
+
+      .card-section h3 {
+        font-size: 1rem;
+      }
+
+      .card-section p {
+        font-size: 0.85rem;
+      }
+
+      .check-list li {
+        font-size: 0.85rem;
+        padding-left: 22px;
+      }
+
+      .buttons-container {
+        gap: 8px;
+        flex-direction: column;
+      }
+
+      .btn-saiba-mais,
+      .btn-whatsapp {
+        min-width: 100%;
+        padding: 11px 16px;
+        font-size: 0.85rem;
+      }
+
+      .modal-content {
+        padding: 20px;
+        border-radius: 12px;
+      }
+
+      .modal-header h2 {
+        font-size: 1.3rem;
+      }
+
+      .modal-body {
+        font-size: 0.9rem;
+      }
+
+      .modal-body h3 {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -40,60 +559,128 @@
     </section>
 
     <div class="news-grid">
-      
       <div class="news-card">
-        <h3><i class="fas fa-star"></i> O Benefício</h3>
-        <p>Você ganha 1 dia de folga remunerada para aproveitar o seu aniversário como preferir.</p>
-        <span class="badge-date">Início: 01/01/2026</span>
-      </div>
+        <div style="text-align: center; margin-bottom: 20px;">
+          <span class="badge-novidade"><i class="fas fa-star"></i> NOVIDADE</span>
+        </div>
 
-      <div class="news-card">
-        <h3><i class="fas fa-user-check"></i> Requisitos</h3>
-        <ul class="check-list">
-          <li>Após 90 dias de empresa</li>
-          <li>Sem faltas injustificadas (11 meses)</li>
-          <li>Sem advertências (6 meses)</li>
-        </ul>
-      </div>
+        <!-- SEÇÃO: O BENEFÍCIO -->
+        <div class="card-section">
+          <h3><i class="fas fa-star"></i> O Benefício</h3>
+          <p>Você ganha <strong>1 dia de folga remunerada</strong> para aproveitar o seu aniversário como preferir. É um presente especial que reconhece sua importância para a PSR.</p>
+          <span class="badge-date">Início: 01/01/2026</span>
+        </div>
 
-      <div class="news-card">
-        <h3><i class="fas fa-calendar-alt"></i> Como Usar</h3>
-        <ul class="check-list">
-          <li>Aviso de 7 dias de antecedência</li>
-          <li>Até 15 dias antes ou depois da data</li>
-          <li>Alinhamento com sua liderança</li>
-        </ul>
-      </div>
+        <!-- SEÇÃO: REQUISITOS -->
+        <div class="card-section">
+          <h3><i class="fas fa-user-check"></i> Requisitos</h3>
+          <ul class="check-list">
+            <li>Após 90 dias de empresa</li>
+            <li>Sem faltas injustificadas (11 meses)</li>
+            <li>Sem advertências (6 meses)</li>
+          </ul>
+        </div>
 
-      <div class="news-card">
-        <h3><i class="fas fa-shield-alt"></i> Garantias</h3>
-        <p>Este dia é um presente da PSR e não afetará seus direitos:</p>
-        <ul class="check-list">
-          <li>Não desconta do Banco de Horas</li>
-          <li>Não interfere nas Férias</li>
-          <li>DSR preservado</li>
-        </ul>
-      </div>
+        <!-- SEÇÃO: COMO USAR -->
+        <div class="card-section">
+          <h3><i class="fas fa-calendar-alt"></i> Como Usar</h3>
+          <ul class="check-list">
+            <li>Aviso de 7 dias de antecedência</li>
+            <li>Até 15 dias antes ou depois da data</li>
+            <li>Alinhamento com sua liderança</li>
+          </ul>
+        </div>
 
+        <!-- SEÇÃO: GARANTIAS -->
+        <div class="card-section">
+          <h3><i class="fas fa-shield-alt"></i> Garantias</h3>
+          <p>Este dia é um presente da PSR e não afetará seus direitos:</p>
+          <ul class="check-list">
+            <li>Não desconta do Banco de Horas</li>
+            <li>Não interfere nas Férias</li>
+            <li>DSR preservado</li>
+          </ul>
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="buttons-container">
+          <button class="btn-saiba-mais" id="btnSaibaMais">
+            <i class="fas fa-arrow-right"></i>Saiba Mais
+          </button>
+          <a href="https://wa.me/5521971350344?text=Olá%20PSR!%20Gostaria%20de%20tirar%20dúvidas%20sobre%20o%20Day%20Off%20de%20Aniversário.%20Podem%20me%20ajudar?" 
+             target="_blank" 
+             class="btn-whatsapp">
+            <i class="fab fa-whatsapp"></i>Dúvidas
+          </a>
+        </div>
+      </div>
     </div>
 
   </main>
 
+  <!-- MODAL -->
+  <div id="modalSaibaMais" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-info-circle" style="margin-right: 10px;"></i>Informações Completas</h2>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3>📅 O Day Off de Aniversário</h3>
+        <p>A PSR tem o prazer de apresentar um novo benefício exclusivo para todos os colaboradores: o Day Off de Aniversário. Este é um presente especial que reconhece sua importância para a empresa.</p>
+
+        <h3>✨ O que é?</h3>
+        <p>Um dia de folga remunerada que você pode usar para celebrar seu aniversário da forma que desejar. É uma oportunidade para descansar, estar com a família ou fazer algo especial para você mesmo.</p>
+
+        <h3>👥 Quem pode usar?</h3>
+        <ul>
+          <li>Colaboradores com mais de 90 dias de empresa</li>
+          <li>Sem faltas injustificadas nos últimos 11 meses</li>
+          <li>Sem advertências nos últimos 6 meses</li>
+        </ul>
+
+        <h3>📋 Como solicitar?</h3>
+        <ul>
+          <li>Avise sua liderança com 7 dias de antecedência</li>
+          <li>Você pode usar até 15 dias antes ou depois da sua data de aniversário</li>
+          <li>Coordene com seu gestor para garantir o melhor alinhamento com as atividades do time</li>
+        </ul>
+
+        <h3>🛡️ Proteções e Garantias</h3>
+        <ul>
+          <li><strong>Não desconta do Banco de Horas:</strong> Este dia é adicional e não afeta suas horas acumuladas</li>
+          <li><strong>Não interfere nas Férias:</strong> É um benefício independente do período de férias</li>
+          <li><strong>DSR preservado:</strong> Seu descanso semanal remunerado continua normal</li>
+        </ul>
+
+        <h3>💡 Dicas Importantes</h3>
+        <ul>
+          <li>Planeje com antecedência para melhor aproveitamento</li>
+          <li>Comunique-se com sua liderança para garantir a aprovação</li>
+          <li>Aproveite este dia para recarregar as energias</li>
+          <li>Qualquer dúvida, consulte o RH ou sua liderança</li>
+        </ul>
+
+        <p style="margin-top: 25px; padding-top: 15px; border-top: 2px solid #f0f0f0; color: #999; font-size: 0.9rem;">
+          <strong>Vigência:</strong> Este benefício tem início em 01/01/2026 e aplica-se a todos os colaboradores que atendem aos requisitos.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <div id="footer-placeholder"></div>
 
   <script>
-    // 3. SCRIPT ROBUSTO (IDÊNTICO AO INDEX)
-    // Garante cache busting e funcionamento do botão mobile
+    // SCRIPT PARA MENU E FOOTER
     document.addEventListener("DOMContentLoaded", () => {
       ['menu', 'footer'].forEach(file => {
-        fetch(`${file}.html?t=${Date.now()}`) // Timestamp evita cache antigo
+        fetch(`${file}.html?t=${Date.now()}`)
           .then(r => r.text())
           .then(html => {
             const placeholder = document.getElementById(`${file}-placeholder`);
             if (placeholder) {
               placeholder.innerHTML = html;
               
-              // Se for o menu, reativa o botão de abrir/fechar do mobile
               if (file === 'menu') {
                 const toggle = document.getElementById('menu-toggle');
                 const navEl = document.getElementById('nav-principal');
@@ -107,6 +694,39 @@
           })
           .catch(err => console.error("Erro ao carregar componente:", err));
       });
+    });
+
+    // SCRIPT PARA MODAL
+    const modal = document.getElementById('modalSaibaMais');
+    const btnSaibaMais = document.getElementById('btnSaibaMais');
+    const closeModal = document.getElementById('closeModal');
+
+    // Abrir modal
+    btnSaibaMais.addEventListener('click', () => {
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Fechar modal pelo botão X
+    closeModal.addEventListener('click', () => {
+      modal.classList.remove('show');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Fechar modal clicando fora do conteúdo
+    window.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Fechar modal com tecla ESC
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal.classList.contains('show')) {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+      }
     });
   </script>
 
