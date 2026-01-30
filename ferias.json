@@ -1,128 +1,62 @@
 [
   {
-    "colaborador": "Robson Jr",
+    "colaborador": "Simone Moura",
+    "departamento": "Supply Chain",
+    "inicio": "02/02/2026",
+    "retorno": "06/02/2026"
+  },
+  {
+    "colaborador": "Gustavo Linhares",
     "departamento": "Produção",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
+    "inicio": "02/02/2026",
+    "retorno": "21/02/2026"
   },
   {
-    "colaborador": "Wallace Carvalho",
+    "colaborador": "Lenardo da Conceicao",
     "departamento": "Produção",
-    "inicio": "05/01/2026",
-    "retorno": "26/01/2026"
+    "inicio": "02/02/2026",
+    "retorno": "21/02/2026"
   },
   {
-    "colaborador": "Tayane Modesto",
-    "departamento": "PCP",
-    "inicio": "05/01/2026",
-    "retorno": "26/01/2026"
+    "colaborador": "Deyvidy Pereira",
+    "departamento": "TI",
+    "inicio": "02/02/2026",
+    "retorno": "21/02/2026"
   },
   {
-    "colaborador": "Marcelo Coutinho",
+    "colaborador": "Marcos Salvado",
     "departamento": "Produção",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
+    "inicio": "02/02/2026",
+    "retorno": "03/03/2026"
   },
   {
-    "colaborador": "Adelson Mattos",
+    "colaborador": "Marcos Vinicius",
     "departamento": "Produção",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
+    "inicio": "02/02/2026",
+    "retorno": "03/03/2026"
   },
   {
-    "colaborador": "Douglas Amaral",
+    "colaborador": "Kayo Soares",
     "departamento": "Produção",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
+    "inicio": "02/02/2026",
+    "retorno": "03/03/2026"
   },
   {
-    "colaborador": "Luciano S. Costa",
-    "departamento": "Comercial",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
-  },
-  {
-    "colaborador": "Paulo Guimarães",
-    "departamento": "Comercial",
-    "inicio": "05/01/2026",
-    "retorno": "15/01/2026"
-  },
-  {
-    "colaborador": "Rodolfo Ramalho",
-    "departamento": "Compras",
-    "inicio": "05/01/2026",
-    "retorno": "26/01/2026"
-  },
-  {
-    "colaborador": "Fernando Alcantara",
-    "departamento": "QSMS",
-    "inicio": "05/01/2026",
-    "retorno": "26/01/2026"
-  },
-  {
-    "colaborador": "Denner Costa",
-    "departamento": "QSMS",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
-  },
-  {
-    "colaborador": "Zelia Paixão",
-    "departamento": "QSMS",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
-  },
-  {
-    "colaborador": "José Marcelo",
+    "colaborador": "Talia Rodrigues",
     "departamento": "Produção",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
+    "inicio": "02/02/2026",
+    "retorno": "03/03/2026"
   },
   {
-    "colaborador": "Diogo Costa",
+    "colaborador": "Francisco de Assis",
     "departamento": "Logística",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
+    "inicio": "04/02/2026",
+    "retorno": "05/03/2026"
   },
   {
-    "colaborador": "Roberto Felix",
+    "colaborador": "Luciano Silva",
     "departamento": "Logística",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
-  },
-  {
-    "colaborador": "Daniel Gomes",
-    "departamento": "Logística",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
-  },
-  {
-    "colaborador": "Nilo Santos",
-    "departamento": "QSMS",
-    "inicio": "05/01/2026",
-    "retorno": "04/02/2026"
-  },
-  {
-    "colaborador": "Gabriel Freire",
-    "departamento": "Produção",
-    "inicio": "12/01/2026",
-    "retorno": "01/02/2026"
-  },
-  {
-    "colaborador": "Fabio Pereira",
-    "departamento": "Produção",
-    "inicio": "12/01/2026",
-    "retorno": "01/02/2026"
-  },
-  {
-    "colaborador": "Luiz Henrique",
-    "departamento": "Produção",
-    "inicio": "12/01/2026",
-    "retorno": "01/02/2026"
-  },
-  {
-    "colaborador": "Rafaela Taborda",
-    "departamento": "Produção",
-    "inicio": "12/01/2026",
-    "retorno": "01/02/2026"
+    "inicio": "04/02/2026",
+    "retorno": "05/03/2026"
   }
 ]
