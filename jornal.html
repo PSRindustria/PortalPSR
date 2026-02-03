@@ -138,7 +138,7 @@
         .cliente-item { border-right: none; }
     }
 
-    /* PARTIU PENSAR (Substitui Receitas) & SAUDE */
+    /* PARTIU PENSAR & SAUDE */
     .partiu-pensar-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
     
     /* DESAFIOS */
@@ -288,7 +288,8 @@
     /* BANNERS */
     .banner-metade { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; }
     .banner-saude-fisica { background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center center; }
-    .banner-partiu-pensar { background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80)); background-size: cover; background-position: center center; }
+    /* REMOVIDO GRADIENTE FIXO DO CSS POIS SERÁ CONTROLADO PELO JS AGORA */
+    .banner-partiu-pensar { background-size: cover; background-position: center center; } 
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
 /* ==================================================
@@ -768,20 +769,35 @@
         const divSaude = document.getElementById('saude-fisica-hero');
         if(divSaude) divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
-        // IMPLEMENTAÇÃO DO CARD "PARTIU PENSAR" (Substituindo lógica de Receitas)
-        const pp = CONTEUDO_JORNAL.partiuPensar || { subtitulo: "A Navalha de Ockham", resumo: "Por que a explicação mais simples costuma ser a correta.", conteudoCompleto: "<p>A Navalha de Ockham sugere que, entre hipóteses concorrentes, a que tiver menos suposições deve ser selecionada.</p>", fonte: "Filosofia" }; 
+        // IMPLEMENTAÇÃO ATUALIZADA DO "PARTIU PENSAR" COM FIREBASE
+        const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
+        // Fallback para conteúdo genérico se não houver dados
+        const ppTitulo = pp.titulo || 'Partiu Pensar';
+        const ppSubtitulo = pp.subtitulo || 'Filosofia';
+        const ppResumo = pp.resumo || 'Conteúdo em atualização...';
+        const ppConteudo = pp.conteudoCompleto || '<p>Aguarde novidades!</p>';
+        const ppFonte = pp.fonte || 'Portal PSR';
+        
+        // Lógica da Imagem de Fundo (Se existir no Firebase, usa. Se não, usa gradiente padrão)
+        const styleBackground = pp.imagemFundo ? 
+            `background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${pp.imagemFundo}') center/cover no-repeat;` : 
+            `background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80));`;
+
         const divPP = document.getElementById('partiu-pensar-hero');
         if(divPP) {
             divPP.innerHTML = `
             <div class="jornal-card">
-                <div class="banner-metade banner-partiu-pensar"><i class="fas fa-lightbulb"></i></div>
+                <div class="banner-metade banner-partiu-pensar" style="${styleBackground}">
+                    ${pp.imagemFundo ? '' : '<i class="fas fa-lightbulb"></i>'} 
+                </div>
                 <div class="jornal-card-content card-texto-centralizado">
-                    <h3>${pp.subtitulo||'Filosofia'}</h3>
-                    <p>${pp.resumo||''}</p>
+                    <h3>${ppSubtitulo}</h3>
+                    <h4 style="color:var(--dourado); margin-bottom:10px;">${ppTitulo}</h4>
+                    <p>${ppResumo}</p>
                     <button id="btnLerMaisPartiuPensar" class="btn-ler-mais" onclick="togglePartiuPensar()">Ler reflexão</button>
                     <div id="materiaPartiuPensar" class="materia-completa">
-                        ${pp.conteudoCompleto||''}
-                        <p class="fonte-materia"><small>Fonte: <strong>${pp.fonte||'Autor'}</strong></small></p>
+                        ${ppConteudo}
+                        <p class="fonte-materia"><small>Fonte: <strong>${ppFonte}</strong></small></p>
                     </div>
                 </div>
             </div>`;
@@ -874,7 +890,10 @@
         const contentData = await secureFetch(BASE_DB_URL + "content.json");
         if (contentData) {
             CONTEUDO_JORNAL = contentData;
+            // Garante inicialização para não quebrar a lógica
             if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
+            if(!CONTEUDO_JORNAL.partiuPensar) CONTEUDO_JORNAL.partiuPensar = {}; 
+            
             saveCache(CACHE_KEYS.CONTENT, contentData);
             refreshAllUI(); 
         }
@@ -1214,7 +1233,7 @@
         };
         simplePost('btn-submit-suggestion', ['suggest-name'], 'suggestions');
         
-        // CORREÇÃO DO BUG: Formulário de Games (Tratamento Específico)
+        // Formulário de Games (Tratamento Específico)
         const btnGame = document.getElementById('btn-submit-game-suggestion');
         if (btnGame) {
             btnGame.onclick = async () => {
@@ -1228,8 +1247,8 @@
 
                 if (nameVal && textVal && AUTH_TOKEN) {
                     const gameData = {
-                        name: nameVal, // Garante chave 'name'
-                        text: textVal, // Garante chave 'text'
+                        name: nameVal, 
+                        text: textVal, 
                         date: new Date().toISOString()
                     };
                     
@@ -1379,7 +1398,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         ['menu', 'footer'].forEach(file => fetch(`${file}.html?t=${Date.now()}`).then(r=>r.text()).then(html=>{ const p=document.getElementById(`${file}-placeholder`); if(p) p.innerHTML=html; if(file==='menu'){const t=document.getElementById('menu-toggle'),n=document.getElementById('nav-principal');if(t&&n){t.addEventListener('click',()=>n.classList.toggle('active'));n.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>n.classList.remove('active')));}} }).catch(e=>console.warn(e)));
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
-        setupToggle('btn-toggle-recipe', 'recipe-form-container'); // Mantido ID apenas para compatibilidade, mas seção não existe mais
+        setupToggle('btn-toggle-recipe', 'recipe-form-container'); // Mantido ID apenas para compatibilidade
         setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
         setupToggle('btn-toggle-praise', 'praise-form-container');
         setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
