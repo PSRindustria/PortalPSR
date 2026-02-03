@@ -437,7 +437,7 @@
         <div id="cultura-container" class="cards-grid"></div>
         <div class="suggestion-section">
             <button id="btn-toggle-suggestion" class="btn-suggestion">
-                Indique o próximo filme do mês <i class="fas fa-bullhorn"></i>
+                Indique o próximo filme ou livro do mês <i class="fas fa-bullhorn"></i>
             </button>
             <div id="suggestion-form-container" class="suggestion-card-form">
                 <h3 style="color: var(--azul-marinho); margin-bottom: 20px; text-align: center;">Sua Sugestão</h3>
@@ -772,7 +772,7 @@
         if(divTema) {
             divTema.innerHTML = `
             <div class="destaque-container" style="${capaBackground}">
-                <div class="destaque-icon">🤍</div>
+                <div class="destaque-icon">${tm.icon || '🤍'}</div>
                 <h2>${tm.titulo||'Tema do Mês'}</h2>
                 <p><strong>${tm.subtitulo||''}</strong></p>
                 <p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p>
@@ -926,12 +926,13 @@
         ]);
 
         if(clientes) { renderNovosClientes(clientes); saveCache(CACHE_KEYS.CLIENTES, clientes); }
-        if(hobby) { globalHobbyData = hobby; saveCache(CACHE_KEYS.HOBBY, hobby); }
-        if(praise) { globalPraiseData = praise; saveCache(CACHE_KEYS.PRAISE, praise); }
-        if(challenges) { globalChallengesData = challenges; saveCache(CACHE_KEYS.CHALLENGES, challenges); }
-        if(quiz) { globalQuizData = quiz; saveCache(CACHE_KEYS.QUIZ, quiz); }
-        if(ratings) { globalRatingsData = ratings; saveCache(CACHE_KEYS.RATINGS, ratings); }
-        if(testimonials) { globalTestimonialsData = testimonials; saveCache(CACHE_KEYS.TESTIMONIALS, testimonials); }
+        // CORREÇÃO DE SYNC: Se vier null (deletado), assume objeto vazio {}
+        globalHobbyData = hobby || {}; saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
+        globalPraiseData = praise || {}; saveCache(CACHE_KEYS.PRAISE, globalPraiseData);
+        globalChallengesData = challenges || {}; saveCache(CACHE_KEYS.CHALLENGES, globalChallengesData);
+        globalQuizData = quiz || {}; saveCache(CACHE_KEYS.QUIZ, globalQuizData);
+        globalRatingsData = ratings || {}; saveCache(CACHE_KEYS.RATINGS, globalRatingsData);
+        globalTestimonialsData = testimonials || {}; saveCache(CACHE_KEYS.TESTIMONIALS, globalTestimonialsData);
 
         refreshAllUI();
         setupForms();
