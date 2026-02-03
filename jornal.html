@@ -138,20 +138,9 @@
         .cliente-item { border-right: none; }
     }
 
-    /* RECEITAS */
-    .receita-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
-    .receita-card:hover { transform: translateY(-5px); }
-    .receita-imagem { width: 100%; height: 180px; background: linear-gradient(135deg, rgba(0, 100, 0, 0.85), rgba(34, 139, 34, 0.85)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-    .receita-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
-    .receita-info h4 { font-size: 1.3em; color: var(--azul-marinho); margin-bottom: 5px; font-weight: 700; }
-    .receita-tempo { font-size: 0.9em; color: var(--dourado); font-weight: 600; margin-bottom: 5px; }
-    .receita-info p { font-size: 0.95em; color: #555; line-height: 1.6; margin-bottom: 15px; }
-    .receita-detalhes { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; animation: fadeIn 0.4s ease; text-align: left; width: 100%; }
-    .receita-detalhes h5 { color: var(--azul-marinho); margin: 10px 0 5px; font-size: 1em; }
-    .receita-detalhes ul, .receita-detalhes ol { margin-left: 20px; font-size: 0.9em; color: #555; text-align: left; }
-    .btn-ver-receita { background-color: var(--verde-escuro); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; margin-top: auto; transition: 0.3s; width: 100%; }
-    .btn-ver-receita:hover { background-color: var(--dourado); color: var(--azul-marinho); }
-
+    /* PARTIU PENSAR (Substitui Receitas) & SAUDE */
+    .partiu-pensar-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
+    
     /* DESAFIOS */
     .desafio-saude-card { background-color: var(--branco); border-radius: 15px; padding: 25px; box-shadow: var(--sombra-card-jornal); border: 1px solid #eee; border-top: 5px solid var(--verde-escuro); transition: transform 0.3s; display: flex; flex-direction: column; }
     .desafio-saude-card:hover { transform: translateX(5px); }
@@ -181,21 +170,20 @@
     .hobby-titulo { font-size: 1.1em; color: var(--dourado); font-weight: 700; margin-bottom: 25px; text-transform: uppercase; }
     
     /* CORREÇÃO DO ÍCONE DE ASPAS */
-/* ESTILO DA CAIXA DE CITAÇÃO (Estilo Revista) */
     .hobby-quote-box { 
         background: #f8f9fa; 
         border-left: 4px solid var(--azul-marinho); 
         padding: 20px 25px; 
         margin-bottom: 25px; 
         border-radius: 0 10px 10px 0; 
-        display: block; /* Removemos o flex para permitir o texto fluir */
+        display: block; 
     }
 
     .hobby-quote-box i { 
         color: var(--dourado); 
         font-size: 1.5em; 
-        float: left;        /* O segredo: faz o ícone flutuar à esquerda */
-        margin-right: 8px; /* Espaço entre as aspas e a primeira letra */
+        float: left;        
+        margin-right: 8px; 
         line-height: 1;
     }
 
@@ -204,7 +192,7 @@
         margin: 0;
         color: #555;
         line-height: 1.6;
-        display: inline; /* Garante que o texto se comporte fluidamente */
+        display: inline; 
     }
     
     .hobby-tag { display: inline-block; background-color: var(--verde-escuro); color: var(--branco); padding: 8px 16px; border-radius: 50px; font-size: 0.85em; font-weight: 600; margin-right: 8px; margin-bottom: 8px; }
@@ -300,31 +288,29 @@
     /* BANNERS */
     .banner-metade { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; }
     .banner-saude-fisica { background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center center; }
+    .banner-partiu-pensar { background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80)); background-size: cover; background-position: center center; }
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
 /* ==================================================
        BLINDAGEM TOTAL: RANK (HISCORE) E SINOPSE
        ================================================== */
     
-    /* 1. BLINDAGEM DO FUNDO (OVERLAY) 
-       Usamos os IDs específicos para garantir que sobreponham qualquer regra do index.html */
+    /* 1. BLINDAGEM DO FUNDO (OVERLAY) */
     #hiscore-modal,
     #synopsis-modal {
-        position: fixed !important; /* !important garante que nada mude a posição */
+        position: fixed !important; 
         top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         height: 100% !important;
         background: rgba(0,0,0,0.5) !important;
-        z-index: 99999 !important; /* Valor altíssimo para ficar acima de tudo */
+        z-index: 99999 !important; 
         
-        /* Garante o alinhamento central */
-        display: none; /* O JS muda isso para flex, mas começamos oculto */
+        display: none; 
         justify-content: center;
         align-items: center;
         padding: 20px;
         
-        /* Reseta transformações que podem vir de fora */
         transform: none !important;
         opacity: 1 !important;
         visibility: visible;
@@ -333,7 +319,6 @@
     /* 2. BLINDAGEM DA CAIXA DE CONTEÚDO (A JANELA EM SI) */
     #hiscore-modal .modal-content,
     #synopsis-modal .modal-content {
-        /* Estrutura Visual */
         background: white !important;
         width: 100% !important;
         max-width: 500px !important;
@@ -342,7 +327,6 @@
         position: relative !important;
         box-shadow: 0 5px 25px rgba(0,0,0,0.3) !important;
         
-        /* Reset de Texto (A blindagem que fizemos antes) */
         text-align: left !important;
         font-family: 'Poppins', sans-serif !important;
         font-size: 1rem !important;
@@ -350,14 +334,14 @@
         color: #4B4B4B !important;
         font-weight: 400 !important;
         float: none !important;
-        display: block !important; /* Garante que a caixa apareça */
-        margin: auto !important; /* Centraliza no flex container */
+        display: block !important; 
+        margin: auto !important; 
     }
 
-    /* 3. RESET DE ELEMENTOS INTERNOS (Para ignorar CSS global) */
+    /* 3. RESET DE ELEMENTOS INTERNOS */
     #hiscore-modal .modal-content h3,
     #synopsis-modal .modal-content h3 {
-        color: #003366 !important; /* Azul Marinho */
+        color: #003366 !important; 
         font-size: 1.5rem !important;
         margin-bottom: 20px !important;
         text-align: center !important;
@@ -377,7 +361,7 @@
     /* 4. BLINDAGEM DO BOTÃO FECHAR (X) */
     #hiscore-modal .modal-close,
     #synopsis-modal .modal-close {
-        all: unset !important; /* Remove qualquer herança do index */
+        all: unset !important; 
         position: absolute !important;
         top: 15px !important;
         right: 15px !important;
@@ -395,10 +379,10 @@
     
     #hiscore-modal .modal-close:hover,
     #synopsis-modal .modal-close:hover {
-        color: #dc3545 !important; /* Vermelho Erro */
+        color: #dc3545 !important; 
     }
 
-    /* 5. LISTA DE RANKING (Específica do Hiscore) */
+    /* 5. LISTA DE RANKING */
     #hiscore-modal .hiscore-item { 
         display: flex !important; 
         justify-content: space-between !important; 
@@ -423,7 +407,7 @@
     }
     
     #hiscore-modal .hiscore-points { 
-        color: #DAA520 !important; /* Dourado */
+        color: #DAA520 !important; 
         font-weight: 700 !important; 
     }
 
@@ -485,20 +469,9 @@
         <div id="saude-fisica-hero"></div>
     </section>
 
-    <section id="receitas">
-        <h2 class="jornal-section-title">🍎 Receitas Saudáveis</h2>
-        <div id="receitas-container" class="cards-grid"></div>
-        <div class="suggestion-section">
-            <button id="btn-toggle-recipe" class="btn-suggestion">
-                Indique a próxima receita do mês 🥗
-            </button>
-            <div id="recipe-form-container" class="suggestion-card-form">
-                <h3 style="color: var(--azul-marinho); margin-bottom: 20px; text-align: center;">Compartilhe sua Receita</h3>
-                <div class="form-group"><label>Seu Nome:</label><input type="text" id="recipe-author" placeholder="Ex: João da Silva"></div>
-                <div class="form-group"><label>Nome do Prato:</label><input type="text" id="recipe-name" placeholder="Ex: Salada Colorida"></div>
-                <button id="btn-submit-recipe" class="btn-submit-suggestion">Registrar Receita</button>
-            </div>
-        </div>
+    <section id="partiu-pensar">
+        <h2 class="jornal-section-title">💡 Partiu Pensar</h2>
+        <div id="partiu-pensar-hero"></div>
     </section>
 
     <section id="desafios">
@@ -554,6 +527,10 @@
             <h3 style="color: var(--azul-marinho); margin-bottom: 1.5rem; font-size: 1.5rem; text-align: center;">Segurança em Primeiro Lugar</h3>
             <div id="cards-seguranca" class="cards-grid"></div>
             <div class="quiz-container">
+                <div id="safety-analytics-display" style="background: #e8f5e9; color: var(--verde-escuro); padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 700; border: 1px solid var(--verde-sucesso);">
+                    <i class="fas fa-chart-pie"></i> Calculando média da empresa...
+                </div>
+                
                 <button id="btn-open-quiz" class="btn-toggle-quiz">
                     <i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança
                 </button>
@@ -659,6 +636,7 @@
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
     // =================================================================
@@ -704,8 +682,8 @@
         { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
     ];
 
-    // VARIÁVEIS DE ESTADO
-    let CONTEUDO_JORNAL = { temaMes: {}, bemEstar: {}, saudeFisica: {}, receitas: [], desafios: [], hobby: {}, cultura: [], sustentabilidade: SUSTENTABILIDADE_PADRAO };
+    // VARIÁVEIS DE ESTADO (PartiuPensar adicionado)
+    let CONTEUDO_JORNAL = { temaMes: {}, bemEstar: {}, saudeFisica: {}, partiuPensar: {}, desafios: [], hobby: {}, cultura: [], sustentabilidade: SUSTENTABILIDADE_PADRAO };
     let globalChallengesData = {}, globalQuizData = {}, globalHobbyData = {}, globalPraiseData = {}, globalRatingsData = {}, globalTestimonialsData = {};
     
     const CURRENT_MONTH_KEY = new Date().toISOString().slice(0, 7);
@@ -786,14 +764,28 @@
         const divTema = document.getElementById('tema-mes');
         if(divTema) divTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
         
-        // renderHobbyUI() agora é chamado separadamente ou no refreshAllUI
-        
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const divSaude = document.getElementById('saude-fisica-hero');
         if(divSaude) divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
-        const recContainer = document.getElementById('receitas-container'); 
-        if(recContainer) { recContainer.innerHTML = ''; (CONTEUDO_JORNAL.receitas||[]).forEach((r, i) => { recContainer.innerHTML += `<div class="receita-card"><div class="receita-imagem">${r.emoji}</div><div class="receita-info"><h4>${r.titulo}</h4><div class="receita-tempo">⏱️ ${r.tempo}</div><p class="indicacao-texto"><strong>Indicado por:</strong> ${r.indicadoPor}</p><p>${r.desc}</p><button class="btn-ver-receita" onclick="toggleReceita('receita-${i}')">Ver Receita</button><div id="receita-${i}" class="receita-detalhes"><h5>Ingredientes:</h5><ul>${(r.ingredientes||[]).map(x=>`<li>${x}</li>`).join('')}</ul><h5>Modo de Preparo:</h5><ol>${(r.preparo||[]).map(x=>`<li>${x}</li>`).join('')}</ol></div></div></div>`; }); }
+        // IMPLEMENTAÇÃO DO CARD "PARTIU PENSAR" (Substituindo lógica de Receitas)
+        const pp = CONTEUDO_JORNAL.partiuPensar || { subtitulo: "A Navalha de Ockham", resumo: "Por que a explicação mais simples costuma ser a correta.", conteudoCompleto: "<p>A Navalha de Ockham sugere que, entre hipóteses concorrentes, a que tiver menos suposições deve ser selecionada.</p>", fonte: "Filosofia" }; 
+        const divPP = document.getElementById('partiu-pensar-hero');
+        if(divPP) {
+            divPP.innerHTML = `
+            <div class="jornal-card">
+                <div class="banner-metade banner-partiu-pensar"><i class="fas fa-lightbulb"></i></div>
+                <div class="jornal-card-content card-texto-centralizado">
+                    <h3>${pp.subtitulo||'Filosofia'}</h3>
+                    <p>${pp.resumo||''}</p>
+                    <button id="btnLerMaisPartiuPensar" class="btn-ler-mais" onclick="togglePartiuPensar()">Ler reflexão</button>
+                    <div id="materiaPartiuPensar" class="materia-completa">
+                        ${pp.conteudoCompleto||''}
+                        <p class="fonte-materia"><small>Fonte: <strong>${pp.fonte||'Autor'}</strong></small></p>
+                    </div>
+                </div>
+            </div>`;
+        }
         
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         const titDes = document.getElementById('titulo-desafio-mes');
@@ -855,6 +847,7 @@
             AUTH_TOKEN = token;
             downloadData(); 
             initAnalytics();
+            initSafetyAnalytics(); // INICIALIZA ANALYTICS DO QUIZ
         });
     }).catch((error) => {
         console.error("Erro no Login:", error);
@@ -912,6 +905,41 @@
     // 5. INTERAÇÕES E LÓGICA (UI)
     // =================================================================
 
+    // LÓGICA DE ANALYTICS DO QUIZ
+    function initSafetyAnalytics() {
+        const dbRef = firebase.database().ref('safety_quiz');
+        
+        dbRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            const displayEl = document.getElementById('safety-analytics-display');
+            if (!data) {
+                if (displayEl) displayEl.innerHTML = `<i class="fas fa-chart-pie"></i> Média geral de acertos da empresa: 0%`;
+                return;
+            }
+
+            let totalRespostas = 0;
+            let totalAcertos = 0;
+
+            // Itera sobre as questões (q1, q2...)
+            Object.keys(data).forEach(questionKey => {
+                const usersAnswers = data[questionKey];
+                // Itera sobre os usuários dentro de cada questão
+                Object.values(usersAnswers).forEach(isCorrect => {
+                    totalRespostas++;
+                    if (isCorrect === true) {
+                        totalAcertos++;
+                    }
+                });
+            });
+
+            const porcentagem = totalRespostas === 0 ? 0 : Math.round((totalAcertos / totalRespostas) * 100);
+            
+            if (displayEl) {
+                displayEl.innerHTML = `<i class="fas fa-chart-pie"></i> Média geral de acertos da empresa: ${porcentagem}%`;
+            }
+        });
+    }
+
     function setupRatings(ratingsData) {
         document.querySelectorAll('.rating-container').forEach(container => {
             const itemId = container.dataset.id;
@@ -924,13 +952,12 @@
 
             // Função interna para calcular e renderizar
             const calcRender = (votes) => {
-                const vals = Object.values(votes); // Pega apenas os números (votos) do JSON
+                const vals = Object.values(votes); 
                 
                 // CÁLCULO DA MÉDIA
-                // Soma todos os votos e divide pela quantidade de pessoas
                 let avg = 0;
                 if (vals.length > 0) {
-                    const sum = vals.reduce((a, b) => a + Number(b), 0); // Garante que seja número
+                    const sum = vals.reduce((a, b) => a + Number(b), 0); 
                     avg = sum / vals.length;
                 }
                 
@@ -964,7 +991,7 @@
                     });
                 });
 
-                // Efeito Hover (apenas visual, não altera a média real)
+                // Efeito Hover 
                 star.addEventListener('mouseover', () => {
                     const val = parseInt(star.dataset.value);
                     stars.forEach(s => { 
@@ -990,24 +1017,20 @@
     }
 
     function updateVisualStars(stars, val) { 
-        const rating = parseFloat(val); // Garante que é decimal (ex: 4.5)
+        const rating = parseFloat(val); 
 
         stars.forEach((s, index) => { 
-            const starValue = index + 1; // Valor da estrela (1, 2, 3, 4, 5)
+            const starValue = index + 1; 
 
             // Reseta a estrela
             s.className = ''; 
             s.style.color = ''; 
 
             if (rating >= starValue) {
-                // Se a média for maior que a estrela atual -> CHEIA
                 s.className = 'fas fa-star filled'; 
             } else if (rating >= starValue - 0.5) {
-                // Se a média for maior que a anterior + 0.5 -> MEIA ESTRELA
-                // Ex: Média 4.5. Na estrela 5 (5 - 0.5 = 4.5), entra aqui.
                 s.className = 'fas fa-star-half-alt filled'; 
             } else {
-                // Caso contrário -> VAZIA
                 s.className = 'far fa-star'; 
             }
         }); 
@@ -1166,13 +1189,14 @@
     function toggleGeneric(c, b, o, f) { const el=document.getElementById(c), btn=document.getElementById(b); if(el.style.display==='block'){el.style.display='none';btn.innerText=o;btn.style.background='var(--azul-marinho)';btn.style.color='white';}else{el.style.display='block';btn.innerText=f;btn.style.background='white';btn.style.color='var(--azul-marinho)';btn.style.border='2px solid var(--azul-marinho)';}}
     window.toggleMateria = function() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
     window.toggleSaudeFisica = function() { toggleGeneric('materiaSaudeFisica', 'btnLerMaisSaudeFisica', 'Ler sobre saúde', 'Fechar'); }
-    window.toggleReceita = function(id) { const el=document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; }
+    window.togglePartiuPensar = function() { toggleGeneric('materiaPartiuPensar', 'btnLerMaisPartiuPensar', 'Ler reflexão', 'Fechar'); } // Toggle novo
     window.toggleHobbyComments = function() { const el=document.getElementById('hobby-comments-box'); el.style.display=el.style.display==='block'?'none':'block'; }
     window.mostrarAba = function(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
     function setupQuizToggle() { const btn = document.getElementById('btn-open-quiz'); const content = document.getElementById('quiz-content'); if (btn && content) { btn.onclick = () => { if(content.style.display === 'block') { content.style.display = 'none'; btn.innerHTML = '<i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança'; } else { content.style.display = 'block'; btn.innerHTML = '<i class="fas fa-chevron-up"></i> Fechar Quiz'; } }; } }
     
     function setupForms() {
+        // Função genérica mantida para sugestões gerais e receitas
         const simplePost = (btnId, inputs, urlSuffix) => {
             const btn = document.getElementById(btnId);
             if(btn) btn.onclick = async () => {
@@ -1189,10 +1213,39 @@
             }
         };
         simplePost('btn-submit-suggestion', ['suggest-name'], 'suggestions');
-        simplePost('btn-submit-recipe', ['recipe-author'], 'recipe_suggestions');
-        simplePost('btn-submit-game-suggestion', ['game-suggest-name', 'game-suggest-text'], 'game_suggestions');
+        
+        // CORREÇÃO DO BUG: Formulário de Games (Tratamento Específico)
+        const btnGame = document.getElementById('btn-submit-game-suggestion');
+        if (btnGame) {
+            btnGame.onclick = async () => {
+                const nameInput = document.getElementById('game-suggest-name');
+                const textInput = document.getElementById('game-suggest-text');
+                
+                if (!nameInput || !textInput) return;
 
-        // --- CORREÇÃO 2: LÓGICA DE INDICAÇÃO "ALÉM DO CRACHÁ" ---
+                const nameVal = nameInput.value.trim();
+                const textVal = textInput.value.trim();
+
+                if (nameVal && textVal && AUTH_TOKEN) {
+                    const gameData = {
+                        name: nameVal, // Garante chave 'name'
+                        text: textVal, // Garante chave 'text'
+                        date: new Date().toISOString()
+                    };
+                    
+                    await fetch(BASE_DB_URL + "game_suggestions.json?auth=" + AUTH_TOKEN, {
+                        method: 'POST', 
+                        body: JSON.stringify(gameData)
+                    });
+                    
+                    alert('Sugestão de jogo enviada com sucesso!'); 
+                    location.reload();
+                } else {
+                    alert('Preencha seu nome e a sugestão!');
+                }
+            };
+        }
+
         const btnHobby = document.getElementById('btn-submit-hobby-suggestion');
         if(btnHobby) btnHobby.onclick = async () => {
             const from = document.getElementById('hobby-suggest-from').value;
@@ -1242,7 +1295,6 @@
     }
     window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
 
-    // --- CORREÇÃO 3: FUNÇÃO PARA EXPANDIR LISTA DE CLIENTES ---
     window.toggleTodosClientes = function() {
         const lista = document.getElementById('lista-clientes');
         const btn = event.target;
@@ -1255,7 +1307,7 @@
         }
     };
 
-// =================================================================
+    // =================================================================
     // 6. SISTEMA DE ANALYTICS
     // =================================================================
 
@@ -1274,7 +1326,6 @@
             platform: navigator.platform
         };
 
-        // MUDANÇA AQUI: De 'analytics' para 'monitor_interno' para evitar bloqueadores
         fetch(`${BASE_DB_URL}monitor_interno/users/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
             method: 'PATCH',
             body: JSON.stringify(sessionData)
@@ -1304,12 +1355,11 @@
             const elementoTexto = target.innerText ? target.innerText.substring(0, 30) : 'sem_texto';
             const elementoTag = target.tagName;
 
-            // Ignora cliques no modal de fechar para não sujar dados
             if(elementoId === 'modal-close') return;
 
             const clickData = {
-                u: MY_DEVICE_ID, // Abreviei para economizar dados
-                t: new Date().toISOString().split('T')[1].split('.')[0], // Só a hora
+                u: MY_DEVICE_ID, 
+                t: new Date().toISOString().split('T')[1].split('.')[0], 
                 id: elementoId,
                 tag: elementoTag,
                 txt: elementoTexto,
@@ -1318,8 +1368,6 @@
 
             const hoje = new Date().toISOString().slice(0, 10);
             
-            // MUDANÇA AQUI: 'monitor_interno' e adicionamos 'keepalive: true'
-            // keepalive garante que o dado seja enviado mesmo se a pessoa mudar de página
             fetch(`${BASE_DB_URL}monitor_interno/events/${hoje}.json?auth=${AUTH_TOKEN}`, {
                 method: 'POST',
                 body: JSON.stringify(clickData),
@@ -1331,7 +1379,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         ['menu', 'footer'].forEach(file => fetch(`${file}.html?t=${Date.now()}`).then(r=>r.text()).then(html=>{ const p=document.getElementById(`${file}-placeholder`); if(p) p.innerHTML=html; if(file==='menu'){const t=document.getElementById('menu-toggle'),n=document.getElementById('nav-principal');if(t&&n){t.addEventListener('click',()=>n.classList.toggle('active'));n.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>n.classList.remove('active')));}} }).catch(e=>console.warn(e)));
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
-        setupToggle('btn-toggle-recipe', 'recipe-form-container');
+        setupToggle('btn-toggle-recipe', 'recipe-form-container'); // Mantido ID apenas para compatibilidade, mas seção não existe mais
         setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
         setupToggle('btn-toggle-praise', 'praise-form-container');
         setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
