@@ -786,7 +786,13 @@
         
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const divSaude = document.getElementById('saude-fisica-hero');
-        if(divSaude) divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
+
+        // --- ALTERAÇÃO AQUI: SAÚDE FÍSICA DINÂMICA (IMAGEM E ÍCONE) ---
+        const saudeBgStyle = sf.imagemFundo ? 
+            `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('${sf.imagemFundo}') center/cover no-repeat;` : 
+            `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;`;
+
+        if(divSaude) divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade" style="${saudeBgStyle}">${sf.icon||'🏃'}</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
         // --- ALTERAÇÃO AQUI: Partiu Pensar dinâmico ---
         const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
