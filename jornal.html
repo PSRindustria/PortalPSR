@@ -85,7 +85,7 @@
 
     /* DESTAQUES */
     .destaque-container { border-radius: 15px; padding: 60px 40px; margin-bottom: 40px; text-align: center; box-shadow: var(--sombra-card-jornal); color: var(--azul-marinho); border: 1px solid rgba(0,0,0,0.05); transition: all 0.5s ease; position: relative; overflow: hidden; }
-    .tema-mes-bg { background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('https://i.postimg.cc/pWWZhcwT/wallpaper-janery-branco.jpg?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
+    /* A classe .tema-mes-bg será removida do HTML dinâmico, pois a imagem vem inline agora */
     .destaque-container h2 { font-size: 2.2em; margin-bottom: 10px; font-weight: 700; color: var(--azul-marinho); }
     .destaque-container p { font-size: 1.1em; margin-bottom: 20px; color: #444; }
     .destaque-icon { font-size: 3.5em; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -763,22 +763,39 @@
     function renderJornal() {
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         const divTema = document.getElementById('tema-mes');
-        if(divTema) divTema.innerHTML = `<div class="destaque-container tema-mes-bg"><div class="destaque-icon">🤍</div><h2>${tm.titulo||'Tema do Mês'}</h2><p><strong>${tm.subtitulo||''}</strong></p><p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p><button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button><div id="materiaCompleta" class="materia-completa">${tm.conteudoCompleto||''}<p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p></div></div>`;
+        
+        // --- ALTERAÇÃO AQUI: Capa dinâmica ---
+        const capaBackground = tm.capaUrl ? 
+            `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('${tm.capaUrl}') center/cover no-repeat;` : 
+            `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('https://i.postimg.cc/pWWZhcwT/wallpaper-janery-branco.jpg?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;`;
+
+        if(divTema) {
+            divTema.innerHTML = `
+            <div class="destaque-container" style="${capaBackground}">
+                <div class="destaque-icon">🤍</div>
+                <h2>${tm.titulo||'Tema do Mês'}</h2>
+                <p><strong>${tm.subtitulo||''}</strong></p>
+                <p style="font-size: 1em; max-width: 800px; margin: 10px auto;">${tm.resumo||''}</p>
+                <button id="btnLerMais" class="btn-ler-mais" onclick="toggleMateria()">Ler mais sobre o tema</button>
+                <div id="materiaCompleta" class="materia-completa">
+                    ${tm.conteudoCompleto||''}
+                    <p class="fonte-materia"><small>Clique para ler a matéria completa: <a href="${tm.fonte?.link||'#'}" target="_blank">${tm.fonte?.texto||'Fonte'}</a></small></p>
+                </div>
+            </div>`;
+        }
         
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const divSaude = document.getElementById('saude-fisica-hero');
         if(divSaude) divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
-        // IMPLEMENTAÇÃO ATUALIZADA DO "PARTIU PENSAR" COM FIREBASE
+        // --- ALTERAÇÃO AQUI: Partiu Pensar dinâmico ---
         const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
-        // Fallback para conteúdo genérico se não houver dados
         const ppTitulo = pp.titulo || 'Partiu Pensar';
         const ppSubtitulo = pp.subtitulo || 'Filosofia';
         const ppResumo = pp.resumo || 'Conteúdo em atualização...';
         const ppConteudo = pp.conteudoCompleto || '<p>Aguarde novidades!</p>';
         const ppFonte = pp.fonte || 'Portal PSR';
         
-        // Lógica da Imagem de Fundo (Se existir no Firebase, usa. Se não, usa gradiente padrão)
         const styleBackground = pp.imagemFundo ? 
             `background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${pp.imagemFundo}') center/cover no-repeat;` : 
             `background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80));`;
