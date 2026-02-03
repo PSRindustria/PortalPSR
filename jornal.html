@@ -786,13 +786,7 @@
         
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const divSaude = document.getElementById('saude-fisica-hero');
-
-        // --- ALTERAÇÃO AQUI: SAÚDE FÍSICA DINÂMICA (IMAGEM E ÍCONE) ---
-        const saudeBgStyle = sf.imagemFundo ? 
-            `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('${sf.imagemFundo}') center/cover no-repeat;` : 
-            `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;`;
-
-        if(divSaude) divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade" style="${saudeBgStyle}">${sf.icon||'🏃'}</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
+        if(divSaude) divSaude.innerHTML = `<div class="jornal-card"><div class="banner-metade banner-saude-fisica">🏃</div><div class="jornal-card-content card-texto-centralizado"><h3>${sf.subtitulo||''}</h3><p>${sf.resumo||''}</p><button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button><div id="materiaSaudeFisica" class="materia-completa">${sf.conteudoCompleto||''}<p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p></div></div></div>`;
         
         // --- ALTERAÇÃO AQUI: Partiu Pensar dinâmico ---
         const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
@@ -826,9 +820,18 @@
             </div>`;
         }
         
-        const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        // --- INÍCIO DA ALTERAÇÃO (Título Dinâmico) ---
         const titDes = document.getElementById('titulo-desafio-mes');
-        if(titDes) titDes.innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
+        if(titDes) {
+            // Se houver título salvo no banco, usa ele. Se não, usa o padrão automático de data.
+            if (CONTEUDO_JORNAL.desafios_titulo && CONTEUDO_JORNAL.desafios_titulo.trim() !== "") {
+                titDes.innerText = CONTEUDO_JORNAL.desafios_titulo;
+            } else {
+                const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                titDes.innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
+            }
+        }
+        // --- FIM DA ALTERAÇÃO ---
         
         const desContainer = document.getElementById('desafios-container'); 
         if(desContainer) { desContainer.innerHTML = ''; (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; }); }
