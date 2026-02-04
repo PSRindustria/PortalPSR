@@ -374,6 +374,179 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
+<style>
+    /* ==================================================
+       SEU CSS MANTIDO (Apenas com a correção no modal)
+       ================================================== */
+    :root {
+        --azul-marinho: #003366;
+        --azul-aco: #4682B4;
+        --dourado: #DAA520;
+        --verde-escuro: #006400;
+        --verde-sucesso: #28a745;
+        --vermelho-erro: #dc3545;
+        --cinza-escuro: #4B4B4B;
+        --cinza-texto: #666666;
+        --branco: #FFFFFF;
+        --cinza-claro-bg: #f4f7f9;
+        --sombra-card-jornal: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --sombra-suave: 0 10px 30px -10px rgba(0, 51, 102, 0.15);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1001; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--cinza-claro-bg); color: var(--cinza-escuro); line-height: 1.6; padding-top: 90px; margin: 0; padding-bottom: 20px; }
+    #footer-placeholder { margin-top: 0px; }
+    .jornal-main { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .jornal-section-title { font-size: 2em; font-weight: 700; color: var(--azul-marinho); margin-bottom: 20px; margin-top: 0; text-align: center; }
+    section { position: relative; margin-bottom: 80px; padding-bottom: 50px; }
+    section::after { content: ""; position: absolute; bottom: 0; left: 15%; width: 70%; height: 1px; background: linear-gradient(90deg, transparent, var(--azul-marinho), var(--dourado), var(--azul-marinho), transparent); opacity: 0.15; border-radius: 50%; }
+    main > section:last-of-type::after { display: none; }
+    .section-description { text-align: center; font-size: 0.95em; color: #666; max-width: 800px; margin: 0 auto 40px; font-style: italic; }
+    .destaque-container { border-radius: 15px; padding: 60px 40px; margin-bottom: 40px; text-align: center; box-shadow: var(--sombra-card-jornal); color: var(--azul-marinho); border: 1px solid rgba(0,0,0,0.05); transition: all 0.5s ease; position: relative; overflow: hidden; }
+    .destaque-container h2 { font-size: 2.2em; margin-bottom: 10px; font-weight: 700; color: var(--azul-marinho); }
+    .destaque-icon { font-size: 3.5em; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .materia-completa { display: none; text-align: left; max-width: 800px; margin: 20px auto 0; border-top: 1px solid rgba(0,35,102, 0.1); padding-top: 20px; animation: fadeIn 0.6s ease-in-out; }
+    .fonte-materia { font-size: 0.85em; color: #777; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; text-align: center; }
+    .btn-ler-mais { background-color: var(--azul-marinho); color: var(--branco); padding: 12px 35px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-top: 15px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); }
+    .btn-ler-mais:hover { background-color: var(--dourado); color: var(--azul-marinho); transform: translateY(-2px); }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .jornal-card { background-color: #fff; border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; }
+    .jornal-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15); }
+    .jornal-card-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+    .jornal-card-content h3 { font-size: 1.4em; color: var(--azul-marinho); margin-bottom: 10px; font-weight: 600; }
+    .jornal-card-content p { color: #555; margin-bottom: 15px; line-height: 1.6; }
+    
+    /* CLIENTES */
+    .clientes-header { background: var(--branco); border-radius: 12px; box-shadow: var(--sombra-suave); padding: 35px 20px 20px 20px; margin-bottom: 30px; position: relative; overflow: hidden; border-top: 4px solid var(--dourado); text-align: center; }
+    .stats-row { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 25px; }
+    .stat-box { display: flex; align-items: center; justify-content: center; }
+    .stat-box-inner { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+    .stat-num { font-size: 3.5em; font-weight: 600; color: var(--azul-marinho); line-height: 1; letter-spacing: -1px; }
+    .stat-label { font-size: 1.5em; color: var(--azul-marinho); font-weight: 600; text-transform: none; }
+    .data-discreta { color: #999; font-size: 0.9em; margin-top: 5px; display: inline-flex; align-items: center; gap: 5px; }
+    .clientes-compact-list { background: white; border-radius: 15px; box-shadow: var(--sombra-suave); overflow: hidden; border: 1px solid #eee; display: none; animation: fadeIn 0.5s ease; padding: 10px; }
+    #lista-clientes-content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+    .cliente-item { display: flex; align-items: center; gap: 10px; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; transition: all 0.3s ease; background: #fff; }
+    .cliente-item:hover { background: #f8f9fa; }
+    .cliente-item.destaque { background: linear-gradient(90deg, rgba(218, 165, 32, 0.05), rgba(255, 255, 255, 0)); border-left: 3px solid var(--dourado); }
+    .cliente-icon-mini { font-size: 1.2em; min-width: 30px; text-align: center; }
+    .cliente-info { flex: 1; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .badge-destaque { background: var(--dourado); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7em !important; font-weight: 700 !important; }
+    .btn-ver-todos { background: white; border: 1px solid var(--azul-marinho); color: var(--azul-marinho); padding: 12px 35px; border-radius: 30px; font-size: 0.9em; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; letter-spacing: 0.5px; }
+    .btn-ver-todos:hover { background: var(--azul-marinho); color: white; transform: translateY(-2px); }
+    .loading-container { text-align: center; padding: 20px; color: #999; grid-column: 1 / -1; }
+    @media (max-width: 768px) { .stat-box-inner { flex-direction: column; gap: 5px; } #lista-clientes-content { grid-template-columns: 1fr; } .cliente-item { border-right: none; } }
+    
+    .partiu-pensar-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
+    .desafio-saude-card { background-color: var(--branco); border-radius: 15px; padding: 25px; box-shadow: var(--sombra-card-jornal); border: 1px solid #eee; border-top: 5px solid var(--verde-escuro); transition: transform 0.3s; display: flex; flex-direction: column; }
+    .challenge-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
+    .btn-challenge { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: all 0.2s; color: #777; }
+    .btn-challenge.success:hover, .btn-challenge.success.active { background-color: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
+    .btn-challenge.fail:hover, .btn-challenge.fail.active { background-color: var(--vermelho-erro); color: white; border-color: var(--vermelho-erro); }
+    .challenge-stats { font-size: 0.8em; color: #777; display: flex; justify-content: space-between; padding: 0 5px; }
+    .stat-success { color: var(--verde-sucesso); font-weight: 700; }
+    .stat-fail { color: var(--vermelho-erro); font-weight: 700; }
+    .testimonials-section { margin-top: 20px; background: #fff; padding: 40px; border-radius: 15px; box-shadow: var(--sombra-card-jornal); text-align: center; border: 1px solid #eee; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; text-align: left; }
+    .hobby-container { background-color: var(--branco); border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; margin-bottom: 40px; border: 1px solid #eee; }
+    .hobby-content { display: grid; grid-template-columns: 40% 60%; min-height: 350px; }
+    .hobby-foto { position: relative; height: 100%; background-color: var(--cinza-claro-bg); }
+    .hobby-foto img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+    .hobby-texto { padding: 40px; display: flex; flex-direction: column; justify-content: center; text-align: left; }
+    .hobby-titulo { font-size: 1.1em; color: var(--dourado); font-weight: 700; margin-bottom: 25px; text-transform: uppercase; }
+    .hobby-quote-box { background: #f8f9fa; border-left: 4px solid var(--azul-marinho); padding: 20px 25px; margin-bottom: 25px; border-radius: 0 10px 10px 0; display: block; }
+    .hobby-quote-box i { color: var(--dourado); font-size: 1.5em; float: left; margin-right: 8px; line-height: 1; }
+    .hobby-quote-box p { font-style: italic; margin: 0; color: #555; line-height: 1.6; display: inline; }
+    .hobby-tag { display: inline-block; background-color: var(--verde-escuro); color: var(--branco); padding: 8px 16px; border-radius: 50px; font-size: 0.85em; font-weight: 600; margin-right: 8px; margin-bottom: 8px; }
+    .hobby-actions { display: flex; gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+    .hobby-btn-action { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.95em; color: #777; font-weight: 600; transition: all 0.2s; padding: 5px 10px; border-radius: 20px; }
+    .hobby-btn-action:hover { background-color: #f0f7ff; color: var(--azul-marinho); }
+    .hobby-btn-action.liked { color: #e91e63; }
+    .hobby-comments-section { display: none; margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee; animation: fadeIn 0.3s ease; }
+    .hobby-comment-item { background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; font-size: 0.9em; color: #555; }
+    .praise-header { text-align: center; margin-bottom: 30px; }
+    .praise-archive-links { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+    .praise-link { color: #888; cursor: pointer; text-decoration: none; padding: 4px 12px; border-radius: 20px; transition: all 0.2s; font-size: 0.85em; border: 1px solid #eee; background: #fff; }
+    .praise-link:hover { color: var(--azul-marinho); border-color: var(--azul-marinho); }
+    .praise-link.active { color: var(--branco); background: var(--azul-marinho); font-weight: 600; border-color: var(--azul-marinho); }
+    .praise-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; border-top: 4px solid var(--verde-sucesso); display: flex; flex-direction: column; }
+    .praise-like-btn { cursor: pointer; color: #ccc; transition: color 0.2s; font-size: 1.1em; display: flex; align-items: center; gap: 5px; border: none; background: none; }
+    .praise-like-btn.liked { color: #e91e63; }
+    .hiscore-menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+    .hiscore-btn { background: #fff; border: 1px solid var(--dourado); color: var(--azul-marinho); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9em; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+    .hiscore-btn:hover { background: var(--dourado); color: white; transform: translateY(-2px); }
+    .game-card { background: #fff; border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; text-decoration: none; color: inherit; height: 100%; }
+    .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+    .game-banner { width: 100%; height: 160px; object-fit: cover; background: #eee; }
+    .game-info { padding: 15px; text-align: center; background: #fff; }
+    .suggestion-section { max-width: 600px; margin: 40px auto 0; text-align: center; }
+    .btn-suggestion { background-color: var(--azul-marinho); color: var(--branco); font-weight: 600; padding: 12px 35px; border: none; border-radius: 50px; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; }
+    .btn-suggestion:hover { background-color: var(--dourado); color: var(--azul-marinho); transform: translateY(-2px); }
+    .suggestion-card-form { display: none; background: #fff; margin-top: 20px; padding: 30px; border-radius: 15px; box-shadow: var(--sombra-card-jornal); border: 1px solid #eee; text-align: left; animation: fadeIn 0.5s ease-in-out; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; color: var(--azul-marinho); margin-bottom: 5px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; font-size: 1rem; }
+    .btn-submit-suggestion { width: 100%; background-color: var(--azul-marinho); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+    .btn-submit-suggestion:hover { background-color: var(--dourado); color: var(--azul-marinho); }
+    .video-thumbnail-container { position: relative; width: 100%; padding-bottom: 56.25%; background-color: #000; overflow: hidden; cursor: pointer; }
+    .video-thumbnail-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: opacity 0.3s; }
+    .video-thumbnail-container:hover img { opacity: 0.7; }
+    .play-button { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; color: rgba(255, 255, 255, 0.9); pointer-events: none; transition: transform 0.3s; }
+    .video-thumbnail-container:hover .play-button { transform: translate(-50%, -50%) scale(1.1); color: #ff0000; }
+    .btn-ler-sinopse { background-color: transparent; border: 2px solid var(--azul-marinho); color: var(--azul-marinho); padding: 6px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; margin-top: auto; margin-bottom: 8px; transition: all 0.3s; font-size: 0.9em; align-self: center; width: auto; min-width: 120px; }
+    .btn-ler-sinopse:hover { background-color: var(--azul-marinho); color: white; }
+    .tag-discreta { font-size: 0.75em; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+    .indicacao-texto { font-size: 0.85em; color: var(--azul-aco); margin-bottom: 10px !important; font-style: italic; }
+    .rating-container { margin-top: auto; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
+    .rating-stars { display: inline-flex; gap: 5px; font-size: 1.5rem; cursor: pointer; color: #d1d1d1; }
+    .rating-stars i.filled { color: var(--dourado) !important; }
+    .score-value { font-weight: 700; font-size: 1.2em; color: var(--azul-marinho); }
+    .tab-btn { transition: all 0.3s; }
+    .tab-btn:hover { color: var(--dourado) !important; }
+    .tab-btn.active { color: var(--azul-marinho) !important; border-bottom: 3px solid var(--dourado) !important; }
+    .quiz-container { background: #fff; padding: 20px; border-radius: 15px; box-shadow: var(--sombra-card-jornal); margin-top: 40px; border-top: 5px solid var(--azul-marinho); }
+    .btn-toggle-quiz { width: 100%; background-color: var(--azul-marinho); color: var(--branco); border: none; padding: 15px; border-radius: 50px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); }
+    .btn-toggle-quiz:hover { background-color: var(--dourado); color: var(--azul-marinho); transform: translateY(-2px); }
+    #quiz-content { display: none; animation: fadeIn 0.5s ease; }
+    .quiz-question { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+    .quiz-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; border-radius: 8px; transition: background 0.2s; border: 1px solid transparent; }
+    .quiz-option:hover { background: #f0f7ff; }
+    .quiz-stats { margin-top: 10px; font-size: 0.85em; color: #666; background: #eee; border-radius: 5px; overflow: hidden; height: 20px; position: relative; display: none; }
+    .quiz-bar { background: var(--verde-sucesso); height: 100%; width: 0%; transition: width 1s ease; }
+    .quiz-bar-text { position: absolute; top: 0; left: 5px; line-height: 20px; color: #333; font-weight: 600; font-size: 0.8em; z-index: 2; }
+    .correct-answer { background-color: rgba(40, 167, 69, 0.2) !important; border: 1px solid var(--verde-sucesso); }
+    .banner-metade { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; }
+    .banner-saude-fisica { background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center center; }
+    .banner-partiu-pensar { background-size: cover; background-position: center center; } 
+    .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+    /* --- CORREÇÃO AQUI: Removemos o display:none daqui --- */
+    .modal-overlay { 
+        position: fixed !important; 
+        top: 0 !important; 
+        left: 0 !important; 
+        width: 100% !important; 
+        height: 100% !important; 
+        background: rgba(0,0,0,0.5) !important; 
+        z-index: 99999 !important; 
+        justify-content: center; 
+        align-items: center; 
+        padding: 20px; 
+        /* display: none; -> REMOVIDO */
+    }
+
+    .modal-content { background: white !important; width: 100% !important; max-width: 500px !important; border-radius: 15px !important; padding: 25px !important; position: relative !important; box-shadow: 0 5px 25px rgba(0,0,0,0.3) !important; text-align: left !important; display: block !important; margin: auto !important; }
+    .modal-content h3 { color: #003366 !important; font-size: 1.5rem !important; margin-bottom: 20px !important; text-align: center !important; font-weight: 700 !important; border: none !important; display: block !important; }
+    .modal-content p, .modal-content div { color: #555 !important; margin-bottom: 1rem; line-height: 1.6 !important; }
+    .modal-close { all: unset !important; position: absolute !important; top: 15px !important; right: 15px !important; width: 30px !important; height: 30px !important; font-size: 1.8rem !important; color: #999 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; }
+    .modal-close:hover { color: #dc3545 !important; }
+    .hiscore-item { display: flex !important; justify-content: space-between !important; padding: 10px !important; border-bottom: 1px solid #eee !important; align-items: center !important; background: transparent !important; }
+    .hiscore-rank { font-weight: bold !important; width: 30px !important; height: 30px !important; background: #003366 !important; color: white !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 0.9em !important; margin-right: 10px !important; }
+    .hiscore-points { color: #DAA520 !important; font-weight: 700 !important; }
+    @media (max-width: 768px) { .jornal-section-title { font-size: 1.5em; } .destaque-container { padding: 30px 20px; } .hobby-content { grid-template-columns: 1fr; grid-template-rows: auto auto; } .hobby-foto { height: 300px; width: 100%; } .hobby-texto { padding: 30px 20px; text-align: center; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
 <script>
     // =================================================================
     // 1. CONFIGURAÇÕES
@@ -385,10 +558,90 @@
       projectId: "jornalpsr-1b8c6",
     };
 
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    
+    // Inicialização segura do Firebase
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
     let AUTH_TOKEN = null;
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
+
+    // =================================================================
+    // [CORREÇÃO] FUNÇÕES DO MODAL MOVIDAS PARA O TOPO
+    // Isso garante que elas existam mesmo que o script quebre depois
+    // =================================================================
+    window.openHiScore = async function(gameKey) {
+        const modal = document.getElementById('hiscore-modal'); 
+        const list = document.getElementById('modal-score-list');
+        const title = document.getElementById('modal-game-title');
+        
+        if (!modal || !list) {
+            console.error("ERRO: Modal não encontrado!");
+            return;
+        }
+
+        // Força a exibição (sobrescreve o inline style)
+        modal.style.setProperty('display', 'flex', 'important');
+        
+        if(title) title.textContent = `Ranking: ${gameKey}`;
+        list.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+        
+        try {
+            // Verifica se as funções auxiliares existem antes de usar
+            const url = `${BASE_DB_URL}games/${gameKey}/scores.json`;
+            let data = null;
+
+            // Tentativa manual de fetch caso secureFetch não esteja definida ainda
+            if (typeof secureFetch === 'function') {
+                data = await secureFetch(url);
+            } else {
+                const resp = await fetch(url);
+                data = await resp.json();
+            }
+            
+            if (!data) { 
+                list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde registrado ainda.</p>'; 
+                return; 
+            }
+            
+            let scoresArray = Object.values(data).sort((a, b) => {
+                const pA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
+                const pB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
+                return pB - pA;
+            });
+
+            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
+                let visualPonto = s.pontos;
+                if (gameKey === 'BobinaKart' && !String(visualPonto).includes('km')) { 
+                    visualPonto = visualPonto + " km"; 
+                }
+                
+                let corRank = 'var(--azul-marinho)';
+                if (index === 0) corRank = '#FFD700';
+                if (index === 1) corRank = '#C0C0C0';
+                if (index === 2) corRank = '#CD7F32';
+
+                return `
+                <div class="hiscore-item" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
+                    <div class="hiscore-rank" style="background:${corRank}; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; margin-right:10px;">${index + 1}</div>
+                    <div style="flex:1; font-weight:600; color:#4B4B4B;">${s.nome || 'Anônimo'}</div>
+                    <div class="hiscore-points" style="color:#DAA520; font-weight:700;">${visualPonto}</div>
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error("Erro ao processar ranking:", error);
+            list.innerHTML = '<p style="color:red; text-align:center;">Erro ao ler dados.</p>';
+        }
+    };
+
+    window.closeHiScore = function() { 
+        const modal = document.getElementById('hiscore-modal');
+        if(modal) modal.style.display = 'none'; 
+    };
+
+    // =================================================================
+    // RESTANTE DO SCRIPT
+    // =================================================================
 
     const SUSTENTABILIDADE_PADRAO = {
         meioAmbiente: [
@@ -460,12 +713,12 @@
     }
 
     // =================================================================
-    // 2. FETCH COM ANTI-CACHE (CORREÇÃO DE DADOS VELHOS)
+    // 2. FETCH COM ANTI-CACHE
     // =================================================================
     async function secureFetch(url) {
         let finalUrl = url;
         const separator = url.includes('?') ? '&' : '?';
-        finalUrl = `${url}${separator}t=${Date.now()}`; // Timestamp obriga navegador a baixar novo
+        finalUrl = `${url}${separator}t=${Date.now()}`; 
         
         if (AUTH_TOKEN) {
             finalUrl += `&auth=${AUTH_TOKEN}`;
@@ -481,7 +734,7 @@
     }
 
     // =================================================================
-    // 3. DOWNLOAD COM CAMINHO CORRIGIDO
+    // 3. DOWNLOAD
     // =================================================================
     async function downloadData() {
         const contentData = await secureFetch(BASE_DB_URL + "content.json");
@@ -494,7 +747,7 @@
         }
 
         const [clientes, hobby, praise, challenges, quiz, ratings, testimonials] = await Promise.all([
-            secureFetch(BASE_DB_URL + "content/novos_clientes.json"), // <-- CAMINHO CORRETO (13 CLIENTES)
+            secureFetch(BASE_DB_URL + "content/novos_clientes.json"),
             secureFetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
             secureFetch(BASE_DB_URL + "praise_messages.json"),
             secureFetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"),
@@ -531,7 +784,7 @@
     }
 
     // =================================================================
-    // 4. RENDERIZAÇÃO E FUNÇÕES DE UI (VOLTANDO AO MODO CLASSICO)
+    // 4. RENDERIZAÇÃO
     // =================================================================
     
     // RENDERIZAR JORNAL
@@ -578,7 +831,7 @@
                 </div>
             </div>
         </div>`;
-      
+       
         // PARTIU PENSAR
         const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
         const styleBackground = pp.imagemFundo ? `background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${pp.imagemFundo}') center/cover no-repeat;` : `background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80));`;
@@ -639,7 +892,7 @@
         setupQuizToggle();
     }
 
-    // RENDERIZAR CLIENTES (CORRIGIDO PARA CONTAR E EXIBIR 13)
+    // RENDERIZAR CLIENTES
     function renderNovosClientes(dados) {
         if (!dados) return;
 
@@ -648,7 +901,7 @@
 
         const elQtd = document.getElementById('stat-qtd');
         const elPer = document.getElementById('stat-periodo');
-        if(elQtd) elQtd.textContent = totalReal; // Mostra 13
+        if(elQtd) elQtd.textContent = totalReal; 
         if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
 
         const listaContainer = document.getElementById('lista-clientes-content');
@@ -687,10 +940,10 @@
     }
 
     // =================================================================
-    // 5. FUNÇÕES DE INTERAÇÃO UI (RESTAURADAS E EXPLÍCITAS)
+    // 5. FUNÇÕES DE INTERAÇÃO UI
     // =================================================================
     
-    // Funções de Expandir/Recolher Cards (Feitas uma a uma para garantir)
+    // Funções de Expandir/Recolher Cards
     window.toggleMateria = function() {
         const el = document.getElementById('materiaCompleta');
         const btn = document.getElementById('btnLerMais');
@@ -843,91 +1096,26 @@
     function openSynopsis(id) { const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id); if (item) { document.getElementById('modal-synopsis-title').textContent = item.titulo; document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível."; document.getElementById('synopsis-modal').style.display = 'flex'; } }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
     
-    // =================================================================
-    // CORREÇÃO DOS RANKINGS DE JOGOS
-    // =================================================================
-    window.openHiScore = async function(gameKey) {
-        const modal = document.getElementById('hiscore-modal'); 
-        const list = document.getElementById('modal-score-list');
-        const title = document.getElementById('modal-game-title');
-        
-        if (!modal || !list) {
-            console.error("ERRO: Modal de ranking não encontrado no HTML!");
-            alert("Erro interno: O modal de ranking sumiu do HTML.");
-            return;
-        }
-
-        // 1. FORÇA A ABERTURA (Obriga o display flex com prioridade máxima)
-        modal.style.setProperty('display', 'flex', 'important');
-        
-        // 2. Prepara visual
-        if(title) title.textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
-        
-        // 3. Busca dados
-        try {
-            const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
-            
-            // 4. Se não tiver dados ou der erro
-            if (!data) { 
-                list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde registrado ainda.</p>'; 
-                return; 
-            }
-            
-            // 5. Organiza e exibe
-            // Converte objeto em array e ordena por pontos (do maior para o menor)
-            let scoresArray = Object.values(data).sort((a, b) => {
-                const pA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
-                const pB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
-                return pB - pA;
-            });
-
-            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
-                let visualPonto = s.pontos;
-                // Se for Kart, adiciona "km" se não tiver
-                if (gameKey === 'BobinaKart' && !String(visualPonto).includes('km')) { 
-                    visualPonto = visualPonto + " km"; 
-                }
-                
-                // Cores do pódio
-                let corRank = 'var(--azul-marinho)';
-                if (index === 0) corRank = '#FFD700'; // Ouro
-                if (index === 1) corRank = '#C0C0C0'; // Prata
-                if (index === 2) corRank = '#CD7F32'; // Bronze
-
-                return `
-                <div class="hiscore-item" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
-                    <div class="hiscore-rank" style="background:${corRank}; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; margin-right:10px;">${index + 1}</div>
-                    <div style="flex:1; font-weight:600; color:#4B4B4B;">${s.nome || 'Anônimo'}</div>
-                    <div class="hiscore-points" style="color:#DAA520; font-weight:700;">${visualPonto}</div>
-                </div>`;
-            }).join('');
-        } catch (error) {
-            console.error("Erro ao processar ranking:", error);
-            list.innerHTML = '<p style="color:red; text-align:center;">Erro ao ler dados.</p>';
-        }
-    };
-
-    // Função para fechar (GARANTIDA)
-    window.closeHiScore = function() { 
-        const modal = document.getElementById('hiscore-modal');
-        if(modal) modal.style.display = 'none'; 
-    };
-
     // Analytics e Login
     renderFromCache();
 
-    firebase.auth().signInAnonymously().then((userCred) => {
-        return userCred.user.getIdToken().then(token => {
-            AUTH_TOKEN = token;
+    // Verificação de segurança caso o Firebase falhe
+    if (typeof firebase !== 'undefined') {
+        firebase.auth().signInAnonymously().then((userCred) => {
+            return userCred.user.getIdToken().then(token => {
+                AUTH_TOKEN = token;
+                downloadData(); 
+                initAnalytics();
+                initSafetyAnalytics();
+            });
+        }).catch((error) => {
+            console.error("Erro no Login:", error);
             downloadData(); 
-            initAnalytics();
-            initSafetyAnalytics();
         });
-    }).catch((error) => {
-        console.error("Erro no Login:", error);
-        downloadData(); 
-    });
+    } else {
+        console.warn("Firebase não carregado. Tentando baixar dados sem autenticação...");
+        downloadData();
+    }
 
     async function initAnalytics() {
         if (!AUTH_TOKEN) return; 
@@ -940,6 +1128,7 @@
     }
 
     function initSafetyAnalytics() {
+        if (typeof firebase === 'undefined') return;
         const dbRef = firebase.database().ref('safety_quiz');
         dbRef.on('value', (snapshot) => {
             const data = snapshot.val();
