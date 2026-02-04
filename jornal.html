@@ -842,22 +842,73 @@
     // Modais
     function openSynopsis(id) { const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id); if (item) { document.getElementById('modal-synopsis-title').textContent = item.titulo; document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível."; document.getElementById('synopsis-modal').style.display = 'flex'; } }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
-    window.openHiScore = async function(gameKey) {
+window.openHiScore = async function(gameKey) {
         const modal = document.getElementById('hiscore-modal'); 
         const list = document.getElementById('modal-score-list');
-        modal.style.display = 'flex'; 
-        document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
+        const title = document.getElementById('modal-game-title');
+        
+        if (!modal || !list) {
+            console.error("ERRO: Modal de ranking não encontrado no HTML!");
+            alert("Erro interno: O modal de ranking sumiu do HTML.");
+            return;
+        }
+
+        // 1. FORÇA A ABERTURA (Obriga o display flex com prioridade máxima)
+        modal.style.setProperty('display', 'flex', 'important');
+        
+        // 2. Prepara visual
+        if(title) title.textContent = `Ranking: ${gameKey}`;
+        list.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+        
+        // 3. Busca dados
         const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
-        if (!data) { list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; return; }
-        let scoresArray = Object.values(data).sort((a, b) => (parseFloat(String(b.pontos).replace(/[^\d.-]/g, ''))||0) - (parseFloat(String(a.pontos).replace(/[^\d.-]/g, ''))||0));
-        list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
-            let visualPonto = s.pontos;
-            if (gameKey === 'BobinaKart') { visualPonto = visualPonto + " km"; }
-            return `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${visualPonto}</div></div>`;
-        }).join('');
+        
+        // 4. Se não tiver dados ou der erro
+        if (!data) { 
+            list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde registrado ainda.</p>'; 
+            return; 
+        }
+        
+        // 5. Organiza e exibe
+        try {
+            // Converte objeto em array e ordena por pontos (do maior para o menor)
+            let scoresArray = Object.values(data).sort((a, b) => {
+                const pA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
+                const pB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
+                return pB - pA;
+            });
+
+            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
+                let visualPonto = s.pontos;
+                // Se for Kart, adiciona "km" se não tiver
+                if (gameKey === 'BobinaKart' && !String(visualPonto).includes('km')) { 
+                    visualPonto = visualPonto + " km"; 
+                }
+                
+                // Cores do pódio
+                let corRank = 'var(--azul-marinho)';
+                if (index === 0) corRank = '#FFD700'; // Ouro
+                if (index === 1) corRank = '#C0C0C0'; // Prata
+                if (index === 2) corRank = '#CD7F32'; // Bronze
+
+                return `
+                <div class="hiscore-item" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
+                    <div class="hiscore-rank" style="background:${corRank}; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; margin-right:10px;">${index + 1}</div>
+                    <div style="flex:1; font-weight:600; color:#4B4B4B;">${s.nome || 'Anônimo'}</div>
+                    <div class="hiscore-points" style="color:#DAA520; font-weight:700;">${visualPonto}</div>
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error("Erro ao processar ranking:", error);
+            list.innerHTML = '<p style="color:red; text-align:center;">Erro ao ler dados.</p>';
+        }
     };
-    window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; };
+
+    // Função para fechar (GARANTIDA)
+    window.closeHiScore = function() { 
+        const modal = document.getElementById('hiscore-modal');
+        if(modal) modal.style.display = 'none'; 
+    };
 
     // Analytics e Login
     renderFromCache();
