@@ -788,10 +788,11 @@ btnSave.addEventListener('click', async () => {
             localStorage.setItem('psr_device_id', deviceId);
         }
 
+        // 3. Montar o pacote EXATO que a regra pede
         const payload = { 
             nome: safeName, 
-            pontos: score, 
-            id_dispositivo: deviceId,
+            pontos: parseInt(score), // <--- IMPORTANTE: parseInt garante que vai como NÚMERO, não texto.
+            id_dispositivo: deviceId, // <--- IMPORTANTE: Adicionado o ID obrigatório
             data: new Date().toLocaleString('pt-BR') 
         };
 
@@ -803,7 +804,7 @@ btnSave.addEventListener('click', async () => {
             msgSuccess.style.display = 'block';
         } catch (error) {
             console.error(error);
-            alert("Erro de conexão.");
+            alert("Erro de conexão. Verifique se está logado.");
             btnSave.disabled = false;
             btnSave.innerText = "Tentar Novamente";
         }
@@ -823,4 +824,5 @@ btnSave.addEventListener('click', async () => {
 </body>
 
 </html>
+
 
