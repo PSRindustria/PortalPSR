@@ -885,40 +885,35 @@
 function renderNovosClientes(dados) {
         if (!dados) return;
 
-        // 1. Padronização: Trata 'lista' como array, igual as outras seções fazem
-        // (Garante que funciona mesmo se o Firebase enviar como Objeto indexado)
-        const listaClientes = dados.lista ? Object.values(dados.lista) : [];
+        // 1. Garante que é uma lista (Array)
+        const lista = dados.lista ? Object.values(dados.lista) : []; 
+        
+        // 2. CONTA AUTOMATICAMENTE (Aqui estava o erro, antes lia dados.resumo.quantidade)
+        const total = lista.length;
 
-        // 2. Correção Lógica: Conta o tamanho da lista real, igual o resto do sistema faria
-        // (Ignora o campo 'resumo.quantidade' que está desatualizado no banco)
-        const totalReal = listaClientes.length;
-
-        // Atualiza o contador no HTML
+        // Atualiza números
         const elQtd = document.getElementById('stat-qtd');
         const elPer = document.getElementById('stat-periodo');
-        
-        if(elQtd) elQtd.textContent = totalReal; // Agora mostra 13
+        if(elQtd) elQtd.textContent = total; 
         if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
 
-        // 3. Renderização
+        // 3. Monta a lista visual
         const listaContainer = document.getElementById('lista-clientes-content');
         if(listaContainer) {
             listaContainer.innerHTML = "";
-            
-            if (totalReal > 0) {
-                listaClientes.forEach(cliente => {
-                    if(!cliente) return;
-                    const classeDestaque = cliente.destaque ? 'destaque' : '';
-                    const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                    
+            if (total > 0) {
+                lista.forEach(c => {
+                    if(!c) return;
+                    const destaque = c.destaque ? 'destaque' : '';
+                    const badge = c.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
                     listaContainer.innerHTML += `
-                        <div class="cliente-item ${classeDestaque}">
-                            <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
-                            <div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div>
+                        <div class="cliente-item ${destaque}">
+                            <span class="cliente-icon-mini">${c.icone || '🏢'}</span>
+                            <div class="cliente-info"><span>${c.nome}</span>${badge}</div>
                         </div>`;
                 });
             } else { 
-                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente.</div>'; 
             }
         }
     }
