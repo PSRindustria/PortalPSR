@@ -883,38 +883,34 @@
     }
 
 function renderNovosClientes(dados) {
-        console.log("--- DEBUG CLIENTES ---");
-        console.log("Dados recebidos:", dados);
-
         if (!dados) return;
 
-        // 1. Força a criação da lista
-        const listaSegura = dados.lista ? Object.values(dados.lista) : []; 
-        
-        // 2. Conta quantos itens tem na lista (deve dar 13)
-        const quantidadeReal = listaSegura.length;
-        console.log("Quantidade contada pelo código:", quantidadeReal);
+        // 1. Padronização: Trata 'lista' como array, igual as outras seções fazem
+        // (Garante que funciona mesmo se o Firebase enviar como Objeto indexado)
+        const listaClientes = dados.lista ? Object.values(dados.lista) : [];
 
-        // 3. Atualiza o HTML
+        // 2. Correção Lógica: Conta o tamanho da lista real, igual o resto do sistema faria
+        // (Ignora o campo 'resumo.quantidade' que está desatualizado no banco)
+        const totalReal = listaClientes.length;
+
+        // Atualiza o contador no HTML
         const elQtd = document.getElementById('stat-qtd');
         const elPer = document.getElementById('stat-periodo');
         
-        if(elQtd) {
-            elQtd.textContent = quantidadeReal; 
-            // VOU MUDAR A COR PARA VERMELHO SÓ PARA VOCÊ VER QUE O CÓDIGO NOVO RODOU
-            elQtd.style.color = "red"; 
-        }
+        if(elQtd) elQtd.textContent = totalReal; // Agora mostra 13
         if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
 
-        // 4. Renderiza a lista
+        // 3. Renderização
         const listaContainer = document.getElementById('lista-clientes-content');
         if(listaContainer) {
             listaContainer.innerHTML = "";
-            if (quantidadeReal > 0) {
-                listaSegura.forEach(cliente => {
+            
+            if (totalReal > 0) {
+                listaClientes.forEach(cliente => {
                     if(!cliente) return;
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
+                    
                     listaContainer.innerHTML += `
                         <div class="cliente-item ${classeDestaque}">
                             <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
