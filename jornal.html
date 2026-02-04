@@ -885,26 +885,33 @@
 function renderNovosClientes(dados) {
         if (!dados) return;
 
-        // 1. Preenche o Resumo (topo do card)
-        if (dados.resumo) {
-            const elQtd = document.getElementById('stat-qtd');
-            const elPer = document.getElementById('stat-periodo');
-            if(elQtd) elQtd.textContent = dados.resumo.quantidade || "0";
-            if(elPer) elPer.textContent = dados.resumo.periodo || "";
-        }
+        // 1. TRUQUE DE SEGURANÇA:
+        // Transforma os dados em lista (Array), não importa se o Firebase mandou como Objeto ou Array.
+        // Isso resolve o problema de incompatibilidade de formatos.
+        const listaSegura = dados.lista ? Object.values(dados.lista) : []; 
 
-        // 2. Preenche a Lista (CORREÇÃO DE ARRAY/OBJETO)
+        // 2. CORREÇÃO DO CONTADOR (AUTOMÁTICO):
+        // Ignoramos o número "6" do banco e contamos o tamanho real da lista (ex: 13).
+        const quantidadeReal = listaSegura.length;
+
+        // Atualiza os números no topo do card
+        const elQtd = document.getElementById('stat-qtd');
+        const elPer = document.getElementById('stat-periodo');
+        
+        if(elQtd) elQtd.textContent = quantidadeReal; // Mostra o valor calculado (13)
+        if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
+
+        // 3. RENDERIZA OS CLIENTES
         const listaContainer = document.getElementById('lista-clientes-content');
         
         if(listaContainer) {
             listaContainer.innerHTML = "";
             
-            // TRUQUE: Converte para Array, não importa se veio como Objeto ou Array do Firebase
-            const listaSegura = dados.lista ? Object.values(dados.lista) : []; 
-
-            if (listaSegura.length > 0) {
+            if (quantidadeReal > 0) {
                 listaSegura.forEach(cliente => {
-                    if(!cliente) return; // Pula itens vazios se houver
+                    // Proteção contra itens vazios que possam existir no banco
+                    if(!cliente) return;
+
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
                     
@@ -918,6 +925,7 @@ function renderNovosClientes(dados) {
                         </div>`;
                 });
             } else { 
+                // Mensagem caso a lista esteja realmente vazia
                 listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
             }
         }
