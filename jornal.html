@@ -1357,28 +1357,46 @@
     
     function openSynopsis(id) { const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id); if (item) { document.getElementById('modal-synopsis-title').textContent = item.titulo; document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível."; document.getElementById('synopsis-modal').style.display = 'flex'; } }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
-    window.openHiScore = async function(gameKey) {
-        const modal = document.getElementById('hiscore-modal'); const list = document.getElementById('modal-score-list');
-        modal.style.display = 'flex'; document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
+window.openHiScore = async function(gameKey) {
+        const modal = document.getElementById('hiscore-modal'); 
+        const list = document.getElementById('modal-score-list');
+        
+        // Abre o modal
+        modal.style.display = 'flex'; 
+        document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
         list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
+        
+        // Busca dados
         const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
-        if (!data) { list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; return; }
-        let scoresArray = Object.values(data).sort((a, b) => (parseFloat(String(b.pontos).replace(/[^\d.-]/g, ''))||0) - (parseFloat(String(a.pontos).replace(/[^\d.-]/g, ''))||0));
-        list.innerHTML = scoresArray.slice(0, 10).map((s, index) => `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${s.pontos}</div></div>`).join('');
-    }
-    window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; }
-
-    window.toggleTodosClientes = function() {
-        const lista = document.getElementById('lista-clientes');
-        const btn = event.target;
-        if(lista.style.display === 'block') {
-            lista.style.display = 'none';
-            btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa';
-        } else {
-            lista.style.display = 'block';
-            btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista';
+        
+        if (!data) { 
+            list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; 
+            return; 
         }
-    };
+        
+        // Ordena
+        let scoresArray = Object.values(data).sort((a, b) => (parseFloat(String(b.pontos).replace(/[^\d.-]/g, ''))||0) - (parseFloat(String(a.pontos).replace(/[^\d.-]/g, ''))||0));
+        
+        // --- AQUI ESTÁ A MUDANÇA ---
+        // Agora usamos um bloco { } para poder programar a lógica do "km"
+        list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
+            
+            // 1. Pega o ponto puro (ex: 150)
+            let visualPonto = s.pontos;
+            
+            // 2. Se for Kart, adiciona o " km" visualmente
+            if (gameKey === 'BobinaKart') {
+                visualPonto = visualPonto + " km";
+            }
+
+            // 3. Retorna o HTML com a variável visualPonto
+            return `<div class="hiscore-item">
+                        <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
+                        <div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div>
+                        <div class="hiscore-points">${visualPonto}</div>
+                    </div>`;
+        }).join('');
+    }
 
     // =================================================================
     // 6. SISTEMA DE ANALYTICS
