@@ -683,7 +683,7 @@
         { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
     ];
 
-    // VARIÁVEIS DE ESTADO
+    // VARIÁVEIS DE ESTADO (PartiuPensar adicionado)
     let CONTEUDO_JORNAL = { temaMes: {}, bemEstar: {}, saudeFisica: {}, partiuPensar: {}, desafios: [], hobby: {}, cultura: [], sustentabilidade: SUSTENTABILIDADE_PADRAO };
     let globalChallengesData = {}, globalQuizData = {}, globalHobbyData = {}, globalPraiseData = {}, globalRatingsData = {}, globalTestimonialsData = {};
     
@@ -736,8 +736,8 @@
     // 3. FUNÇÕES DE RENDERIZAÇÃO (UI)
     // =================================================================
     function refreshAllUI() {
-        renderJornal(); 
-        renderHobbyUI(); 
+        renderJornal(); // Renderiza estrutura
+        renderHobbyUI(); // Renderiza Hobby (separado para não bugar o resto)
         renderChallenges(globalChallengesData);
         renderPraiseSection(currentPraiseMonth);
         renderTestimonials(globalTestimonialsData);
@@ -745,6 +745,7 @@
         setupRatings(globalRatingsData);
     }
 
+    // NOVA FUNÇÃO ESPECÍFICA PARA O HOBBY (CORREÇÃO DO BUG)
     function renderHobbyUI() {
         const h = CONTEUDO_JORNAL.hobby || {};
         const hLikes = globalHobbyData.likes || {};
@@ -763,6 +764,7 @@
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         const divTema = document.getElementById('tema-mes');
         
+        // --- ALTERAÇÃO AQUI: Capa dinâmica ---
         const capaBackground = tm.capaUrl ? 
             `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('${tm.capaUrl}') center/cover no-repeat;` : 
             `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('https://i.postimg.cc/pWWZhcwT/wallpaper-janery-branco.jpg?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;`;
@@ -781,29 +783,39 @@
                 </div>
             </div>`;
         }
+        
+// ... dentro de renderJornal() ...
 
-        const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
-        const divSaude = document.getElementById('saude-fisica-hero');
-        const imgBackground = sf.imagemFundo || 'https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop';
-        const iconSaude = sf.icon || '🏃';
-        const styleSaude = `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('${imgBackground}'); background-size: cover; background-position: center center;`;
+    const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
+    const divSaude = document.getElementById('saude-fisica-hero');
 
-        if(divSaude) divSaude.innerHTML = `
-            <div class="jornal-card">
-                <div class="banner-metade banner-saude-fisica" style="${styleSaude}">
-                    ${iconSaude}
+    // LÓGICA NOVA: Define a imagem e o ícone dinamicamente
+    // 1. Pega a URL do Firebase. Se não tiver, usa a do Unsplash como "plano B"
+    const imgBackground = sf.imagemFundo || 'https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop';
+    
+    // 2. Pega o ícone do Firebase (Ex: 🥗). Se não tiver, usa o corredor (🏃)
+    const iconSaude = sf.icon || '🏃';
+
+    // 3. Monta o estilo CSS inline mantendo o gradiente verde/azul
+    const styleSaude = `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('${imgBackground}'); background-size: cover; background-position: center center;`;
+
+    if(divSaude) divSaude.innerHTML = `
+        <div class="jornal-card">
+            <div class="banner-metade banner-saude-fisica" style="${styleSaude}">
+                ${iconSaude}
+            </div>
+            <div class="jornal-card-content card-texto-centralizado">
+                <h3>${sf.subtitulo||''}</h3>
+                <p>${sf.resumo||''}</p>
+                <button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button>
+                <div id="materiaSaudeFisica" class="materia-completa">
+                    ${sf.conteudoCompleto||''}
+                    <p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p>
                 </div>
-                <div class="jornal-card-content card-texto-centralizado">
-                    <h3>${sf.subtitulo||''}</h3>
-                    <p>${sf.resumo||''}</p>
-                    <button id="btnLerMaisSaudeFisica" class="btn-ler-mais" onclick="toggleSaudeFisica()">Ler sobre saúde física</button>
-                    <div id="materiaSaudeFisica" class="materia-completa">
-                        ${sf.conteudoCompleto||''}
-                        <p class="fonte-materia"><small>Fonte: <a href="${sf.fonte?.link||'#'}" target="_blank">${sf.fonte?.texto||'Fonte'}</a></small></p>
-                    </div>
-                </div>
-            </div>`;
+            </div>
+        </div>`;
       
+        // --- ALTERAÇÃO AQUI: Partiu Pensar dinâmico ---
         const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
         const ppTitulo = pp.titulo || 'Partiu Pensar';
         const ppSubtitulo = pp.subtitulo || 'Filosofia';
@@ -835,8 +847,10 @@
             </div>`;
         }
         
+        // --- INÍCIO DA ALTERAÇÃO (Título Dinâmico) ---
         const titDes = document.getElementById('titulo-desafio-mes');
         if(titDes) {
+            // Se houver título salvo no banco, usa ele. Se não, usa o padrão automático de data.
             if (CONTEUDO_JORNAL.desafios_titulo && CONTEUDO_JORNAL.desafios_titulo.trim() !== "") {
                 titDes.innerText = CONTEUDO_JORNAL.desafios_titulo;
             } else {
@@ -844,6 +858,7 @@
                 titDes.innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
             }
         }
+        // --- FIM DA ALTERAÇÃO ---
         
         const desContainer = document.getElementById('desafios-container'); 
         if(desContainer) { desContainer.innerHTML = ''; (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; }); }
@@ -888,19 +903,6 @@
         }
     }
 
-    // --- FUNÇÃO ADICIONADA PARA O BOTÃO FUNCIONAR ---
-    window.toggleTodosClientes = function() {
-        const el = document.getElementById('lista-clientes');
-        const btn = document.querySelector('.btn-ver-todos');
-        if (el.style.display === 'block') {
-            el.style.display = 'none';
-            btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa';
-        } else {
-            el.style.display = 'block';
-            btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista';
-        }
-    }
-
     // =================================================================
     // 4. INICIALIZAÇÃO E REDE
     // =================================================================
@@ -914,7 +916,7 @@
             AUTH_TOKEN = token;
             downloadData(); 
             initAnalytics();
-            initSafetyAnalytics();
+            initSafetyAnalytics(); // INICIALIZA ANALYTICS DO QUIZ
         });
     }).catch((error) => {
         console.error("Erro no Login:", error);
@@ -941,6 +943,7 @@
         const contentData = await secureFetch(BASE_DB_URL + "content.json");
         if (contentData) {
             CONTEUDO_JORNAL = contentData;
+            // Garante inicialização para não quebrar a lógica
             if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
             if(!CONTEUDO_JORNAL.partiuPensar) CONTEUDO_JORNAL.partiuPensar = {}; 
             
@@ -948,9 +951,8 @@
             refreshAllUI(); 
         }
 
-        // --- CORREÇÃO DO CAMINHO AQUI: adicionado content/ ---
         const [clientes, hobby, praise, challenges, quiz, ratings, testimonials] = await Promise.all([
-            secureFetch(BASE_DB_URL + "content/novos_clientes.json"),
+            secureFetch(BASE_DB_URL + "novos_clientes.json"),
             secureFetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
             secureFetch(BASE_DB_URL + "praise_messages.json"),
             secureFetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"),
@@ -960,7 +962,7 @@
         ]);
 
         if(clientes) { renderNovosClientes(clientes); saveCache(CACHE_KEYS.CLIENTES, clientes); }
-        
+        // CORREÇÃO DE SYNC: Se vier null (deletado), assume objeto vazio {}
         globalHobbyData = hobby || {}; saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
         globalPraiseData = praise || {}; saveCache(CACHE_KEYS.PRAISE, globalPraiseData);
         globalChallengesData = challenges || {}; saveCache(CACHE_KEYS.CHALLENGES, globalChallengesData);
@@ -976,6 +978,7 @@
     // 5. INTERAÇÕES E LÓGICA (UI)
     // =================================================================
 
+    // LÓGICA DE ANALYTICS DO QUIZ
     function initSafetyAnalytics() {
         const dbRef = firebase.database().ref('safety_quiz');
         
@@ -990,8 +993,10 @@
             let totalRespostas = 0;
             let totalAcertos = 0;
 
+            // Itera sobre as questões (q1, q2...)
             Object.keys(data).forEach(questionKey => {
                 const usersAnswers = data[questionKey];
+                // Itera sobre os usuários dentro de cada questão
                 Object.values(usersAnswers).forEach(isCorrect => {
                     totalRespostas++;
                     if (isCorrect === true) {
@@ -1014,34 +1019,44 @@
             const stars = container.querySelectorAll('.rating-stars i');
             const scoreDisplay = container.querySelector('.score-value');
             
+            // Garante que existe o objeto para este item
             if (!ratingsData[itemId]) ratingsData[itemId] = {};
             const itemVotes = ratingsData[itemId]; 
 
+            // Função interna para calcular e renderizar
             const calcRender = (votes) => {
                 const vals = Object.values(votes); 
                 
+                // CÁLCULO DA MÉDIA
                 let avg = 0;
                 if (vals.length > 0) {
                     const sum = vals.reduce((a, b) => a + Number(b), 0); 
                     avg = sum / vals.length;
                 }
                 
+                // Atualiza o texto (Ex: 4.5)
                 scoreDisplay.textContent = avg.toFixed(1);
+                
+                // Atualiza as estrelas visuais
                 updateVisualStars(stars, avg);
             };
 
+            // Executa o cálculo inicial ao carregar
             calcRender(itemVotes);
 
+            // Adiciona os eventos de clique nas estrelas
             stars.forEach(star => {
                 star.addEventListener('click', async () => {
                     const val = parseInt(star.dataset.value);
                     
+                    // Atualiza localmente imediatamente
                     if(!globalRatingsData[itemId]) globalRatingsData[itemId] = {};
                     globalRatingsData[itemId][MY_DEVICE_ID] = val;
                     
-                    calcRender(globalRatingsData[itemId]); 
+                    calcRender(globalRatingsData[itemId]); // Recalcula a média visualmente
                     saveCache(CACHE_KEYS.RATINGS, globalRatingsData);
 
+                    // Envia para o Firebase
                     fetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -1049,21 +1064,23 @@
                     });
                 });
 
+                // Efeito Hover 
                 star.addEventListener('mouseover', () => {
                     const val = parseInt(star.dataset.value);
                     stars.forEach(s => { 
                         const sVal = parseInt(s.dataset.value); 
-                        s.className = ''; 
+                        s.className = ''; // Limpa classes
                         if(sVal <= val) { 
-                            s.className = 'fas fa-star filled'; 
+                            s.className = 'fas fa-star filled'; // Estrela cheia
                             s.style.color='var(--dourado)'; 
                         } else { 
-                            s.className = 'far fa-star'; 
+                            s.className = 'far fa-star'; // Estrela vazia
                             s.style.color='#d1d1d1'; 
                         } 
                     });
                 });
 
+                // Ao tirar o mouse, volta a mostrar a Média Real calculada
                 star.addEventListener('mouseout', () => { 
                     stars.forEach(s => s.style.color = ''); 
                     updateVisualStars(stars, parseFloat(scoreDisplay.textContent)); 
@@ -1078,6 +1095,7 @@
         stars.forEach((s, index) => { 
             const starValue = index + 1; 
 
+            // Reseta a estrela
             s.className = ''; 
             s.style.color = ''; 
 
@@ -1091,6 +1109,7 @@
         }); 
     }
 
+    // Desafios
     window.voteChallenge = async function(cId, type) {
         if(!globalChallengesData) globalChallengesData = {};
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
@@ -1115,6 +1134,7 @@
         });
     }
 
+    // Quiz
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container'); if(!container) return;
         container.innerHTML = '';
@@ -1177,7 +1197,7 @@
         const exists = globalHobbyData.likes[MY_DEVICE_ID];
         if (exists) delete globalHobbyData.likes[MY_DEVICE_ID]; else globalHobbyData.likes[MY_DEVICE_ID] = true;
         saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
-        renderHobbyUI(); 
+        renderHobbyUI(); // Atualiza APENAS o Hobby, sem bugar o resto
         const method = exists ? 'DELETE' : 'PUT';
         if(AUTH_TOKEN) fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/likes/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, { method: method, body: JSON.stringify(true) });
     }
@@ -1190,7 +1210,7 @@
             const tempId = "temp_" + Date.now();
             globalHobbyData.comments[tempId] = newComment;
             saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
-            renderHobbyUI(); 
+            renderHobbyUI(); // Atualiza APENAS o Hobby
             if(AUTH_TOKEN) fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json?auth=${AUTH_TOKEN}`, {method:'POST', body:JSON.stringify(newComment)});
         }
     }
@@ -1249,6 +1269,7 @@
     function setupQuizToggle() { const btn = document.getElementById('btn-open-quiz'); const content = document.getElementById('quiz-content'); if (btn && content) { btn.onclick = () => { if(content.style.display === 'block') { content.style.display = 'none'; btn.innerHTML = '<i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança'; } else { content.style.display = 'block'; btn.innerHTML = '<i class="fas fa-chevron-up"></i> Fechar Quiz'; } }; } }
     
     function setupForms() {
+        // Função genérica mantida para sugestões gerais e receitas
         const simplePost = (btnId, inputs, urlSuffix) => {
             const btn = document.getElementById(btnId);
             if(btn) btn.onclick = async () => {
@@ -1266,6 +1287,7 @@
         };
         simplePost('btn-submit-suggestion', ['suggest-name'], 'suggestions');
         
+        // Formulário de Games (Tratamento Específico)
         const btnGame = document.getElementById('btn-submit-game-suggestion');
         if (btnGame) {
             btnGame.onclick = async () => {
@@ -1339,10 +1361,12 @@ window.openHiScore = async function(gameKey) {
         const modal = document.getElementById('hiscore-modal'); 
         const list = document.getElementById('modal-score-list');
         
+        // Abre o modal
         modal.style.display = 'flex'; 
         document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
         list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
         
+        // Busca dados
         const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
         
         if (!data) { 
@@ -1350,16 +1374,21 @@ window.openHiScore = async function(gameKey) {
             return; 
         }
         
+        // Ordena
         let scoresArray = Object.values(data).sort((a, b) => (parseFloat(String(b.pontos).replace(/[^\d.-]/g, ''))||0) - (parseFloat(String(a.pontos).replace(/[^\d.-]/g, ''))||0));
         
+        // Monta a lista com a lógica do KM
         list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
             
+            // 1. Pega o ponto puro
             let visualPonto = s.pontos;
             
+            // 2. Se for Kart, adiciona o " km" visualmente
             if (gameKey === 'BobinaKart') {
                 visualPonto = visualPonto + " km";
             }
 
+            // 3. Retorna o HTML
             return `<div class="hiscore-item">
                         <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
                         <div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div>
@@ -1368,6 +1397,7 @@ window.openHiScore = async function(gameKey) {
         }).join('');
     };
 
+    // --- FUNÇÃO DE FECHAR O RANKING (RESTAURADA) ---
     window.closeHiScore = function() { 
         document.getElementById('hiscore-modal').style.display = 'none'; 
     };
@@ -1382,6 +1412,9 @@ window.openHiScore = async function(gameKey) {
         const timestamp = new Date().toISOString();
         const userAgent = navigator.userAgent; 
 
+        // -------------------------------------------------------
+        // A. REGISTRAR PRESENÇA 
+        // -------------------------------------------------------
         const sessionData = {
             last_seen: timestamp,
             device_info: userAgent,
@@ -1393,6 +1426,9 @@ window.openHiScore = async function(gameKey) {
             body: JSON.stringify(sessionData)
         }).catch(err => console.error("Erro monitor sessão:", err));
 
+        // -------------------------------------------------------
+        // B. REGISTRAR LOG DIÁRIO
+        // -------------------------------------------------------
         const hoje = timestamp.slice(0, 10); 
         
         fetch(`${BASE_DB_URL}monitor_interno/daily_visits/${hoje}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
@@ -1438,7 +1474,7 @@ window.openHiScore = async function(gameKey) {
     document.addEventListener("DOMContentLoaded", () => {
         ['menu', 'footer'].forEach(file => fetch(`${file}.html?t=${Date.now()}`).then(r=>r.text()).then(html=>{ const p=document.getElementById(`${file}-placeholder`); if(p) p.innerHTML=html; if(file==='menu'){const t=document.getElementById('menu-toggle'),n=document.getElementById('nav-principal');if(t&&n){t.addEventListener('click',()=>n.classList.toggle('active'));n.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>n.classList.remove('active')));}} }).catch(e=>console.warn(e)));
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
-        setupToggle('btn-toggle-recipe', 'recipe-form-container'); 
+        setupToggle('btn-toggle-recipe', 'recipe-form-container'); // Mantido ID apenas para compatibilidade
         setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
         setupToggle('btn-toggle-praise', 'praise-form-container');
         setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
