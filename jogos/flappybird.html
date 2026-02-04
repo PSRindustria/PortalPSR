@@ -772,12 +772,29 @@
         window.location.href = PORTAL_URL;
     });
 
-    btnSave.addEventListener('click', async () => {
+btnSave.addEventListener('click', async () => {
         const name = inputName.value.trim();
         if(!name || name.length < 2) { alert("Digite um nome válido."); return; }
-        localStorage.setItem('psr_player_name_flap', name);
+        
+        // 1. Limitar o nome (< 20 caracteres) - Exigido pela regra
+        const safeName = name.substring(0, 19);
+        
+        localStorage.setItem('psr_player_name_flap', safeName);
 
-        const payload = { nome: name, pontos: score, data: new Date().toLocaleString('pt-BR') };
+        // 2. Adicionar id_dispositivo - Exigido pela regra
+        let deviceId = localStorage.getItem('psr_device_id');
+        if (!deviceId) {
+            deviceId = 'gamer_' + Date.now();
+            localStorage.setItem('psr_device_id', deviceId);
+        }
+
+        const payload = { 
+            nome: safeName, 
+            pontos: score, 
+            id_dispositivo: deviceId,
+            data: new Date().toLocaleString('pt-BR') 
+        };
+
         btnSave.disabled = true; btnSave.innerText = "Enviando...";
 
         try {
@@ -806,3 +823,4 @@
 </body>
 
 </html>
+
