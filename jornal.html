@@ -14,7 +14,7 @@
 
 <style>
     /* ==================================================
-       ESTILOS RESTAURADOS
+       ESTILOS
        ================================================== */
     :root {
         --azul-marinho: #003366;
@@ -321,9 +321,9 @@
     <section id="jogos">
         <h2 class="jornal-section-title">🎮 Jogos</h2>
         <div class="hiscore-menu">
-            <button class="hiscore-btn" onclick="openHiScore('BobinaWorld')"><i class="fas fa-trophy"></i> Rank BobinaWorld</button>
-            <button class="hiscore-btn" onclick="openHiScore('FlapBobina')"><i class="fas fa-trophy"></i> Rank FlapBobina</button>
-            <button class="hiscore-btn" onclick="openHiScore('BobinaKart')"><i class="fas fa-trophy"></i> Rank BobinaKart</button>
+            <button class="hiscore-btn" onclick="window.openHiScore('BobinaWorld')"><i class="fas fa-trophy"></i> Rank BobinaWorld</button>
+            <button class="hiscore-btn" onclick="window.openHiScore('FlapBobina')"><i class="fas fa-trophy"></i> Rank FlapBobina</button>
+            <button class="hiscore-btn" onclick="window.openHiScore('BobinaKart')"><i class="fas fa-trophy"></i> Rank BobinaKart</button>
         </div>
         <div class="cards-grid">
             <a href="https://psrindustria.github.io/PortalPSR/jogos/marioworld.html" class="game-card">
@@ -356,7 +356,7 @@
 
 <div id="hiscore-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeHiScore()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
+        <button class="modal-close" onclick="window.closeHiScore()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
         <h3 id="modal-game-title" style="text-align:center; color:#003366;">Ranking</h3>
         <div id="modal-score-list" class="hiscore-list"></div>
     </div>
@@ -368,21 +368,6 @@
         <h3 id="modal-synopsis-title" style="text-align:center; color:#003366;">Sinopse</h3>
         <div id="modal-synopsis-text"></div>
     </div>
-</div>
-
-  </main>
-
-<div id="footer-placeholder"></div>
-
-<div id="hiscore-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeHiScore()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
-        <h3 id="modal-game-title" style="text-align:center; color:#003366;">Ranking</h3>
-        <div id="modal-score-list" class="hiscore-list"></div>
-    </div>
-</div>
-
-  
 </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -857,7 +842,11 @@
     // Modais
     function openSynopsis(id) { const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id); if (item) { document.getElementById('modal-synopsis-title').textContent = item.titulo; document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível."; document.getElementById('synopsis-modal').style.display = 'flex'; } }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
-window.openHiScore = async function(gameKey) {
+    
+    // =================================================================
+    // CORREÇÃO DOS RANKINGS DE JOGOS
+    // =================================================================
+    window.openHiScore = async function(gameKey) {
         const modal = document.getElementById('hiscore-modal'); 
         const list = document.getElementById('modal-score-list');
         const title = document.getElementById('modal-game-title');
@@ -876,16 +865,16 @@ window.openHiScore = async function(gameKey) {
         list.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
         
         // 3. Busca dados
-        const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
-        
-        // 4. Se não tiver dados ou der erro
-        if (!data) { 
-            list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde registrado ainda.</p>'; 
-            return; 
-        }
-        
-        // 5. Organiza e exibe
         try {
+            const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
+            
+            // 4. Se não tiver dados ou der erro
+            if (!data) { 
+                list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde registrado ainda.</p>'; 
+                return; 
+            }
+            
+            // 5. Organiza e exibe
             // Converte objeto em array e ordena por pontos (do maior para o menor)
             let scoresArray = Object.values(data).sort((a, b) => {
                 const pA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
