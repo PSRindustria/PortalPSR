@@ -945,17 +945,13 @@ function renderNovosClientes(dados) {
 
 async function secureFetch(url) {
         let finalUrl = url;
-        
-        // 1. TRUQUE ANTI-CACHE: Adiciona um número aleatório (timestamp) no final do link
-        // Isso obriga o navegador a baixar o arquivo fresco, pois ele acha que é um link novo.
+        // ADICIONA TIMESTAMP PARA MATAR O CACHE
         const separator = url.includes('?') ? '&' : '?';
-        finalUrl = `${url}${separator}antiCache=${Date.now()}`;
-
-        // 2. Adiciona a autenticação se tiver
+        finalUrl = `${url}${separator}t=${Date.now()}`;
+        
         if (AUTH_TOKEN) {
             finalUrl += `&auth=${AUTH_TOKEN}`;
         }
-
         try {
             const resp = await fetch(finalUrl);
             if (!resp.ok) throw new Error(`Erro ${resp.status}`);
