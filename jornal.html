@@ -350,25 +350,40 @@
         </div>
     </section>
 
-    <div id="hiscore-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeHiScore()">&times;</button>
-            <h3 id="modal-game-title">Ranking</h3>
-            <div id="modal-score-list" class="hiscore-list"></div>
-        </div>
+  </main>
+
+<div id="footer-placeholder"></div>
+
+<div id="hiscore-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeHiScore()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
+        <h3 id="modal-game-title" style="text-align:center; color:#003366;">Ranking</h3>
+        <div id="modal-score-list" class="hiscore-list"></div>
     </div>
-    
-    <div id="synopsis-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeSynopsis()">&times;</button>
-            <h3 id="modal-synopsis-title">Sinopse</h3>
-            <div id="modal-synopsis-text"></div>
-        </div>
+</div>
+
+<div id="synopsis-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeSynopsis()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
+        <h3 id="modal-synopsis-title" style="text-align:center; color:#003366;">Sinopse</h3>
+        <div id="modal-synopsis-text"></div>
     </div>
+</div>
 
   </main>
 
 <div id="footer-placeholder"></div>
+
+<div id="hiscore-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeHiScore()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
+        <h3 id="modal-game-title" style="text-align:center; color:#003366;">Ranking</h3>
+        <div id="modal-score-list" class="hiscore-list"></div>
+    </div>
+</div>
+
+  
+</div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
