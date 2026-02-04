@@ -578,21 +578,41 @@
         window.location.href = PORTAL_URL;
     });
 
-    btnSave.addEventListener('click', async () => {
+btnSave.addEventListener('click', async () => {
         const name = inputName.value.trim();
         if(!name || name.length < 2) { alert("Digite um nome válido."); return; }
-        localStorage.setItem('psr_player_name_kart', name);
+        
+        // 1. Regra: Nome seguro
+        const safeName = name.substring(0, 19);
+        
+        localStorage.setItem('psr_player_name_kart', safeName);
 
-        const payload = { nome: name, pontos: Math.floor(score) + " km", data: new Date().toLocaleString('pt-BR') };
+        // 2. Regra: ID Obrigatório
+        let deviceId = localStorage.getItem('psr_device_id');
+        if (!deviceId) {
+            deviceId = 'gamer_' + Date.now();
+            localStorage.setItem('psr_device_id', deviceId);
+        }
+
+        // 3. Regra: Pontos tem que ser NÚMERO (sem "km")
+        // O "km" você mostra só visualmente no site depois, se quiser.
+        // No banco, tem que entrar o número puro (Math.floor).
+        const payload = { 
+            nome: safeName, 
+            pontos: Math.floor(score), 
+            id_dispositivo: deviceId,
+            data: new Date().toLocaleString('pt-BR') 
+        };
+
         btnSave.disabled = true; btnSave.innerText = "Enviando...";
 
         try {
-await secureFetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(payload) });
+            await secureFetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(payload) });
             saveArea.style.display = 'none';
             msgSuccess.style.display = 'block';
         } catch (error) {
             console.error(error);
-            alert("Erro de conexão.");
+            alert("Erro de conexão (Regra de Segurança).");
             btnSave.disabled = false;
             btnSave.innerText = "Tentar Novamente";
         }
@@ -614,6 +634,7 @@ await secureFetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(payload) 
 </body>
 
 </html>
+
 
 
 
