@@ -4,21 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="color-scheme" content="light">
-  <meta name="supported-color-schemes" content="light">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma"        content="no-cache" />
-  <meta http-equiv="Expires"       content="0" />
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" href="favicon.png" type="image/png">
-  <meta property="og:title" content="Portal PSR">
-  <meta property="og:description" content="Acesse nosso canal interno com notícias, cardápio, aniversariantes e muito mais!">
-  <meta property="og:image" content="https://psrimpressao.com.br/wp-content/uploads/2026/01/thumbnail.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:url" content="https://psrindustria.github.io/PortalPSR/">
-  <meta property="og:type" content="website">
-  <link rel="preconnect" href="https://jornalpsr-1b8c6-default-rtdb.firebaseio.com">
-  <link rel="dns-prefetch" href="https://jornalpsr-1b8c6-default-rtdb.firebaseio.com">
-  <meta name="color-scheme" content="light only">
   <title>PortalPSR</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +33,6 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* MENU FIXO ANTI-QUEBRA */
     #menu-placeholder { position: fixed; top: 0; left: 0; width: 100%; z-index: 1001; }
     #menu-placeholder header { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
     #menu-placeholder nav ul li a { white-space: nowrap !important; }
@@ -85,7 +69,6 @@
 
     /* DESTAQUES */
     .destaque-container { border-radius: 15px; padding: 60px 40px; margin-bottom: 40px; text-align: center; box-shadow: var(--sombra-card-jornal); color: var(--azul-marinho); border: 1px solid rgba(0,0,0,0.05); transition: all 0.5s ease; position: relative; overflow: hidden; }
-    /* A classe .tema-mes-bg será removida do HTML dinâmico, pois a imagem vem inline agora */
     .destaque-container h2 { font-size: 2.2em; margin-bottom: 10px; font-weight: 700; color: var(--azul-marinho); }
     .destaque-container p { font-size: 1.1em; margin-bottom: 20px; color: #444; }
     .destaque-icon { font-size: 3.5em; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -94,7 +77,6 @@
     .materia-completa { display: none; text-align: left; max-width: 800px; margin: 20px auto 0; border-top: 1px solid rgba(0,35,102, 0.1); padding-top: 20px; animation: fadeIn 0.6s ease-in-out; }
     .fonte-materia { font-size: 0.85em; color: #777; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; text-align: center; }
     .fonte-materia a { color: var(--azul-aco); text-decoration: none; font-weight: 600; }
-    .fonte-materia a:hover { text-decoration: underline; }
     .btn-ler-mais { background-color: var(--azul-marinho); color: var(--branco); padding: 12px 35px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-top: 15px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); }
     .btn-ler-mais:hover { background-color: var(--dourado); color: var(--azul-marinho); transform: translateY(-2px); }
 
@@ -106,9 +88,7 @@
     .jornal-card-content h3 { font-size: 1.4em; color: var(--azul-marinho); margin-bottom: 10px; font-weight: 600; }
     .jornal-card-content p { color: #555; margin-bottom: 15px; line-height: 1.6; }
 
-    /* ==================================================
-       ESTILOS NOVOS CLIENTES (HEADER & LISTA)
-       ================================================== */
+    /* CLIENTES */
     .clientes-header { background: var(--branco); border-radius: 12px; box-shadow: var(--sombra-suave); padding: 35px 20px 20px 20px; margin-bottom: 30px; position: relative; overflow: hidden; border-top: 4px solid var(--dourado); text-align: center; }
     .stats-row { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 25px; }
     .stat-box { display: flex; align-items: center; justify-content: center; }
@@ -117,7 +97,6 @@
     .stat-label { font-size: 1.5em; color: var(--azul-marinho); font-weight: 600; text-transform: none; }
     .data-discreta { color: #999; font-size: 0.9em; margin-top: 5px; display: inline-flex; align-items: center; gap: 5px; }
 
-    /* LISTA DE CLIENTES */
     .clientes-compact-list { background: white; border-radius: 15px; box-shadow: var(--sombra-suave); overflow: hidden; border: 1px solid #eee; display: none; animation: fadeIn 0.5s ease; padding: 10px; }
     #lista-clientes-content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
     .cliente-item { display: flex; align-items: center; gap: 10px; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; transition: all 0.3s ease; background: #fff; }
@@ -128,23 +107,18 @@
     .cliente-info span { color: var(--cinza-escuro); font-size: 0.9em; font-weight: 500; }
     .badge-destaque { background: var(--dourado); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7em !important; font-weight: 700 !important; }
     .btn-ver-todos { background: white; border: 1px solid var(--azul-marinho); color: var(--azul-marinho); padding: 12px 35px; border-radius: 30px; font-size: 0.9em; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; letter-spacing: 0.5px; }
-    .btn-ver-todos:hover { background: var(--azul-marinho); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,51,102,0.2); }
+    .btn-ver-todos:hover { background: var(--azul-marinho); color: white; transform: translateY(-2px); }
     .loading-container { text-align: center; padding: 20px; color: #999; grid-column: 1 / -1; }
 
     @media (max-width: 768px) {
         .stat-box-inner { flex-direction: column; gap: 5px; }
-        .stat-label { font-size: 0.75em; text-transform: uppercase; letter-spacing: 2px; color: var(--cinza-texto); }
         #lista-clientes-content { grid-template-columns: 1fr; }
         .cliente-item { border-right: none; }
     }
 
-    /* PARTIU PENSAR & SAUDE */
+    /* OUTROS COMPONENTES */
     .partiu-pensar-card { background-color: var(--branco); border-radius: 15px; overflow: hidden; box-shadow: var(--sombra-card-jornal); transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; text-align: center; }
-    
-    /* DESAFIOS */
     .desafio-saude-card { background-color: var(--branco); border-radius: 15px; padding: 25px; box-shadow: var(--sombra-card-jornal); border: 1px solid #eee; border-top: 5px solid var(--verde-escuro); transition: transform 0.3s; display: flex; flex-direction: column; }
-    .desafio-saude-card:hover { transform: translateX(5px); }
-    .desafio-saude-card h4 { font-size: 1.2em; color: var(--azul-marinho); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
     .challenge-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
     .btn-challenge { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: all 0.2s; color: #777; }
     .btn-challenge.success:hover, .btn-challenge.success.active { background-color: var(--verde-sucesso); color: white; border-color: var(--verde-sucesso); }
@@ -153,14 +127,9 @@
     .stat-success { color: var(--verde-sucesso); font-weight: 700; }
     .stat-fail { color: var(--vermelho-erro); font-weight: 700; }
 
-    /* DEPOIMENTOS */
     .testimonials-section { margin-top: 20px; background: #fff; padding: 40px; border-radius: 15px; box-shadow: var(--sombra-card-jornal); text-align: center; border: 1px solid #eee; }
     .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; text-align: left; }
-    .testimonial-card { background: var(--cinza-claro-bg); padding: 20px; border-radius: 10px; border-top: 4px solid var(--dourado); box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-    .testimonial-author { font-weight: 700; color: var(--azul-marinho); margin-bottom: 5px; display: block; font-size: 0.95em; }
-    .testimonial-text { font-style: italic; color: #555; font-size: 0.9em; line-height: 1.6; margin-bottom: 10px; flex-grow: 1; }
-    .testimonial-date { font-size: 0.75em; color: #999; display: block; margin-top: 5px; text-align: right; }
-
+    
     /* HOBBY */
     .hobby-container { background-color: var(--branco); border-radius: 15px; box-shadow: var(--sombra-card-jornal); overflow: hidden; margin-bottom: 40px; border: 1px solid #eee; }
     .hobby-content { display: grid; grid-template-columns: 40% 60%; min-height: 350px; }
@@ -169,31 +138,9 @@
     .hobby-texto { padding: 40px; display: flex; flex-direction: column; justify-content: center; text-align: left; }
     .hobby-titulo { font-size: 1.1em; color: var(--dourado); font-weight: 700; margin-bottom: 25px; text-transform: uppercase; }
     
-    /* CORREÇÃO DO ÍCONE DE ASPAS */
-    .hobby-quote-box { 
-        background: #f8f9fa; 
-        border-left: 4px solid var(--azul-marinho); 
-        padding: 20px 25px; 
-        margin-bottom: 25px; 
-        border-radius: 0 10px 10px 0; 
-        display: block; 
-    }
-
-    .hobby-quote-box i { 
-        color: var(--dourado); 
-        font-size: 1.5em; 
-        float: left;        
-        margin-right: 8px; 
-        line-height: 1;
-    }
-
-    .hobby-quote-box p {
-        font-style: italic;
-        margin: 0;
-        color: #555;
-        line-height: 1.6;
-        display: inline; 
-    }
+    .hobby-quote-box { background: #f8f9fa; border-left: 4px solid var(--azul-marinho); padding: 20px 25px; margin-bottom: 25px; border-radius: 0 10px 10px 0; display: block; }
+    .hobby-quote-box i { color: var(--dourado); font-size: 1.5em; float: left; margin-right: 8px; line-height: 1; }
+    .hobby-quote-box p { font-style: italic; margin: 0; color: #555; line-height: 1.6; display: inline; }
     
     .hobby-tag { display: inline-block; background-color: var(--verde-escuro); color: var(--branco); padding: 8px 16px; border-radius: 50px; font-size: 0.85em; font-weight: 600; margin-right: 8px; margin-bottom: 8px; }
     .hobby-actions { display: flex; gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
@@ -202,7 +149,6 @@
     .hobby-btn-action.liked { color: #e91e63; }
     .hobby-comments-section { display: none; margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee; animation: fadeIn 0.3s ease; }
     .hobby-comment-item { background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; font-size: 0.9em; color: #555; }
-    .hobby-comment-item strong { color: var(--azul-marinho); display: block; margin-bottom: 2px; }
 
     /* ELOGIOS */
     .praise-header { text-align: center; margin-bottom: 30px; }
@@ -211,7 +157,6 @@
     .praise-link:hover { color: var(--azul-marinho); border-color: var(--azul-marinho); }
     .praise-link.active { color: var(--branco); background: var(--azul-marinho); font-weight: 600; border-color: var(--azul-marinho); }
     .praise-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 20px; border-top: 4px solid var(--verde-sucesso); display: flex; flex-direction: column; }
-    .praise-from-to { font-size: 0.9em; color: #777; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
     .praise-like-btn { cursor: pointer; color: #ccc; transition: color 0.2s; font-size: 1.1em; display: flex; align-items: center; gap: 5px; border: none; background: none; }
     .praise-like-btn.liked { color: #e91e63; }
 
@@ -224,7 +169,7 @@
     .game-banner { width: 100%; height: 160px; object-fit: cover; background: #eee; }
     .game-info { padding: 15px; text-align: center; background: #fff; }
 
-    /* FORMULÁRIOS & BOTÕES GERAIS */
+    /* FORMULÁRIOS */
     .suggestion-section { max-width: 600px; margin: 40px auto 0; text-align: center; }
     .btn-suggestion { background-color: var(--azul-marinho); color: var(--branco); font-weight: 600; padding: 12px 35px; border: none; border-radius: 50px; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2); transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; }
     .btn-suggestion:hover { background-color: var(--dourado); color: var(--azul-marinho); transform: translateY(-2px); }
@@ -242,23 +187,7 @@
     .play-button { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; color: rgba(255, 255, 255, 0.9); pointer-events: none; transition: transform 0.3s; }
     .video-thumbnail-container:hover .play-button { transform: translate(-50%, -50%) scale(1.1); color: #ff0000; }
     
-    /* CORREÇÃO BOTÃO SINOPSE */
-    .btn-ler-sinopse { 
-        background-color: transparent; 
-        border: 2px solid var(--azul-marinho); 
-        color: var(--azul-marinho); 
-        padding: 6px 20px; 
-        border-radius: 20px; 
-        font-weight: 600; 
-        cursor: pointer; 
-        margin-top: auto; 
-        margin-bottom: 8px; 
-        transition: all 0.3s; 
-        font-size: 0.9em;
-        align-self: center; /* Centraliza no flex container */
-        width: auto; /* Evita que estique */
-        min-width: 120px;
-    }
+    .btn-ler-sinopse { background-color: transparent; border: 2px solid var(--azul-marinho); color: var(--azul-marinho); padding: 6px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; margin-top: auto; margin-bottom: 8px; transition: all 0.3s; font-size: 0.9em; align-self: center; width: auto; min-width: 120px; }
     .btn-ler-sinopse:hover { background-color: var(--azul-marinho); color: white; }
     
     .tag-discreta { font-size: 0.75em; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
@@ -266,7 +195,6 @@
     .rating-container { margin-top: auto; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
     .rating-stars { display: inline-flex; gap: 5px; font-size: 1.5rem; cursor: pointer; color: #d1d1d1; }
     .rating-stars i.filled { color: var(--dourado) !important; }
-    .rating-stars i:hover, .rating-stars i:hover ~ i { color: var(--dourado) !important; }
     .score-value { font-weight: 700; font-size: 1.2em; color: var(--azul-marinho); }
 
     /* QUIZ & ABAS */
@@ -288,129 +216,20 @@
     /* BANNERS */
     .banner-metade { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5em; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; }
     .banner-saude-fisica { background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center center; }
-    /* REMOVIDO GRADIENTE FIXO DO CSS POIS SERÁ CONTROLADO PELO JS AGORA */
     .banner-partiu-pensar { background-size: cover; background-position: center center; } 
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
-/* ==================================================
-       BLINDAGEM TOTAL: RANK (HISCORE) E SINOPSE
-       ================================================== */
-    
-    /* 1. BLINDAGEM DO FUNDO (OVERLAY) */
-    #hiscore-modal,
-    #synopsis-modal {
-        position: fixed !important; 
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background: rgba(0,0,0,0.5) !important;
-        z-index: 99999 !important; 
-        
-        display: none; 
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        
-        transform: none !important;
-        opacity: 1 !important;
-        visibility: visible;
-    }
+    /* MODAIS */
+    .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0,0,0,0.5) !important; z-index: 99999 !important; display: none; justify-content: center; align-items: center; padding: 20px; }
+    .modal-content { background: white !important; width: 100% !important; max-width: 500px !important; border-radius: 15px !important; padding: 25px !important; position: relative !important; box-shadow: 0 5px 25px rgba(0,0,0,0.3) !important; text-align: left !important; display: block !important; margin: auto !important; }
+    .modal-content h3 { color: #003366 !important; font-size: 1.5rem !important; margin-bottom: 20px !important; text-align: center !important; font-weight: 700 !important; border: none !important; display: block !important; }
+    .modal-content p, .modal-content div { color: #555 !important; margin-bottom: 1rem; line-height: 1.6 !important; }
+    .modal-close { all: unset !important; position: absolute !important; top: 15px !important; right: 15px !important; width: 30px !important; height: 30px !important; font-size: 1.8rem !important; color: #999 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; }
+    .modal-close:hover { color: #dc3545 !important; }
 
-    /* 2. BLINDAGEM DA CAIXA DE CONTEÚDO (A JANELA EM SI) */
-    #hiscore-modal .modal-content,
-    #synopsis-modal .modal-content {
-        background: white !important;
-        width: 100% !important;
-        max-width: 500px !important;
-        border-radius: 15px !important;
-        padding: 25px !important;
-        position: relative !important;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.3) !important;
-        
-        text-align: left !important;
-        font-family: 'Poppins', sans-serif !important;
-        font-size: 1rem !important;
-        line-height: 1.5 !important;
-        color: #4B4B4B !important;
-        font-weight: 400 !important;
-        float: none !important;
-        display: block !important; 
-        margin: auto !important; 
-    }
-
-    /* 3. RESET DE ELEMENTOS INTERNOS */
-    #hiscore-modal .modal-content h3,
-    #synopsis-modal .modal-content h3 {
-        color: #003366 !important; 
-        font-size: 1.5rem !important;
-        margin-bottom: 20px !important;
-        text-align: center !important;
-        font-weight: 700 !important;
-        border: none !important;
-        display: block !important;
-    }
-
-    #hiscore-modal .modal-content p, 
-    #synopsis-modal .modal-content p,
-    #synopsis-modal .modal-content div {
-        color: #555 !important;
-        margin-bottom: 1rem;
-        line-height: 1.6 !important;
-    }
-
-    /* 4. BLINDAGEM DO BOTÃO FECHAR (X) */
-    #hiscore-modal .modal-close,
-    #synopsis-modal .modal-close {
-        all: unset !important; 
-        position: absolute !important;
-        top: 15px !important;
-        right: 15px !important;
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 1.8rem !important;
-        color: #999 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        cursor: pointer !important;
-        background: transparent !important;
-        border: none !important;
-    }
-    
-    #hiscore-modal .modal-close:hover,
-    #synopsis-modal .modal-close:hover {
-        color: #dc3545 !important; 
-    }
-
-    /* 5. LISTA DE RANKING */
-    #hiscore-modal .hiscore-item { 
-        display: flex !important; 
-        justify-content: space-between !important; 
-        padding: 10px !important; 
-        border-bottom: 1px solid #eee !important; 
-        align-items: center !important; 
-        background: transparent !important;
-    }
-    
-    #hiscore-modal .hiscore-rank { 
-        font-weight: bold !important; 
-        width: 30px !important; 
-        height: 30px !important; 
-        background: #003366 !important; 
-        color: white !important; 
-        border-radius: 50% !important; 
-        display: flex !important; 
-        align-items: center !important; 
-        justify-content: center !important; 
-        font-size: 0.9em !important; 
-        margin-right: 10px !important;
-    }
-    
-    #hiscore-modal .hiscore-points { 
-        color: #DAA520 !important; 
-        font-weight: 700 !important; 
-    }
+    .hiscore-item { display: flex !important; justify-content: space-between !important; padding: 10px !important; border-bottom: 1px solid #eee !important; align-items: center !important; background: transparent !important; }
+    .hiscore-rank { font-weight: bold !important; width: 30px !important; height: 30px !important; background: #003366 !important; color: white !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 0.9em !important; margin-right: 10px !important; }
+    .hiscore-points { color: #DAA520 !important; font-weight: 700 !important; }
 
     @media (max-width: 768px) {
         .jornal-section-title { font-size: 1.5em; }
@@ -418,8 +237,6 @@
         .hobby-content { grid-template-columns: 1fr; grid-template-rows: auto auto; }
         .hobby-foto { height: 300px; width: 100%; }
         .hobby-texto { padding: 30px 20px; text-align: center; }
-        .hobby-quote-box { text-align: left; font-style: italic; }
-        .hobby-tag { margin-bottom: 10px; }
     }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
@@ -436,9 +253,7 @@
         <h2 class="jornal-section-title">Indica aí 🎬</h2>
         <div id="cultura-container" class="cards-grid"></div>
         <div class="suggestion-section">
-            <button id="btn-toggle-suggestion" class="btn-suggestion">
-                Indique o próximo filme ou livro do mês <i class="fas fa-bullhorn"></i>
-            </button>
+            <button id="btn-toggle-suggestion" class="btn-suggestion">Indique o próximo filme ou livro do mês <i class="fas fa-bullhorn"></i></button>
             <div id="suggestion-form-container" class="suggestion-card-form">
                 <h3 style="color: var(--azul-marinho); margin-bottom: 20px; text-align: center;">Sua Sugestão</h3>
                 <div class="form-group"><label>Seu Nome:</label><input type="text" id="suggest-name" placeholder="Ex: Maria Silva"></div>
@@ -452,9 +267,7 @@
         <h2 class="jornal-section-title">✨ Além do Crachá</h2>
         <div id="hobby-container" class="hobby-container"></div>
         <div class="suggestion-section">
-            <button id="btn-toggle-hobby-suggestion" class="btn-suggestion">
-                <i class="fas fa-user-plus"></i>&nbsp; Indique o próximo entrevistado
-            </button>
+            <button id="btn-toggle-hobby-suggestion" class="btn-suggestion"><i class="fas fa-user-plus"></i>&nbsp; Indique o próximo entrevistado</button>
             <div id="hobby-suggestion-form-container" class="suggestion-card-form">
                 <h3 style="color: var(--azul-marinho); margin-bottom: 20px; text-align: center;">Indicação "Além do Crachá"</h3>
                 <div class="form-group"><label>Seu Nome:</label><input type="text" id="hobby-suggest-from" placeholder="Ex: João"></div>
@@ -499,9 +312,7 @@
             <div id="praise-archive-links" class="praise-archive-links"></div>
         </div>
         <div class="suggestion-section">
-            <button id="btn-toggle-praise" class="btn-suggestion">
-                <i class="fas fa-heart"></i>&nbsp; Enviar um Elogio
-            </button>
+            <button id="btn-toggle-praise" class="btn-suggestion"><i class="fas fa-heart"></i>&nbsp; Enviar um Elogio</button>
             <div id="praise-form-container" class="suggestion-card-form">
                 <h3 style="color: var(--azul-marinho); margin-bottom: 20px; text-align: center;">Envie um Elogio</h3>
                 <div class="form-group"><label>Seu Nome:</label><input type="text" id="praise-from" placeholder="Ex: Carlos (Financeiro)"></div>
@@ -531,10 +342,7 @@
                 <div id="safety-analytics-display" style="background: #e8f5e9; color: var(--verde-escuro); padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 700; border: 1px solid var(--verde-sucesso);">
                     <i class="fas fa-chart-pie"></i> Calculando média da empresa...
                 </div>
-                
-                <button id="btn-open-quiz" class="btn-toggle-quiz">
-                    <i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança
-                </button>
+                <button id="btn-open-quiz" class="btn-toggle-quiz"><i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança</button>
                 <div id="quiz-content">
                     <h3 style="text-align: center; color: var(--azul-marinho); margin-bottom: 10px;">Quiz da Segurança</h3>
                     <p style="text-align: center; margin-bottom: 30px; color: #666;">Teste seus conhecimentos sobre as Regras de Ouro e Procedimentos.</p>
@@ -603,9 +411,7 @@
             </a>
         </div>
         <div class="suggestion-section">
-            <button id="btn-toggle-game-suggestion" class="btn-suggestion">
-                <i class="fas fa-lightbulb"></i>&nbsp; Envie sua sugestão de melhoria
-            </button>
+            <button id="btn-toggle-game-suggestion" class="btn-suggestion"><i class="fas fa-lightbulb"></i>&nbsp; Envie sua sugestão de melhoria</button>
             <div id="game-suggestion-form-container" class="suggestion-card-form">
                 <h3 style="color: var(--azul-marinho); margin-bottom: 20px; text-align: center;">Melhorias para os Jogos</h3>
                 <div class="form-group"><label>Seu Nome:</label><input type="text" id="game-suggest-name" placeholder="Ex: João"></div>
@@ -618,7 +424,7 @@
     <div id="hiscore-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close" onclick="closeHiScore()">&times;</button>
-            <h3 id="modal-game-title" style="color: var(--azul-marinho); text-align: center; margin-bottom: 20px;">Ranking</h3>
+            <h3 id="modal-game-title">Ranking</h3>
             <div id="modal-score-list" class="hiscore-list"></div>
         </div>
     </div>
@@ -626,8 +432,8 @@
     <div id="synopsis-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close" onclick="closeSynopsis()">&times;</button>
-            <h3 id="modal-synopsis-title" style="color: var(--azul-marinho); text-align: center; margin-bottom: 20px;">Sinopse</h3>
-            <div id="modal-synopsis-text" style="color: #555; line-height: 1.6;"></div>
+            <h3 id="modal-synopsis-title">Sinopse</h3>
+            <div id="modal-synopsis-text"></div>
         </div>
     </div>
 
@@ -640,9 +446,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    // =================================================================
-    // 1. CONFIGURAÇÕES, CONSTANTES E VARIÁVEIS GLOBAIS
-    // =================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyBzMvAw9ahEyd-tSYY08HxcMzo9RKf3IFY",
       authDomain: "jornalpsr-1b8c6.firebaseapp.com",
@@ -655,7 +458,6 @@
     let AUTH_TOKEN = null;
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
 
-    // CONSTANTES DE DADOS
     const SUSTENTABILIDADE_PADRAO = {
         meioAmbiente: [
             { cor: "#4caf50", icon: "fas fa-water", titulo: "Gestão de Água", texto: "Reuso de água nos processos de produção." },
@@ -683,7 +485,6 @@
         { id: "q10", question: "Organização do local é dever de:", options: ["Limpeza", "Gerente", "Todos"], correct: 2 }
     ];
 
-    // VARIÁVEIS DE ESTADO (PartiuPensar adicionado)
     let CONTEUDO_JORNAL = { temaMes: {}, bemEstar: {}, saudeFisica: {}, partiuPensar: {}, desafios: [], hobby: {}, cultura: [], sustentabilidade: SUSTENTABILIDADE_PADRAO };
     let globalChallengesData = {}, globalQuizData = {}, globalHobbyData = {}, globalPraiseData = {}, globalRatingsData = {}, globalTestimonialsData = {};
     
@@ -697,9 +498,6 @@
     }
     const MY_DEVICE_ID = getDeviceId();
 
-    // =================================================================
-    // 2. SISTEMA DE CACHE
-    // =================================================================
     const CACHE_KEYS = {
         CONTENT: "psr_v3_content",
         CLIENTES: "psr_v3_clientes",
@@ -715,7 +513,6 @@
     function loadCache(key) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch(e){ return null; } }
 
     function renderFromCache() {
-        console.log("Tentando renderizar via Cache...");
         const cContent = loadCache(CACHE_KEYS.CONTENT);
         if(cContent) { CONTEUDO_JORNAL = cContent; if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO; }
         
@@ -732,12 +529,9 @@
         if(cContent) refreshAllUI();
     }
 
-    // =================================================================
-    // 3. FUNÇÕES DE RENDERIZAÇÃO (UI)
-    // =================================================================
     function refreshAllUI() {
-        renderJornal(); // Renderiza estrutura
-        renderHobbyUI(); // Renderiza Hobby (separado para não bugar o resto)
+        renderJornal();
+        renderHobbyUI(); 
         renderChallenges(globalChallengesData);
         renderPraiseSection(currentPraiseMonth);
         renderTestimonials(globalTestimonialsData);
@@ -745,7 +539,6 @@
         setupRatings(globalRatingsData);
     }
 
-    // NOVA FUNÇÃO ESPECÍFICA PARA O HOBBY (CORREÇÃO DO BUG)
     function renderHobbyUI() {
         const h = CONTEUDO_JORNAL.hobby || {};
         const hLikes = globalHobbyData.likes || {};
@@ -763,11 +556,7 @@
     function renderJornal() {
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         const divTema = document.getElementById('tema-mes');
-        
-        // --- ALTERAÇÃO AQUI: Capa dinâmica ---
-        const capaBackground = tm.capaUrl ? 
-            `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('${tm.capaUrl}') center/cover no-repeat;` : 
-            `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('https://i.postimg.cc/pWWZhcwT/wallpaper-janery-branco.jpg?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;`;
+        const capaBackground = tm.capaUrl ? `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('${tm.capaUrl}') center/cover no-repeat;` : `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('https://i.postimg.cc/pWWZhcwT/wallpaper-janery-branco.jpg?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;`;
 
         if(divTema) {
             divTema.innerHTML = `
@@ -784,22 +573,13 @@
             </div>`;
         }
         
-// ... dentro de renderJornal() ...
+        const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
+        const divSaude = document.getElementById('saude-fisica-hero');
+        const imgBackground = sf.imagemFundo || 'https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop';
+        const iconSaude = sf.icon || '🏃';
+        const styleSaude = `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('${imgBackground}'); background-size: cover; background-position: center center;`;
 
-    const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
-    const divSaude = document.getElementById('saude-fisica-hero');
-
-    // LÓGICA NOVA: Define a imagem e o ícone dinamicamente
-    // 1. Pega a URL do Firebase. Se não tiver, usa a do Unsplash como "plano B"
-    const imgBackground = sf.imagemFundo || 'https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop';
-    
-    // 2. Pega o ícone do Firebase (Ex: 🥗). Se não tiver, usa o corredor (🏃)
-    const iconSaude = sf.icon || '🏃';
-
-    // 3. Monta o estilo CSS inline mantendo o gradiente verde/azul
-    const styleSaude = `background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('${imgBackground}'); background-size: cover; background-position: center center;`;
-
-    if(divSaude) divSaude.innerHTML = `
+        if(divSaude) divSaude.innerHTML = `
         <div class="jornal-card">
             <div class="banner-metade banner-saude-fisica" style="${styleSaude}">
                 ${iconSaude}
@@ -815,17 +595,8 @@
             </div>
         </div>`;
       
-        // --- ALTERAÇÃO AQUI: Partiu Pensar dinâmico ---
         const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
-        const ppTitulo = pp.titulo || 'Partiu Pensar';
-        const ppSubtitulo = pp.subtitulo || 'Filosofia';
-        const ppResumo = pp.resumo || 'Conteúdo em atualização...';
-        const ppConteudo = pp.conteudoCompleto || '<p>Aguarde novidades!</p>';
-        const ppFonte = pp.fonte || 'Portal PSR';
-        
-        const styleBackground = pp.imagemFundo ? 
-            `background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${pp.imagemFundo}') center/cover no-repeat;` : 
-            `background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80));`;
+        const styleBackground = pp.imagemFundo ? `background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${pp.imagemFundo}') center/cover no-repeat;` : `background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80));`;
 
         const divPP = document.getElementById('partiu-pensar-hero');
         if(divPP) {
@@ -835,22 +606,20 @@
                     ${pp.imagemFundo ? '' : '<i class="fas fa-lightbulb"></i>'} 
                 </div>
                 <div class="jornal-card-content card-texto-centralizado">
-                    <h3>${ppSubtitulo}</h3>
-                    <h4 style="color:var(--dourado); margin-bottom:10px;">${ppTitulo}</h4>
-                    <p>${ppResumo}</p>
+                    <h3>${pp.subtitulo || 'Filosofia'}</h3>
+                    <h4 style="color:var(--dourado); margin-bottom:10px;">${pp.titulo || 'Partiu Pensar'}</h4>
+                    <p>${pp.resumo || 'Conteúdo em atualização...'}</p>
                     <button id="btnLerMaisPartiuPensar" class="btn-ler-mais" onclick="togglePartiuPensar()">Ler reflexão</button>
                     <div id="materiaPartiuPensar" class="materia-completa">
-                        ${ppConteudo}
-                        <p class="fonte-materia"><small>Fonte: <strong>${ppFonte}</strong></small></p>
+                        ${pp.conteudoCompleto || '<p>Aguarde novidades!</p>'}
+                        <p class="fonte-materia"><small>Fonte: <strong>${pp.fonte || 'Portal PSR'}</strong></small></p>
                     </div>
                 </div>
             </div>`;
         }
         
-        // --- INÍCIO DA ALTERAÇÃO (Título Dinâmico) ---
         const titDes = document.getElementById('titulo-desafio-mes');
         if(titDes) {
-            // Se houver título salvo no banco, usa ele. Se não, usa o padrão automático de data.
             if (CONTEUDO_JORNAL.desafios_titulo && CONTEUDO_JORNAL.desafios_titulo.trim() !== "") {
                 titDes.innerText = CONTEUDO_JORNAL.desafios_titulo;
             } else {
@@ -858,7 +627,6 @@
                 titDes.innerText = `💪 Desafio do Mês de ${meses[new Date().getMonth()]}`;
             }
         }
-        // --- FIM DA ALTERAÇÃO ---
         
         const desContainer = document.getElementById('desafios-container'); 
         if(desContainer) { desContainer.innerHTML = ''; (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; }); }
@@ -882,52 +650,69 @@
         setupQuizToggle();
     }
 
+    // =================================================================
+    // 2. CORREÇÃO NA RENDERIZAÇÃO DE CLIENTES (AGORA CONTA AUTOMÁTICO)
+    // =================================================================
     function renderNovosClientes(dados) {
         if (!dados) return;
-        if (dados.resumo) {
-            const elQtd = document.getElementById('stat-qtd');
-            const elPer = document.getElementById('stat-periodo');
-            if(elQtd) elQtd.textContent = dados.resumo.quantidade || "0";
-            if(elPer) elPer.textContent = dados.resumo.periodo || "";
-        }
+
+        // Garante que é uma lista, ignorando se o Firebase mandou como Objeto
+        const listaClientes = dados.lista ? Object.values(dados.lista) : []; 
+        
+        // CONTA AUTOMATICAMENTE o tamanho real da lista (ignora o "6" do resumo)
+        const totalReal = listaClientes.length;
+
+        // Atualiza números
+        const elQtd = document.getElementById('stat-qtd');
+        const elPer = document.getElementById('stat-periodo');
+        if(elQtd) elQtd.textContent = totalReal; // Vai mostrar 13
+        if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
+
         const listaContainer = document.getElementById('lista-clientes-content');
         if(listaContainer) {
-            listaContainer.innerHTML = ""; 
-            if (dados.lista && dados.lista.length > 0) {
-                dados.lista.forEach(cliente => {
+            listaContainer.innerHTML = "";
+            if (totalReal > 0) {
+                listaClientes.forEach(cliente => {
+                    if(!cliente) return;
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                    listaContainer.innerHTML += `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
+                    listaContainer.innerHTML += `
+                        <div class="cliente-item ${classeDestaque}">
+                            <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
+                            <div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div>
+                        </div>`;
                 });
-            } else { listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; }
+            } else { 
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
+            }
         }
     }
 
-    // =================================================================
-    // 4. INICIALIZAÇÃO E REDE
-    // =================================================================
-    
-    // Passo 1: Renderiza Cache
     renderFromCache();
 
-    // Passo 2: Login e Download
     firebase.auth().signInAnonymously().then((userCred) => {
         return userCred.user.getIdToken().then(token => {
             AUTH_TOKEN = token;
             downloadData(); 
             initAnalytics();
-            initSafetyAnalytics(); // INICIALIZA ANALYTICS DO QUIZ
+            initSafetyAnalytics();
         });
     }).catch((error) => {
         console.error("Erro no Login:", error);
         downloadData(); 
     });
 
+    // =================================================================
+    // 1. CORREÇÃO NO FETCH (AGORA COM ANTI-CACHE)
+    // =================================================================
     async function secureFetch(url) {
         let finalUrl = url;
+        // Adiciona timestamp para impedir que o navegador use dados velhos
+        const separator = url.includes('?') ? '&' : '?';
+        finalUrl = `${url}${separator}t=${Date.now()}`;
+        
         if (AUTH_TOKEN) {
-            const separator = url.includes('?') ? '&' : '?';
-            finalUrl = `${url}${separator}auth=${AUTH_TOKEN}`;
+            finalUrl += `&auth=${AUTH_TOKEN}`;
         }
         try {
             const resp = await fetch(finalUrl);
@@ -939,20 +724,21 @@
         }
     }
 
+    // =================================================================
+    // 3. CORREÇÃO NO ENDEREÇO (AGORA APONTA PARA CONTENT/NOVOS_CLIENTES)
+    // =================================================================
     async function downloadData() {
         const contentData = await secureFetch(BASE_DB_URL + "content.json");
         if (contentData) {
             CONTEUDO_JORNAL = contentData;
-            // Garante inicialização para não quebrar a lógica
             if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO;
             if(!CONTEUDO_JORNAL.partiuPensar) CONTEUDO_JORNAL.partiuPensar = {}; 
-            
             saveCache(CACHE_KEYS.CONTENT, contentData);
             refreshAllUI(); 
         }
 
         const [clientes, hobby, praise, challenges, quiz, ratings, testimonials] = await Promise.all([
-            secureFetch(BASE_DB_URL + "novos_clientes.json"),
+            secureFetch(BASE_DB_URL + "content/novos_clientes.json"), // <-- CAMINHO CORRIGIDO AQUI
             secureFetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
             secureFetch(BASE_DB_URL + "praise_messages.json"),
             secureFetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"),
@@ -961,8 +747,14 @@
             secureFetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
         ]);
 
-        if(clientes) { renderNovosClientes(clientes); saveCache(CACHE_KEYS.CLIENTES, clientes); }
-        // CORREÇÃO DE SYNC: Se vier null (deletado), assume objeto vazio {}
+        // Se 'clientes' vier vazio do fetch específico, tenta pegar de dentro do contentData por garantia
+        const dadosClientes = clientes || (contentData ? contentData.novos_clientes : null);
+
+        if(dadosClientes) { 
+            renderNovosClientes(dadosClientes); 
+            saveCache(CACHE_KEYS.CLIENTES, dadosClientes); 
+        }
+
         globalHobbyData = hobby || {}; saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
         globalPraiseData = praise || {}; saveCache(CACHE_KEYS.PRAISE, globalPraiseData);
         globalChallengesData = challenges || {}; saveCache(CACHE_KEYS.CHALLENGES, globalChallengesData);
@@ -974,14 +766,8 @@
         setupForms();
     }
 
-    // =================================================================
-    // 5. INTERAÇÕES E LÓGICA (UI)
-    // =================================================================
-
-    // LÓGICA DE ANALYTICS DO QUIZ
     function initSafetyAnalytics() {
         const dbRef = firebase.database().ref('safety_quiz');
-        
         dbRef.on('value', (snapshot) => {
             const data = snapshot.val();
             const displayEl = document.getElementById('safety-analytics-display');
@@ -989,27 +775,17 @@
                 if (displayEl) displayEl.innerHTML = `<i class="fas fa-chart-pie"></i> Média geral de acertos da empresa: 0%`;
                 return;
             }
-
             let totalRespostas = 0;
             let totalAcertos = 0;
-
-            // Itera sobre as questões (q1, q2...)
             Object.keys(data).forEach(questionKey => {
                 const usersAnswers = data[questionKey];
-                // Itera sobre os usuários dentro de cada questão
                 Object.values(usersAnswers).forEach(isCorrect => {
                     totalRespostas++;
-                    if (isCorrect === true) {
-                        totalAcertos++;
-                    }
+                    if (isCorrect === true) totalAcertos++;
                 });
             });
-
             const porcentagem = totalRespostas === 0 ? 0 : Math.round((totalAcertos / totalRespostas) * 100);
-            
-            if (displayEl) {
-                displayEl.innerHTML = `<i class="fas fa-chart-pie"></i> Média geral de acertos da empresa: ${porcentagem}%`;
-            }
+            if (displayEl) displayEl.innerHTML = `<i class="fas fa-chart-pie"></i> Média geral de acertos da empresa: ${porcentagem}%`;
         });
     }
 
@@ -1018,69 +794,41 @@
             const itemId = container.dataset.id;
             const stars = container.querySelectorAll('.rating-stars i');
             const scoreDisplay = container.querySelector('.score-value');
-            
-            // Garante que existe o objeto para este item
             if (!ratingsData[itemId]) ratingsData[itemId] = {};
             const itemVotes = ratingsData[itemId]; 
-
-            // Função interna para calcular e renderizar
             const calcRender = (votes) => {
                 const vals = Object.values(votes); 
-                
-                // CÁLCULO DA MÉDIA
                 let avg = 0;
                 if (vals.length > 0) {
                     const sum = vals.reduce((a, b) => a + Number(b), 0); 
                     avg = sum / vals.length;
                 }
-                
-                // Atualiza o texto (Ex: 4.5)
                 scoreDisplay.textContent = avg.toFixed(1);
-                
-                // Atualiza as estrelas visuais
                 updateVisualStars(stars, avg);
             };
-
-            // Executa o cálculo inicial ao carregar
             calcRender(itemVotes);
-
-            // Adiciona os eventos de clique nas estrelas
             stars.forEach(star => {
                 star.addEventListener('click', async () => {
                     const val = parseInt(star.dataset.value);
-                    
-                    // Atualiza localmente imediatamente
                     if(!globalRatingsData[itemId]) globalRatingsData[itemId] = {};
                     globalRatingsData[itemId][MY_DEVICE_ID] = val;
-                    
-                    calcRender(globalRatingsData[itemId]); // Recalcula a média visualmente
+                    calcRender(globalRatingsData[itemId]);
                     saveCache(CACHE_KEYS.RATINGS, globalRatingsData);
-
-                    // Envia para o Firebase
                     fetch(`${BASE_DB_URL}ratings_history/${CURRENT_MONTH_KEY}/${itemId}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(val)
                     });
                 });
-
-                // Efeito Hover 
                 star.addEventListener('mouseover', () => {
                     const val = parseInt(star.dataset.value);
                     stars.forEach(s => { 
                         const sVal = parseInt(s.dataset.value); 
-                        s.className = ''; // Limpa classes
-                        if(sVal <= val) { 
-                            s.className = 'fas fa-star filled'; // Estrela cheia
-                            s.style.color='var(--dourado)'; 
-                        } else { 
-                            s.className = 'far fa-star'; // Estrela vazia
-                            s.style.color='#d1d1d1'; 
-                        } 
+                        s.className = ''; 
+                        if(sVal <= val) { s.className = 'fas fa-star filled'; s.style.color='var(--dourado)'; } 
+                        else { s.className = 'far fa-star'; s.style.color='#d1d1d1'; } 
                     });
                 });
-
-                // Ao tirar o mouse, volta a mostrar a Média Real calculada
                 star.addEventListener('mouseout', () => { 
                     stars.forEach(s => s.style.color = ''); 
                     updateVisualStars(stars, parseFloat(scoreDisplay.textContent)); 
@@ -1091,25 +839,15 @@
 
     function updateVisualStars(stars, val) { 
         const rating = parseFloat(val); 
-
         stars.forEach((s, index) => { 
             const starValue = index + 1; 
-
-            // Reseta a estrela
-            s.className = ''; 
-            s.style.color = ''; 
-
-            if (rating >= starValue) {
-                s.className = 'fas fa-star filled'; 
-            } else if (rating >= starValue - 0.5) {
-                s.className = 'fas fa-star-half-alt filled'; 
-            } else {
-                s.className = 'far fa-star'; 
-            }
+            s.className = ''; s.style.color = ''; 
+            if (rating >= starValue) { s.className = 'fas fa-star filled'; } 
+            else if (rating >= starValue - 0.5) { s.className = 'fas fa-star-half-alt filled'; } 
+            else { s.className = 'far fa-star'; }
         }); 
     }
 
-    // Desafios
     window.voteChallenge = async function(cId, type) {
         if(!globalChallengesData) globalChallengesData = {};
         if(!globalChallengesData[cId]) globalChallengesData[cId] = {};
@@ -1134,7 +872,6 @@
         });
     }
 
-    // Quiz
     function renderQuizHTML() {
         const container = document.getElementById('quiz-questions-container'); if(!container) return;
         container.innerHTML = '';
@@ -1191,13 +928,12 @@
         location.reload();
     });
 
-    // Hobby
     window.likeHobby = async function() {
         if(!globalHobbyData.likes) globalHobbyData.likes = {};
         const exists = globalHobbyData.likes[MY_DEVICE_ID];
         if (exists) delete globalHobbyData.likes[MY_DEVICE_ID]; else globalHobbyData.likes[MY_DEVICE_ID] = true;
         saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
-        renderHobbyUI(); // Atualiza APENAS o Hobby, sem bugar o resto
+        renderHobbyUI(); 
         const method = exists ? 'DELETE' : 'PUT';
         if(AUTH_TOKEN) fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/likes/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, { method: method, body: JSON.stringify(true) });
     }
@@ -1210,12 +946,11 @@
             const tempId = "temp_" + Date.now();
             globalHobbyData.comments[tempId] = newComment;
             saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
-            renderHobbyUI(); // Atualiza APENAS o Hobby
+            renderHobbyUI(); 
             if(AUTH_TOKEN) fetch(`${BASE_DB_URL}hobby_interactions_history/${CURRENT_MONTH_KEY}/comments.json?auth=${AUTH_TOKEN}`, {method:'POST', body:JSON.stringify(newComment)});
         }
     }
 
-    // Elogios
     function renderPraiseSection(selectedMonth) {
         currentPraiseMonth = selectedMonth;
         const container = document.getElementById('praise-container'); if(!container) return;
@@ -1249,7 +984,6 @@
         if(AUTH_TOKEN) fetch(`${BASE_DB_URL}praise_messages/${id}/likes/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, { method: method, body: JSON.stringify(true) });
     }
 
-    // Depoimentos
     function renderTestimonials(data) {
         const container = document.getElementById('testimonials-display'); if(!container) return;
         container.innerHTML = '';
@@ -1258,25 +992,34 @@
         sorted.forEach(([id, t]) => { container.innerHTML += `<div style="background:#f4f7f9; padding:20px; border-radius:10px; border-top:4px solid var(--dourado); text-align:left;"><span style="font-weight:700; color:var(--azul-marinho);">${t.name}</span><p style="font-style:italic; color:#555;">"${t.text}"</p></div>`; });
     }
 
-    // Utilitários de UI e Formulários
     function toggleGeneric(c, b, o, f) { const el=document.getElementById(c), btn=document.getElementById(b); if(el.style.display==='block'){el.style.display='none';btn.innerText=o;btn.style.background='var(--azul-marinho)';btn.style.color='white';}else{el.style.display='block';btn.innerText=f;btn.style.background='white';btn.style.color='var(--azul-marinho)';btn.style.border='2px solid var(--azul-marinho)';}}
     window.toggleMateria = function() { toggleGeneric('materiaCompleta', 'btnLerMais', 'Ler mais sobre o tema', 'Ler menos'); }
     window.toggleSaudeFisica = function() { toggleGeneric('materiaSaudeFisica', 'btnLerMaisSaudeFisica', 'Ler sobre saúde', 'Fechar'); }
-    window.togglePartiuPensar = function() { toggleGeneric('materiaPartiuPensar', 'btnLerMaisPartiuPensar', 'Ler reflexão', 'Fechar'); } // Toggle novo
+    window.togglePartiuPensar = function() { toggleGeneric('materiaPartiuPensar', 'btnLerMaisPartiuPensar', 'Ler reflexão', 'Fechar'); } 
     window.toggleHobbyComments = function() { const el=document.getElementById('hobby-comments-box'); el.style.display=el.style.display==='block'?'none':'block'; }
     window.mostrarAba = function(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function setupToggle(b,f){ const btn=document.getElementById(b), frm=document.getElementById(f); if(btn&&frm) btn.addEventListener('click',()=>frm.style.display=frm.style.display==='block'?'none':'block'); }
     function setupQuizToggle() { const btn = document.getElementById('btn-open-quiz'); const content = document.getElementById('quiz-content'); if (btn && content) { btn.onclick = () => { if(content.style.display === 'block') { content.style.display = 'none'; btn.innerHTML = '<i class="fas fa-clipboard-check"></i> Responder Quiz de Segurança'; } else { content.style.display = 'block'; btn.innerHTML = '<i class="fas fa-chevron-up"></i> Fechar Quiz'; } }; } }
     
+    window.toggleTodosClientes = function() {
+        const lista = document.getElementById('lista-clientes');
+        const btn = document.querySelector('.btn-ver-todos');
+        if (!lista.style.display || lista.style.display === 'none') {
+            lista.style.display = 'block';
+            if(btn) btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista';
+        } else {
+            lista.style.display = 'none';
+            if(btn) btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa';
+        }
+    }
+
     function setupForms() {
-        // Função genérica mantida para sugestões gerais e receitas
         const simplePost = (btnId, inputs, urlSuffix) => {
             const btn = document.getElementById(btnId);
             if(btn) btn.onclick = async () => {
                 const data = {}; let valid = true;
                 inputs.forEach(id => { const val = document.getElementById(id).value; if(!val) valid = false; data[id.split('-')[1]] = val; }); 
                 if(btnId==='btn-submit-suggestion') data.movie = document.getElementById('suggest-movie').value;
-                if(btnId==='btn-submit-recipe') data.dish = document.getElementById('recipe-name').value;
                 data.date = new Date();
                 
                 if(valid && AUTH_TOKEN) {
@@ -1287,7 +1030,6 @@
         };
         simplePost('btn-submit-suggestion', ['suggest-name'], 'suggestions');
         
-        // Formulário de Games (Tratamento Específico)
         const btnGame = document.getElementById('btn-submit-game-suggestion');
         if (btnGame) {
             btnGame.onclick = async () => {
@@ -1295,27 +1037,15 @@
                 const textInput = document.getElementById('game-suggest-text');
                 
                 if (!nameInput || !textInput) return;
-
                 const nameVal = nameInput.value.trim();
                 const textVal = textInput.value.trim();
 
                 if (nameVal && textVal && AUTH_TOKEN) {
-                    const gameData = {
-                        name: nameVal, 
-                        text: textVal, 
-                        date: new Date().toISOString()
-                    };
-                    
-                    await fetch(BASE_DB_URL + "game_suggestions.json?auth=" + AUTH_TOKEN, {
-                        method: 'POST', 
-                        body: JSON.stringify(gameData)
-                    });
-                    
+                    const gameData = { name: nameVal, text: textVal, date: new Date().toISOString() };
+                    await fetch(BASE_DB_URL + "game_suggestions.json?auth=" + AUTH_TOKEN, { method: 'POST', body: JSON.stringify(gameData) });
                     alert('Sugestão de jogo enviada com sucesso!'); 
                     location.reload();
-                } else {
-                    alert('Preencha seu nome e a sugestão!');
-                }
+                } else { alert('Preencha seu nome e a sugestão!'); }
             };
         }
 
@@ -1325,22 +1055,10 @@
             const target = document.getElementById('hobby-suggest-target').value;
             const reason = document.getElementById('hobby-suggest-reason').value;
             if(from && target && AUTH_TOKEN) {
-                const data = {
-                    from: from,
-                    target: target,
-                    reason: reason || '',
-                    date: new Date().toISOString()
-                };
-                await fetch(BASE_DB_URL + 'hobby_suggestions.json?auth=' + AUTH_TOKEN, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                alert('Indicação enviada com sucesso!');
-                location.reload();
-            } else if(!from || !target) {
-                alert('Preencha pelo menos o seu nome e quem você indica!');
-            }
+                const data = { from: from, target: target, reason: reason || '', date: new Date().toISOString() };
+                await fetch(BASE_DB_URL + 'hobby_suggestions.json?auth=' + AUTH_TOKEN, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                alert('Indicação enviada com sucesso!'); location.reload();
+            } else if(!from || !target) { alert('Preencha pelo menos o seu nome e quem você indica!'); }
         };
 
         const btnT = document.getElementById('btn-submit-testimonial');
@@ -1357,124 +1075,49 @@
     
     function openSynopsis(id) { const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id); if (item) { document.getElementById('modal-synopsis-title').textContent = item.titulo; document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível."; document.getElementById('synopsis-modal').style.display = 'flex'; } }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
-window.openHiScore = async function(gameKey) {
+    window.openHiScore = async function(gameKey) {
         const modal = document.getElementById('hiscore-modal'); 
         const list = document.getElementById('modal-score-list');
-        
-        // Abre o modal
         modal.style.display = 'flex'; 
         document.getElementById('modal-game-title').textContent = `Ranking: ${gameKey}`;
         list.innerHTML = '<p style="text-align:center; color:#666;">Carregando...</p>';
-        
-        // Busca dados
         const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
-        
-        if (!data) { 
-            list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; 
-            return; 
-        }
-        
-        // Ordena
+        if (!data) { list.innerHTML = '<p style="text-align:center; color:#999;">Sem recordes.</p>'; return; }
         let scoresArray = Object.values(data).sort((a, b) => (parseFloat(String(b.pontos).replace(/[^\d.-]/g, ''))||0) - (parseFloat(String(a.pontos).replace(/[^\d.-]/g, ''))||0));
-        
-        // Monta a lista com a lógica do KM
         list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
-            
-            // 1. Pega o ponto puro
             let visualPonto = s.pontos;
-            
-            // 2. Se for Kart, adiciona o " km" visualmente
-            if (gameKey === 'BobinaKart') {
-                visualPonto = visualPonto + " km";
-            }
-
-            // 3. Retorna o HTML
-            return `<div class="hiscore-item">
-                        <div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div>
-                        <div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div>
-                        <div class="hiscore-points">${visualPonto}</div>
-                    </div>`;
+            if (gameKey === 'BobinaKart') { visualPonto = visualPonto + " km"; }
+            return `<div class="hiscore-item"><div class="hiscore-rank" style="background:${index < 3 ? 'var(--dourado)' : 'var(--azul-marinho)'}">${index + 1}</div><div style="flex:1; margin-left:10px; font-weight:600;">${s.nome || 'Anônimo'}</div><div class="hiscore-points">${visualPonto}</div></div>`;
         }).join('');
     };
-
-    // --- FUNÇÃO DE FECHAR O RANKING (RESTAURADA) ---
-    window.closeHiScore = function() { 
-        document.getElementById('hiscore-modal').style.display = 'none'; 
-    };
-
-    // =================================================================
-    // 6. SISTEMA DE ANALYTICS
-    // =================================================================
+    window.closeHiScore = function() { document.getElementById('hiscore-modal').style.display = 'none'; };
 
     async function initAnalytics() {
         if (!AUTH_TOKEN) return; 
-
         const timestamp = new Date().toISOString();
         const userAgent = navigator.userAgent; 
-
-        // -------------------------------------------------------
-        // A. REGISTRAR PRESENÇA 
-        // -------------------------------------------------------
-        const sessionData = {
-            last_seen: timestamp,
-            device_info: userAgent,
-            platform: navigator.platform
-        };
-
-        fetch(`${BASE_DB_URL}monitor_interno/users/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
-            method: 'PATCH',
-            body: JSON.stringify(sessionData)
-        }).catch(err => console.error("Erro monitor sessão:", err));
-
-        // -------------------------------------------------------
-        // B. REGISTRAR LOG DIÁRIO
-        // -------------------------------------------------------
+        const sessionData = { last_seen: timestamp, device_info: userAgent, platform: navigator.platform };
+        fetch(`${BASE_DB_URL}monitor_interno/users/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, { method: 'PATCH', body: JSON.stringify(sessionData) }).catch(err => console.error("Erro monitor sessão:", err));
         const hoje = timestamp.slice(0, 10); 
-        
-        fetch(`${BASE_DB_URL}monitor_interno/daily_visits/${hoje}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, {
-            method: 'PUT',
-            body: JSON.stringify(true)
-        });
-
-        console.log("Monitoramento iniciado para", MY_DEVICE_ID);
+        fetch(`${BASE_DB_URL}monitor_interno/daily_visits/${hoje}/${MY_DEVICE_ID}.json?auth=${AUTH_TOKEN}`, { method: 'PUT', body: JSON.stringify(true) });
     }
 
-    // -------------------------------------------------------
-    // C. RASTREADOR DE CLIQUES
-    // -------------------------------------------------------
     document.addEventListener('click', (event) => {
         const target = event.target.closest('button, a, .clickable');
-
         if (target && AUTH_TOKEN) {
             const elementoId = target.id || 'sem_id';
             const elementoTexto = target.innerText ? target.innerText.substring(0, 30) : 'sem_texto';
             const elementoTag = target.tagName;
-
             if(elementoId === 'modal-close') return;
-
-            const clickData = {
-                u: MY_DEVICE_ID, 
-                t: new Date().toISOString().split('T')[1].split('.')[0], 
-                id: elementoId,
-                tag: elementoTag,
-                txt: elementoTexto,
-                sec: target.closest('section') ? target.closest('section').id : 'geral'
-            };
-
+            const clickData = { u: MY_DEVICE_ID, t: new Date().toISOString().split('T')[1].split('.')[0], id: elementoId, tag: elementoTag, txt: elementoTexto, sec: target.closest('section') ? target.closest('section').id : 'geral' };
             const hoje = new Date().toISOString().slice(0, 10);
-            
-            fetch(`${BASE_DB_URL}monitor_interno/events/${hoje}.json?auth=${AUTH_TOKEN}`, {
-                method: 'POST',
-                body: JSON.stringify(clickData),
-                keepalive: true 
-            });
+            fetch(`${BASE_DB_URL}monitor_interno/events/${hoje}.json?auth=${AUTH_TOKEN}`, { method: 'POST', body: JSON.stringify(clickData), keepalive: true });
         }
     });
 
     document.addEventListener("DOMContentLoaded", () => {
         ['menu', 'footer'].forEach(file => fetch(`${file}.html?t=${Date.now()}`).then(r=>r.text()).then(html=>{ const p=document.getElementById(`${file}-placeholder`); if(p) p.innerHTML=html; if(file==='menu'){const t=document.getElementById('menu-toggle'),n=document.getElementById('nav-principal');if(t&&n){t.addEventListener('click',()=>n.classList.toggle('active'));n.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>n.classList.remove('active')));}} }).catch(e=>console.warn(e)));
         setupToggle('btn-toggle-suggestion', 'suggestion-form-container');
-        setupToggle('btn-toggle-recipe', 'recipe-form-container'); // Mantido ID apenas para compatibilidade
         setupToggle('btn-toggle-testimonial', 'testimonial-form-container');
         setupToggle('btn-toggle-praise', 'praise-form-container');
         setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
