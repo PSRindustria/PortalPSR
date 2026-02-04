@@ -882,24 +882,44 @@
         setupQuizToggle();
     }
 
-    function renderNovosClientes(dados) {
+function renderNovosClientes(dados) {
         if (!dados) return;
+
+        // 1. Preenche o Resumo (topo do card)
         if (dados.resumo) {
             const elQtd = document.getElementById('stat-qtd');
             const elPer = document.getElementById('stat-periodo');
             if(elQtd) elQtd.textContent = dados.resumo.quantidade || "0";
             if(elPer) elPer.textContent = dados.resumo.periodo || "";
         }
+
+        // 2. Preenche a Lista (CORREÇÃO DE ARRAY/OBJETO)
         const listaContainer = document.getElementById('lista-clientes-content');
+        
         if(listaContainer) {
-            listaContainer.innerHTML = ""; 
-            if (dados.lista && dados.lista.length > 0) {
-                dados.lista.forEach(cliente => {
+            listaContainer.innerHTML = "";
+            
+            // TRUQUE: Converte para Array, não importa se veio como Objeto ou Array do Firebase
+            const listaSegura = dados.lista ? Object.values(dados.lista) : []; 
+
+            if (listaSegura.length > 0) {
+                listaSegura.forEach(cliente => {
+                    if(!cliente) return; // Pula itens vazios se houver
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                    listaContainer.innerHTML += `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
+                    
+                    listaContainer.innerHTML += `
+                        <div class="cliente-item ${classeDestaque}">
+                            <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
+                            <div class="cliente-info">
+                                <span>${cliente.nome}</span>
+                                ${htmlBadge}
+                            </div>
+                        </div>`;
                 });
-            } else { listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; }
+            } else { 
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
+            }
         }
     }
 
@@ -1480,6 +1500,23 @@ window.openHiScore = async function(gameKey) {
         setupToggle('btn-toggle-hobby-suggestion', 'hobby-suggestion-form-container');
         setupToggle('btn-toggle-game-suggestion', 'game-suggestion-form-container');
     });
+  // =================================================================
+    // CÓDIGO QUE ESTAVA FALTANDO
+    // =================================================================
+    window.toggleTodosClientes = function() {
+        const lista = document.getElementById('lista-clientes');
+        const btn = document.querySelector('.btn-ver-todos');
+        
+        // Se a lista não tem estilo definido ou está oculta, mostra ela
+        if (!lista.style.display || lista.style.display === 'none') {
+            lista.style.display = 'block';
+            if(btn) btn.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar lista';
+        } else {
+            // Senão, esconde
+            lista.style.display = 'none';
+            if(btn) btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa';
+        }
+    }
 </script>
 </body>
 </html>
