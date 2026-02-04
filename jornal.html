@@ -883,49 +883,45 @@
     }
 
 function renderNovosClientes(dados) {
+        console.log("--- DEBUG CLIENTES ---");
+        console.log("Dados recebidos:", dados);
+
         if (!dados) return;
 
-        // 1. TRUQUE DE SEGURANÇA:
-        // Transforma os dados em lista (Array), não importa se o Firebase mandou como Objeto ou Array.
-        // Isso resolve o problema de incompatibilidade de formatos.
+        // 1. Força a criação da lista
         const listaSegura = dados.lista ? Object.values(dados.lista) : []; 
-
-        // 2. CORREÇÃO DO CONTADOR (AUTOMÁTICO):
-        // Ignoramos o número "6" do banco e contamos o tamanho real da lista (ex: 13).
+        
+        // 2. Conta quantos itens tem na lista (deve dar 13)
         const quantidadeReal = listaSegura.length;
+        console.log("Quantidade contada pelo código:", quantidadeReal);
 
-        // Atualiza os números no topo do card
+        // 3. Atualiza o HTML
         const elQtd = document.getElementById('stat-qtd');
         const elPer = document.getElementById('stat-periodo');
         
-        if(elQtd) elQtd.textContent = quantidadeReal; // Mostra o valor calculado (13)
+        if(elQtd) {
+            elQtd.textContent = quantidadeReal; 
+            // VOU MUDAR A COR PARA VERMELHO SÓ PARA VOCÊ VER QUE O CÓDIGO NOVO RODOU
+            elQtd.style.color = "red"; 
+        }
         if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
 
-        // 3. RENDERIZA OS CLIENTES
+        // 4. Renderiza a lista
         const listaContainer = document.getElementById('lista-clientes-content');
-        
         if(listaContainer) {
             listaContainer.innerHTML = "";
-            
             if (quantidadeReal > 0) {
                 listaSegura.forEach(cliente => {
-                    // Proteção contra itens vazios que possam existir no banco
                     if(!cliente) return;
-
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                    
                     listaContainer.innerHTML += `
                         <div class="cliente-item ${classeDestaque}">
                             <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
-                            <div class="cliente-info">
-                                <span>${cliente.nome}</span>
-                                ${htmlBadge}
-                            </div>
+                            <div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div>
                         </div>`;
                 });
             } else { 
-                // Mensagem caso a lista esteja realmente vazia
                 listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
             }
         }
