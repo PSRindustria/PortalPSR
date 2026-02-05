@@ -370,8 +370,10 @@ function updatePhysics() {
         // Usa o limite definido na etapa anterior
         if(roadSpeed > MAX_SPEED_LIMIT) roadSpeed = MAX_SPEED_LIMIT; 
 
-        backgroundOffset += roadSpeed;
-        score += roadSpeed * 0.05;
+backgroundOffset += roadSpeed;
+        const scoreMultiplier = isMobileDevice ? 0.05 : 0.03;
+        
+        score += roadSpeed * scoreMultiplier;
         uiScore.textContent = Math.floor(score) + " km";
 
         spawnTimer++;
@@ -650,6 +652,7 @@ btnSave.addEventListener('click', async () => {
 </body>
 
 </html>
+
 
 
 
