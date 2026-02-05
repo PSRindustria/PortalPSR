@@ -177,7 +177,7 @@
               <th>Colaborador</th>
               <th>Departamento</th>
               <th>Início</th>
-              <th>Retorno</th>
+              <th>Fim</th> <th>Retorno</th>
             </tr>
           </thead>
           <tbody id="ferias-tbody">
@@ -746,14 +746,25 @@
        tb.innerHTML = "";
        if (data === null) { tb.innerHTML = `<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>`; return; }
        if (dataFiltrada.length === 0) { tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`; return; }
-       dataFiltrada.forEach(f => {
-         const retornaHoje = isSameDate(f.retorno, hoje);
-         const tr = document.createElement("tr");
-         if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
-         tr.innerHTML = `<td>${f.colaborador}</td><td>${f.departamento}</td><td>${f.inicio}</td><td>${f.retorno}</td>`;
-         tb.appendChild(tr);
-       });
-     }
+dataFiltrada.forEach(f => {
+  const retornaHoje = isSameDate(f.retorno, hoje);
+  const tr = document.createElement("tr");
+  if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
+
+  // --- ALTERAÇÃO AQUI: Adicionado campo 'fim' e atributos data-label para o mobile ---
+  const fimFerias = f.fim || '---'; // Pega o dado do JSON ou coloca traços se não existir
+  
+  tr.innerHTML = `
+    <td data-label="Colaborador"><strong>${f.colaborador}</strong></td>
+    <td data-label="Departamento">${f.departamento}</td>
+    <td data-label="Início das Férias">${f.inicio}</td>
+    <td data-label="Fim das Férias">${fimFerias}</td>
+    <td data-label="Retorno às Atividades" style="color: var(--primary-color); font-weight:bold;">${f.retorno}</td>
+  `;
+  // ----------------------------------------------------------------------------------
+  
+  tb.appendChild(tr);
+});
 
     // --- 7. DESTAQUES ---
     async function renderDestaques() {
@@ -918,6 +929,7 @@
   </script>
 </body>
 </html>
+
 
 
 
