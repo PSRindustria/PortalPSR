@@ -737,6 +737,7 @@
     // =================================================================
     function refreshAllUI() {
         renderJornal(); // Renderiza estrutura
+        renderNovosClientes(CONTEUDO_JORNAL.novos_clientes);
         renderHobbyUI(); // Renderiza Hobby (separado para não bugar o resto)
         renderChallenges(globalChallengesData);
         renderPraiseSection(currentPraiseMonth);
@@ -1004,7 +1005,8 @@ function renderNovosClientes(dados) {
         }
     }
 
-    async function downloadData() {
+async function downloadData() {
+        // 1. Baixa o conteúdo PRINCIPAL (Isso já traz os novos_clientes dentro dele!)
         const contentData = await secureFetch(BASE_DB_URL + "content.json");
         if (contentData) {
             CONTEUDO_JORNAL = contentData;
@@ -1013,11 +1015,11 @@ function renderNovosClientes(dados) {
             if(!CONTEUDO_JORNAL.partiuPensar) CONTEUDO_JORNAL.partiuPensar = {}; 
             
             saveCache(CACHE_KEYS.CONTENT, contentData);
-            refreshAllUI(); 
+            refreshAllUI(); // Isso agora vai chamar renderNovosClientes automaticamente
         }
 
-        const [clientes, hobby, praise, challenges, quiz, ratings, testimonials] = await Promise.all([
-            secureFetch(BASE_DB_URL + "novos_clientes.json"),
+        // 2. Baixa o restante das interações (Removido o fetch de novos_clientes daqui)
+        const [hobby, praise, challenges, quiz, ratings, testimonials] = await Promise.all([
             secureFetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
             secureFetch(BASE_DB_URL + "praise_messages.json"),
             secureFetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"),
@@ -1026,8 +1028,7 @@ function renderNovosClientes(dados) {
             secureFetch(BASE_DB_URL + "testimonials_history/" + CURRENT_MONTH_KEY + ".json")
         ]);
 
-        if(clientes) { renderNovosClientes(clientes); saveCache(CACHE_KEYS.CLIENTES, clientes); }
-        // CORREÇÃO DE SYNC: Se vier null (deletado), assume objeto vazio {}
+        // Atualiza as variáveis globais e caches
         globalHobbyData = hobby || {}; saveCache(CACHE_KEYS.HOBBY, globalHobbyData);
         globalPraiseData = praise || {}; saveCache(CACHE_KEYS.PRAISE, globalPraiseData);
         globalChallengesData = challenges || {}; saveCache(CACHE_KEYS.CHALLENGES, globalChallengesData);
