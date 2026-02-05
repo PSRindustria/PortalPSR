@@ -3,60 +3,70 @@
     "colaborador": "Simone Moura",
     "departamento": "Supply Chain",
     "inicio": "02/02/2026",
+    "fim": "06/02/2026",
     "retorno": "07/02/2026"
   },
   {
     "colaborador": "Gustavo Linhares",
     "departamento": "Produção",
     "inicio": "02/02/2026",
+    "fim": "22/02/2026",
     "retorno": "23/02/2026"
   },
   {
     "colaborador": "Leandro da Conceição",
     "departamento": "Clicheria",
     "inicio": "02/02/2026",
+    "fim": "22/02/2026",
     "retorno": "23/02/2026"
   },
   {
     "colaborador": "Deyvidy Pereira",
     "departamento": "TI",
     "inicio": "02/02/2026",
+    "fim": "22/02/2026",
     "retorno": "23/02/2026"
   },
   {
     "colaborador": "Marcos Salvado",
     "departamento": "Produção",
     "inicio": "02/02/2026",
+    "fim": "03/03/2026",
     "retorno": "04/03/2026"
   },
   {
     "colaborador": "Marcos Vinicius",
     "departamento": "Produção",
     "inicio": "02/02/2026",
+    "fim": "03/03/2026",
     "retorno": "04/03/2026"
   },
   {
     "colaborador": "Kayo Soares",
     "departamento": "Produção",
     "inicio": "02/02/2026",
+    "fim": "03/03/2026",
     "retorno": "04/03/2026"
   },
   {
     "colaborador": "Talita Rodrigues",
     "departamento": "Produção",
     "inicio": "02/02/2026",
+    "fim": "03/03/2026",
     "retorno": "04/03/2026"
   },
   {
     "colaborador": "Francisco de Assis",
     "departamento": "Logística",
     "inicio": "04/02/2026",
+    "fim": "05/03/2026",
     "retorno": "06/03/2026"
   },
   {
     "colaborador": "Luciano Silva",
     "departamento": "Logística",
     "inicio": "04/02/2026",
+    "fim": "05/03/2026",
     "retorno": "06/03/2026"
   }
 ]
