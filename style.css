@@ -1202,50 +1202,84 @@ footer .footer-content {
   }
   
   /* Férias no Mobile (Card View - Correção) */
-  .ferias-container { display: block; width: 100%; }
-  .ferias-table thead { display: none; }
+.ferias-container { display: block; width: 100%; }
+  .ferias-table thead { display: none; } /* Esconde cabeçalho da tabela */
   .ferias-table, .ferias-table tbody { display: block; width: 100%; }
 
   .ferias-table tr {
     background-color: #fff;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-    padding: 15px;
+    margin-bottom: 20px; /* Mais espaço entre um colaborador e outro */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Sombra mais destacada */
+    padding: 20px;
     border: 1px solid #f0f0f0;
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-    position: relative; text-align: center;
+    display: flex;
+    flex-direction: column; /* Garante um item abaixo do outro */
+    position: relative;
   }
 
-  .ferias-table td { display: block; border: none; padding: 0; }
+  .ferias-table td { 
+      display: flex; 
+      justify-content: space-between; /* Joga o rótulo pra esquerda e a data pra direita */
+      align-items: center;
+      width: 100%; 
+      padding: 8px 0; 
+      border-bottom: 1px dashed #eee; /* Linha pontilhada para separar */
+      font-size: 0.95rem;
+      color: #555;
+  }
+  .ferias-table td:last-child { border-bottom: none; }
 
+  /* 1. Nome do Colaborador (Topo do Card) */
   .ferias-table td:nth-child(1) {
-      width: 100%; font-weight: 700; font-size: 1.05rem;
-      color: var(--mvv-azul-marinho); margin-bottom: 2px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--mvv-azul-marinho);
+      justify-content: center; /* Centralizado */
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
+      margin-bottom: 5px;
   }
 
+  /* 2. Departamento */
   .ferias-table td:nth-child(2) {
-      width: 100%; font-size: 0.85rem; color: #888;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      margin-bottom: 12px; font-weight: 600;
+      font-size: 0.85rem;
+      color: #999;
+      text-transform: uppercase;
+      font-weight: 700;
+      justify-content: center; /* Centralizado */
+      border-bottom: none;
+      padding-top: 0;
+      margin-bottom: 10px;
   }
 
-  .ferias-table td:nth-child(3), 
-  .ferias-table td:nth-child(4) {
-      display: inline-block; font-size: 0.9rem; color: #555;
-      background-color: #f4f8fb; padding: 6px 10px;
-      border-radius: 6px; margin: 0px -10px 0px -10px;
-  }
-
-  .ferias-table td:nth-child(3) { margin-right: 5px; }
-  
+  /* 3. Data de Início */
   .ferias-table td:nth-child(3)::before {
-      content: "\f073"; font-family: "Font Awesome 6 Free"; font-weight: 900;
-      margin-right: 5px; color: var(--primary-color);
+      content: "📅 Início das Férias";
+      font-weight: 600;
+      color: #666;
   }
 
-  .ferias-table td:nth-child(3)::after {
-      content: " até "; margin-left: 5px; color: #888;
+  /* 4. Data de Fim (NOVA COLUNA) */
+  .ferias-table td:nth-child(4)::before {
+      content: "🛑 Último dia de Férias";
+      font-weight: 600;
+      color: #666;
+  }
+
+  /* 5. Data de Retorno */
+  .ferias-table td:nth-child(5) {
+      margin-top: 10px;
+      background-color: #f0f7ff; /* Fundo azul claro para destacar o retorno */
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: var(--azul-aco);
+      font-weight: 700;
+      border-bottom: none;
+  }
+  
+  .ferias-table td:nth-child(5)::before {
+      content: "🚀 Retorno ao Trabalho";
   }
 
   /* Ajuste Mobile Comunicado (Ícone no topo, Centralizado) */
@@ -1429,5 +1463,6 @@ footer .footer-content {
         justify-content: center;
     }
 }
+
 
 
