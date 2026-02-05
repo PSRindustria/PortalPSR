@@ -14,7 +14,7 @@
 
 <style>
     /* ==================================================
-       ESTILOS GERAIS
+       ESTILOS
        ================================================== */
     :root {
         --azul-marinho: #003366;
@@ -157,22 +157,7 @@
     .banner-saude-fisica { background: linear-gradient(135deg, rgba(34, 139, 34, 0.80), rgba(0, 51, 102, 0.80)), url('https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center center; }
     .banner-partiu-pensar { background-size: cover; background-position: center center; } 
     .card-texto-centralizado { text-align: center; display: flex; flex-direction: column; align-items: center; }
-
-    /* CORREÇÃO DO MODAL: display: none aqui, mas com override !important no JS */
-    .modal-overlay { 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        background: rgba(0,0,0,0.5); 
-        z-index: 99999; 
-        justify-content: center; 
-        align-items: center; 
-        padding: 20px; 
-        display: none; /* Mantido para não aparecer no carregamento */
-    }
-
+    .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0,0,0,0.5) !important; z-index: 99999 !important; justify-content: center; align-items: center; padding: 20px; }
     .modal-content { background: white !important; width: 100% !important; max-width: 500px !important; border-radius: 15px !important; padding: 25px !important; position: relative !important; box-shadow: 0 5px 25px rgba(0,0,0,0.3) !important; text-align: left !important; display: block !important; margin: auto !important; }
     .modal-content h3 { color: #003366 !important; font-size: 1.5rem !important; margin-bottom: 20px !important; text-align: center !important; font-weight: 700 !important; border: none !important; display: block !important; }
     .modal-content p, .modal-content div { color: #555 !important; margin-bottom: 1rem; line-height: 1.6 !important; }
@@ -369,7 +354,7 @@
 
 <div id="footer-placeholder"></div>
 
-<div id="hiscore-modal" class="modal-overlay">
+<div id="hiscore-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <button class="modal-close" onclick="window.closeHiScore()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
         <h3 id="modal-game-title" style="text-align:center; color:#003366;">Ranking</h3>
@@ -377,7 +362,7 @@
     </div>
 </div>
 
-<div id="synopsis-modal" class="modal-overlay">
+<div id="synopsis-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <button class="modal-close" onclick="closeSynopsis()" style="float:right; cursor:pointer; background:none; border:none; font-size:1.5rem;">&times;</button>
         <h3 id="modal-synopsis-title" style="text-align:center; color:#003366;">Sinopse</h3>
@@ -385,61 +370,11 @@
     </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    // =================================================================
-    // FUNÇÕES DO MODAL - TOTALMENTE ISOLADAS E SEGURAS
-    // =================================================================
-    window.openHiScore = async function(gameKey) {
-        const modal = document.getElementById('hiscore-modal'); 
-        const list = document.getElementById('modal-score-list');
-        const title = document.getElementById('modal-game-title');
-        
-        if (!modal || !list) return;
-
-        // FORÇA O DISPLAY FLEX COM IMPORTANT (SOBRESCREVE TUDO)
-        modal.style.setProperty('display', 'flex', 'important');
-        
-        if(title) title.textContent = `Ranking: ${gameKey}`;
-        list.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
-        
-        // FETCH INTERNO: Não depende do secureFetch, funciona sempre.
-        try {
-            const url = `https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/games/${gameKey}/scores.json`;
-            const r = await fetch(url); 
-            const data = await r.json();
-            
-            if (!data) { list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde ainda.</p>'; return; }
-            
-            let scoresArray = Object.values(data).sort((a, b) => {
-                const pA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
-                const pB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
-                return pB - pA;
-            });
-
-            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
-                let corRank = index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'var(--azul-marinho)';
-                let pontosDisplay = gameKey === 'BobinaKart' && !String(s.pontos).includes('km') ? s.pontos + " km" : s.pontos;
-                return `<div class="hiscore-item" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
-                    <div class="hiscore-rank" style="background:${corRank}; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; margin-right:10px;">${index + 1}</div>
-                    <div style="flex:1; font-weight:600; color:#4B4B4B;">${s.nome || 'Anônimo'}</div>
-                    <div class="hiscore-points" style="color:#DAA520; font-weight:700;">${pontosDisplay}</div>
-                </div>`;
-            }).join('');
-        } catch (error) {
-            console.error(error);
-            list.innerHTML = '<p style="color:red; text-align:center;">Erro ao ler dados.</p>';
-        }
-    };
-
-    window.closeHiScore = function() { 
-        const modal = document.getElementById('hiscore-modal');
-        if(modal) modal.style.display = 'none'; 
-    };
-
     // =================================================================
     // 1. CONFIGURAÇÕES
     // =================================================================
@@ -450,10 +385,8 @@
       projectId: "jornalpsr-1b8c6",
     };
 
-    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    
     let AUTH_TOKEN = null;
     const BASE_DB_URL = "https://jornalpsr-1b8c6-default-rtdb.firebaseio.com/";
 
@@ -526,11 +459,17 @@
         if(cContent) refreshAllUI();
     }
 
+    // =================================================================
+    // 2. FETCH COM ANTI-CACHE (CORREÇÃO DE DADOS VELHOS)
+    // =================================================================
     async function secureFetch(url) {
         let finalUrl = url;
         const separator = url.includes('?') ? '&' : '?';
-        finalUrl = `${url}${separator}t=${Date.now()}`; 
-        if (AUTH_TOKEN) finalUrl += `&auth=${AUTH_TOKEN}`;
+        finalUrl = `${url}${separator}t=${Date.now()}`; // Timestamp obriga navegador a baixar novo
+        
+        if (AUTH_TOKEN) {
+            finalUrl += `&auth=${AUTH_TOKEN}`;
+        }
         try {
             const resp = await fetch(finalUrl);
             if (!resp.ok) throw new Error(`Erro ${resp.status}`);
@@ -541,6 +480,9 @@
         }
     }
 
+    // =================================================================
+    // 3. DOWNLOAD COM CAMINHO CORRIGIDO
+    // =================================================================
     async function downloadData() {
         const contentData = await secureFetch(BASE_DB_URL + "content.json");
         if (contentData) {
@@ -552,7 +494,7 @@
         }
 
         const [clientes, hobby, praise, challenges, quiz, ratings, testimonials] = await Promise.all([
-            secureFetch(BASE_DB_URL + "content/novos_clientes.json"), 
+            secureFetch(BASE_DB_URL + "content/novos_clientes.json"), // <-- CAMINHO CORRETO (13 CLIENTES)
             secureFetch(BASE_DB_URL + "hobby_interactions_history/" + CURRENT_MONTH_KEY + ".json"),
             secureFetch(BASE_DB_URL + "praise_messages.json"),
             secureFetch(BASE_DB_URL + "challenges_history/" + CURRENT_MONTH_KEY + ".json"),
@@ -588,7 +530,13 @@
         setupRatings(globalRatingsData);
     }
 
+    // =================================================================
+    // 4. RENDERIZAÇÃO E FUNÇÕES DE UI (VOLTANDO AO MODO CLASSICO)
+    // =================================================================
+    
+    // RENDERIZAR JORNAL
     function renderJornal() {
+        // TEMA DO MÊS
         const tm = CONTEUDO_JORNAL.temaMes || {}; 
         const divTema = document.getElementById('tema-mes');
         const capaBackground = tm.capaUrl ? `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('${tm.capaUrl}') center/cover no-repeat;` : `background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.98)), url('https://i.postimg.cc/pWWZhcwT/wallpaper-janery-branco.jpg?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;`;
@@ -608,6 +556,7 @@
             </div>`;
         }
         
+        // SAÚDE FÍSICA
         const sf = CONTEUDO_JORNAL.saudeFisica || {}; 
         const divSaude = document.getElementById('saude-fisica-hero');
         const imgBackground = sf.imagemFundo || 'https://images.unsplash.com/photo-1571968624832-ce960b3ec953?q=80&w=2070&auto=format&fit=crop';
@@ -629,7 +578,8 @@
                 </div>
             </div>
         </div>`;
-       
+      
+        // PARTIU PENSAR
         const pp = CONTEUDO_JORNAL.partiuPensar || {}; 
         const styleBackground = pp.imagemFundo ? `background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${pp.imagemFundo}') center/cover no-repeat;` : `background: linear-gradient(135deg, rgba(70, 130, 180, 0.80), rgba(0, 51, 102, 0.80));`;
 
@@ -653,6 +603,7 @@
             </div>`;
         }
         
+        // TÍTULO DESAFIO
         const titDes = document.getElementById('titulo-desafio-mes');
         if(titDes) {
             if (CONTEUDO_JORNAL.desafios_titulo && CONTEUDO_JORNAL.desafios_titulo.trim() !== "") {
@@ -663,9 +614,11 @@
             }
         }
         
+        // DESAFIOS CARDS
         const desContainer = document.getElementById('desafios-container'); 
         if(desContainer) { desContainer.innerHTML = ''; (CONTEUDO_JORNAL.desafios||[]).forEach(d => { desContainer.innerHTML += `<div class="desafio-saude-card" data-challenge-id="${d.id}"><h4><span style="font-size:1.5em; margin-right:5px;">${d.emoji}</span> ${d.titulo}</h4><p>${d.desc}</p><div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee;"><div class="challenge-buttons"><button class="btn-challenge success" onclick="voteChallenge('${d.id}', 'success')">✅ Consegui</button><button class="btn-challenge fail" onclick="voteChallenge('${d.id}', 'fail')">❌ Não Consegui</button></div><div class="challenge-stats"><span>Consegui: <strong class="stat-success">0</strong></span><span>Não Consegui: <strong class="stat-fail">0</strong></span></div></div></div>`; }); }
         
+        // CULTURA CARDS
         const cultContainer = document.getElementById('cultura-container'); 
         if(cultContainer) {
             cultContainer.innerHTML = ''; 
@@ -675,6 +628,7 @@
             });
         }
         
+        // SUSTENTABILIDADE CARDS
         const maContainer = document.getElementById('cards-meio-ambiente'); 
         if(maContainer) { maContainer.innerHTML = ''; CONTEUDO_JORNAL.sustentabilidade.meioAmbiente.forEach(m => { maContainer.innerHTML += `<div class="jornal-card" style="border-top: 5px solid ${m.cor};"><div class="jornal-card-content"><h3 style="color: ${m.cor}; font-size: 1.2em;"><i class="${m.icon}"></i> ${m.titulo}</h3><p>${m.texto}</p></div></div>`; }); }
 
@@ -685,42 +639,39 @@
         setupQuizToggle();
     }
 
-    // PROTEÇÃO TRY-CATCH AQUI PARA NÃO TRAVAR O SITE
+    // RENDERIZAR CLIENTES (CORRIGIDO PARA CONTAR E EXIBIR 13)
     function renderNovosClientes(dados) {
-        try {
-            if (!dados) return;
+        if (!dados) return;
 
-            const listaClientes = dados.lista ? Object.values(dados.lista) : []; 
-            const totalReal = listaClientes.length;
+        const listaClientes = dados.lista ? Object.values(dados.lista) : []; 
+        const totalReal = listaClientes.length;
 
-            const elQtd = document.getElementById('stat-qtd');
-            const elPer = document.getElementById('stat-periodo');
-            if(elQtd) elQtd.textContent = totalReal; 
-            if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
+        const elQtd = document.getElementById('stat-qtd');
+        const elPer = document.getElementById('stat-periodo');
+        if(elQtd) elQtd.textContent = totalReal; // Mostra 13
+        if(elPer && dados.resumo) elPer.textContent = dados.resumo.periodo || "";
 
-            const listaContainer = document.getElementById('lista-clientes-content');
-            if(listaContainer) {
-                listaContainer.innerHTML = "";
-                if (totalReal > 0) {
-                    listaClientes.forEach(cliente => {
-                        if(!cliente) return;
-                        const classeDestaque = cliente.destaque ? 'destaque' : '';
-                        const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                        listaContainer.innerHTML += `
-                            <div class="cliente-item ${classeDestaque}">
-                                <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
-                                <div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div>
-                            </div>`;
-                    });
-                } else { 
-                    listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
-                }
+        const listaContainer = document.getElementById('lista-clientes-content');
+        if(listaContainer) {
+            listaContainer.innerHTML = "";
+            if (totalReal > 0) {
+                listaClientes.forEach(cliente => {
+                    if(!cliente) return;
+                    const classeDestaque = cliente.destaque ? 'destaque' : '';
+                    const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
+                    listaContainer.innerHTML += `
+                        <div class="cliente-item ${classeDestaque}">
+                            <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
+                            <div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div>
+                        </div>`;
+                });
+            } else { 
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
             }
-        } catch(e) {
-            console.error("Erro ao renderizar clientes:", e);
         }
     }
 
+    // RENDERIZAR HOBBY
     function renderHobbyUI() {
         const h = CONTEUDO_JORNAL.hobby || {};
         const hLikes = globalHobbyData.likes || {};
@@ -735,6 +686,11 @@
         }
     }
 
+    // =================================================================
+    // 5. FUNÇÕES DE INTERAÇÃO UI (RESTAURADAS E EXPLÍCITAS)
+    // =================================================================
+    
+    // Funções de Expandir/Recolher Cards (Feitas uma a uma para garantir)
     window.toggleMateria = function() {
         const el = document.getElementById('materiaCompleta');
         const btn = document.getElementById('btnLerMais');
@@ -795,6 +751,7 @@
         btn.classList.add('active'); 
     }
 
+    // Configuração dos Botões de Sugestão e Formulários
     function setupToggle(btnId, formId){ 
         const btn = document.getElementById(btnId);
         const frm = document.getElementById(formId); 
@@ -882,27 +839,95 @@
         };
     }
     
+    // Modais
     function openSynopsis(id) { const item = (CONTEUDO_JORNAL.cultura||[]).find(c => c.id === id); if (item) { document.getElementById('modal-synopsis-title').textContent = item.titulo; document.getElementById('modal-synopsis-text').textContent = item.sinopse || item.desc || "Sinopse não disponível."; document.getElementById('synopsis-modal').style.display = 'flex'; } }
     function closeSynopsis() { document.getElementById('synopsis-modal').style.display = 'none'; }
     
+    // =================================================================
+    // CORREÇÃO DOS RANKINGS DE JOGOS
+    // =================================================================
+    window.openHiScore = async function(gameKey) {
+        const modal = document.getElementById('hiscore-modal'); 
+        const list = document.getElementById('modal-score-list');
+        const title = document.getElementById('modal-game-title');
+        
+        if (!modal || !list) {
+            console.error("ERRO: Modal de ranking não encontrado no HTML!");
+            alert("Erro interno: O modal de ranking sumiu do HTML.");
+            return;
+        }
+
+        // 1. FORÇA A ABERTURA (Obriga o display flex com prioridade máxima)
+        modal.style.setProperty('display', 'flex', 'important');
+        
+        // 2. Prepara visual
+        if(title) title.textContent = `Ranking: ${gameKey}`;
+        list.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+        
+        // 3. Busca dados
+        try {
+            const data = await secureFetch(`${BASE_DB_URL}games/${gameKey}/scores.json`);
+            
+            // 4. Se não tiver dados ou der erro
+            if (!data) { 
+                list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Nenhum recorde registrado ainda.</p>'; 
+                return; 
+            }
+            
+            // 5. Organiza e exibe
+            // Converte objeto em array e ordena por pontos (do maior para o menor)
+            let scoresArray = Object.values(data).sort((a, b) => {
+                const pA = parseFloat(String(a.pontos).replace(/[^\d.-]/g, '')) || 0;
+                const pB = parseFloat(String(b.pontos).replace(/[^\d.-]/g, '')) || 0;
+                return pB - pA;
+            });
+
+            list.innerHTML = scoresArray.slice(0, 10).map((s, index) => {
+                let visualPonto = s.pontos;
+                // Se for Kart, adiciona "km" se não tiver
+                if (gameKey === 'BobinaKart' && !String(visualPonto).includes('km')) { 
+                    visualPonto = visualPonto + " km"; 
+                }
+                
+                // Cores do pódio
+                let corRank = 'var(--azul-marinho)';
+                if (index === 0) corRank = '#FFD700'; // Ouro
+                if (index === 1) corRank = '#C0C0C0'; // Prata
+                if (index === 2) corRank = '#CD7F32'; // Bronze
+
+                return `
+                <div class="hiscore-item" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
+                    <div class="hiscore-rank" style="background:${corRank}; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; margin-right:10px;">${index + 1}</div>
+                    <div style="flex:1; font-weight:600; color:#4B4B4B;">${s.nome || 'Anônimo'}</div>
+                    <div class="hiscore-points" style="color:#DAA520; font-weight:700;">${visualPonto}</div>
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error("Erro ao processar ranking:", error);
+            list.innerHTML = '<p style="color:red; text-align:center;">Erro ao ler dados.</p>';
+        }
+    };
+
+    // Função para fechar (GARANTIDA)
+    window.closeHiScore = function() { 
+        const modal = document.getElementById('hiscore-modal');
+        if(modal) modal.style.display = 'none'; 
+    };
+
+    // Analytics e Login
     renderFromCache();
 
-    if (typeof firebase !== 'undefined') {
-        firebase.auth().signInAnonymously().then((userCred) => {
-            return userCred.user.getIdToken().then(token => {
-                AUTH_TOKEN = token;
-                downloadData(); 
-                initAnalytics();
-                initSafetyAnalytics();
-            });
-        }).catch((error) => {
-            console.error("Erro no Login:", error);
+    firebase.auth().signInAnonymously().then((userCred) => {
+        return userCred.user.getIdToken().then(token => {
+            AUTH_TOKEN = token;
             downloadData(); 
+            initAnalytics();
+            initSafetyAnalytics();
         });
-    } else {
-        console.warn("Firebase não carregado. Tentando baixar dados sem autenticação...");
-        downloadData();
-    }
+    }).catch((error) => {
+        console.error("Erro no Login:", error);
+        downloadData(); 
+    });
 
     async function initAnalytics() {
         if (!AUTH_TOKEN) return; 
@@ -915,7 +940,6 @@
     }
 
     function initSafetyAnalytics() {
-        if (typeof firebase === 'undefined') return;
         const dbRef = firebase.database().ref('safety_quiz');
         dbRef.on('value', (snapshot) => {
             const data = snapshot.val();
