@@ -271,7 +271,10 @@
     
     const LANE_COUNT = 5; 
     let ROAD_WIDTH, ROAD_LEFT, LANE_WIDTH;
-    const BASE_SPEED = 8;
+    
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 800;
+    const BASE_SPEED = isMobileDevice ? 8 : 11; 
+    const MAX_SPEED_LIMIT = isMobileDevice ? 22 : 28;
     
     let player = { lane: 2, x: 0, y: 0, width: 0, height: 0, turnAngle: 0 };
     let obstacles = [];
@@ -361,17 +364,30 @@
         });
     }
 
-    function updatePhysics() {
+function updatePhysics() {
         roadSpeed = BASE_SPEED + (score / 300); 
-        if(roadSpeed > 22) roadSpeed = 22; 
+        
+        // Usa o limite definido na etapa anterior
+        if(roadSpeed > MAX_SPEED_LIMIT) roadSpeed = MAX_SPEED_LIMIT; 
 
         backgroundOffset += roadSpeed;
         score += roadSpeed * 0.05;
         uiScore.textContent = Math.floor(score) + " km";
 
         spawnTimer++;
-        // Intervalo de spawn um pouco mais curto para compensar a desuniformidade vertical
-        const spawnInterval = Math.max(30, 85 - (roadSpeed * 2.5)); 
+        
+        // === LÓGICA DE SPAWN DIFERENCIADA ===
+        let spawnInterval;
+
+        if (isMobileDevice) {
+            // Mantém a dificuldade original do celular
+            spawnInterval = Math.max(30, 85 - (roadSpeed * 2.5)); 
+        } else {
+            // Dificuldade PC:
+            // 1. Base menor (65 em vez de 85) = carros aparecem mais rápido
+            // 2. Mínimo menor (20 em vez de 30) = em alta velocidade vira um bullet hell
+            spawnInterval = Math.max(20, 65 - (roadSpeed * 2.5));
+        }
         
         if (spawnTimer > spawnInterval) {
             spawnObstacleRow();
@@ -634,6 +650,7 @@ btnSave.addEventListener('click', async () => {
 </body>
 
 </html>
+
 
 
 
