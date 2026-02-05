@@ -882,24 +882,67 @@
         setupQuizToggle();
     }
 
-    function renderNovosClientes(dados) {
+function renderNovosClientes(dados) {
         if (!dados) return;
+
+        // 1. Preenche o Resumo (Números no Topo)
         if (dados.resumo) {
             const elQtd = document.getElementById('stat-qtd');
             const elPer = document.getElementById('stat-periodo');
             if(elQtd) elQtd.textContent = dados.resumo.quantidade || "0";
             if(elPer) elPer.textContent = dados.resumo.periodo || "";
         }
+
+        // 2. Preenche a Lista (Tratamento robusto para Array ou Objeto do Firebase)
         const listaContainer = document.getElementById('lista-clientes-content');
         if(listaContainer) {
             listaContainer.innerHTML = ""; 
-            if (dados.lista && dados.lista.length > 0) {
-                dados.lista.forEach(cliente => {
+            
+            // CORREÇÃO AQUI: Garante que seja um Array, mesmo que o Firebase mande um Objeto
+            let listaReal = [];
+            if (dados.lista) {
+                listaReal = Array.isArray(dados.lista) ? dados.lista : Object.values(dados.lista);
+            }
+
+            if (listaReal.length > 0) {
+                listaReal.forEach(cliente => {
+                    // Proteção caso venha algum item nulo/vazio na lista
+                    if (!cliente) return; 
+
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
-                    listaContainer.innerHTML += `<div class="cliente-item ${classeDestaque}"><span class="cliente-icon-mini">${cliente.icone || '🏢'}</span><div class="cliente-info"><span>${cliente.nome}</span>${htmlBadge}</div></div>`;
+                    
+                    listaContainer.innerHTML += `
+                    <div class="cliente-item ${classeDestaque}">
+                        <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
+                        <div class="cliente-info">
+                            <span>${cliente.nome}</span>
+                            ${htmlBadge}
+                        </div>
+                    </div>`;
                 });
-            } else { listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; }
+            } else { 
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
+            }
+        }
+    }
+
+    // CORREÇÃO: Adicionando a função do botão que não existia
+    window.toggleTodosClientes = function() {
+        const lista = document.getElementById('lista-clientes');
+        const btn = document.querySelector('.btn-ver-todos');
+        
+        if (!lista || !btn) return;
+
+        // Verifica o estilo computado para saber se está visível ou não
+        const isHidden = window.getComputedStyle(lista).display === 'none';
+
+        if (isHidden) {
+            lista.style.display = 'block';
+            btn.innerHTML = '<i class="fas fa-chevron-up"></i> Recolher lista';
+        } else {
+            lista.style.display = 'none';
+            btn.innerHTML = '<i class="fas fa-chevron-down"></i> Ver lista completa';
         }
     }
 
