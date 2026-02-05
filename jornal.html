@@ -883,38 +883,60 @@
     }
 
 function renderNovosClientes(dados) {
-        if (!dados) return;
+        console.log("🔥 DEBUG - Dados recebidos do Firebase:", dados); // Veja isso no Console (F12)
 
-        // 1. Preenche o Resumo (Números no Topo)
-        if (dados.resumo) {
-            const elQtd = document.getElementById('stat-qtd');
-            const elPer = document.getElementById('stat-periodo');
-            if(elQtd) elQtd.textContent = dados.resumo.quantidade || "0";
-            if(elPer) elPer.textContent = dados.resumo.periodo || "";
+        // Se dados for nulo, não faz nada
+        if (!dados) {
+            console.warn("🔥 DEBUG - Dados vazios ou nulos.");
+            return;
         }
 
-        // 2. Preenche a Lista (Tratamento robusto para Array ou Objeto do Firebase)
+        // 1. Preenche o Resumo (Números no Topo do Card)
+        // Verifica se 'dados.resumo' existe, senão tenta procurar direto em 'dados'
+        const resumo = dados.resumo || (dados.quantidade ? dados : null);
+        
+        if (resumo) {
+            const elQtd = document.getElementById('stat-qtd');
+            const elPer = document.getElementById('stat-periodo');
+            if(elQtd) elQtd.textContent = resumo.quantidade || "0";
+            if(elPer) elPer.textContent = resumo.periodo || "";
+        }
+
+        // 2. Preenche a Lista
         const listaContainer = document.getElementById('lista-clientes-content');
         if(listaContainer) {
-            listaContainer.innerHTML = ""; 
+            listaContainer.innerHTML = ""; // Limpa o "Carregando..." ou conteúdo antigo
             
-            // CORREÇÃO AQUI: Garante que seja um Array, mesmo que o Firebase mande um Objeto
+            // LÓGICA ROBUSTA PARA EXTRAIR A LISTA:
             let listaReal = [];
+
             if (dados.lista) {
+                // Cenário Ideal: Existe a chave 'lista'
+                // Se for Array usa direto, se for Objeto transforma em Array
                 listaReal = Array.isArray(dados.lista) ? dados.lista : Object.values(dados.lista);
+            } else if (Array.isArray(dados)) {
+                // Cenário Alternativo: O Firebase retornou um Array direto na raiz
+                listaReal = dados;
+            } else {
+                // Cenário de Emergência: O Firebase retornou um Objeto misturado
+                // Tentamos pegar todos os valores que parecem ser clientes (tem propriedade 'nome')
+                listaReal = Object.values(dados).filter(item => item && item.nome);
             }
+
+            console.log("🔥 DEBUG - Lista processada para renderizar:", listaReal);
 
             if (listaReal.length > 0) {
                 listaReal.forEach(cliente => {
-                    // Proteção caso venha algum item nulo/vazio na lista
-                    if (!cliente) return; 
+                    // Pula itens vazios ou inválidos
+                    if (!cliente || !cliente.nome) return; 
 
                     const classeDestaque = cliente.destaque ? 'destaque' : '';
                     const htmlBadge = cliente.destaque ? '<span class="badge-destaque">✨ Destaque</span>' : '';
+                    const icone = cliente.icone || '🏢';
                     
                     listaContainer.innerHTML += `
                     <div class="cliente-item ${classeDestaque}">
-                        <span class="cliente-icon-mini">${cliente.icone || '🏢'}</span>
+                        <span class="cliente-icon-mini">${icone}</span>
                         <div class="cliente-info">
                             <span>${cliente.nome}</span>
                             ${htmlBadge}
@@ -922,7 +944,7 @@ function renderNovosClientes(dados) {
                     </div>`;
                 });
             } else { 
-                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; grid-column: 1 / -1;">Nenhum cliente novo neste período.</div>'; 
+                listaContainer.innerHTML = '<div style="padding:20px; text-align:center; color:#999; grid-column: 1 / -1;">Nenhum cliente encontrado na lista.</div>'; 
             }
         }
     }
