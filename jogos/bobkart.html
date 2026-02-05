@@ -365,32 +365,39 @@
     }
 
 function updatePhysics() {
-        roadSpeed = BASE_SPEED + (score / 300); 
-        
-        // Usa o limite definido na etapa anterior
-        if(roadSpeed > MAX_SPEED_LIMIT) roadSpeed = MAX_SPEED_LIMIT; 
+        // === CONFIGURAÇÕES DE BALANCEAMENTO ===
+        // Mobile: Ganha 0.05 pontos por frame | Acelera a cada 300 pontos acumulados
+        // PC: Ganha 0.025 pontos (METADE) | Acelera a cada 150 pontos (para manter a aceleração agressiva)
+        const scoreRate = isMobileDevice ? 0.05 : 0.025; 
+        const accelerationDivisor = isMobileDevice ? 300 : 150; 
 
-backgroundOffset += roadSpeed;
-        const scoreMultiplier = isMobileDevice ? 0.05 : 0.03;
+        // 1. Calcula a Velocidade
+        // No PC, como o divisor é menor (150), o carro acelera "normalmente" mesmo ganhando poucos pontos.
+        roadSpeed = BASE_SPEED + (score / accelerationDivisor); 
         
-        score += roadSpeed * scoreMultiplier;
+        // Limites de velocidade (PC pode correr mais no final se quiser, ou travar em 22 igual)
+        const currentMaxSpeed = isMobileDevice ? 22 : 28;
+        if(roadSpeed > currentMaxSpeed) roadSpeed = currentMaxSpeed; 
+
+        backgroundOffset += roadSpeed;
+        
+        // 2. Calcula a Pontuação
+        // Aqui aplicamos a "trava" do PC. Ele ganha pontos bem mais devagar.
+        score += roadSpeed * scoreRate;
         uiScore.textContent = Math.floor(score) + " km";
 
         spawnTimer++;
         
-        // === LÓGICA DE SPAWN DIFERENCIADA ===
-        let spawnInterval;
-
-        if (isMobileDevice) {
-            // Mantém a dificuldade original do celular
-            spawnInterval = Math.max(30, 85 - (roadSpeed * 2.5)); 
-        } else {
-            // Dificuldade PC:
-            // 1. Base menor (65 em vez de 85) = carros aparecem mais rápido
-            // 2. Mínimo menor (20 em vez de 30) = em alta velocidade vira um bullet hell
-            spawnInterval = Math.max(20, 65 - (roadSpeed * 2.5));
-        }
+        // === RESTO DA FUNÇÃO SEGUE IGUAL DAQUI PARA BAIXO ===
+        // (Copie a lógica de spawn que ajustamos antes ou mantenha a original se preferir)
         
+        let spawnInterval;
+        if (isMobileDevice) {
+             spawnInterval = Math.max(30, 85 - (roadSpeed * 2.5)); 
+        } else {
+             spawnInterval = Math.max(20, 65 - (roadSpeed * 2.5));
+        }
+
         if (spawnTimer > spawnInterval) {
             spawnObstacleRow();
             spawnTimer = 0;
@@ -652,6 +659,7 @@ btnSave.addEventListener('click', async () => {
 </body>
 
 </html>
+
 
 
 
