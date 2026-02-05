@@ -715,7 +715,6 @@
     function loadCache(key) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch(e){ return null; } }
 
     function renderFromCache() {
-        console.log("Tentando renderizar via Cache...");
         const cContent = loadCache(CACHE_KEYS.CONTENT);
         if(cContent) { CONTEUDO_JORNAL = cContent; if(!CONTEUDO_JORNAL.sustentabilidade) CONTEUDO_JORNAL.sustentabilidade = SUSTENTABILIDADE_PADRAO; }
         
@@ -884,11 +883,7 @@
     }
 
 function renderNovosClientes(dados) {
-        console.log("🔥 DEBUG - Dados recebidos do Firebase:", dados); // Veja isso no Console (F12)
-
-        // Se dados for nulo, não faz nada
         if (!dados) {
-            console.warn("🔥 DEBUG - Dados vazios ou nulos.");
             return;
         }
 
@@ -923,8 +918,6 @@ function renderNovosClientes(dados) {
                 // Tentamos pegar todos os valores que parecem ser clientes (tem propriedade 'nome')
                 listaReal = Object.values(dados).filter(item => item && item.nome);
             }
-
-            console.log("🔥 DEBUG - Lista processada para renderizar:", listaReal);
 
             if (listaReal.length > 0) {
                 listaReal.forEach(cliente => {
@@ -1501,8 +1494,6 @@ window.openHiScore = async function(gameKey) {
             method: 'PUT',
             body: JSON.stringify(true)
         });
-
-        console.log("Monitoramento iniciado para", MY_DEVICE_ID);
     }
 
     // -------------------------------------------------------
