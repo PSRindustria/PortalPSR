@@ -719,12 +719,14 @@
       });
     }
 
-    async function renderFerias() {
+async function renderFerias() {
        const data = await fetchData("ferias.json");
        const tb = document.getElementById("ferias-tbody");
        if (!tb) return;
+       
        const hoje = new Date();
        hoje.setHours(0, 0, 0, 0);
+       
        function isSameDate(dateStr, comparisonDate) {
          try {
            const [dia, mes, ano] = dateStr.split("/");
@@ -734,6 +736,8 @@
            return dataObj.getTime() === comparisonDate.getTime();
          } catch (e) { return false; }
        }
+       
+       // Filtra apenas quem retorna hoje ou no futuro
        const dataFiltrada = (data || []).filter(f => {
          try {
              const [dia, mes, ano] = f.retorno.split("/");
@@ -743,24 +747,30 @@
              return dataRetorno >= hoje;
           } catch (e) { return false; }
        });
+       
        tb.innerHTML = "";
-       if (data === null) { tb.innerHTML = `<tr><td colspan="4"><p>Erro ao carregar férias.</p></td></tr>`; return; }
-       if (dataFiltrada.length === 0) { tb.innerHTML = `<tr><td colspan="4">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`; return; }
-dataFiltrada.forEach(f => {
-  const retornaHoje = isSameDate(f.retorno, hoje);
-  const tr = document.createElement("tr");
-  if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
-
-  // --- ALTERAÇÃO AQUI: Adicionado campo 'fim' e atributos data-label para o mobile ---
-  const fimFerias = f.fim || '---'; // Pega o dado do JSON ou coloca traços se não existir
-  
-  tr.innerHTML = `
-    <td data-label="Colaborador"><strong>${f.colaborador}</strong></td>
-    <td data-label="Departamento">${f.departamento}</td>
-    <td data-label="Início das Férias">${f.inicio}</td>
-    <td data-label="Fim das Férias">${fimFerias}</td>
-    <td data-label="Retorno às Atividades" style="color: var(--primary-color); font-weight:bold;">${f.retorno}</td>
-  `;
+       // Ajustei o colspan para 5 colunas para cobrir o cabeçalho novo
+       if (data === null) { tb.innerHTML = `<tr><td colspan="5"><p>Erro ao carregar férias.</p></td></tr>`; return; }
+       if (dataFiltrada.length === 0) { tb.innerHTML = `<tr><td colspan="5">Nenhum colaborador em férias retornando hoje ou futuramente.</td></tr>`; return; }
+       
+       dataFiltrada.forEach(f => {
+         const retornaHoje = isSameDate(f.retorno, hoje);
+         const tr = document.createElement("tr");
+         if (retornaHoje) tr.classList.add("retorno-hoje-piscar");
+         
+         // Define o fim ou coloca traços se não houver no JSON antigo
+         const fimFerias = f.fim || '---';
+         
+         tr.innerHTML = `
+           <td data-label="Colaborador"><strong>${f.colaborador}</strong></td>
+           <td data-label="Departamento">${f.departamento}</td>
+           <td data-label="Início das Férias">${f.inicio}</td>
+           <td data-label="Fim das Férias">${fimFerias}</td>
+           <td data-label="Retorno às Atividades" style="color: var(--primary-color); font-weight:bold;">${f.retorno}</td>
+         `;
+         tb.appendChild(tr);
+       });
+     }
   // ----------------------------------------------------------------------------------
   
   tb.appendChild(tr);
@@ -929,6 +939,7 @@ dataFiltrada.forEach(f => {
   </script>
 </body>
 </html>
+
 
 
 
