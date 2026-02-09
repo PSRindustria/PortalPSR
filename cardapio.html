@@ -6,7 +6,8 @@
   
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
-  <meta name="color-scheme" content="light only"> <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta name="color-scheme" content="light only"> 
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma"        content="no-cache" />
   <meta http-equiv="Expires"       content="0" />
   <meta name="robots" content="noindex, nofollow">
@@ -21,12 +22,11 @@
   <title>Cardápio Semanal - PortalPSR</title>
   
   <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="preconnect" href="https://jornalpsr-1b8c6-default-rtdb.firebaseio.com">
-  <link rel="dns-prefetch" href="https://jornalpsr-1b8c6-default-rtdb.firebaseio.com">
+  <link rel="preconnect" href="https://agenda-portal-2d149-default-rtdb.firebaseio.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=2" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -47,15 +47,12 @@
     body {
       background: var(--bg-light);
       color: var(--color-text);
-      padding-top: 80px; /* Espaço para o menu fixo */
+      padding-top: 80px; 
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding-bottom: 0px; 
     }
 
-    /* ==================================================
-       FIX PARA O MENU HEADER (EVITA QUEBRA DE LAYOUT)
-       ================================================== */
     #menu-placeholder { 
       position: fixed; 
       top: 0; 
@@ -64,26 +61,39 @@
       z-index: 1000; 
     }
 
-    /* Força a fonte Segoe UI no header para não alargar o texto como a Poppins faz */
     #menu-placeholder header {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
     }
 
-    /* Impede que o texto "Reflexão do Dia" quebre em 2 linhas */
     #menu-placeholder nav ul li a {
       white-space: nowrap !important;
     }
 
-    /* Ajuste fino para o menu não apertar em ecrãs médios */
     @media (min-width: 769px) and (max-width: 1100px) {
       nav ul li { margin-left: 10px !important; }
       nav ul li a { font-size: 0.9rem; padding: 8px 5px !important; }
     }
 
-    /* ==================================================
-       ESTILOS DO CONTEÚDO DO CARDÁPIO
-       ================================================== */
     .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; }
+
+    #titulo-semana {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--color-text);
+        margin-top: 20px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    #update-info {
+        text-align: center;
+        font-size: 0.75rem;
+        color: #d32f2f;
+        margin-bottom: 25px;
+        font-weight: 500;
+        opacity: 0.9;
+    }
 
     .btn-pdf {
         display: flex;
@@ -126,6 +136,7 @@
     .coluna:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
     .coluna::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 12px; background: var(--color-primary); }
     .orange::before { background: var(--color-highlight); }
+    
     .inativa { opacity: 0.4; filter: grayscale(60%); }
 
     .texto { padding: 1.5rem; line-height: 1.5; }
@@ -150,6 +161,7 @@
       .texto { padding: 1.5rem; font-size: 0.90rem; }
       .diaSemana { font-size: 1.0rem; padding: 10px 10px 1px 10px; }
       .proteinas { font-size: 1.4rem; }
+      #titulo-semana { font-size: 1rem; }
     }
   </style>
 </head>
@@ -158,6 +170,9 @@
   <div id="menu-placeholder"></div>
 
   <div class="container">
+    <h2 id="titulo-semana">Carregando...</h2>
+    <div id="update-info"></div>
+
     <div class="coluna"><div class="texto"></div></div>
     <div class="coluna"><div class="texto"></div></div>
     <div class="coluna"><div class="texto"></div></div>
@@ -173,9 +188,9 @@
 
   <script>
     let dadosCardapio = {};
+    let dataInicioSemana = new Date(); // Controla qual semana está sendo exibida
 
     document.addEventListener('DOMContentLoaded', () => {
-      // 1) INJEÇÃO DE MENU E FOOTER (SINCRONIZADO COM INDEX.HTML)
       ['menu', 'footer'].forEach(file => {
         fetch(`${file}.html?t=${Date.now()}`)
           .then(r => r.text())
@@ -198,24 +213,31 @@
       });
     });
 
-    // --- Lógica do Cardápio ---
+    // --- Funções Auxiliares ---
     function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
     function scrollToCenter(element) {
       const top = element.offsetTop - (window.innerHeight / 2) + (element.offsetHeight / 2);
       window.scrollTo({ top, behavior: 'auto' });
     }
+    
     function inativarColunasAntes(index, colunas) {
       for (let i = 0; i < index; i++) colunas[i].classList.add('inativa');
     }
 
-    function obterTextoDataSemana() {
-        const hoje = new Date();
-        const diaSemana = hoje.getDay(); 
-        const diff = diaSemana === 0 ? -6 : 1 - diaSemana;
-        const segunda = new Date(hoje);
-        segunda.setDate(hoje.getDate() + diff);
+    // --- Lógica de Data e Título ---
+
+    // 1. Apenas calcula o texto base (ex: "9 a 13 de Fevereiro")
+    // Será usado tanto pela tela quanto pelo PDF (que quer sempre abreviado)
+    function obterTextoDataBase() {
+        const diaSemana = dataInicioSemana.getDay(); 
+        const diff = diaSemana === 0 ? -6 : 1 - diaSemana; // Ajusta para segunda
+        
+        const segunda = new Date(dataInicioSemana);
+        segunda.setDate(dataInicioSemana.getDate() + diff);
+        
         const sexta = new Date(segunda);
         sexta.setDate(segunda.getDate() + 4);
+        
         const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
         const formatMes = (m) => m.charAt(0).toUpperCase() + m.slice(1);
         
@@ -226,39 +248,110 @@
         }
     }
 
-    window.addEventListener('load', () => {
-      const hojeNum = new Date().getDay();
-      const colunas = document.querySelectorAll('.coluna');
-      
-      // Realça o dia atual
-      if (hojeNum >= 1 && hojeNum <= 5) {
-        colunas[hojeNum - 1].classList.add('orange');
-        inativarColunasAntes(hojeNum - 1, colunas);
-        setTimeout(() => {
-          if (isIOS()) scrollToCenter(colunas[hojeNum - 1]);
-          else colunas[hojeNum - 1].scrollIntoView({ behavior: 'auto', block: 'center' });
-        }, 500);
-      }
+    // 2. Atualiza a Tela aplicando a regra de horário (Sexta 15h)
+    function atualizarTituloTela() {
+        const textoBase = obterTextoDataBase();
+        const agora = new Date();
+        const dia = agora.getDay();   // 0=Dom, 5=Sex, 6=Sab
+        const hora = agora.getHours();
+        
+        let prefixo = "";
 
-      // Procura dados no Firebase
-      fetch('https://agenda-portal-2d149-default-rtdb.firebaseio.com/cardapio.json')
-        .then(res => res.json())
-        .then(data => {
+        // Regra: Apenas Sexta(>15h), Sábado e Domingo ganham "Cardápio do dia"
+        if ((dia === 5 && hora >= 15) || dia === 6 || dia === 0) {
+            prefixo = "Cardápio do dia ";
+        }
+
+        document.getElementById('titulo-semana').innerText = prefixo + textoBase;
+    }
+
+    window.addEventListener('load', async () => {
+      const colunas = document.querySelectorAll('.coluna');
+      const updateInfoEl = document.getElementById('update-info');
+      
+      try {
+          // Busca dados e metadados
+          const [resCardapio, resMeta] = await Promise.all([
+              fetch('https://agenda-portal-2d149-default-rtdb.firebaseio.com/cardapio.json'),
+              fetch('https://agenda-portal-2d149-default-rtdb.firebaseio.com/cardapio_metadata.json')
+          ]);
+
+          const data = await resCardapio.json();
+          const meta = await resMeta.json(); 
+          
           dadosCardapio = data;
+
+          // Descobre última atualização
+          let lastUpdateTimestamp = 0;
+          if (meta) {
+             Object.values(meta).forEach(diaObj => {
+                 Object.values(diaObj).forEach(campoObj => {
+                     if(campoObj.time && campoObj.time > lastUpdateTimestamp) {
+                         lastUpdateTimestamp = campoObj.time;
+                     }
+                 });
+             });
+          }
+
+          // Exibe info de update
+          if (lastUpdateTimestamp > 0) {
+              const dateUp = new Date(lastUpdateTimestamp);
+              const diaFmt = String(dateUp.getDate()).padStart(2, '0');
+              const mesFmt = String(dateUp.getMonth() + 1).padStart(2, '0');
+              const anoFmt = String(dateUp.getFullYear()).slice(-2);
+              const horaFmt = String(dateUp.getHours()).padStart(2, '0');
+              const minFmt = String(dateUp.getMinutes()).padStart(2, '0');
+              updateInfoEl.innerText = `Última atualização: ${diaFmt}/${mesFmt}/${anoFmt} às ${horaFmt}:${minFmt}`;
+          }
+
+          // Lógica de "Virada de Chave" (Mostrar Próxima Semana)
+          const agora = new Date();
+          const diaSemanaHoje = agora.getDay(); 
+          const horaHoje = agora.getHours();
+          let exibirProximaSemana = false;
+
+          if ((diaSemanaHoje === 5 && horaHoje >= 15) || diaSemanaHoje === 6 || diaSemanaHoje === 0) {
+              const dataCorte = new Date(agora);
+              if(diaSemanaHoje === 6) dataCorte.setDate(dataCorte.getDate() - 1);
+              if(diaSemanaHoje === 0) dataCorte.setDate(dataCorte.getDate() - 2);
+              dataCorte.setHours(15, 0, 0, 0);
+
+              if (lastUpdateTimestamp > dataCorte.getTime()) {
+                  exibirProximaSemana = true;
+              }
+          }
+
+          if (exibirProximaSemana) {
+              const diasParaSegunda = (diaSemanaHoje === 5) ? 3 : (diaSemanaHoje === 6) ? 2 : 1;
+              dataInicioSemana.setDate(dataInicioSemana.getDate() + diasParaSegunda);
+              // Próxima semana: Todos ativos
+          } else {
+              // Semana atual: Inativa dias passados
+              if (diaSemanaHoje >= 1 && diaSemanaHoje <= 5) {
+                colunas[diaSemanaHoje - 1].classList.add('orange');
+                inativarColunasAntes(diaSemanaHoje - 1, colunas);
+                setTimeout(() => {
+                  if (isIOS()) scrollToCenter(colunas[diaSemanaHoje - 1]);
+                  else colunas[diaSemanaHoje - 1].scrollIntoView({ behavior: 'auto', block: 'center' });
+                }, 500);
+              }
+          }
+          
+          // Atualiza o Título na Tela (com ou sem prefixo dependendo do horário)
+          atualizarTituloTela();
+
+          // Renderiza Cards
           const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+          const termosBloqueio = ['feriado', 'recesso', 'fechado', 'folga', 'recesso de natal', 'recesso de fim de ano', 'sem expediente'];
+
           dias.forEach((dia, i) => {
             const item = data[dia];
             if (item && colunas[i]) {
-                // Normaliza o texto para minúsculas para facilitar a busca
                 const textoPrato = (item.proteinas || '').toLowerCase();
-
-                // LISTA DE PALAVRAS: Adicione aqui as palavras que devem "apagar" o dia
-                const termosBloqueio = ['feriado', 'recesso', 'fechado', 'folga', 'recesso de natal', 'recesso de fim de ano', 'sem expediente'];
-
-                // Verifica se ALGUMA das palavras da lista está no texto
                 if (termosBloqueio.some(termo => textoPrato.includes(termo))) {
                   colunas[i].classList.add('inativa');
                 }
+
               colunas[i].querySelector('.texto').innerHTML = `
                 <p class="diaSemana">${dia.toUpperCase()}-FEIRA</p>
                 <p class="proteinas">🔶 ${item.proteinas}</p>
@@ -269,8 +362,11 @@
               `;
             }
           });
-        })
-        .catch(err => console.error('Erro Firebase:', err));
+
+      } catch (err) {
+          console.error('Erro ao carregar cardápio:', err);
+          document.getElementById('titulo-semana').innerText = "Erro ao carregar.";
+      }
     });
 
     // --- Geração de PDF ---
@@ -298,7 +394,12 @@
             doc.setTextColor(8, 50, 96);
             doc.setFontSize(15);
             doc.setFont("helvetica", "bold");
-            doc.text(obterTextoDataSemana(), 105, 62, { align: "center" });
+            
+            // AQUI ESTÁ A CORREÇÃO:
+            // Usa obterTextoDataBase() para pegar SEMPRE a versão abreviada ("9 a 13 de...")
+            // Ignorando o prefixo que pode estar na tela
+            const tituloPDF = obterTextoDataBase();
+            doc.text(tituloPDF, 105, 62, { align: "center" });
 
             const diasMap = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
             let cursorY = 82; 
