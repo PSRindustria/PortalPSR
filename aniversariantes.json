@@ -1,25 +1,25 @@
 [
   {
     "nome": "Jennyfer",
-    "cargo": "Colaborador",
+    "cargo": "Desenvolvimento",
     "data": "01/02",
     "imagem": "https://i.postimg.cc/XvvsGH14/01-Jennyfer-Trentini.jpg"
   },
   {
     "nome": "Cláudio",
-    "cargo": "Colaborador",
+    "cargo": "Produção",
     "data": "09/02",
     "imagem": "https://i.postimg.cc/k5hfxQLr/09-Claudio-Oliveira.jpg"
   },
   {
     "nome": "Marcos",
-    "cargo": "Colaborador",
+    "cargo": "Produção",
     "data": "11/02",
     "imagem": "https://i.postimg.cc/TPHCrVBv/11-Marcos-Vinicius.jpg"
   },
   {
     "nome": "Waldir",
-    "cargo": "Colaborador",
+    "cargo": "QSMS",
     "data": "13/02",
     "imagem": "https://i.postimg.cc/tgm2h38Q/13-Waldir-Advincula.jpg"
   },
@@ -31,13 +31,13 @@
   },
   {
     "nome": "Fernanda",
-    "cargo": "Colaborador",
+    "cargo": "Faturamento",
     "data": "28/02",
     "imagem": "https://i.postimg.cc/vmS3WrCY/28-Fernanda-Alves.jpg"
   },
   {
     "nome": "Rodolfo",
-    "cargo": "Colaborador",
+    "cargo": "Logística",
     "data": "28/02",
     "imagem": "https://i.postimg.cc/Ls0NztG6/28-Rodolfo-Pacheco.jpg"
   }
